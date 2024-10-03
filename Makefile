@@ -16,10 +16,11 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leakr-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
+VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
 
-$(NAME) = $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) &(LIBFT) -o &(NAME)
+
+$(NAME): $(LIBFT) $(SRCS)
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 
 #bonus: $(BONUS_NAME)
 
@@ -29,7 +30,7 @@ $(NAME) = $(LIBFT) $(SRCS)
 all: $(NAME) #bonus
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT)
+	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
 	$(MAKE) clean -C $(LIBFT)
@@ -41,7 +42,7 @@ fclean: clean
 re: fclean
 	$(MAKE) all
 
-valgrind: $(NAME)
+test: $(NAME)
 	$(VALGRIND) ./$(NAME)
 
 .PHONY: all clean fclean re #bonus
