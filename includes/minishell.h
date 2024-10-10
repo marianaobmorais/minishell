@@ -22,6 +22,8 @@
 
 // our own libraries
 # include "../libft/libft.h"
+# include "builtins.h"
+# include "structs.h" // delete later?
 
 // main.c
 int	main(void);
