@@ -7,7 +7,8 @@ SRCS_DIR = ./srcs
 LIBFT = ./libft/libft.a
 LIBFT_DIR = ./libft
 
-SRCS = $(SRCS_DIR)/main.c \
+SRCS = $(SRCS_DIR)/main.c\
+	srcs/builtins/ft_pwd.c\
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
