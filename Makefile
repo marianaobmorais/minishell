@@ -10,6 +10,7 @@ LIBFT_DIR = ./libft
 SRCS = $(SRCS_DIR)/main.c\
 	srcs/builtins/ft_pwd.c\
 	srcs/builtins/ft_export.c\
+	srcs/builtins/ft_unset.c\
 
 #BONUS_SRCS = $(BONUS_DIR)/
 

@@ -41,8 +41,8 @@ int	ft_export(char *str)
 		new_environ[i] = environ[i];
 		i++;
 	}
+	new_environ[i] = str;
+	new_environ[i + 1] = NULL;
 	environ = new_environ;
-	environ[i] = str;
-	environ[i + 1] = NULL;
 	return (0);
 }

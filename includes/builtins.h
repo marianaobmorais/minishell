@@ -3,5 +3,6 @@
 
 int	ft_pwd(void);
 int	ft_export(char *str);
+int	ft_unset(char *str);
 
-#endif
+#endif //BUILTINS_H
