@@ -1,13 +1,13 @@
 #include "../../includes/minishell.h"
 
-extern char **environ;
+extern char	**environ;
 
 static int	replace_env(char *str, size_t size)
 {
 	int	i;
 
 	i = 0;
-	while(environ[i])
+	while (environ[i])
 	{
 		if (ft_strncmp(str, environ[i], size) == 0)
 		{
@@ -36,7 +36,7 @@ int	ft_export(char *str)
 	if (!new_environ)
 		return (-1);
 	i = 0;
-	while(environ[i])
+	while (environ[i])
 	{
 		new_environ[i] = environ[i];
 		i++;

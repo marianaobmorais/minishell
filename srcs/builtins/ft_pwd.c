@@ -7,6 +7,6 @@ int	ft_pwd(void)
 	if (getcwd(current_path, 1024) != NULL)
 		printf("%s\n", current_path);
 	else
-	 	return (-1);
+		return (-1);
 	return (0);
 }
