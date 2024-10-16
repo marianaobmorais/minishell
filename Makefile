@@ -8,6 +8,9 @@ LIBFT = ./libft/libft.a
 LIBFT_DIR = ./libft
 
 SRCS = $(SRCS_DIR)/main.c \
+		$(SRCS_DIR)/ft_error_handler.c \
+		$(SRCS_DIR)/builtins/ft_env.c \
+		$(SRCS_DIR)/builtins/ft_cd.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
@@ -33,11 +36,11 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	$(MAKE) clean -C $(LIBFT)
+	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
-	$(MAKE) fclean -c $(LIBFT_DIR)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean
 	$(MAKE) all
