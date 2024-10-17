@@ -47,7 +47,8 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 
 	if (argc > 2)
 	{
-		ft_error_handler(); //printf("%s: cd: too many arguments\n", PROMPT); // precisamos printar no STDERR
+		//ft_error_handler();
+		printf("%s: cd: too many arguments\n", PROMPT); // precisamos printar no STDERR
 		return ;
 	}
 	cur_pwd = getcwd(s, 100);
@@ -56,16 +57,24 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 		home = ft_getenv("HOME=", my_envp); // not sure if this is necessary //home = getenv("HOME");
 		if (!home)
 		{
-			ft_error_handler(); //printf("%s: cd: HOME not set \n", PROMPT); // precisamos printar no STDERR
+			//ft_error_handler();
+			printf("%s: cd: HOME not set \n", PROMPT); // precisamos printar no STDERR
 			return (free(home));
 		}
 		chdir(home);
 		ft_update_my_envp(my_envp, cur_pwd);
 		return (free(home));
 	}
-	if (chdir(new_dir) == -1)
+	if (new_dir[0] == '-')
 	{
-		ft_error_handler(); //printf("%s: cd: %s: no such file or directory\n", PROMPT, new_dir); // precisamos printar no STDERR
+		//ft_error_handler();
+		printf("%s: cd: %s: invalid option\n", PROMPT, new_dir); // precisamos printar no STDERR
+		return ;
+	}
+	if (chdir(new_dir) == -1) // se eu coloco &, o chdir funciona kkk
+	{
+		//ft_error_handler();
+		printf("%s: cd: %s: no such file or directory\n", PROMPT, new_dir); // precisamos printar no STDERR
 		return ;
 	}
 	ft_update_my_envp(my_envp, cur_pwd);
