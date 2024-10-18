@@ -51,10 +51,10 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 		printf("%s: cd: too many arguments\n", PROMPT); // precisamos printar no STDERR
 		return ;
 	}
-	cur_pwd = getcwd(s, 100);
+	cur_pwd = getcwd(s, 100); // essa funcao vai pegar o pwd do my_envp ou do envp?
 	if (argc == 1)
 	{
-		home = ft_getenv("HOME=", my_envp); // not sure if this is necessary //home = getenv("HOME");
+		home = ft_getenv("HOME=", my_envp); // not sure if this function is necessary //home = getenv("HOME"); essa funcao vai pegar o pwd do my_envp ou do envp?
 		if (!home)
 		{
 			//ft_error_handler();
@@ -67,11 +67,17 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	}
 	if (new_dir[0] == '-')
 	{
+		if (!new_dir[1])
+		{
+			printf("\n\n\n%s\n", cur_pwd);
+			return ;
+		}
 		//ft_error_handler();
 		printf("%s: cd: %s: invalid option\n", PROMPT, new_dir); // precisamos printar no STDERR
 		return ;
 	}
-	if (chdir(new_dir) == -1) // se eu coloco &, o chdir funciona kkk
+	//if (new_dir[0] == '/')
+	if (chdir(new_dir) == -1) // se eu coloco &, o chdir funciona kkk // preciso testar mais dentro no bashinho
 	{
 		//ft_error_handler();
 		printf("%s: cd: %s: no such file or directory\n", PROMPT, new_dir); // precisamos printar no STDERR
