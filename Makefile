@@ -12,11 +12,12 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_get_my_envp.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
+		$(SRCS_DIR)/builtins/ft_echo.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -lreadline -g
 
 RM = rm -f
 
