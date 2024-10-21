@@ -137,7 +137,7 @@ char	**ft_split_quotes(char *s, char c)
 		printf("%s open quotes are not accepted\n", PROMPT); //ft_error_handler();
 		return (NULL);
 	}
-	printf("word count = %d\n", word_count); // delete later
+	//printf("word count = %d\n", word_count); // delete later
 	res = (char **)malloc(sizeof(char **) * (word_count + 1));
 	if (res == NULL)
 		return (NULL);
@@ -153,7 +153,7 @@ char	**ft_split_quotes(char *s, char c)
 				ft_clean(res);
 				return (NULL);
 			}
-			printf("res[%zu] = %s\n", i, res[i]); // delete later
+			//printf("res[%zu] = %s\n", i, res[i]); // delete later
 			s += offset;
 			i++;
 		}
