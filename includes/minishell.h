@@ -25,7 +25,12 @@
 # include "builtins.h"
 # include "structs.h" // delete later?
 
-// main.c
-int	main(void);
+# define PROMPT "bashinho: "
+# define PROG_NAME "bashinho"
+
+// srcs
+int		ft_error_handler(void);
+char	**ft_get_my_envp(char **envp);
+char	**ft_split_quotes(char *s, char c);
 
 #endif
