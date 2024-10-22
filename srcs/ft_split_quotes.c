@@ -77,7 +77,7 @@ char	*ft_copy_word(char *s, int len)
 	j = 0;
 	while (j < len)
 	{
-		if (s[j] == 39)
+		if (s[j] == 39) // single quote prevents shell from interpreting metacharacters
 		{
 			j++;
 			while (s[j] != 39)
@@ -88,7 +88,7 @@ char	*ft_copy_word(char *s, int len)
 			}
 			j++;
 		}
-		else if (s[j] == 34)
+		else if (s[j] == 34) // double quotes prevents shell from interpreting metacharacters except $
 		{
 			j++;
 			while (s[j] != 34)
@@ -134,7 +134,7 @@ char	**ft_split_quotes(char *s, char c)
 	word_count = ft_count_words(s, c);
 	if (word_count == -1) // if the quotes aren't closed
 	{
-		printf("%s open quotes are not accepted\n", PROMPT); //ft_error_handler();
+		printf("%s open quotes are not supported\n", PROMPT); //ft_error_handler();
 		return (NULL);
 	}
 	//printf("word count = %d\n", word_count); // delete later
