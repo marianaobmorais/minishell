@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/10 15:48:42 by mariaoli          #+#    #+#              #
-#    Updated: 2024/09/09 15:47:47 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/10/29 15:13:09 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,4 +40,4 @@ fclean: clean
 re:	fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
