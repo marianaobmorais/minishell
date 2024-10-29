@@ -17,9 +17,8 @@ bool	ft_arg_is_flag(char *s)
 	}
 }
 
-void	ft_echo(char *args)
+void	ft_echo(char **args)
 {
-	char	**s;
 	bool	flag;
 	int		i;
 
@@ -29,19 +28,18 @@ void	ft_echo(char *args)
 		printf("\n");
 		return ;
 	}
-	s = ft_split_quotes(args, ' ');
-	if (!s)
+	if (!args)
 		return ;
 	i = 0;
-	while (ft_arg_is_flag(s[i])) // &flag will work?
+	while (ft_arg_is_flag(args[i]))
 	{
 		flag = true;
 		i++;
 	}
-	while (s[i])
+	while (args[i])
 	{
-		printf("%s", s[i]);
-		if (s[i + 1])
+		printf("%s", args[i]);
+		if (args[i + 1])
 			printf(" ");
 		i++;
 	}
@@ -49,3 +47,25 @@ void	ft_echo(char *args)
 		printf("\n");
 	return ;
 }
+
+/* int	main(int argc, char **argv)
+{
+	(void)argc;
+	(void)argv;
+
+	ft_echo("-nnnnnnnnnnnnnnnnnnnn -nn -no -n oi   'oi'oi'' \"tchau\"");
+	return (0);
+} */
+
+/* int	main(int argc, char **argv, char **envp)
+{
+	(void)argc;
+	(void)argv;
+	char	**s;
+
+	//s = ft_split_quotes("-nnnnnnnnnnnnnnnnnnnn -nn -no -n oi \"$USER\"  'oi'oi'' \"tchau\" espaco ", ' ', envp);
+	s = ft_split_quotes("$USER tchau", ' ', envp);
+	ft_echo(s);
+	ft_free_vector(s);
+	return (0);
+} */
