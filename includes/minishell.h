@@ -23,14 +23,16 @@
 // our own libraries
 # include "../libft/libft.h"
 # include "builtins.h"
-# include "structs.h" // delete later?
+# include "tokenize.h"
 
 # define PROMPT "bashinho: "
 # define PROG_NAME "bashinho"
+# define METACHARS "|&<>"
 
 // srcs
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
-char	**ft_split_quotes(char *s, char c);
+char	**ft_split_expand(char *s, char c, char **my_envp);
+char	*ft_charjoin(char *str, char c);
 
 #endif
