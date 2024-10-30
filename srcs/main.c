@@ -1,12 +1,12 @@
 #include "../includes/minishell.h"
 
-static char	**create_env(char **envp)
+char	**create_env(char **envp)
 {
 	char	**my_envp;
 	int		i;
 
 	i = 0;
-	while (envp[i])	
+	while (envp[i])
 		i++;
 	my_envp = (char **) malloc((i + 1) * sizeof(char *));
 	if (!my_envp)
@@ -50,19 +50,22 @@ int	main(int argc, char **argv, char **envp)
 	printf("Oi, eu sou o bashinho\n");
 
 	//print_env(my_envp);
+	char *arguments3[] = {"export", "AVAR1=AQUI NAO", NULL};
+	ft_export(2, arguments3, &my_envp);
 
-	char *arguments[] = {"export", "_VAR=PRIMEIRA COISA"};
+	char *arguments[] = {"export", "ZVAR=PRIMEIRA COISA", NULL};
 	ft_export(2, arguments, &my_envp);
 
-	print_env(my_envp);
+	char *arguments2[] = {"export", NULL};
+	ft_export(1, arguments2, &my_envp);
 
-	// char *arguments2[] = {"export", "VAR=                                      SEGUNDA COISA"};
-	// ft_export(2, arguments2, &my_envp);
+	//char *arguments3[] = {"export", "VAR2+=SEGUNDA COISA"};
+	//ft_export(2, arguments3, &my_envp);
 
-	// print_env(my_envp);
+	//print_env(my_envp);
 
-	// char *arguments3[] = {"unset", "VAR"};
-	// ft_unset(2, arguments3, &my_envp);
+	// char *arguments4[] = {"unset", "VAR", "ZZZ", "VAR1"};
+	// ft_unset(2, arguments4, &my_envp);
 
 	// print_env(my_envp);
 
