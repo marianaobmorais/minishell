@@ -1,36 +1,60 @@
 #include "../../includes/minishell.h"
 
-static int	check_key(char *str, size_t size)
+static int check_key(char **argv)
 {
 	size_t i;
 
-	i = 0;
-	if (!ft_isalpha(str[i]) && str[i] != '_')
+	while (*argv)
 	{
-		printf("export: '%s' not a valid identifier\n", str);
-		return (-1); //not a valid identifier
-	}
-	while (i < size)
-	{
-		if ((!ft_isalnum(str[i]) && str[i] != '_') && (str[i] == '+'
-			&& str[i + 1] != '='))
+		i = 0;
+		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
+			return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+		while ((*argv)[i] != '=')
 		{
-			printf("[%c]export: '%s' not a valid identifier\n",str[size], str);
-			return (-1); //not a valid identifier			
+			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
+			{
+				if ((*argv)[i] != '+')
+					return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+				else if ((*argv)[i] == '+' && (*argv)[i + 1] != '=')
+					return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+			}
+			i++;
 		}
-		i++;
+		argv++;
 	}
 	return (0);
 }
 
-static int	replace_var(char *str, size_t size, char ***my_envp)
+static void	add_var(char *str, size_t size, char ***my_envp)
 {
-	int	i;
+	int i;
+	char **new_envp;
+
+	i = 0;
+	new_envp = (char **) malloc((size + 2) * sizeof(char *));
+	if (!new_envp)
+		exit(1); // tratamento de erro
+	i = 0;
+	while ((*my_envp)[i])
+	{
+		new_envp[i] = (*my_envp)[i];
+		i++;
+	}
+	new_envp[i] = ft_strdup(str); // tratatamento de erro
+	new_envp[i + 1] = NULL;
+	free((*my_envp));
+	*my_envp = new_envp;
+}
+
+static int replace_var(char *str, size_t size, char ***my_envp)
+{
+	int i;
 
 	i = 0;
 	while ((*my_envp)[i])
 	{
-		if (ft_strncmp(str, (*my_envp)[i], size - 1) == 0)
+		if (ft_strncmp(str, (*my_envp)[i], size) == 0
+			&& (*my_envp)[i][size] == '=')
 		{
 			free((*my_envp)[i]);
 			(*my_envp)[i] = ft_strdup(str);
@@ -38,60 +62,58 @@ static int	replace_var(char *str, size_t size, char ***my_envp)
 		}
 		i++;
 	}
+	add_var(str, i, my_envp);
 	return (i);
 }
 
-// static int	concatenate_var(char *str, size_t size, char ***my_envp)
-// {
-// 	int	i;
-
-// 	while ((*my_envp)[i])
-// 	{
-// 		if (ft_strncmp(str, (*my_envp)[i], size) == 0)
-// 		{
-// 			free((*my_envp)[i]);
-// 			(*my_envp)[i] = ft_strdup(str);
-// 			return (0);
-// 		}
-// 		i++;
-// 	}
-// 	return (i);
-// }
-
-int	ft_export(int argc, char **argv, char ***my_envp)
+static int concatenate_var(char *str, char ***my_envp)
 {
-	size_t	s_key;
-	size_t	i;
-	char	**new_envp;
+	int		i;
+	int		size;
+	char	*temp_str;
+	char	*value;
 
-	//se tiver mais de uma eh para exportar tbm
-	if (argc == 1)
-		return (-1); //printf das variaveis que foram exportadas
-	if (!ft_strchr(argv[1], '='))
-		return (-1); //nao fazer nada e guardar junto com as variaveis que foram exportadas
-	s_key = (ft_strlen(argv[1]) - ft_strlen(ft_strchr(argv[1], '=')));
-	if (check_key(argv[1], s_key) == -1)
-		exit(1);
-	//chamar de forma recursiva export para os demais argvs
-	//check se e concatenate
-	printf("%c\n", argv[1][s_key]);
-	if (argv[1][s_key - 1] == '+')
-		printf("CONCATENAR\n");
-	i = replace_var(argv[1], s_key, my_envp); //ter funcao de check e fazer else de append ou replace, ao final de cada um se nao achar fazer funcao de add
-	if (i == 0)
-		return (0);
-	new_envp = (char **) malloc((i + 2) * sizeof(char *));
-	if (!new_envp)
-		return (-1);
 	i = 0;
 	while ((*my_envp)[i])
 	{
-		new_envp[i] = (*my_envp)[i];
+		value = ft_strchr(str, '+') + 2;
+		size = (ft_strlen(str) - ft_strlen(value)) - 2;
+		if (ft_strncmp(str, (*my_envp)[i], size) == 0
+			&& (*my_envp)[i][size] == '=')
+		{
+			temp_str = ft_strjoin((*my_envp)[i], value);
+			free((*my_envp)[i]);
+			(*my_envp)[i] = temp_str;
+			return (0);
+		}
 		i++;
 	}
-	new_envp[i] = ft_strdup(argv[1]);
-	new_envp[i + 1] = NULL;
-	free((*my_envp));
-	*my_envp = new_envp;
+	add_var(str, i, my_envp);
+	return (i);
+}
+
+int	ft_export(int argc, char **argv, char ***my_envp)
+{
+	size_t s_key;
+
+	if (argc == 1)
+		ft_print_export(*my_envp); 
+	// printf das variaveis exportadas e nomes declarados sorted
+	argv++;
+	// fzr tratamento de erro, dessa forma por conta do printf
+	if (check_key(argv) != 0)
+		return (1);			  // encerrar
+	while (*argv)
+	{
+		if (!ft_strchr(*argv, '='))
+			return (-1);
+		// nao fazer nada e guardar junto com as variaveis que foram exportadas
+		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
+		if ((*argv)[s_key - 1] == '+')
+			concatenate_var(*argv, my_envp);
+		else
+			replace_var(*argv, s_key, my_envp);
+		argv++;
+	}
 	return (0);
 }

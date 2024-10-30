@@ -11,6 +11,7 @@ SRCS = $(SRCS_DIR)/main.c\
 	srcs/builtins/ft_pwd.c\
 	srcs/builtins/ft_export.c\
 	srcs/builtins/ft_unset.c\
+	srcs/builtins/ft_print_export.c\
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
