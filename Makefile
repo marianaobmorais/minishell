@@ -10,11 +10,13 @@ LIBFT_DIR = ./libft
 SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_error_handler.c \
 		$(SRCS_DIR)/ft_get_my_envp.c \
-		$(SRCS_DIR)/ft_split_expand.c \
 		$(SRCS_DIR)/ft_charjoin.c \
+		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
+		$(SRCS_DIR)/tokenize/ft_next_quote.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
+		#$(SRCS_DIR)/ft_split_argv.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
