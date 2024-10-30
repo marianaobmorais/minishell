@@ -31,8 +31,7 @@
 // srcs
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
-char	**ft_split_argv(char *s, char c);
-//char	**ft_split_expand(char *s, char c, char **my_envp);
-char	*ft_charjoin(char *str, char c);
+//char	**ft_split_argv(char *s, char c);
+void	ft_free_vector(char **vector);
 
 #endif

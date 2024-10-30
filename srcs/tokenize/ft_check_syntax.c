@@ -10,13 +10,14 @@ int	ft_isspace(int c)
 
 int	ft_check_syntax(char *s)
 {
+	char	*trim;
 	int		i;
 	bool	specialchar;
 
+	trim = ft_strtrim(s, ISSPACE);
+	
 	specialchar = false;
 	i = 0;
-	while (ft_isspace(s[i]))
-		i++;
 	if (ft_strchr(SPECIALCHARS, s[i]))
 	{
 		if (s[i] != '<' && s[i] != '>')
@@ -36,8 +37,9 @@ int	ft_check_syntax(char *s)
 				return (0);
 			}
 			i++;
+			specialchar = false;
 		}
-		else if (ft_strchr(SPECIALCHARS, s[i]))
+		if (ft_strchr(SPECIALCHARS, s[i]))
 		{
 			if (specialchar == true)
 			{
@@ -49,6 +51,7 @@ int	ft_check_syntax(char *s)
 			else if (s[i] == '>' && s[i + 1] == s[i] && specialchar == false)
 				i += 2;
 			specialchar = true;
+			i++;
 		}
 		else if (!ft_isspace(s[i]))
 		{
@@ -58,5 +61,7 @@ int	ft_check_syntax(char *s)
 		if (ft_isspace(s[i]))
 			i++;
 	}
+	//if (specialchar == true)
+		//printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i - 1]);
 	return (1);
 }

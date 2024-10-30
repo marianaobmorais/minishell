@@ -22,7 +22,6 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
 	}
 }
 
-
 char	*ft_getenv(char *env, char **my_envp)
 {
 	char	*res;

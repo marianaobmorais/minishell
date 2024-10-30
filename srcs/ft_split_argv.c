@@ -1,17 +1,5 @@
 #include "../includes/minishell.h"
 
-static int	ft_next_quote(char *s, int i, char c)
-{
-	i++;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
 static int	ft_count_words(char *s, char c)
 {
 	bool	in_word;
@@ -28,15 +16,9 @@ static int	ft_count_words(char *s, char c)
 			in_word = true;
 			count++;
 		}
-		if (s[i] == 39)
+		if (s[i] == 39 || s[i] == 34)
 		{
-			i = ft_next_quote(s, i, 39); // single quote
-			if (i == -1)
-				return (-1);
-		}
-		if (s[i] == 34)
-		{
-			i = ft_next_quote(s, i, 34); // double quote
+			i = ft_next_quote(s, i, s[i]);
 			if (i == -1)
 				return (-1);
 		}
@@ -64,7 +46,7 @@ int	ft_offset_str(char *s, char c)
 	return (len);
 }
 
-char	*ft_expand_env(char *s, char **my_envp)
+/* char	*ft_expand_env(char *s, char **my_envp)
 {
 	char	*word;
 	char	*env;
@@ -94,9 +76,24 @@ char	*ft_expand_env(char *s, char **my_envp)
 		i++;
 	}
 	return (free(env_equal), ft_strdup("\0"));
+} */
+
+char	*ft_copy_word(char *s, int len)
+{
+	char	*word;
+	int		i;
+
+	word = NULL;
+	i = 0;
+	while (i < len)
+	{
+		word = ft_charjoin(word, s[i]);
+		i++;
+	}
+	return (word);
 }
 
-char	*ft_copy_word(char *s, int len, char **my_envp)
+/* char	*ft_copy_word(char *s, int len, char **my_envp)
 {
 	char	*word;
 	char	*expansion;
@@ -161,7 +158,7 @@ char	*ft_copy_word(char *s, int len, char **my_envp)
 	}
 	word = ft_charjoin(word, '\0');
 	return (word);
-}
+} */
 
 static void	ft_clean(char **str)
 {
@@ -176,9 +173,8 @@ static void	ft_clean(char **str)
 	free(str);
 }
 
-char	**ft_split_expand(char *s, char c, char **my_envp)
+char	**ft_split_argv(char *s, char c)
 {
-	(void)my_envp;
 	char	**res;
 	int		word_count;
 	int		offset;
@@ -188,7 +184,7 @@ char	**ft_split_expand(char *s, char c, char **my_envp)
 	word_count = ft_count_words(s, c);
 	if (word_count == -1) // if the quotes aren't closed
 	{
-		printf("%s open quotes are not supported\n", PROMPT); //ft_error_handler();
+		printf("%s: open quotes are not supported\n", PROG_NAME); //ft_error_handler();
 		return (NULL);
 	}
 	res = (char **)malloc(sizeof(char **) * (word_count + 1));
@@ -200,10 +196,10 @@ char	**ft_split_expand(char *s, char c, char **my_envp)
 		if (*s != c)
 		{
 			offset = ft_offset_str(s, c);
-			res[i] = ft_copy_word(s, offset, my_envp);
+			res[i] = ft_copy_word(s, offset);
 			if (res[i] == NULL)
 			{
-				ft_clean(res);
+				ft_clean(res); //ft_error_handler();
 				return (NULL);
 			}
 			s += offset;

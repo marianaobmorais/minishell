@@ -63,8 +63,8 @@ void	ft_echo(char **args)
 	(void)argv;
 	char	**s;
 
-	//s = ft_split_quotes("-nnnnnnnnnnnnnnnnnnnn -nn -no -n oi \"$USER\"  'oi'oi'' \"tchau\" espaco ", ' ', envp);
-	s = ft_split_quotes("$USER tchau", ' ', envp);
+	//s = ft_split_argv("-nnnnnnnnnnnnnnnnnnnn -nn -no -n oi \"$USER\"  'oi'oi'' \"tchau\" espaco ", ' ', envp);
+	s = ft_split_argv("$USER tchau", ' ', envp);
 	ft_echo(s);
 	ft_free_vector(s);
 	return (0);
