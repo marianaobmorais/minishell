@@ -25,10 +25,10 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
 char	*ft_getenv(char *env, char **my_envp)
 {
 	char	*res;
-	int		i;
+	//int		i;
 
 	res = NULL;
-	i = 0;
+	//i = 0;
 	while (*my_envp)
 	{
 		if (ft_strncmp(*my_envp, env, ft_strlen(env)) == 0)

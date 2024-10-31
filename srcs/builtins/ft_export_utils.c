@@ -64,7 +64,7 @@ void	ft_print_export(char **envp)
 	int		size_envp;
 	int		i;
 
-	sorted_envp = create_env(envp);
+	sorted_envp = ft_get_my_envp(envp);
 	size_envp = 0;
 	i = 0;
 	while (envp[size_envp])
