@@ -7,16 +7,23 @@ SRCS_DIR = ./srcs
 LIBFT = ./libft/libft.a
 LIBFT_DIR = ./libft
 
-SRCS = $(SRCS_DIR)/main.c\
-	srcs/builtins/ft_pwd.c\
-	srcs/builtins/ft_export.c\
-	srcs/builtins/ft_unset.c\
-	srcs/builtins/ft_print_export.c\
+SRCS = $(SRCS_DIR)/main.c \
+		$(SRCS_DIR)/ft_error_handler.c \
+		$(SRCS_DIR)/ft_get_my_envp.c \
+		$(SRCS_DIR)/ft_free_vector.c \
+		$(SRCS_DIR)/tokenize/ft_process_input.c \
+		$(SRCS_DIR)/tokenize/ft_charjoin.c \
+		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
+		$(SRCS_DIR)/tokenize/ft_next_quote.c \
+		$(SRCS_DIR)/builtins/ft_env.c \
+		$(SRCS_DIR)/builtins/ft_cd.c \
+		$(SRCS_DIR)/builtins/ft_echo.c \
+		#$(SRCS_DIR)/ft_split_argv.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -lreadline -g
 
 RM = rm -f
 
@@ -37,11 +44,11 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	$(MAKE) clean -C $(LIBFT)
+	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
-	$(MAKE) fclean -c $(LIBFT_DIR)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean
 	$(MAKE) all
