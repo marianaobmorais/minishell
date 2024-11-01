@@ -36,7 +36,7 @@ static bool	ft_first_char(char c)
 	{
 		if (c != '<' && c != '>')
 		{
-			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c);  //ft_error_handler();
+			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
 			return (true);
 		}
 	}
@@ -70,4 +70,3 @@ int	ft_check_syntax(char *s)
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
 	return (free(trim), 1);
 }
-
