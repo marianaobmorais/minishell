@@ -8,70 +8,66 @@ int	ft_isspace(int c)
 		return (0);
 }
 
+static int	ft_iterate_str(char *trim, int i, bool *special)
+{
+	if (trim[i] == 39 || trim[i] == 34)
+	{
+		i = ft_next_quote(trim, i, trim[i]);
+		if (i == -1)
+			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
+		*special = false;
+	}
+	if (ft_strchr(SPECIALCHARS, trim[i]))
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+	if (ft_strchr(METACHARS, trim[i]))
+	{
+		if (*special == true)
+			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+		*special = true;
+		if ((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i])
+			i += 2;
+	}
+	return (i);
+}
+
+static bool	ft_first_char(char c)
+{
+	if (ft_strchr(SPECIALCHARS, c) || ft_strchr(METACHARS, c))
+	{
+		if (c != '<' && c != '>')
+		{
+			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c);  //ft_error_handler();
+			return (true);
+		}
+	}
+	return (false);
+}
+
 int	ft_check_syntax(char *s)
 {
 	char	*trim;
 	int		i;
-	bool	specialchar;
+	bool	special;
 
 	trim = ft_strtrim(s, ISSPACE);
 	if (!trim)
-		return (0); //mensagem?
-	specialchar = false;
+		return (0); //ft_error_handler();
 	i = 0;
-	if (ft_strchr(SPECIALCHARS, trim[i]))
-	{
-		if (trim[i] != '<' && trim[i] != '>')
-		{
-			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]);
-			return (free(trim), 0);
-		}
-	}
+	special = ft_first_char(trim[i]);
+	if (special)
+		return (free(trim), 0);
 	while (trim[i])
 	{
-		if (trim[i] == 39 || trim[i] == 34)
-		{
-			i = ft_next_quote(s, i, trim[i]);
-			if (i == -1)
-			{
-				printf("%s: open quotes are not supported\n", PROG_NAME); //ft_error_handler();
-				return (0);
-			}
-			i++;
-			specialchar = false;
-			if (trim[i] == '\0') // check this
-				break ;
-		}
-		if (ft_strchr(SPECIALCHARS, trim[i])) //check this with this
-		{
-			if (specialchar == true)
-			{
-				printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]);
-				free(trim);
-				return (0);
-			}
-			if (trim[i] == '<' && trim[i + 1] == trim[i] && specialchar == false)
-				i += 2;
-			else if (trim[i] == '>' && trim[i + 1] == trim[i] && specialchar == false)
-				i += 2;
-			specialchar = true;
-			if (trim[i] == '\0')
-				break ;
-			i++;
-		}
-		else if (!ft_isspace(trim[i]))
-		{
-			specialchar = false;
-			i++;
-		}
-		if (ft_isspace(trim[i]))
-			i++;
+		i = ft_iterate_str(trim, i, &special);
+		if (i == -1)
+			return (free(trim), 0);
+		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
+			special = false;
+		if (trim[i])
+		i++;
 	}
-	if (specialchar == true)
-	{
-		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i + 1]);
-		return (free(trim), 0);
-	}
-	free(trim);
-	return (1);
+	if (special == true)
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
+	return (free(trim), 1);
 }
+
