@@ -25,7 +25,7 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 		*special = true;
 		if ((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i])
-			i += 2;
+			i += 1;
 	}
 	return (i);
 }
@@ -64,7 +64,7 @@ int	ft_check_syntax(char *s)
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 			special = false;
 		if (trim[i])
-		i++;
+			i++;
 	}
 	if (special == true)
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
