@@ -34,7 +34,7 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	j = 0;
 	new_environ = (char **) malloc(size_env * sizeof(char *));
 	if (!new_environ)
-		return (-1); //tratar erro
+		return (-1); //error handler
 	while (i < size_env)
 	{
 		if (ft_strncmp(str, (*my_envp)[i], size) == 0
@@ -56,13 +56,13 @@ int	ft_unset(int argc, char **argv, char ***my_envp)
 	size_t	size_env;
 
 	if (argc == 1)
-		return (0); //nao fazer nada
+		return (0);
 	++argv;
 	while (*argv)
 	{
 		size_env = is_var(*argv, my_envp);
 		if (size_env > 0)
-			delete_var(*argv, my_envp, size_env); // tem que delatar de envp_history do export, apago os que nao foram exportados
+			delete_var(*argv, my_envp, size_env); //missing delete VAR without '='
 		argv++;
 	}
 	return (0);
