@@ -1,19 +1,37 @@
 #include "../../includes/minishell.h"
 
-t_type	ft_get_node_type(char *str)
+t_type	ft_get_token_type(char *s)
 {
-	//t_type	type;
+	t_type	type;
 
-	if (str[0] == '|')
+	if (s[0] == '|')
 		return (PIPE);
+	else if (s[0] == '>')
+	{
+		if (s[1] == '>')
+			return (APPEND);
+		return (OUTFILE);
+	}
+	else if (s[0] == '<')
+	{
+		if (s[1] == '<')
+			return (HEREDOC);
+		return (INFILE);
+	}
 	else
-		return (BUILTIN);
+		return (EXEC);
+}
+
+t_state	ft_get_token_state(char *s)
+{
+	
 }
 
 t_list	**ft_create_token_list(char *s)
 {
 	t_list	**token_list;
 	t_list	*new_node;
+	t_token	*new_token;
 	bool	in_token;
 	char	*value;
 	int		i;
@@ -30,8 +48,11 @@ t_list	**ft_create_token_list(char *s)
 			{
 				if (in_token)
 				{
-					new_node = ft_lstnew((t_token *)value); // need to study this more
-					//new_node->type = ??
+					new_token = (t_token *)malloc(sizeof(t_token));
+					new_token->value = ft_strdup(value);
+					new_token->type = ft_get_token_type(&s[i]);
+					new_token->state = ft_get_token_state(&s[i]);
+					new_node = ft_lstnew((t_token *)new_token);
 					ft_lstadd_back(token_list, new_node);
 					free(value);
 					in_token = false;
