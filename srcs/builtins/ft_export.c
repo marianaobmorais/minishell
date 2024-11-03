@@ -8,7 +8,7 @@ static int check_key(char **argv)
 	{
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
-			return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+			return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
 		while ((*argv)[i] != '=')
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
@@ -97,16 +97,17 @@ int	ft_export(int argc, char **argv, char ***my_envp)
 	size_t s_key;
 
 	if (argc == 1)
-		ft_print_export(*my_envp); 
-	// printf das variaveis exportadas e nomes declarados sorted
+	{
+		ft_print_export(*my_envp);
+		return (ft_exit_status(0, TRUE, TRUE));
+	}
 	argv++;
-	// fzr tratamento de erro, dessa forma por conta do printf
 	if (check_key(argv) != 0)
-		return (1);			  // encerrar
+		return (ft_exit_status(2, TRUE, TRUE));
 	while (*argv)
 	{
 		if (!ft_strchr(*argv, '='))
-			return (-1);
+			return (ft_exit_status(0, TRUE, TRUE));
 		// nao fazer nada e guardar junto com as variaveis que foram exportadas
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
@@ -115,5 +116,5 @@ int	ft_export(int argc, char **argv, char ***my_envp)
 			replace_var(*argv, s_key, my_envp);
 		argv++;
 	}
-	return (0);
+	return (ft_exit_status(0, TRUE, TRUE));
 }

@@ -56,7 +56,7 @@ int	ft_unset(int argc, char **argv, char ***my_envp)
 	size_t	size_env;
 
 	if (argc == 1)
-		return (0);
+		return (ft_exit_status(0, TRUE, TRUE));
 	++argv;
 	while (*argv)
 	{
@@ -65,5 +65,5 @@ int	ft_unset(int argc, char **argv, char ***my_envp)
 			delete_var(*argv, my_envp, size_env); //missing delete VAR without '='
 		argv++;
 	}
-	return (0);
+	return (ft_exit_status(0, TRUE, TRUE));
 }
