@@ -8,7 +8,7 @@
 typedef enum e_type
 {
 	EXEC,
-	BUILTIN,
+	//BUILTIN,
 	PIPE,
 	INFILE,
 	OUTFILE,
