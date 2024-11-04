@@ -15,16 +15,16 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list.c \
+		$(SRCS_DIR)/tokenize/ft_parse_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_next_quote.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
-		#$(SRCS_DIR)/ft_split_argv.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -lreadline -g
+CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
@@ -32,7 +32,7 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=extern
 
 
 $(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
 
 #bonus: $(BONUS_NAME)
 
