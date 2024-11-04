@@ -53,6 +53,23 @@ t_state	ft_get_state(char *s)
 	return (GENERAL);
 }
 
+bool	ft_is_expansion(char *s, t_state state)
+{
+	int	i;
+
+	if (state == GENERAL || state == IN_DQUOTE)
+	{
+		i = 0;
+		while (s[i])
+		{
+			if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+				return (true);
+			i++;
+		}
+	}
+	return (false);
+}
+
 void	ft_add_to_list(char **value, t_list **token_list)
 {
 	t_token	*new_token;
@@ -66,6 +83,7 @@ void	ft_add_to_list(char **value, t_list **token_list)
 		new_token->value = ft_strdup(*value);
 		new_token->type = ft_get_type(*value);
 		new_token->state = ft_get_state(*value);
+		new_token->expand = ft_is_expansion(*value, new_token->state);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
 			return ;
