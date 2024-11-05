@@ -138,7 +138,7 @@ void	ft_parse_token_list(t_list **list, char **my_envp)
 					new_value = ft_charjoin(new_value, token->value[i++]);
 					while (token->value[i] && token->value[i] != SQUOTE)
 						new_value = ft_charjoin(new_value, token->value[i++]);
-					new_value = ft_charjoin(new_value, token->value[i]);
+					new_value = ft_charjoin(new_value, token->value[i++]);
 				}
 				else if (token->value[i] == DQUOTE)
 				{
@@ -169,6 +169,8 @@ void	ft_parse_token_list(t_list **list, char **my_envp)
 						else
 							new_value = ft_charjoin(new_value, token->value[i++]);
 					}
+					if (token->value[i] == DQUOTE)
+						new_value = ft_charjoin(new_value, token->value[i++]);
 				}
 				else if (token->value[i] == '$' && ((ft_isalpha(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_')))
 				{
@@ -191,7 +193,7 @@ void	ft_parse_token_list(t_list **list, char **my_envp)
 						new_value = tmp;
 					}
 				}
-				else if (token->value[i] && (token->value[i] != DQUOTE))
+				else if (token->value[i] && token->value[i] != DQUOTE && token->value[i] != SQUOTE)
 					new_value = ft_charjoin(new_value, token->value[i++]);
 			}
 			free(token->value);
