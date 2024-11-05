@@ -50,6 +50,28 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	*new_value = tmp;
 }
 
+void	ft_handle_squotes(char **new_value, char *value, int *i)
+{
+	*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	while (value[(*i)] && value[(*i)] != SQUOTE)
+		*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	*new_value = ft_charjoin(*new_value, value[(*i)++]);
+}
+
+void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp)
+{
+	*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	while (value[(*i)] && value[(*i)] != DQUOTE)
+	{
+		if (value[(*i)] == '$' && ((ft_isalpha(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
+			ft_handle_expansion(new_value, value, i, my_envp);
+		else
+			*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	}
+	if (value[(*i)] == DQUOTE)
+		*new_value = ft_charjoin(*new_value, value[(*i)++]);
+}
+
 void	ft_process_expansion(t_token *token, char **my_envp)
 {
 	char	*new_value;
@@ -60,25 +82,9 @@ void	ft_process_expansion(t_token *token, char **my_envp)
 	while (token->value[i])
 	{
 		if (token->value[i] == SQUOTE)
-		{
-			new_value = ft_charjoin(new_value, token->value[i++]);
-			while (token->value[i] && token->value[i] != SQUOTE)
-				new_value = ft_charjoin(new_value, token->value[i++]);
-			new_value = ft_charjoin(new_value, token->value[i++]);
-		}
+			ft_handle_squotes(&new_value, token->value, &i);
 		else if (token->value[i] == DQUOTE)
-		{
-			new_value = ft_charjoin(new_value, token->value[i++]);
-			while (token->value[i] && token->value[i] != DQUOTE)
-			{
-				if (token->value[i] == '$' && ((ft_isalpha(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_')))
-					ft_handle_expansion(&new_value, token->value, &i, my_envp);//
-				else
-					new_value = ft_charjoin(new_value, token->value[i++]);
-			}
-			if (token->value[i] == DQUOTE)
-				new_value = ft_charjoin(new_value, token->value[i++]);
-		}
+			ft_handle_dquotes(&new_value, token->value, &i, my_envp);
 		else if (token->value[i] == '$' && (ft_isalpha(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_'))
 			ft_handle_expansion(&new_value, token->value, &i, my_envp);//
 		else if (token->value[i] && token->value[i] != DQUOTE && token->value[i] != SQUOTE)
