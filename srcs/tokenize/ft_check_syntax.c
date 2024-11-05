@@ -15,6 +15,8 @@ int	ft_check_syntax(char *s)
 	bool	specialchar;
 
 	trim = ft_strtrim(s, ISSPACE);
+
+	printf("%s", trim);
 	
 	specialchar = false;
 	i = 0;

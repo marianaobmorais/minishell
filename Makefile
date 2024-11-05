@@ -11,6 +11,10 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_error_handler.c \
 		$(SRCS_DIR)/ft_get_my_envp.c \
 		$(SRCS_DIR)/ft_free_vector.c \
+		$(SRCS_DIR)/ft_split_argv.c \
+		$(SRCS_DIR)/ft_exit_status.c \
+		$(SRCS_DIR)/ft_stderror.c \
+		$(SRCS_DIR)/ft_signal.c \
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
@@ -18,12 +22,16 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
-		#$(SRCS_DIR)/ft_split_argv.c \
+		$(SRCS_DIR)/builtins/ft_pwd.c \
+		$(SRCS_DIR)/builtins/ft_export.c \
+		$(SRCS_DIR)/builtins/ft_export_utils.c \
+		$(SRCS_DIR)/builtins/ft_unset.c \
+		$(SRCS_DIR)/builtins/ft_exit.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -lreadline -g
+CFLAGS = -Wall -Werror -Wextra
 
 RM = rm -f
 
@@ -31,7 +39,7 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=extern
 
 
 $(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline -g
 
 #bonus: $(BONUS_NAME)
 
