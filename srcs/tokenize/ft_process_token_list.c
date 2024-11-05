@@ -1,9 +1,17 @@
 #include "../../includes/minishell.h"
 
-void	ft_process_quotes(t_token *token, t_state state)
+void	ft_process_quotes(t_token *token)
 {
-	(void)token;
-	(void)state;
+	char	quote;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (token->value[i])
+	{
+		
+		i++;
+	}
 	return ;
 }
 
@@ -18,6 +26,8 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		token = (t_token *)current->content;
 		if (token->expand == true)
 			ft_process_expansion(token, my_envp);
+		if (token->state == IN_QUOTE)
+			ft_process_quotes(token);
 		current = current->next;
 	}
 }
