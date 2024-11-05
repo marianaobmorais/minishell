@@ -41,4 +41,4 @@ int		ft_stderror(int error, const char *str, ...);
 void	ft_signal_parent(void);
 void	ft_signal_child(void);
 
-#endif
+#endif //MINISHELL_H
