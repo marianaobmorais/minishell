@@ -12,6 +12,7 @@ static char	*ft_format(va_list args, const char fmt)
 {
 	char	*specifier;
 
+	specifier = NULL;
 	if (fmt == 's')
 		specifier = str_check(va_arg(args, char *));
 	return (specifier);
