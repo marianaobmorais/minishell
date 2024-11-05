@@ -60,7 +60,7 @@ bool	ft_is_expandable(char *s)
 	{
 		if (s[i] == SQUOTE)
 			i = ft_next_quote(&s[i], i, SQUOTE) + 1;
-		if (s[i] == DQUOTE)
+		else if (s[i] == DQUOTE)
 		{
 			i++;
 			while (s[i] && s[i] != DQUOTE)
@@ -70,9 +70,9 @@ bool	ft_is_expandable(char *s)
 				i++;
 			}
 		}
-		if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+		else if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
 			return (true);
-		if (s[i])
+		else if (s[i])
 			i++;
 	}
 	return (false);
