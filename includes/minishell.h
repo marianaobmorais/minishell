@@ -40,5 +40,6 @@ int		ft_exit_status(int status, int mode, int exit_);
 int		ft_stderror(int error, const char *str, ...);
 void	ft_signal_parent(void);
 void	ft_signal_child(void);
+void	ft_cli(void);
 
 #endif //MINISHELL_H

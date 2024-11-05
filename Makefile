@@ -15,6 +15,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_exit_status.c \
 		$(SRCS_DIR)/ft_stderror.c \
 		$(SRCS_DIR)/ft_signal.c \
+		$(SRCS_DIR)/ft_cli.c \
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
