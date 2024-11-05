@@ -38,5 +38,7 @@ char	**ft_get_my_envp(char **envp);
 void	ft_free_vector(char **vector);
 int		ft_exit_status(int status, int mode, int exit_);
 int		ft_stderror(int error, const char *str, ...);
+void	ft_signal_parent(void);
+void	ft_signal_child(void);
 
 #endif
