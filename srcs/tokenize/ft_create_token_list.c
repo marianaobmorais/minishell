@@ -44,28 +44,36 @@ t_state	ft_get_state(char *s)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == SQUOTE)
-			return (IN_SQUOTE);
-		else if (s[i] == DQUOTE)
-			return (IN_DQUOTE);
+		if (s[i] == SQUOTE || s[i] == DQUOTE)
+			return (IN_QUOTE);
 		i++;
 	}
 	return (GENERAL);
 }
 
-bool	ft_is_expansion(char *s, t_state state)
+bool	ft_is_expandable(char *s)
 {
-	int	i;
+	int		i;
 
-	if (state == GENERAL || state == IN_DQUOTE)
+	i = 0;
+	while (s[i])
 	{
-		i = 0;
-		while (s[i])
+		if (s[i] == SQUOTE)
+			i = ft_next_quote(&s[i], i, SQUOTE) + 1;
+		if (s[i] == DQUOTE)
 		{
-			if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
-				return (true);
 			i++;
+			while (s[i] && s[i] != DQUOTE)
+			{
+				if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+					return (true);
+				i++;
+			}
 		}
+		if (s[i] == '$' && (ft_isalpha(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+			return (true);
+		if (s[i])
+			i++;
 	}
 	return (false);
 }
@@ -83,7 +91,7 @@ void	ft_add_to_list(char **value, t_list **token_list)
 		new_token->value = ft_strdup(*value);
 		new_token->type = ft_get_type(*value);
 		new_token->state = ft_get_state(*value);
-		new_token->expand = ft_is_expansion(*value, new_token->state);
+		new_token->expand = ft_is_expandable(*value);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
 			return ;
