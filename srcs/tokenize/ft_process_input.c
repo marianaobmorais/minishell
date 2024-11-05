@@ -1,6 +1,5 @@
 #include "../../includes/minishell.h"
 
-
 void	ft_print_list(t_list **token_list)
 {
 	t_list	*current;
@@ -38,7 +37,6 @@ void	ft_free_list(t_list **list)
 
 void	ft_process_input(char *input, char **my_envp)
 {
-	(void)my_envp;
 	t_list	**token_list;
 	char	*trimmed;
 
