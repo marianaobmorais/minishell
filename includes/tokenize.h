@@ -9,14 +9,14 @@
 
 typedef enum e_type
 {
-	//BUILTIN,
 	PIPE,
 	APPEND,
 	OUTFILE,
 	HEREDOC,
 	INFILE,
-	EXPORT, // delete or keep?
-	EXEC
+	EXEC,
+	EXPORT,
+	EXPORT_AP
 }	t_type;
 
 typedef enum e_state
@@ -30,7 +30,7 @@ typedef struct s_token
 	char	*value;
 	t_type	type;
 	t_state	state;
-	bool	expand;//
+	bool	expand;
 }	t_token;
 
 typedef struct s_pipe
