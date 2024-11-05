@@ -15,15 +15,14 @@ typedef enum e_type
 	OUTFILE,
 	HEREDOC,
 	INFILE,
-	EXPORT, // delete of keep?
+	EXPORT, // delete or keep?
 	EXEC
 }	t_type;
 
 typedef enum e_state
 {
-	IN_SQUOTE,
-	IN_DQUOTE,
-	GENERAL
+	GENERAL,
+	IN_QUOTE
 }	t_state;
 
 typedef struct s_token
