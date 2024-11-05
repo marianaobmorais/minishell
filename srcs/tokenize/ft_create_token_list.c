@@ -22,6 +22,7 @@ t_type	ft_get_type(char *s)
 	}
 	else
 	{
+		//= ou +=
 		//export
 		//eligible_export = true;
 		//export = false;
