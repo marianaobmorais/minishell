@@ -15,7 +15,8 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list.c \
-		$(SRCS_DIR)/tokenize/ft_parse_token_list.c \
+		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
+		$(SRCS_DIR)/tokenize/ft_process_expansion.c \
 		$(SRCS_DIR)/tokenize/ft_next_quote.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \

@@ -48,6 +48,7 @@ char	*ft_charjoin(char *str, char c);
 t_list	**ft_create_token_list(char *s);
 t_type	ft_get_type(char *s);
 t_state	ft_get_state(char *s);
-void	ft_parse_token_list(t_list **token_list, char** my_envp);
+void	ft_process_token_list(t_list **token_list, char** my_envp);
+void	ft_process_expansion(t_token *token, char **my_envp);
 
 #endif
