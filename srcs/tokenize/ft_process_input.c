@@ -40,10 +40,9 @@ void	ft_process_input(char *input, char **my_envp)
 		return ;
 	ft_print_list(token_list); // delete later
 	printf("after expansion:\n");
-	//treat expansions and quotes
 	ft_process_token_list(token_list, my_envp);
 	ft_print_list(token_list); // delete later
-
 	//create tree
+	ft_create_tree(token_list);
 	ft_free_list(token_list);
 }
