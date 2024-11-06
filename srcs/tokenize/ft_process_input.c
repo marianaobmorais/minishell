@@ -27,14 +27,6 @@ void	ft_print_list(t_list **token_list)
 	printf("------------------------------------------------------\n");
 }
 
-void	ft_free_list(t_list **list)
-{
-	ft_lstclear(list, free);
-	if (list)
-		free(list);
-	list = NULL;
-}
-
 void	ft_process_input(char *input, char **my_envp)
 {
 	t_list	**token_list;

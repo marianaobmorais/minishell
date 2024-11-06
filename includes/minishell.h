@@ -28,10 +28,11 @@
 # define PROMPT "bashinho: "
 # define PROG_NAME "bashinho"
 
-// srcs
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
-//char	**ft_split_argv(char *s, char c);
-void	ft_free_vector(char **vector);
 
-#endif
+//ft_free_utils.c
+void	ft_free_vector(char **vector);
+void	ft_free_list(t_list **list);
+
+#endif //MINISHELL_H

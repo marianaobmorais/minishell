@@ -15,3 +15,11 @@ void	ft_free_vector(char **vector)
 	}
 	free(vector);
 }
+
+void	ft_free_list(t_list **list)
+{
+	ft_lstclear(list, free);
+	if (list)
+		free(list);
+	list = NULL;
+}
