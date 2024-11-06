@@ -72,7 +72,7 @@ void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp)
 		*new_value = ft_charjoin(*new_value, value[(*i)++]);
 }
 
-void	ft_process_expansion(t_token *token, char **my_envp)
+void	ft_expand_tokens(t_token *token, char **my_envp)
 {
 	char	*new_value;
 	int		i;
