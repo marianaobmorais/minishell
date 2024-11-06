@@ -46,9 +46,8 @@ int		ft_isspace(int c);
 void	ft_process_input(char *input, char **my_envp);
 char	*ft_charjoin(char *str, char c);
 t_list	**ft_create_token_list(char *s);
-t_type	ft_get_type(char *s);
-t_state	ft_get_state(char *s);
+void	ft_add_to_token_list(char **value, t_list **token_list);
 void	ft_process_token_list(t_list **token_list, char** my_envp);
-void	ft_process_expansion(t_token *token, char **my_envp);
+void	ft_expand_tokens(t_token *token, char **my_envp);
 
-#endif
+#endif //TOKENIZE_H
