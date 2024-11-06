@@ -1,16 +1,24 @@
 #include "../../includes/minishell.h"
 
-void	ft_process_quotes(t_token *token)
+void	ft_remove_quotes(t_token *token)
 {
 	char	quote;
 	int		i;
-	int		j;
 
 	i = 0;
 	while (token->value[i])
 	{
-		
-		i++;
+		if (token->value[i] == SQUOTE || token->value[i] == DQUOTE)
+		{
+			quote = token->value[i];
+			ft_memmove(&token->value[i], &token->value[i + 1], ft_strlen(&token->value[i + 1]) + 1);
+			while (token->value[i] && token->value[i] != quote)
+				i++;
+			if (token->value[i] == quote)
+				ft_memmove(&token->value[i], &token->value[i + 1], ft_strlen(&token->value[i + 1]) + 1);
+		}
+		else
+			i++;
 	}
 	return ;
 }
@@ -25,9 +33,9 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 	{
 		token = (t_token *)current->content;
 		if (token->expand == true)
-			ft_process_expansion(token, my_envp);
+			ft_expand_tokens(token, my_envp);
 		if (token->state == IN_QUOTE)
-			ft_process_quotes(token);
+			ft_remove_quotes(token);
 		current = current->next;
 	}
 }
