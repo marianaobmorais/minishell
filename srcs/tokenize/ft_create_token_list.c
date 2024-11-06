@@ -2,8 +2,6 @@
 
 static int	ft_handle_metachar(char **value, char *s, int i, t_list **token_list)
 {
-	if (*value)
-		ft_add_to_token_list(value, token_list);
 	*value = ft_charjoin(*value, s[0]);
 	if (ft_strchr(METACHARS, s[1])) // if it's >> or <<
 	{
@@ -27,7 +25,7 @@ static int	ft_handle_quotes(char **value, char *s, int i, char quote)
 	return (i);
 }
 
-void	ft_process_tokens(char *s, t_list **token_list)
+static void	ft_process_tokens(char *s, t_list **token_list)
 {
 	char	*value;
 	int		i;
@@ -39,7 +37,11 @@ void	ft_process_tokens(char *s, t_list **token_list)
 		if (!ft_isspace(s[i]))
 		{
 			if (ft_strchr(METACHARS, s[i]))
+			{
+				if (value)
+					ft_add_to_token_list(&value, token_list);
 				i = ft_handle_metachar(&value, &s[i], i, token_list);
+			}
 			else if (s[i] == SQUOTE || s[i] == DQUOTE)
 				i = ft_handle_quotes(&value, s, i, s[i]);
 			else
