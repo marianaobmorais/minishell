@@ -2,10 +2,18 @@
 
 void	ft_history(char *input)
 {
-	// int	i;
-	// int	w;
+	int	i;
+	int	w;
 
-	if (input)
+	i = 0;
+	w = 0;
+	while (input[i])
+	{
+		if (input[i] == ' ' || input[i] == '\t')
+			w++;
+		i++;
+	}
+	if (i != w)
 		add_history(input);
 }
 
@@ -14,11 +22,22 @@ void	ft_cli(void)
 	char	*input;
 	pid_t pid;
 
-	ft_signal_parent();
+	//ft_signal_parent();
+	input = NULL;
 	while (1)
 	{
-		input = readline(PROMPT);
 		if (input)
+		{
+			free(input);
+			input = NULL;
+		}
+		input = readline(PROMPT);
+		if (!input)
+		{
+			free(input);
+			break;
+		}
+		if (input && *input)
 		{
 			//ft_process_input(input, my_envp);
 			ft_history(input);
@@ -34,11 +53,6 @@ void	ft_cli(void)
 				}
 			}
 			wait(0);
-		}
-		if (!input)
-		{
-			ft_exit(FALSE);
-			break;
 		}
 	}
 }
