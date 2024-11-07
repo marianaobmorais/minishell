@@ -4,7 +4,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
 	char	**my_envp;
-	char	*input;
 
 	if (argc != 1)
 	{
@@ -17,12 +16,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_error_handler();
 		return (1); // conferir numero de saida
 	}
-	while (1)
-	{
-		input = readline(PROMPT);
-		if (input)
-			ft_process_input(input, my_envp);
-	}
+	ft_cli(&my_envp);
 	ft_free_vector(my_envp);
 	return (0);
 }
