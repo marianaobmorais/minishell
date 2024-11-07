@@ -64,7 +64,7 @@ static bool	ft_first_char(char c)
 	return (false);
 }
 
-int	ft_check_syntax(char *s)
+int	ft_validate_syntax(char *s)
 {
 	char	*trim;
 	int		i;

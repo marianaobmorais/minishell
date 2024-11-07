@@ -47,7 +47,7 @@ int		ft_find_next_quote(char *s, int i, char c);
 char	*ft_charjoin(char *str, char c);
 
 //ft_check_syntax.c
-int		ft_check_syntax(char *s);
+int		ft_validate_syntax(char *s);
 int		ft_isspace(int c);
 
 //ft_create_token_list.c
