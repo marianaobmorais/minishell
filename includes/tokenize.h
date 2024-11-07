@@ -40,8 +40,8 @@ typedef struct s_pipe
 	char	*right;
 }	t_pipe;
 
-//ft_next_quote.c
-int		ft_next_quote(char *s, int i, char c);
+//ft_find_next_quote.c
+int		ft_find_next_quote(char *s, int i, char c);
 
 //ft_charjoin.c
 char	*ft_charjoin(char *str, char c);

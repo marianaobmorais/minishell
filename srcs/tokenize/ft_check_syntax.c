@@ -12,7 +12,7 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 {
 	if (trim[i] == 39 || trim[i] == 34)
 	{
-		i = ft_next_quote(trim, i, trim[i]);
+		i = ft_find_next_quote(trim, i, trim[i]);
 		if (i == -1)
 			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
 		*special = false;

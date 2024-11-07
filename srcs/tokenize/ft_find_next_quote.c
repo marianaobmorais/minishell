@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-int	ft_next_quote(char *s, int i, char c)
+int	ft_find_next_quote(char *s, int i, char c)
 {
 	i++;
 	while (s[i] != '\0')
