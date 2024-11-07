@@ -37,9 +37,25 @@ typedef struct s_token
 typedef struct s_pipe
 {
 	int		type;
-	char	*left;
-	char	*right;
+	char	*left; // aponta para redir ou exec
+	char	*right; // aponta para pipe 
 }	t_pipe;
+
+typedef struct s_redir
+{
+	int		type;
+	char	*file;
+	int		mode;
+	int		fd;
+	void	*next; // aponta para o node de exec ou um redir, nunca pipe
+}	t_redir;
+
+typedef struct s_exec
+{
+	int		type;
+	char	*pathname;
+	char	**args;
+}	t_exec;
 
 //ft_find_next_quote.c
 int		ft_find_next_quote(char *s, int i, char c);
