@@ -76,6 +76,11 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	(*i)++; // skip $
 	if (value[(*i)] == '?')
 		expansion = ft_get_exit_code(i);
+	else if (ft_isdigit(value[(*i)]))
+	{
+		expansion = ft_strdup("\0");
+		(*i)++;
+	}
 	else
 		expansion = ft_expand_env(&value[(*i)], i, my_envp);
 	tmp = ft_strjoin(*new_value, expansion);
@@ -119,7 +124,7 @@ void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp)
 	*new_value = ft_charjoin(*new_value, value[(*i)++]);
 	while (value[(*i)] && value[(*i)] != DQUOTE)
 	{
-		if (value[(*i)] == '$' && ((ft_isalpha(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
+		if (value[(*i)] == '$' && ((ft_isalnum(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
 			ft_handle_expansion(new_value, value, i, my_envp);
 		else
 			*new_value = ft_charjoin(*new_value, value[(*i)++]);

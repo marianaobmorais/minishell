@@ -31,11 +31,11 @@ int	ft_isspace(int c)
  */
 static int	ft_iterate_str(char *trim, int i, bool *special)
 {
-	if (trim[i] == 39 || trim[i] == 34)
+	if (trim[i] == SQUOTE || trim[i] == DQUOTE)
 	{
 		i = ft_find_next_quote(trim, i, trim[i]);
 		if (i == -1)
-			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
+			return (-1);
 		*special = false;
 	}
 	if (ft_strchr(SPECIALCHARS, trim[i]))
@@ -51,13 +51,20 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	return (i);
 }
 /**
- * @brief Validates if the first character in a string is an unexpected metacharacter or special character.
+ * @brief Validates if the first character in a string is an unexpected metacharacter, special character or a comment.
  *
  * @param c The character to check.
  * @return true if the first character is invalid, otherwise false.
  */
 static bool	ft_is_invalid_first_char(char c)
 {
+	if (c == '#') // it is a comment
+		return (true); // no error. doesn't change the last exit_code
+	if (c == '%')
+	{
+		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
+		return (true);
+	}
 	if (ft_strchr(SPECIALCHARS, c) || ft_strchr(METACHARS, c))
 	{
 		if (c != '<' && c != '>')
@@ -69,7 +76,7 @@ static bool	ft_is_invalid_first_char(char c)
 	return (false);
 }
 /**
- * @brief Checks syntax validity of a given input string for proper quote usage and valid metacharacter positioning.
+ * @brief Checks syntax validity of a given input string for proper quote usage, valid metacharacter positioning and env expansion.
  *
  * @param input The input string to validate.
  * @return 1 if syntax is valid, otherwise 0.
@@ -95,7 +102,11 @@ int	ft_validate_syntax(char *s)
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 			special = false;
 		if (trim[i])
+		{
+			if (trim[i] == '$' && ft_strchr(NON_EXPANDABLE, trim[i + 1]))
+				return (printf("%s: `$%c' expansion no supported\n", PROG_NAME, s[i + 1]), free(trim), 0);
 			i++;
+		}
 	}
 	if (special == true)
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();

@@ -56,7 +56,7 @@ void	ft_expand_tokens(t_token *token, char **my_envp)
 			ft_handle_squotes(&new_value, token->value, &i);
 		else if (token->value[i] == DQUOTE)
 			ft_handle_dquotes(&new_value, token->value, &i, my_envp);
-		else if (token->value[i] == '$' && (ft_isalpha(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_'))
+		else if (token->value[i] == '$' && (ft_isalnum(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_'))
 			ft_handle_expansion(&new_value, token->value, &i, my_envp);//
 		else if (token->value[i] && token->value[i] != DQUOTE && token->value[i] != SQUOTE)
 			new_value = ft_charjoin(new_value, token->value[i++]);
