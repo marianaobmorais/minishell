@@ -5,11 +5,11 @@
 * 
 * 
 */
-int	ft_exit_status(int status, int mode, int exit_)
+int	ft_exit_status(int status, int write_, int exit_)
 {
 	static int	current_status;
 
-	if (mode == TRUE)
+	if (write_ == TRUE)
 		current_status = status;
 	if (exit_ == TRUE)
 		exit(current_status);

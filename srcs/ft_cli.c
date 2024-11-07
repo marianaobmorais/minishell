@@ -17,13 +17,35 @@ void	ft_history(char *input)
 		add_history(input);
 }
 
-void	ft_cli(void)
+void	ft_launcher(char *input, char ***envp)
 {
-	char	*input;
 	pid_t pid;
 
-	//ft_signal_parent();
+	if (strcmp(input, "bad") == 0)
+	{
+		//printf("Start...");
+		pid = fork();
+		if (pid == 0)
+		{
+			ft_signal_child();
+			char *algo[] = {"/usr/bin/sleep", "50", NULL};
+			execve(algo[0], algo, *envp);
+		}
+	}
+	if (strcmp(input, "status") == 0) //Test
+	{
+		ft_stderror(0, "Qaulquer coisa");
+		printf("%d\n", ft_exit_status(0, FALSE, FALSE));
+	}
+	wait(0); //capturar status code
+}
+
+void	ft_cli(char ***envp)
+{
+	char	*input;
+
 	input = NULL;
+	ft_signal_parent();
 	while (1)
 	{
 		if (input)
@@ -35,24 +57,14 @@ void	ft_cli(void)
 		if (!input)
 		{
 			free(input);
+			ft_exit(FALSE);
 			break;
 		}
-		if (input && *input)
+		if (input && *input && *input != '\n')
 		{
-			//ft_process_input(input, my_envp);
 			ft_history(input);
-			if (strcmp(input, "bad") == 0)
-			{
-				printf("Start...\n");
-				pid = fork();
-				if (pid == 0)
-				{
-					ft_signal_child();
-					char *algo[] = {"./minishell", NULL};
-					execve(algo[0], algo, NULL);
-				}
-			}
-			wait(0);
+			ft_launcher(input, envp);
 		}
 	}
+	rl_clear_history();
 }
