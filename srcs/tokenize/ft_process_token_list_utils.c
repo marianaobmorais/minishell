@@ -38,7 +38,7 @@ char	*ft_expand_env(char *s, int *i, char **my_envp)
 		j++;
 	}
 	(*i) += len; // update index past env name
-	return (free(env_equal), ft_strdup("\0"));
+	return (free(env_equal), ft_strdup("\0")); // this is not an error
 }
 
 /**
@@ -78,7 +78,7 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 		expansion = ft_get_exit_code(i);
 	else if (ft_isdigit(value[(*i)]))
 	{
-		expansion = ft_strdup("\0");
+		expansion = ft_strdup("\0"); // this is not an error
 		(*i)++;
 	}
 	else
