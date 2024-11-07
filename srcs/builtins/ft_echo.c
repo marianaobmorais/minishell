@@ -1,5 +1,15 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Checks if a given string is a valid `-n` flag.
+ *
+ * This function checks if the input string is in the form of the `-n` flag, 
+ * which may consist of multiple consecutive `n` characters (e.g., `-n`, `-nnn`).
+ * It returns `true` if the string is a valid flag, and `false` otherwise.
+ *
+ * @param s The string to check.
+ * @return `true` if the string is a valid `-n` flag, `false` otherwise.
+ */
 bool	ft_arg_is_flag(char *s)
 {
 	int	i;
@@ -17,13 +27,23 @@ bool	ft_arg_is_flag(char *s)
 	}
 }
 
+/**
+ * @brief Mimics the behavior of the `echo` command with optional flags.
+ *
+ * This function implements the `echo` command, printing the arguments passed 
+ * to it. If the `-n` flag is present, it suppresses the newline at the end of the output.
+ * If no arguments are passed, it simply prints a newline. The function handles 
+ * multiple consecutive `-n` flags and correctly formats the output.
+ *
+ * @param args The array of arguments passed to the `echo` command.
+ */
 void	ft_echo(char **args)
 {
 	bool	flag;
 	int		i;
 
 	flag = false;
-	if (args == NULL) // sem argumento
+	if (args == NULL) // no argument
 	{
 		printf("\n");
 		return ;
