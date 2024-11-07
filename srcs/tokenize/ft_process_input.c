@@ -27,6 +27,16 @@ void	ft_print_list(t_list **token_list)
 	printf("------------------------------------------------------\n");
 }
 
+/**
+ * @brief Parses and processes the input string, expanding variables and organizing tokens.
+ * 
+ * This function first checks the syntax of the input and removes leading/trailing whitespace.
+ * It then tokenizes the input, expands any variables, removes quotes, and creates an binary tree
+ * based on the tokens. Finally, it frees the allocated token list.
+ * 
+ * @param input The raw input string to process.
+ * @param my_envp Environment variable array used for token expansion.
+ */
 void	ft_process_input(char *input, char **my_envp)
 {
 	t_list	**token_list;

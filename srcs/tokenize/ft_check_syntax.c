@@ -1,5 +1,14 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Checks if a character is a whitespace.
+ * 
+ * This function returns 1 if the character is a space (ASCII 32) or a whitespace character 
+ * within the range of ASCII 9 to 13, otherwise returns 0.
+ * 
+ * @param c The character to check.
+ * @return 1 if whitespace, otherwise 0.
+ */
 int	ft_isspace(int c)
 {
 	if (c == 32 || (c >= 9 && c <= 13))
@@ -8,6 +17,18 @@ int	ft_isspace(int c)
 		return (0);
 }
 
+/**
+ * @brief Iterates over a string to check for unmatched quotes or invalid syntax characters.
+ * 
+ * This function navigates through the `trim` string, checking if characters are quotes, 
+ * special characters, or metacharacters. It detects and handles cases where quotes are 
+ * unclosed or special characters appear unexpectedly.
+ * 
+ * @param trim The trimmed input string.
+ * @param i Current index in the string.
+ * @param special Pointer to a boolean that tracks consecutive special characters.
+ * @return Updated index if successful, -1 if syntax error.
+ */
 static int	ft_iterate_str(char *trim, int i, bool *special)
 {
 	if (trim[i] == 39 || trim[i] == 34)
