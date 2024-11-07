@@ -32,11 +32,13 @@
 # define TRUE 1
 # define FALSE 0
 
-// srcs
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
-//char	**ft_split_argv(char *s, char c);
+
+//ft_free_utils.c
 void	ft_free_vector(char **vector);
+void	ft_free_list(t_list **list);
+
 int		ft_exit_status(int status, int write_, int exit_);
 int		ft_stderror(int error, const char *str, ...);
 void	ft_signal_parent(void);

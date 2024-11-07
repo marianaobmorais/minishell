@@ -10,16 +10,16 @@ LIBFT_DIR = ./libft
 SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_error_handler.c \
 		$(SRCS_DIR)/ft_get_my_envp.c \
-		$(SRCS_DIR)/ft_free_vector.c \
-		$(SRCS_DIR)/ft_split_argv.c \
-		$(SRCS_DIR)/ft_exit_status.c \
-		$(SRCS_DIR)/ft_stderror.c \
-		$(SRCS_DIR)/ft_signal.c \
-		$(SRCS_DIR)/ft_cli.c \
+		$(SRCS_DIR)/ft_free_utils.c \
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
-		$(SRCS_DIR)/tokenize/ft_check_syntax.c \
-		$(SRCS_DIR)/tokenize/ft_next_quote.c \
+		$(SRCS_DIR)/tokenize/ft_validate_syntax.c \
+		$(SRCS_DIR)/tokenize/ft_create_token_list.c \
+		$(SRCS_DIR)/tokenize/ft_create_token_list_utils.c \
+		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
+		$(SRCS_DIR)/tokenize/ft_process_token_list_utils.c \
+		$(SRCS_DIR)/tokenize/ft_find_next_quote.c \
+		$(SRCS_DIR)/tokenize/ft_create_tree.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
@@ -32,7 +32,7 @@ SRCS = $(SRCS_DIR)/main.c \
 #BONUS_SRCS = $(BONUS_DIR)/
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
@@ -40,7 +40,7 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=extern
 
 
 $(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline -g
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
 
 #bonus: $(BONUS_NAME)
 
