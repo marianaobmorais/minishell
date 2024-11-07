@@ -50,8 +50,13 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	}
 	return (i);
 }
-
-static bool	ft_first_char(char c)
+/**
+ * @brief Validates if the first character in a string is an unexpected metacharacter or special character.
+ *
+ * @param c The character to check.
+ * @return true if the first character is invalid, otherwise false.
+ */
+static bool	ft_is_invalid_first_char(char c)
 {
 	if (ft_strchr(SPECIALCHARS, c) || ft_strchr(METACHARS, c))
 	{
@@ -63,7 +68,12 @@ static bool	ft_first_char(char c)
 	}
 	return (false);
 }
-
+/**
+ * @brief Checks syntax validity of a given input string for proper quote usage and valid metacharacter positioning.
+ *
+ * @param input The input string to validate.
+ * @return 1 if syntax is valid, otherwise 0.
+ */
 int	ft_validate_syntax(char *s)
 {
 	char	*trim;
@@ -74,7 +84,7 @@ int	ft_validate_syntax(char *s)
 	if (!trim)
 		return (0); //ft_error_handler();
 	i = 0;
-	special = ft_first_char(trim[i]);
+	special = ft_is_invalid_first_char(trim[i]);
 	if (special)
 		return (free(trim), 0);
 	while (trim[i])
