@@ -18,7 +18,7 @@ static char	*ft_format(va_list args, const char fmt)
 	return (specifier);
 }
 
-int	ft_stderror(int error, const char *str, ...)
+int	ft_stderror(int status_code, const char *str, ...)
 {
 	va_list	args;
 	char	*fmt_specifier;
@@ -39,5 +39,5 @@ int	ft_stderror(int error, const char *str, ...)
 		str++;
 	}
 	va_end(args);
-	return (error);
+	return (status_code);
 }

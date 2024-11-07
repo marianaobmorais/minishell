@@ -11,6 +11,10 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_error_handler.c \
 		$(SRCS_DIR)/ft_get_my_envp.c \
 		$(SRCS_DIR)/ft_free_utils.c \
+		$(SRCS_DIR)/ft_cli.c \
+		$(SRCS_DIR)/ft_exit_status.c \
+		$(SRCS_DIR)/ft_stderror.c \
+		$(SRCS_DIR)/ft_signal.c \
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_validate_syntax.c \
