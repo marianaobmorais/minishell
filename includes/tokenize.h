@@ -2,7 +2,7 @@
 # define TOKENIZE_H
 
 # define SPECIALCHARS "&;()\\{}[^.`*"
-# define NON_EXPANDABLE "$#-_"
+# define NON_EXPANDABLE "$#-_!@"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
