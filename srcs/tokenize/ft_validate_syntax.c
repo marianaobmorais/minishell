@@ -50,19 +50,30 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	}
 	return (i);
 }
+
 /**
- * @brief Validates if the first character in a string is an unexpected metacharacter, special character or a comment.
+ * @brief Checks if a character is an invalid or special starting character for syntax, updating status.
+ *
+ * Determines if `c` is an invalid or special character for the start of a command or syntax. If `c` is a 
+ * comment character (`#`), it sets `*special` to `true` and returns `true` without error. If `c` is `%` or 
+ * another special/metacharacter (excluding `<` and `>`), it prints a syntax error message, sets `*special` 
+ * to `true`, and returns `true`. If `c` is valid, it sets `*special` to `false` and returns `false`.
  *
  * @param c The character to check.
- * @return true if the first character is invalid, otherwise false.
+ * @param special Pointer to a boolean indicating if the character is special.
+ * @return `true` if `c` is invalid or special; otherwise, `false`.
  */
-static bool	ft_is_invalid_first_char(char c)
+static bool	ft_is_invalid_first_char(char c, bool *special)
 {
-	if (c == '#') // it is a comment
-		return (true); // no error. doesn't change the last exit_code
-	if (c == '%')
+	if (c == '#') // it indicates a comment
+	{
+		*special = true;
+		return (true); // not an error. doesn't change the last exit_code
+	}
+	if (c == '%' || c == '~')
 	{
 		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
+		*special = true;
 		return (true);
 	}
 	if (ft_strchr(SPECIALCHARS, c) || ft_strchr(METACHARS, c))
@@ -70,9 +81,11 @@ static bool	ft_is_invalid_first_char(char c)
 		if (c != '<' && c != '>')
 		{
 			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
+			*special = true;
 			return (true);
 		}
 	}
+	*special = false;
 	return (false);
 }
 /**
@@ -91,8 +104,7 @@ int	ft_validate_syntax(char *s)
 	if (!trim)
 		return (0); //ft_error_handler();
 	i = 0;
-	special = ft_is_invalid_first_char(trim[i]);
-	if (special)
+	if (ft_is_invalid_first_char(trim[i], &special))
 		return (free(trim), 0);
 	while (trim[i])
 	{
@@ -101,12 +113,10 @@ int	ft_validate_syntax(char *s)
 			return (free(trim), 0);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 			special = false;
+		if (trim[i] == '$' && ft_strchr(NON_EXPANDABLE, trim[i + 1]))
+			return (printf("%s: expansion is not supported `$%c'\n", PROG_NAME, s[i + 1]), free(trim), 0); //ft_error_handler();
 		if (trim[i])
-		{
-			if (trim[i] == '$' && ft_strchr(NON_EXPANDABLE, trim[i + 1]))
-				return (printf("%s: `$%c' expansion no supported\n", PROG_NAME, s[i + 1]), free(trim), 0);
 			i++;
-		}
 	}
 	if (special == true)
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
