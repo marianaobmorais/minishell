@@ -1,5 +1,14 @@
 #include "../includes/minishell.h"
 
+/**
+ * @brief Frees all strings in a vector (array of strings) and the vector itself.
+ *
+ * This function iterates through the array of strings (vector), freeing each string
+ * individually. After all strings are freed, the function frees the vector pointer
+ * itself to prevent memory leaks.
+ *
+ * @param vector A pointer to the array of strings to be freed.
+ */
 void	ft_free_vector(char **vector)
 {
 	int	i;
