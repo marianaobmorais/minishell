@@ -109,12 +109,12 @@ static bool	ft_has_expandable_var(char *s)
 			i++;
 			while (s[i] && s[i] != DQUOTE)
 			{
-				if (s[i] == '$' && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_')) //isalpha or is alnum?
+				if (s[i] == '$' && ft_is_expandable(&s[i + 1])) 
 					return (true);
 				i++;
 			}
 		}
-		else if (s[i] == '$' && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_')) //isalpha or is alnum?
+		else if (s[i] == '$' && ft_is_expandable(&s[i + 1]))
 			return (true);
 		else if (s[i])
 			i++;

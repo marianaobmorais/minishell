@@ -2,7 +2,6 @@
 # define TOKENIZE_H
 
 # define SPECIALCHARS "&;()\\{}[^.`*"
-# define NON_EXPANDABLE "$#-_!@"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
@@ -77,6 +76,8 @@ void	ft_process_input(char *input, char **my_envp);
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char** my_envp);
+bool	ft_is_expandable(char *s);
+
 //ft_process_token_list_utils.c
 void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp);
 void	ft_handle_squotes(char **new_value, char *value, int *i);

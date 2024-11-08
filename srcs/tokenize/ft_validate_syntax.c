@@ -113,8 +113,6 @@ int	ft_validate_syntax(char *s)
 			return (free(trim), 0);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 			special = false;
-		if (trim[i] == '$' && ft_strchr(NON_EXPANDABLE, trim[i + 1]))
-			return (printf("%s: expansion is not supported `$%c'\n", PROG_NAME, s[i + 1]), free(trim), 0); //ft_error_handler();
 		if (trim[i])
 			i++;
 	}

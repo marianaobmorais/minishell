@@ -19,8 +19,6 @@ int	ft_find_next_quote(char *s, int i, char c)
 	i++;
 	while (s[i] != '\0')
 	{
-		if (c == DQUOTE && s[i] == '$' && ft_strchr(NON_EXPANDABLE, s[i + 1]))
-			return (printf("%s: `$%c' expansion no supported\n", PROG_NAME, s[i + 1]), -1); //ft_error_handler();
 		if (s[i] == c)
 			return (i);
 		i++;
