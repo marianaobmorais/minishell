@@ -6,7 +6,7 @@ bool	ft_is_expandable(char *s)
 
 	i = 0;
 	if (ft_isalpha(s[i]) || s[i] == '?' || (s[i] == '_' && s[i + 1]
-		&& ft_isalnum(s[i + 2])))
+		&& ft_isalnum(s[i + 1])))
 		return (true);
 	return (false);
 }
