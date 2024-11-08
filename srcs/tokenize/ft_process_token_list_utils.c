@@ -33,12 +33,12 @@ char	*ft_expand_env(char *s, int *i, char **my_envp)
 		{
 			expansion = ft_strdup(my_envp[j] + (len + 1));
 			(*i) += len; // update index past env name
-			return (free(env_equal), expansion);
+			return (free(env_equal), free(env), expansion);
 		}
 		j++;
 	}
 	(*i) += len; // update index past env name
-	return (free(env_equal), ft_strdup("\0")); // this is not an error
+	return (free(env_equal), free(env), ft_strdup("\0")); // this is not an error
 }
 
 /**
