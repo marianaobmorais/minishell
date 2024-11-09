@@ -24,7 +24,7 @@ int	ft_stderror(int status_code, const char *str, ...)
 	char	*fmt_specifier;
 
 	va_start(args, str);
-	ft_putstr_fd(PROG_NAME_ERRO, 2);
+	ft_putstr_fd(PROG_NAME_ERROR, 2);
 	while (*str)
 	{
 		if (*str == '%')
