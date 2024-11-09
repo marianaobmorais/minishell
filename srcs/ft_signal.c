@@ -1,55 +1,51 @@
 #include "../includes/minishell.h"
 
-void handler_sigint(int sig)
+void	sig_parent_handler(int sig)
 {
-	(void)sig;
-	printf("\n");
+	write(1, "\n", 1);
 	ft_exit_status(130, TRUE, FALSE);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	(void)sig;
 }
 
-void handler_sigint_chld(int sig)
+void	sig_child_handler(int sig)
+{
+	if (sig == SIGINT)
+		write(1, "\n", 1);
+	if (sig == SIGQUIT)
+		ft_putendl_fd("Quit (core dumped)", 1);
+}
+
+void	sig_heredoc_handler(int sig)
 {
 	(void)sig;
-	printf("\nfilhoo\n");
-	ft_exit_status(130, TRUE, FALSE);
-	// rl_on_new_line();
-	// rl_replace_line("", 0);
-	// rl_redisplay();
+	//signal(SIGINT, handler_sigint);
+	printf("HEREDOC\n");
 }
 
-/* void	off_control_char(void)
+void	ft_signal(int type)
 {
-	struct termios tty;
-
-	tcgetattr(STDIN_FILENO, &tty);
-	tty.c_lflag &= ~ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &tty);
-}
-
-void	on_control_char(void)
-{
-	struct termios tty;
-
-	tcgetattr(STDIN_FILENO, &tty);
-	tty.c_lflag |= ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &tty);
-} */
-
-void ft_signal_parent(void)
-{
-
-	// off_control_char();
-	signal(SIGINT, handler_sigint);
-	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
-}
-
-void ft_signal_child(void)
-{
-	// on_control_char();
-	signal(SIGINT, handler_sigint_chld);
-	signal(SIGQUIT, SIG_DFL);
+	if (type == PARENT)
+	{
+		signal(SIGINT, sig_parent_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	if (type == HEREDOC)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		//configurar handler
+	}
+	if (type == DEFAULT)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
+	if (type == CHILD)
+	{
+		signal(SIGINT, sig_child_handler);
+		signal(SIGQUIT, sig_child_handler);
+	}
 }
