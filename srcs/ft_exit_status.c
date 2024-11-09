@@ -5,12 +5,12 @@
 * 
 * 
 */
-int	ft_exit_status(int status, int write_, int exit_)
+int	ft_exit_status(int exit_status, int write_, int exit_)
 {
 	static int	current_status;
 
 	if (write_ == TRUE)
-		current_status = status;
+		current_status = exit_status;
 	if (exit_ == TRUE)
 		exit(current_status);
 	return (current_status);
