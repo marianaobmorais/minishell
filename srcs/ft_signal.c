@@ -41,7 +41,7 @@ void	ft_signal(int type)
 	if (type == DEFAULT)
 	{
 		signal(SIGQUIT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 	}
 	if (type == CHILD)
 	{
