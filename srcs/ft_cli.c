@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-void	ft_history(char *input)
+int	ft_history(char *input)
 {
 	int	i;
 	int	w;
@@ -9,28 +9,45 @@ void	ft_history(char *input)
 	w = 0;
 	while (input[i])
 	{
-		if (input[i] == ' ' || input[i] == '\t')
+		if (ft_isspace(input[i]))
 			w++;
 		i++;
 	}
 	if (i != w)
+	{
 		add_history(input);
+		return (1);
+	}
+	return (0);	
 }
 
 void	ft_launcher(char *input, char ***my_envp)
 {
-	pid_t pid;
+	pid_t	pid;
+	int		status;
 
 	ft_process_input(input, *my_envp);
-	if (strcmp(input, "bad") == 0)
+	if (strcmp(input, "child") == 0)
 	{
-		//printf("Start...");
 		pid = fork();
 		if (pid == 0)
 		{
-			ft_signal_child();
+			ft_signal(DEFAULT);
 			char *algo[] = {"/usr/bin/sleep", "50", NULL};
 			execve(algo[0], algo, *my_envp);
+		}
+		else
+		{
+			if (waitpid(pid, &status, 0) != -1)
+			{
+				if (WIFEXITED(status))
+					ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); //grava exit status
+        		else if (WIFSIGNALED(status))
+				{
+					ft_signal(CHILD);
+					ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); //grava exit status
+				}
+			}
 		}
 	}
 	if (strcmp(input, "status") == 0) //Test
@@ -38,7 +55,6 @@ void	ft_launcher(char *input, char ***my_envp)
 		ft_stderror(0, "Qualquer coisa: ");
 		printf("%d\n", ft_exit_status(0, FALSE, FALSE));
 	}
-	wait(0); //capturar status code
 }
 
 void	ft_cli(char ***my_envp)
@@ -46,7 +62,7 @@ void	ft_cli(char ***my_envp)
 	char	*input;
 
 	input = NULL;
-	ft_signal_parent();
+	ft_signal(PARENT);
 	while (1)
 	{
 		if (input)
@@ -61,9 +77,8 @@ void	ft_cli(char ***my_envp)
 			ft_exit(FALSE);
 			break;
 		}
-		if (input && *input && *input != '\n') // tratar whitespace com \n
+		if (ft_history(input))
 		{
-			ft_history(input);
 			ft_launcher(input, my_envp);
 		}
 	}
