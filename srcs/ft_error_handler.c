@@ -1,32 +1,47 @@
 #include "../includes/minishell.h"
 
-static char	*str_check(char *specifier)
-{
-	if (!specifier)
-		return (ft_strdup("(null)"));
-	else
-		return (ft_strdup(specifier));
-}
-
+/**
+ * @brief Formats a single argument based on the specified format character.
+ *
+ * This function processes a variable argument list (`va_list`) and formats 
+ * a single argument based on the provided format character. Currently, 
+ * it supports the format specifier 's' for strings. If the argument is 
+ * `NULL`, it returns a copy of the string "(null)".
+ *
+ * @param args The list of arguments to format.
+ * @param fmt The format specifier character (e.g., 's' for strings).
+ * @return A dynamically allocated formatted string. If allocation fails,
+ *         it returns "(null)" instead.
+ */
 static char	*ft_format(va_list args, const char fmt)
 {
 	char	*specifier;
 
 	specifier = NULL;
 	if (fmt == 's')
-		specifier = str_check(va_arg(args, char *));
+	{
+		specifier = ft_strdup(va_arg(args, char *));
+		if (!specifier)
+			return (ft_strdup("(null)"));
+	}
 	return (specifier);
 }
 
 /**
- * @brief Print in fd stderr a string.
+ * @brief Prints an error message to stderr with formatted arguments and returns an exit status.
  *
- * This function print a string with a another string , 
- * which may consist of multiple consecutive `n` characters (e.g., `-n`, `-nnn`).
- * It returns `true` if the string is a valid flag, and `false` otherwise.
+ * This function prints a formatted error message to the standard error output 
+ * (stderr) using a format string and additional arguments, similar to `printf`. 
+ * It starts by printing a predefined program name (`PROG_NAME_ERROR`) to indicate 
+ * the source of the error. For each format specifier (currently only `%s` for strings), 
+ * it retrieves the argument from `va_list`, formats it, and writes it to stderr. 
+ * The function ends by returning the specified `exit_status`.
  *
- * @param s The string to check.
- * @return `true` if the string is a valid `-n` flag, `false` otherwise.
+ * @param exit_status The exit code to be returned by the function.
+ * @param str The format string specifying the output message, using `%` 
+ *            as the format specifier (e.g., `%s` for strings).
+ * @param ... The variable arguments matching the format specifiers in `str`.
+ * @return The provided exit status.
  */
 int	ft_stderror(int exit_status, const char *str, ...)
 {
