@@ -136,6 +136,18 @@ static int concatenate_var(char *str, char ***my_envp)
 	return (i);
 }
 
+/**
+ * @brief Handles the exportation of environment variables.
+ *
+ * This function manages the exportation of environment variables. If no arguments are passed,
+ * it prints the current environment variables. If arguments are passed, it checks for valid keys,
+ * and either concatenates or replaces the environment variable based on the input.
+ *
+ * @param argc The number of arguments passed to the function.
+ * @param argv An array of strings representing the arguments.
+ * @param my_envp A pointer to the array of environment variables to be updated.
+ * @return Returns 0 on success, or the exit status code for various error conditions.
+ */
 int	ft_export(int argc, char **argv, char ***my_envp)
 {
 	size_t s_key;
