@@ -1,16 +1,14 @@
 #include "../../includes/minishell.h"
 
-/* 
-"export var" nao exporta uma variavel mais guarda o o nome da variavel que 
-depois pode ser atribuida se for declarado var=texto apenas "export" imprime
-todas as variaveis inclusive o que n\ao foi exportado e ordena por ordem
-alfabetica de ASCII
-o que pode ser feito para essa funcao eh ter no envp as variaveis que foram
-declaradas mais nao exportadas, e o env apenas imprimir o que tiver '=' assim
-nao seria necessario criar um novo array, a funcao history seria apenas para 
-ordenar e imprimir todas inclusive as que nao tiverem '='
-*/
-
+/**
+ * @brief Sorts an array of strings in ascending order using bubble sort.
+ *
+ * This function sorts an array of strings `str` in ascending order based on lexicographical 
+ * comparison. It uses a bubble sort algorithm to swap adjacent strings until the array is sorted.
+ *
+ * @param str The array of strings to be sorted.
+ * @param n The number of strings in the array.
+ */
 void	ft_sort_str_tab(char **str, int n)
 {
 	int		k;
@@ -35,7 +33,16 @@ void	ft_sort_str_tab(char **str, int n)
 	}
 }
 
-void	ft_str_quotes(char *str)
+/**
+ * @brief Prints a string with double quotes around its value after the '=' symbol.
+ *
+ * This function prints the given string `str` in the format `declare -x <str>`, 
+ * where the portion after the '=' symbol is enclosed in double quotes. This is 
+ * useful for simulating environment variable declarations in a shell-like format.
+ *
+ * @param str The string to be printed with quoted value after '='.
+ */
+void	ft_str_dquotes(char *str)
 {
 	int	i;
 	int	flag;
@@ -58,6 +65,15 @@ void	ft_str_quotes(char *str)
 	ft_putchar('\n');
 }
 
+/**
+ * @brief Prints the environment variables in a sorted, quoted format.
+ *
+ * This function retrieves a copy of the environment variables (`envp`), 
+ * sorts them alphabetically, and prints each variable in the format `declare -x <var>="<value>"`.
+ * It uses `ft_str_dquotes` to format each variable with double quotes around the value.
+ *
+ * @param envp The array of environment variables to be printed.
+ */
 void	ft_print_export(char **envp)
 {
 	char	**sorted_envp;
@@ -72,7 +88,7 @@ void	ft_print_export(char **envp)
 	ft_sort_str_tab(sorted_envp, size_envp);
 	while (sorted_envp[i])
 	{
-		ft_str_quotes(sorted_envp[i]);
+		ft_str_dquotes(sorted_envp[i]);
 		free(sorted_envp[i]);
 		i++;
 	}

@@ -1,5 +1,16 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Validates if each argument is a valid environment variable identifier.
+ *
+ * Checks each string in `argv` to ensure it follows the rules for environment variable names.
+ * The first character must be alphabetic or an underscore; subsequent characters may include
+ * alphanumeric, underscore, or a plus sign (`+`) only if it is followed by an equals sign (`=`).
+ *
+ * @param argv Array of argument strings to validate.
+ *
+ * @return 0 if all identifiers are valid, or an error message and non-zero value if any identifier is invalid.
+ */
 static int check_key(char **argv)
 {
 	size_t i;
@@ -14,9 +25,9 @@ static int check_key(char **argv)
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
 			{
 				if ((*argv)[i] != '+')
-					return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+					return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
 				else if ((*argv)[i] == '+' && (*argv)[i + 1] != '=')
-					return (printf("export: '%s' not a valid identifier\n", (*argv))); // not a valid identifier
+					return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
 			}
 			i++;
 		}
@@ -25,6 +36,16 @@ static int check_key(char **argv)
 	return (0);
 }
 
+/**
+ * @brief Adds a new environment variable to the environment array.
+ *
+ * Allocates space for a new environment array with one additional slot for `str`,
+ * copying existing variables from `my_envp` and appending the new variable.
+ *
+ * @param str The new environment variable string to add.
+ * @param size The current number of environment variables in `my_envp`.
+ * @param my_envp Pointer to the environment variable array to be updated.
+ */
 static void	add_var(char *str, size_t size, char ***my_envp)
 {
 	int i;
@@ -46,6 +67,18 @@ static void	add_var(char *str, size_t size, char ***my_envp)
 	*my_envp = new_envp;
 }
 
+/**
+ * @brief Replaces an existing environment variable or adds a new one if not found.
+ *
+ * Searches for a variable in `my_envp` matching `str` up to the equal sign `=`. 
+ * If found, frees the old entry and replaces it with `str`. If not found, 
+ * calls `add_var` to add `str` as a new environment variable.
+ *
+ * @param str The environment variable string to replace or add.
+ * @param size The length of the variable name in `str` (up to `=`).
+ * @param my_envp Pointer to the array of environment variables to be updated.
+ * @return Returns 0 if the variable is replaced, or the new size of `my_envp` if added.
+ */
 static int replace_var(char *str, size_t size, char ***my_envp)
 {
 	int i;
@@ -66,6 +99,17 @@ static int replace_var(char *str, size_t size, char ***my_envp)
 	return (i);
 }
 
+/**
+ * @brief Concatenates a value to an existing environment variable or adds it as a new variable.
+ *
+ * Searches for an environment variable in `my_envp` that matches the prefix of `str` (before `+=`).
+ * If found, concatenates the new value from `str` (after `+=`) to the existing variable value.
+ * If not found, calls `add_var` to add `str` as a new environment variable.
+ *
+ * @param str The environment variable string with the format "VAR+=VALUE".
+ * @param my_envp Pointer to the array of environment variables to be updated.
+ * @return Returns 0 if the variable is concatenated, or the new size of `my_envp` if added.
+ */
 static int concatenate_var(char *str, char ***my_envp)
 {
 	int		i;
@@ -92,6 +136,18 @@ static int concatenate_var(char *str, char ***my_envp)
 	return (i);
 }
 
+/**
+ * @brief Handles the exportation of environment variables.
+ *
+ * This function manages the exportation of environment variables. If no arguments are passed,
+ * it prints the current environment variables. If arguments are passed, it checks for valid keys,
+ * and either concatenates or replaces the environment variable based on the input.
+ *
+ * @param argc The number of arguments passed to the function.
+ * @param argv An array of strings representing the arguments.
+ * @param my_envp A pointer to the array of environment variables to be updated.
+ * @return Returns 0 on success, or the exit status code for various error conditions.
+ */
 int	ft_export(int argc, char **argv, char ***my_envp)
 {
 	size_t s_key;
@@ -99,15 +155,15 @@ int	ft_export(int argc, char **argv, char ***my_envp)
 	if (argc == 1)
 	{
 		ft_print_export(*my_envp);
-		return (ft_exit_status(0, TRUE, TRUE));
+		return (ft_exit_status(0, TRUE, FALSE));
 	}
 	argv++;
 	if (check_key(argv) != 0)
-		return (ft_exit_status(2, TRUE, TRUE));
+		return (ft_exit_status(2, TRUE, FALSE));
 	while (*argv)
 	{
 		if (!ft_strchr(*argv, '='))
-			return (ft_exit_status(0, TRUE, TRUE));
+			return (ft_exit_status(0, TRUE, FALSE));
 		// nao fazer nada e guardar junto com as variaveis que foram exportadas
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
@@ -116,5 +172,5 @@ int	ft_export(int argc, char **argv, char ***my_envp)
 			replace_var(*argv, s_key, my_envp);
 		argv++;
 	}
-	return (ft_exit_status(0, TRUE, TRUE));
+	return (ft_exit_status(0, TRUE, FALSE));
 }
