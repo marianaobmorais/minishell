@@ -1,8 +1,7 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "&;()\\{}[^.`*"
-# define NON_EXPANDABLE "$#-_!@"
+# define SPECIALCHARS "&;()\\{}[^`*"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
@@ -36,10 +35,26 @@ typedef struct s_token
 
 typedef struct s_pipe
 {
-	int		type;
-	char	*left;
-	char	*right;
+	t_token	*token; // int		type;
+	char	*left; // aponta para redir ou exec
+	char	*right; // aponta para pipe 
 }	t_pipe;
+
+typedef struct s_redir
+{
+	t_token	*token; // int		type;
+	char	*file;
+	int		mode;
+	int		fd;
+	void	*next; // aponta para o node de exec ou um redir, nunca pipe
+}	t_redir;
+
+typedef struct s_exec
+{
+	t_token	*token; // int		type;
+	char	*pathname; // precisa desse?
+	char	**args;
+}	t_exec;
 
 //ft_find_next_quote.c
 int		ft_find_next_quote(char *s, int i, char c);
@@ -61,6 +76,8 @@ void	ft_process_input(char *input, char **my_envp);
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char** my_envp);
+bool	ft_is_expandable(char *s);
+
 //ft_process_token_list_utils.c
 void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp);
 void	ft_handle_squotes(char **new_value, char *value, int *i);

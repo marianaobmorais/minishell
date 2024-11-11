@@ -33,12 +33,12 @@ char	*ft_expand_env(char *s, int *i, char **my_envp)
 		{
 			expansion = ft_strdup(my_envp[j] + (len + 1));
 			(*i) += len; // update index past env name
-			return (free(env_equal), expansion);
+			return (free(env_equal), free(env), expansion);
 		}
 		j++;
 	}
 	(*i) += len; // update index past env name
-	return (free(env_equal), ft_strdup("\0")); // this is not an error
+	return (free(env_equal), free(env), ft_strdup("\0")); // this is not an error
 }
 
 /**
@@ -74,15 +74,10 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	char	*tmp;
 
 	(*i)++; // skip $
-	if (value[(*i)] == '?')
+	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);
-	else if (ft_isdigit(value[(*i)]))
-	{
-		expansion = ft_strdup("\0"); // this is not an error
-		(*i)++;
-	}
 	else
-		expansion = ft_expand_env(&value[(*i)], i, my_envp);
+		expansion = ft_expand_env(&value[*i], i, my_envp);
 	tmp = ft_strjoin(*new_value, expansion);
 	free(*new_value);
 	free(expansion);
@@ -102,7 +97,7 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 void	ft_handle_squotes(char **new_value, char *value, int *i)
 {
 	*new_value = ft_charjoin(*new_value, value[(*i)++]);
-	while (value[(*i)] && value[(*i)] != SQUOTE)
+	while (value[*i] && value[*i] != SQUOTE)
 		*new_value = ft_charjoin(*new_value, value[(*i)++]);
 	*new_value = ft_charjoin(*new_value, value[(*i)++]);
 }
@@ -122,14 +117,14 @@ void	ft_handle_squotes(char **new_value, char *value, int *i)
 void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp)
 {
 	*new_value = ft_charjoin(*new_value, value[(*i)++]);
-	while (value[(*i)] && value[(*i)] != DQUOTE)
+	while (value[*i] && value[*i] != DQUOTE)
 	{
-		if (value[(*i)] == '$' && ((ft_isalnum(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
+		if (value[*i] == '$' && ft_is_expandable(&value[*i + 1]))
 			ft_handle_expansion(new_value, value, i, my_envp);
 		else
 			*new_value = ft_charjoin(*new_value, value[(*i)++]);
 	}
-	if (value[(*i)] == DQUOTE)
+	if (value[*i] == DQUOTE)
 		*new_value = ft_charjoin(*new_value, value[(*i)++]);
 }
 

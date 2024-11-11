@@ -1,6 +1,28 @@
 #include "../../includes/minishell.h"
 
 /**
+ * @brief Determines if a string represents an expandable environment or status variable.
+ * 
+ * Checks if the string `s` begins with a valid environment variable name (alphabetic character
+ * or underscore followed by an alphanumeric character) or with `$?`, indicating the exit status.
+ * If so, the function returns `true`, indicating that the string can be expanded; otherwise, 
+ * it returns `false`.
+ * 
+ * @param s Pointer to the string to check for expandability.
+ * @return true if `s` represents an expandable variable, otherwise false.
+ */
+bool	ft_is_expandable(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (ft_isalpha(s[i]) || s[i] == '?' || (s[i] == '_' && s[i + 1]
+		&& ft_isalnum(s[i + 1])))
+		return (true);
+	return (false);
+}
+
+/**
  * @brief Removes leading and trailing quotes from a token's value.
  * 
  * This function iterates through a token's value string, 
@@ -8,7 +30,7 @@
  * 
  * @param token Pointer to the token structure containing the value to process.
  */
-void	ft_remove_quotes(t_token *token)
+static void	ft_remove_quotes(t_token *token)
 {
 	char	quote;
 	int		i;
@@ -43,7 +65,7 @@ void	ft_remove_quotes(t_token *token)
  * @param token Pointer to the token to be expanded.
  * @param my_envp Environment variable array used for expansion.
  */
-void	ft_expand_tokens(t_token *token, char **my_envp)
+static void	ft_expand_tokens(t_token *token, char **my_envp)
 {
 	char	*new_value;
 	int		i;
@@ -56,8 +78,8 @@ void	ft_expand_tokens(t_token *token, char **my_envp)
 			ft_handle_squotes(&new_value, token->value, &i);
 		else if (token->value[i] == DQUOTE)
 			ft_handle_dquotes(&new_value, token->value, &i, my_envp);
-		else if (token->value[i] == '$' && (ft_isalnum(token->value[i + 1]) || token->value[i + 1] == '?' || token->value[i + 1] == '_'))
-			ft_handle_expansion(&new_value, token->value, &i, my_envp);//
+		else if (token->value[i] == '$' && ft_is_expandable(&token->value[i + 1]))
+			ft_handle_expansion(&new_value, token->value, &i, my_envp);
 		else if (token->value[i] && token->value[i] != DQUOTE && token->value[i] != SQUOTE)
 			new_value = ft_charjoin(new_value, token->value[i++]);
 	}

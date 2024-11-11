@@ -36,8 +36,30 @@ void	ft_free_vector(char **vector)
  */
 void	ft_free_list(t_list **list)
 {
-	ft_lstclear(list, free);
-	if (list)
-		free(list);
+	t_list	*current;
+	t_list	*node;
+	t_token	*token;
+
+	if (!list)
+		return ;
+	while (*list)
+	{
+		current = (*list)->next;
+		node = *list;
+		token = node->content;
+		if (node)
+		{
+			if (token->value)
+			{
+				free(token->value);
+				token->value = NULL;
+			}
+			free(node);
+			node = NULL;
+		}
+		*list = current;
+	}	
+	free(list);
 	list = NULL;
 }
+

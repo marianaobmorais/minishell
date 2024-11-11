@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "includes/minishell.h"
 
 int main(void)
 {
-	char *str = "123";
-	printf("%d", str[10]);
+	printf("%d %d %d", O_WRONLY | O_CREAT | O_TRUNC);
 	free(str);
 }

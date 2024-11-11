@@ -103,18 +103,18 @@ static bool	ft_has_expandable_var(char *s)
 	while (s[i])
 	{
 		if (s[i] == SQUOTE)
-			i = ft_find_next_quote(&s[i], i, SQUOTE) + 1;
+			i = ft_find_next_quote(&s[i], i, SQUOTE);
 		else if (s[i] == DQUOTE)
 		{
 			i++;
 			while (s[i] && s[i] != DQUOTE)
 			{
-				if (s[i] == '$' && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+				if (s[i] == '$' && ft_is_expandable(&s[i + 1])) 
 					return (true);
 				i++;
 			}
 		}
-		else if (s[i] == '$' && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+		else if (s[i] == '$' && ft_is_expandable(&s[i + 1]))
 			return (true);
 		else if (s[i])
 			i++;
@@ -143,12 +143,14 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 		if (!new_token)
 			return ; // ft_error_handler();
 		new_token->value = ft_strdup(*value);
+		if (!new_token->value)
+			return (free(new_token));
 		new_token->type = ft_get_token_type(*value);
 		new_token->state = ft_get_token_state(*value);
 		new_token->expand = ft_has_expandable_var(*value);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
-			return ;
+			return (free(new_token->value), free(new_token));
 		ft_lstadd_back(token_list, new_node);
 		free(*value);
 		*value = NULL;
