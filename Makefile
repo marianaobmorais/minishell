@@ -40,7 +40,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leak-check=full --show-leak-kinds=all #--supressions=external_func_leaks.supp
+VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
 
 
 $(NAME): $(LIBFT) $(SRCS)

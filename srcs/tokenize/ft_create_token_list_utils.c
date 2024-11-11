@@ -103,7 +103,7 @@ static bool	ft_has_expandable_var(char *s)
 	while (s[i])
 	{
 		if (s[i] == SQUOTE)
-			i = ft_find_next_quote(&s[i], i, SQUOTE) + 1;
+			i = ft_find_next_quote(&s[i], i, SQUOTE);
 		else if (s[i] == DQUOTE)
 		{
 			i++;

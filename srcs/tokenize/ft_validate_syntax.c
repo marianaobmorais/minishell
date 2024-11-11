@@ -31,6 +31,8 @@ int	ft_isspace(int c)
  */
 static int	ft_iterate_str(char *trim, int i, bool *special)
 {
+	static char	special_char;
+
 	if (trim[i] == SQUOTE || trim[i] == DQUOTE)
 	{
 		i = ft_find_next_quote(trim, i, trim[i]);
@@ -43,9 +45,18 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	if (ft_strchr(METACHARS, trim[i]))
 	{
 		if (*special == true)
-			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+		{
+			if (special_char == '|')
+			{
+				if (trim[i] == '|')
+					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+			}
+			else
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+		}
 		*special = true;
-		if ((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i])
+		special_char = trim[i];
+		if (((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i]) || (trim[i] == '>' && trim[i + 1] == '|'))
 			i += 1;
 	}
 	return (i);
@@ -63,24 +74,24 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
  * @param special Pointer to a boolean indicating if the character is special.
  * @return `true` if `c` is invalid or special; otherwise, `false`.
  */
-static bool	ft_is_invalid_first_char(char c, bool *special)
+static bool	ft_is_invalid_first_char(char *s, bool *special)
 {
-	if (c == '#') // it indicates a comment
+	if (s[0] == '#') // it indicates a comment
 	{
 		*special = true;
 		return (true); // not an error. doesn't change the last exit_code
 	}
-	if (c == '%' || c == '~')
+	if ((s[0] == '%' || s[0] == '~' || s[0] == '.') && s[1] == '\0')
 	{
-		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
+		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
 		*special = true;
 		return (true);
 	}
-	if (ft_strchr(SPECIALCHARS, c) || ft_strchr(METACHARS, c))
+	if (ft_strchr(SPECIALCHARS, s[0]) || ft_strchr(METACHARS, s[0]))
 	{
-		if (c != '<' && c != '>')
+		if (s[0] != '<' && s[0] != '>')
 		{
-			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, c); //ft_error_handler();
+			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
 			*special = true;
 			return (true);
 		}
@@ -104,7 +115,7 @@ int	ft_validate_syntax(char *s)
 	if (!trim)
 		return (0); //ft_error_handler();
 	i = 0;
-	if (ft_is_invalid_first_char(trim[i], &special))
+	if (ft_is_invalid_first_char(trim, &special))
 		return (free(trim), 0);
 	while (trim[i])
 	{

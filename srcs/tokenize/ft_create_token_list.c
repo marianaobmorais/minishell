@@ -17,7 +17,7 @@
 static int	ft_handle_metachar(char **value, char *s, int i, t_list **token_list)
 {
 	*value = ft_charjoin(*value, s[0]);
-	if (ft_strchr(METACHARS, s[1]))
+	if ((s[0] == '>' || s[0] == '<') && ft_strchr(METACHARS, s[1]))
 	{
 		*value = ft_charjoin(*value, s[1]);
 		i++;
