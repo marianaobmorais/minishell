@@ -1,5 +1,16 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Determines if a string represents an expandable environment or status variable.
+ * 
+ * Checks if the string `s` begins with a valid environment variable name (alphabetic character
+ * or underscore followed by an alphanumeric character) or with `$?`, indicating the exit status.
+ * If so, the function returns `true`, indicating that the string can be expanded; otherwise, 
+ * it returns `false`.
+ * 
+ * @param s Pointer to the string to check for expandability.
+ * @return true if `s` represents an expandable variable, otherwise false.
+ */
 bool	ft_is_expandable(char *s)
 {
 	int	i;
