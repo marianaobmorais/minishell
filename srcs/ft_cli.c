@@ -57,7 +57,7 @@ void	ft_cli(char ***my_envp)
 		input = readline(PROMPT);
 		if (!input)
 		{
-			free(input);
+			free(input); // por que free(input), if (!input)?
 			ft_exit(FALSE);
 			break;
 		}
