@@ -41,7 +41,7 @@ void	ft_process_input(char *input, char **my_envp)
 {
 	t_list	**token_list;
 	char	*trimmed;
-	//void	*root;
+	void	*root;
 
 	if (!ft_validate_syntax(input))
 		return ;
@@ -54,7 +54,7 @@ void	ft_process_input(char *input, char **my_envp)
 	ft_process_token_list(token_list, my_envp);
 	ft_print_list(token_list); // delete later
 	//create tree
-	//root = ft_create_tree(token_list);
+	root = ft_create_tree(token_list);
 	//if (!root)
 	//	??
 	ft_free_list(token_list);
