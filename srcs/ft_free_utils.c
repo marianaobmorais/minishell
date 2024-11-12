@@ -52,9 +52,7 @@ void	ft_free_list(t_list **list)
 			if (token->value)
 			{
 				free(token->value);
-				token->value = NULL; //
 				free(token);
-				token = NULL; //
 			}
 			free(node);
 			node = NULL;
