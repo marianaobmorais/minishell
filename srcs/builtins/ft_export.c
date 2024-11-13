@@ -19,15 +19,15 @@ static int check_key(char **argv)
 	{
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
-			return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
+			return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
 		while ((*argv)[i] != '=')
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
 			{
 				if ((*argv)[i] != '+')
-					return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
+					return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
 				else if ((*argv)[i] == '+' && (*argv)[i + 1] != '=')
-					return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
+					return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
 			}
 			i++;
 		}

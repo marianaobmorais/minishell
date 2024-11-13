@@ -45,8 +45,10 @@ void	ft_free_vector(char **vector);
 void	ft_free_list(t_list **list);
 
 int		ft_exit_status(int exit_status, int write_, int exit_);
-int		ft_stderror(int exit_status, const char *str, ...);
+void	ft_stderror(const char *str, ...);
 void	ft_signal(int type);
 void	ft_cli(char ***envp);
+
+int		heredoc_fd(char *limiter);
 
 #endif //MINISHELL_H

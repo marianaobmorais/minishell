@@ -37,15 +37,14 @@ void	sig_child_handler(int sig)
 {
 	if (sig == SIGINT)
 		write(1, "\n", 1);
-	if (sig == SIGQUIT)
+	else if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", 1);
 }
 
 void	sig_heredoc_handler(int sig)
 {
-	(void)sig;
-	//signal(SIGINT, handler_sigint);
-	printf("HEREDOC\n");
+	//rl_redisplay();
+	ft_exit_status(sig, TRUE, TRUE);
 }
 
 /**
@@ -72,8 +71,8 @@ void	ft_signal(int type)
 	}
 	if (type == HEREDOC)
 	{
+		signal(SIGINT, sig_heredoc_handler);
 		signal(SIGQUIT, SIG_IGN);
-		//configurar handler
 	}
 	if (type == DEFAULT)
 	{

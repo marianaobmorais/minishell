@@ -38,14 +38,16 @@ void	ft_launcher(char *input, char ***my_envp)
 	int		status;
 
 	ft_process_input(input, *my_envp);
-	if (strcmp(input, "child") == 0)
+	//heredoc_fd("here");
+	if (strcmp(input, "child") == 0) //test
 	{
 		pid = fork();
 		if (pid == 0)
 		{
 			ft_signal(DEFAULT);
-			char *algo[] = {"/usr/bin/sleep", "50", NULL};
-			execve(algo[0], algo, *my_envp);
+			heredoc_fd("here");
+			// char *algo[] = {"/usr/bin/sleep", "50", NULL};
+			// execve(algo[0], algo, *my_envp);
 		}
 		else
 		{
@@ -63,8 +65,7 @@ void	ft_launcher(char *input, char ***my_envp)
 	}
 	if (strcmp(input, "status") == 0) //Test
 	{
-		ft_stderror(0, "Qualquer coisa: ");
-		printf("%d\n", ft_exit_status(0, FALSE, FALSE));
+		ft_stderror("Exit Status: %d", ft_exit_status(0, FALSE, FALSE));
 	}
 }
 
@@ -92,7 +93,7 @@ void	ft_cli(char ***my_envp)
 			free(input);
 			input = NULL;
 		}
-		input = readline(PROMPT);
+		input = readline("$ ");
 		if (!input)
 		{
 			free(input);
@@ -100,9 +101,7 @@ void	ft_cli(char ***my_envp)
 			break;
 		}
 		if (ft_history(input))
-		{
 			ft_launcher(input, my_envp);
-		}
 	}
 	rl_clear_history();
 }

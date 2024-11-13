@@ -9,12 +9,12 @@ int	main(int argc, char **argv, char **envp)
 	error_msg = "arguments are not accepted when initializing the program\n";
 	if (argc != 1)
 	{
-		return (ft_stderror(128, error_msg));
+		return (ft_stderror(error_msg), 0);
 	}
 	my_envp = ft_get_my_envp(envp);
 	if (!my_envp)
 	{
-		ft_stderror(1, "");
+		ft_stderror("");// corrigir para buscar erro do stderr
 		ft_error_handler();
 		return (1); // conferir numero de saida
 	}

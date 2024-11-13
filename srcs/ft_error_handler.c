@@ -5,8 +5,8 @@
  *
  * This function processes a variable argument list (`va_list`) and formats 
  * a single argument based on the provided format character. Currently, 
- * it supports the format specifier 's' for strings. If the argument is 
- * `NULL`, it returns a copy of the string "(null)".
+ * it supports the format specifier 'd' and 'i' for numbers, 's' for strings. 
+ * If the argument is  `NULL`, it returns a copy of the string "(null)".
  *
  * @param args The list of arguments to format.
  * @param fmt The format specifier character (e.g., 's' for strings).
@@ -24,26 +24,26 @@ static char	*ft_format(va_list args, const char fmt)
 		if (!specifier)
 			return (ft_strdup("(null)"));
 	}
+	else if (fmt == 'd' || fmt == 'i')
+		specifier = ft_itoa(va_arg(args, int));
 	return (specifier);
 }
 
 /**
- * @brief Prints an error message to stderr with formatted arguments and returns an exit status.
+ * @brief Prints an error message to stderr with formatted arguments and
+ * returns an exit status.
  *
  * This function prints a formatted error message to the standard error output 
- * (stderr) using a format string and additional arguments, similar to `printf`. 
- * It starts by printing a predefined program name (`PROG_NAME_ERROR`) to indicate 
- * the source of the error. For each format specifier (currently only `%s` for strings), 
- * it retrieves the argument from `va_list`, formats it, and writes it to stderr. 
- * The function ends by returning the specified `exit_status`.
- *
- * @param exit_status The exit code to be returned by the function.
+ * (stderr) using a format string and additional args, similar to `printf`. 
+ * It starts by printing a predefined program name to indicate the source of
+ * the error. For each format specifier (currently only `%s` for strings), 
+ * it retrieves the arg from `va_list`, formats it, and writes it to stderr. 
+ * 
  * @param str The format string specifying the output message, using `%` 
  *            as the format specifier (e.g., `%s` for strings).
  * @param ... The variable arguments matching the format specifiers in `str`.
- * @return The provided exit status.
  */
-int	ft_stderror(int exit_status, const char *str, ...)
+void	ft_stderror(const char *str, ...)
 {
 	va_list	args;
 	char	*fmt_specifier;
@@ -63,8 +63,8 @@ int	ft_stderror(int exit_status, const char *str, ...)
 			ft_putchar_fd(*str, 2);
 		str++;
 	}
+	ft_putchar_fd('\n', 2);
 	va_end(args);
-	return (exit_status);
 }
 
 //to be printed on STDERR
