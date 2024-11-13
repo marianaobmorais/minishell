@@ -97,7 +97,7 @@ void	ft_cli(char ***my_envp)
 		if (!input)
 		{
 			free(input);
-			ft_exit(FALSE);
+			ft_exit(FALSE, 0);
 			break;
 		}
 		if (ft_history(input))

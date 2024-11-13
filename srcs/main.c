@@ -6,7 +6,7 @@ int	main(int argc, char **argv, char **envp)
 	char	**my_envp;
 	char	*error_msg;
 
-	error_msg = "arguments are not accepted when initializing the program\n";
+	error_msg = "arguments are not accepted when initializing the program";
 	if (argc != 1)
 	{
 		return (ft_stderror(error_msg), 0);

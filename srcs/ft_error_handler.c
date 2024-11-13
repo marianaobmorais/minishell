@@ -37,7 +37,8 @@ static char	*ft_format(va_list args, const char fmt)
  * (stderr) using a format string and additional args, similar to `printf`. 
  * It starts by printing a predefined program name to indicate the source of
  * the error. For each format specifier (currently only `%s` for strings), 
- * it retrieves the arg from `va_list`, formats it, and writes it to stderr. 
+ * it retrieves the arg from `va_list`, formats it, and writes it to stderr
+ * with a '\n'. 
  * 
  * @param str The format string specifying the output message, using `%` 
  *            as the format specifier (e.g., `%s` for strings).
