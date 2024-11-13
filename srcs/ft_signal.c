@@ -43,8 +43,9 @@ void	sig_child_handler(int sig)
 
 void	sig_heredoc_handler(int sig)
 {
-	//rl_redisplay();
-	ft_exit_status(sig, TRUE, TRUE);
+	if (sig == SIGINT)
+		write(1, "\n", 1);
+	ft_exit_status(130, TRUE, TRUE);
 }
 
 /**
