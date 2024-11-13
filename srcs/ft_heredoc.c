@@ -1,18 +1,24 @@
 #include "../includes/minishell.h"
 
+int	count_line(int mode)
+{
+	static int	line;
+
+	if (line == 0)
+		line = 1;
+	if (mode == 1)
+		line++;
+	return (line);
+}
+
 static int	read_heredoc(char *limiter)
 {
 	int		fd_write;
-	//int		fd_read;
 	char	*input;
-	static int	line;
 
-	//fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	fd_write = open("heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = NULL;
 	ft_signal(HEREDOC); //corrigir
-	if (line == 0)
-		line = 1;
 	while (1)
 	{
 		if (input)
@@ -24,9 +30,8 @@ static int	read_heredoc(char *limiter)
 		if (!input)
 		{
 			free(input);
-			ft_stderror("warning: here-document at line %d delimited by end-of-file (wanted `%s')", line, limiter);
-			//atualizar funcao para receber %d
-			ft_exit_status(0, TRUE, TRUE);
+			ft_stderror("warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
+			break ;
 		}
 		if (ft_strlen(input) != 0 && !ft_strncmp(limiter, input, ft_strlen(input)))
 		{
@@ -35,11 +40,10 @@ static int	read_heredoc(char *limiter)
 		}
 		//verificar se realmente precisa salvar o historico
 		ft_putendl_fd(input, fd_write);
-		line++;
+		count_line(1);
 	}
 	close(fd_write);
-	//return (fd_read = open("/tmp/.heredoc_tmp", O_RDONLY));
-	return (0);
+	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
 int	heredoc_fd(char *limiter)
@@ -47,7 +51,10 @@ int	heredoc_fd(char *limiter)
 	int	fd;
 
 	fd = read_heredoc(limiter);
-	ft_signal(DEFAULT);
-	//unlink("/tmp/.heredoc_tmp");
-	return (ft_exit_status(0, TRUE, TRUE), fd);
+	//ft_signal(DEFAULT);
+	dup2(fd, STDIN_FILENO);
+	//para enviar para outro processo precisa de pipe ?
+	close(fd);
+	unlink("/tmp/.heredoc_tmp");
+	return (ft_exit_status(0, TRUE, FALSE));
 }

@@ -41,13 +41,14 @@ void	ft_launcher(char *input, char ***my_envp)
 	//heredoc_fd("here");
 	if (strcmp(input, "child") == 0) //test
 	{
+		count_line(0);// resolver com struct para persistir qtde linhas inseridas no heredoc
 		pid = fork();
 		if (pid == 0)
 		{
 			ft_signal(DEFAULT);
 			heredoc_fd("here");
-			// char *algo[] = {"/usr/bin/sleep", "50", NULL};
-			// execve(algo[0], algo, *my_envp);
+			char *algo[] = {"/usr/bin/cat", NULL};
+			execve(algo[0], algo, *my_envp);
 		}
 		else
 		{

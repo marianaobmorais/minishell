@@ -50,5 +50,6 @@ void	ft_signal(int type);
 void	ft_cli(char ***envp);
 
 int		heredoc_fd(char *limiter);
+int		count_line(int mode);
 
 #endif //MINISHELL_H
