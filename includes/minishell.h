@@ -37,6 +37,16 @@
 # define HEREDOC 2
 # define DEFAULT 3
 
+typedef struct s_bonsai
+{
+	t_token		*left;
+	t_token		*right;
+	t_type	type;
+	t_state	state;
+	bool	expand;
+
+}	t_bonsai;
+
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
 
@@ -48,8 +58,10 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(const char *str, ...);
 void	ft_signal(int type);
 void	ft_cli(char ***envp);
+void	ft_launcher(t_bonsai *bonsai, char ***my_envp);
 
 int		heredoc_fd(char *limiter);
-int		count_line(int mode);
+
+
 
 #endif //MINISHELL_H
