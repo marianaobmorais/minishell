@@ -23,7 +23,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list_utils.c \
 		$(SRCS_DIR)/tokenize/ft_find_next_quote.c \
-		$(SRCS_DIR)/tokenize/ft_create_tree.c \
+		$(SRCS_DIR)/tokenize/ft_build_tree.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
