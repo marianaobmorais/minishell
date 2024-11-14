@@ -43,7 +43,7 @@ typedef struct s_pipe
 typedef struct s_redir
 {
 	t_token	*token; // int		type;
-	t_token	*target; // pointer to next token
+	t_token	*target; // pointer to next token, file or limiter
 	int		mode;
 	int		fd;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe

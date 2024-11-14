@@ -81,13 +81,14 @@ void	*ft_build_tree(t_list **list)
 		if (!pipe)
 			return (NULL); //ft_error_hanlder(); malloc failed
 		pipe->token = token;
-		*list = (*list)->next; // skip '|'
+		*list = (*list)->next; // skip '|' // need to get root?
 		pipe->left = ft_build_tree(list);
 		pipe->right = ft_build_tree(list);
 		return ((void *)pipe);
 	}
 	else if (token->type == OUTFILE || token->type == INFILE || token->type == APPEND || token->type == HEREDOC)
 	{
+		printf("build redir\n");
 		redir = (t_redir *)malloc(sizeof(t_redir));
 		if (!redir)
 			return (NULL); //ft_error_hanlder(); malloc failed
