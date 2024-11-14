@@ -25,6 +25,23 @@ void	ft_free_vector(char **vector)
 	free(vector);
 }
 
+void	ft_free_node(t_list *node)
+{
+	t_token	*token;
+
+	token = node->content;
+	if (node)
+	{
+		if (token->value)
+		{
+			free(token->value);
+			free(token);
+		}
+		free(node);
+		node = NULL;
+	}
+}
+
 /**
  * @brief Frees all elements of a linked list and the list itself.
  *
@@ -38,7 +55,7 @@ void	ft_free_list(t_list **list)
 {
 	t_list	*current;
 	t_list	*node;
-	t_token	*token;
+	//t_token	*token;
 
 	if (!list)
 		return ;
@@ -46,8 +63,9 @@ void	ft_free_list(t_list **list)
 	{
 		current = (*list)->next;
 		node = *list;
-		token = node->content;
-		if (node)
+		ft_free_node(node);
+		//token = node->content;
+		/* if (node)
 		{
 			if (token->value)
 			{
@@ -56,7 +74,7 @@ void	ft_free_list(t_list **list)
 			}
 			free(node);
 			node = NULL;
-		}
+		} */
 		*list = current;
 	}	
 	free(list);

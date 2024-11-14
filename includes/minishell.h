@@ -38,6 +38,7 @@ char	**ft_get_my_envp(char **envp);
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
 void	ft_free_list(t_list **list);
+void	ft_free_node(t_list *node);
 
 int		ft_exit_status(int status, int write_, int exit_);
 int		ft_stderror(int error, const char *str, ...);
