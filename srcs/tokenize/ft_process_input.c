@@ -27,6 +27,48 @@ void	ft_print_list(t_list **token_list)
 	printf("------------------------------------------------------\n");
 }
 
+void print_tree(void *root, int indent) // delete later
+{
+	if (!root)
+		return;
+
+	// Print the corresponding node type
+	if (((t_pipe *)root)->token->type == PIPE)
+	{
+		t_pipe *pipe_node = (t_pipe *)root;
+		printf("%*sPIPE\n", indent, "");
+		printf("%*s/\n", indent, "");
+		print_tree(pipe_node->left, indent + 4);  // Print the left child with more indentation
+		printf("%*s\\\n", indent, "");
+		print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
+	}
+	else if (((t_redir *)root)->token->type == OUTFILE || ((t_redir *)root)->token->type == INFILE ||
+			 ((t_redir *)root)->token->type == APPEND || ((t_redir *)root)->token->type == HEREDOC)
+	{
+		t_redir *redir_node = (t_redir *)root;
+		printf("%*sREDIRECTION: %s %s\n", indent, "",
+			   (redir_node->token->type == APPEND) ? "APPEND" :
+			   (redir_node->token->type == HEREDOC) ? "HEREDOC" :
+			   (redir_node->token->type == INFILE) ? "INFILE" :
+			   "OUTFILE", redir_node->target->value);
+		if (redir_node->next)
+			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
+	}
+	else if (((t_exec *)root)->token->type == EXEC)
+	{
+		t_exec *exec_node = (t_exec *)root;
+		printf("%*sEXEC: %s\n", indent, "", exec_node->pathname);
+		if (exec_node->args)
+		{
+			printf("%*sArguments:\n", indent + 4, "");
+			for (int i = 0; exec_node->args[i] != NULL; i++)
+			{
+				printf("%*s%s\n", indent + 8, "", exec_node->args[i]);
+			}
+		}
+	}
+}
+
 /**
  * @brief Parses and processes the input string, expanding variables and organizing tokens.
  * 
@@ -41,7 +83,7 @@ void	ft_process_input(char *input, char **my_envp)
 {
 	t_list	**token_list;
 	char	*trimmed;
-	//void	*root;
+	void	*root;
 
 	if (!ft_validate_syntax(input))
 		return ;
@@ -54,7 +96,9 @@ void	ft_process_input(char *input, char **my_envp)
 	ft_process_token_list(token_list, my_envp);
 	ft_print_list(token_list); // delete later
 	//create tree
-	/* root =  */ft_create_tree(token_list);
+	root = ft_build_tree(token_list);
+	if (root)
+		print_tree(root, 40);
 	//if (!root)
 	//	??
 	ft_free_list(token_list);
