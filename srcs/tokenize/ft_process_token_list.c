@@ -88,28 +88,59 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 }
 
 /**
+ * @brief Removes a specified node from a linked list.
+ * 
+ * Detaches the `current` node from the linked list, adjusting the pointers
+ * of the previous node (`prev`) or the head of the list if `current` is the first node.
+ * Frees the memory allocated to the `current` node using `ft_free_node`.
+ * 
+ * @param list Double pointer to the head of the list.
+ * @param prev Pointer to the previous node, or NULL if `current` is the head.
+ * @param current Pointer to the node to be removed.
+ */
+void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
+{
+	t_list	*next;
+
+	next = current->next;
+	if (prev)
+		prev->next = next;
+	else
+		*list = next;
+	ft_free_node(current);
+}
+
+/**
  * @brief Processes a list of tokens to handle expansions and remove quotes.
  * 
- * This function iterates through each token in a list. If a token is marked as expandable,
- * it expands any eligible variables in its value. It also removes quotes from tokens that are 
- * flagged as having quoted segments.
+ * Iterates over a list of tokens, expanding environment variables if needed,
+ * removing quotes, and removing any token whose value becomes empty after expansion.
+ * Updates the linked list to reflect any removed nodes.
  * 
- * @param list Pointer to the list of tokens to process.
- * @param my_envp Environment variable array used for expansion.
+ * @param list Double pointer to the head of the list of tokens.
+ * @param my_envp Array of environment variables for token expansion.
  */
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
 	t_list	*current;
+	t_list	*prev;
+	t_list	*next;
 	t_token	*token;
 
 	current = *list;
+	prev = NULL;
 	while (current)
 	{
+		next = current->next;
 		token = (t_token *)current->content;
-		if (token->expand == true)
+		if (token->expand)
 			ft_expand_tokens(token, my_envp);
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
-		current = current->next;
+		if (token->expand && token->value[0] == '\0')
+			ft_remove_current_node(list, prev, current);
+		else
+			prev = current;
+		current = next;
 	}
 }
