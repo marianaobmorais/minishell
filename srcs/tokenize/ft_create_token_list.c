@@ -123,17 +123,6 @@ void	ft_validate_export_tokens(t_list **list)
 }
 
 /**
- * @brief Creates and processes a token list from a given string.
- * 
- * Allocates memory for a new token list, tokenizes the input string, and applies
- * necessary processing steps such as handling `EXPORT` tokens. Returns a pointer to
- * the created list.
- * 
- * @param s Input string to be tokenized and processed.
- * @return A double pointer to the head of the newly created token list.
- */
-
-/**
  * @brief Creates and processes token list from the input string.
  * 
  * This function allocates memory for a token list, processes the input string to 
