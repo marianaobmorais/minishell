@@ -61,11 +61,6 @@ void	*ft_build_tree(t_list **list)
 	t_redir	*redir;
 	t_exec	*exec;
 
-	if (!list || !*list)
-	{
-		printf("List is empty\n"); //delete later
-		return (NULL);
-	}
 	token = (*list)->content;
 	if (token->type == EXPORT || token->type == EXPORT_AP)
 	{
@@ -74,10 +69,14 @@ void	*ft_build_tree(t_list **list)
 		else if (((t_token *)(*list)->next->content)->type == PIPE)
 			printf("don't save in local variable or do it in child process\n"); //need to do this
 		else
-			*list = (*list)->next; //skip it
+		{
+			*list = (*list)->next; //skip node
+			token = (*list)->content;
+		}
 	}
 	if (token->type == PIPE)
 	{
+		printf("build pipe\n");
 		pipe = (t_pipe *)malloc(sizeof(t_pipe));
 		if (!pipe)
 			return (NULL); //ft_error_hanlder(); malloc failed
@@ -96,7 +95,7 @@ void	*ft_build_tree(t_list **list)
 		if ((*list)->next && (*list)->next->content)
 		{
 			if (((t_token *)(*list)->next->content)->type == PIPE)
-				printf("how to execute >|?\n");
+				printf("how to execute >|?\n");//
 			else
 				redir->target = /* (t_token *) */(*list)->next->content;
 		}
@@ -116,87 +115,3 @@ void	*ft_build_tree(t_list **list)
 	}
 	return (NULL);
 }
-
-
-// t_exec	*ft_init_exec(void)
-// {
-// 	t_exec	*exec;
-
-// 	exec = (t_exec *)malloc(sizeof(t_exec));
-// 	if (!exec)
-// 		return (NULL);
-// 	exec->token = NULL;
-// 	exec->pathname = NULL;
-// 	exec->args = NULL;
-// 	return (exec);
-// }
-
-// void	*ft_parse_exec(t_list **list)
-// {
-// 	t_exec	*exec;
-// 	t_token	*token;
-// 	//t_list	*start;
-
-// 	//token = (t_token *)(*list)->content;
-// 	//if (ft_is_builtin(token))
-// 	//	ft_exec_builtin(list);
-// 	//else
-// 	//start = *list;
-// 	exec = ft_init_exec();
-// 	if (!exec)
-// 		return (NULL); // ft_error_handler(); malloc error
-// 	while (*list)
-// 	{
-// 		token = (t_token *)(*list)->content;
-// 		if (token->type == PIPE)
-// 			break ;
-// 		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
-// 			*list = (*list)->next;
-// 		else if (token->value[0] != '\0') 
-// 		{
-// 			if (!exec->token)
-// 				exec->token = token;
-// 			if (!exec->pathname)
-// 				exec->pathname = token->value;
-// 			exec->args = ft_add_to_vector(exec->args, token->value);
-// 			if (!exec->args)
-// 				return (free(exec), NULL); // ft_error_handler(); malloc error
-// 		}
-// 		*list = (*list)->next;
-// 	}
-// 	return (exec);
-// }
-
-// void	*ft_build_tree(t_list **list) //o que retornar? atualizar no header
-// {
-// 	t_list	*current;
-// 	t_list	*start;
-// 	t_token	*token;
-// 	void	*root;
-
-// 	root = NULL;
-// 	if (!list || !*list)
-// 	{
-// 		printf("List is empty\n"); //delete later
-// 		return (NULL);
-// 	}
-// 	start = *list;
-// 	current = start;
-// 	while (current)
-// 	{
-// 		token = (t_token *)current->content;
-// 		//if (current == start && (token->type == EXPORT || token->type == EXPORT_AP))
-// 		//	ft_export_to_local();
-// 		//if (ft_search_pipe())
-// 		//	ft_parse_pipe();
-// 		//else if (ft_search_redir())
-// 		//	ft_parse_redir();
-// 		/* else */
-// 		if (token->value[0] != '\0')
-// 			root = ft_parse_exec(&current);
-// 		current = current->next;
-// 	}
-// 	if (root)
-// 		print_tree(root, 40); //delete later
-// 	return (root);
-// }

@@ -96,10 +96,13 @@ void	ft_process_input(char *input, char **my_envp)
 	ft_process_token_list(token_list, my_envp);
 	ft_print_list(token_list); // delete later
 	//create tree
-	root = ft_build_tree(token_list);
-	if (root)
-		print_tree(root, 40);
-	//if (!root)
-	//	??
+	if (token_list && *token_list)
+	{
+		root = ft_build_tree(token_list);
+		if (root)
+			print_tree(root, 40);
+		//if (!root)
+		//	??
+	}
 	ft_free_list(token_list);
 }
