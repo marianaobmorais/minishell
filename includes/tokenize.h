@@ -85,6 +85,9 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
 
+//ft_free_tree.c
+void	ft_free_tree(void *root);
+
 void	*ft_build_tree(t_list **token_list);
 
 #endif //TOKENIZE_H
