@@ -80,7 +80,7 @@ void	*ft_build_tree(t_list **list)
 		pipe = (t_pipe *)malloc(sizeof(t_pipe));
 		if (!pipe)
 			return (NULL); //ft_error_hanlder(); malloc failed
-		pipe->token = token;
+		pipe->type = token->type;
 		*list = (*list)->next; // skip '|' // need to get root?
 		pipe->left = ft_build_tree(list);
 		pipe->right = ft_build_tree(list);
@@ -92,7 +92,7 @@ void	*ft_build_tree(t_list **list)
 		redir = (t_redir *)malloc(sizeof(t_redir));
 		if (!redir)
 			return (NULL); //ft_error_hanlder(); malloc failed
-		redir->token = token;
+		redir->type = token->type;
 		if ((*list)->next && (*list)->next->content)
 		{
 			if (((t_token *)(*list)->next->content)->type == PIPE)
@@ -108,7 +108,7 @@ void	*ft_build_tree(t_list **list)
 		exec = (t_exec *)malloc(sizeof(t_exec));
 		if (!exec)
 			return (NULL); //ft_error_hanlder(); malloc failed
-		exec->token = token;
+		exec->type = token->type;
 		exec->pathname = token->value;
 		exec->args = ft_get_args(list);
 		*list = (*list)->next;

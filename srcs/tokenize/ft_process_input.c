@@ -33,7 +33,7 @@ void print_tree(void *root, int indent) // delete later
 		return;
 
 	// Print the corresponding node type
-	if (((t_pipe *)root)->token->type == PIPE)
+	if (((t_pipe *)root)->type == PIPE)
 	{
 		t_pipe *pipe_node = (t_pipe *)root;
 		printf("%*sPIPE\n", indent, "");
@@ -42,19 +42,19 @@ void print_tree(void *root, int indent) // delete later
 		printf("%*s\\\n", indent, "");
 		print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
 	}
-	else if (((t_redir *)root)->token->type == OUTFILE || ((t_redir *)root)->token->type == INFILE ||
-			 ((t_redir *)root)->token->type == APPEND || ((t_redir *)root)->token->type == HEREDOC)
+	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
+			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
 	{
 		t_redir *redir_node = (t_redir *)root;
 		printf("%*sREDIRECTION: %s %s\n", indent, "",
-			   (redir_node->token->type == APPEND) ? "APPEND" :
-			   (redir_node->token->type == HEREDOC) ? "HEREDOC" :
-			   (redir_node->token->type == INFILE) ? "INFILE" :
+			   (redir_node->type == APPEND) ? "APPEND" :
+			   (redir_node->type == HEREDOC) ? "HEREDOC" :
+			   (redir_node->type == INFILE) ? "INFILE" :
 			   "OUTFILE", redir_node->target->value);
 		if (redir_node->next)
 			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
 	}
-	else if (((t_exec *)root)->token->type == EXEC)
+	else if (((t_exec *)root)->type == EXEC)
 	{
 		t_exec *exec_node = (t_exec *)root;
 		printf("%*sEXEC: %s\n", indent, "", exec_node->pathname);

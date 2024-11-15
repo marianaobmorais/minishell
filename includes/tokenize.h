@@ -35,14 +35,14 @@ typedef struct s_token
 
 typedef struct s_pipe
 {
-	t_token	*token; // int		type;
+	int		type;
 	char	*left; // aponta para redir ou exec
 	char	*right; // aponta para pipe 
 }	t_pipe;
 
 typedef struct s_redir
 {
-	t_token	*token; // int		type;
+	int		type;
 	t_token	*target; // pointer to next token, file or limiter
 	int		mode;
 	int		fd;
@@ -51,7 +51,7 @@ typedef struct s_redir
 
 typedef struct s_exec
 {
-	t_token	*token; // int		type;
+	int		type;
 	char	*pathname; // precisa desse?
 	char	**args;
 }	t_exec;
