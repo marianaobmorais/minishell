@@ -45,7 +45,7 @@ void	sig_heredoc_handler(int sig)
 {
 	if (sig == SIGINT)
 		write(1, "\n", 1);
-	ft_exit_status(130, TRUE, FALSE);
+	ft_exit_status(130, TRUE, TRUE);
 }
 
 /**

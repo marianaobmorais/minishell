@@ -1,5 +1,39 @@
 #include "../includes/minishell.h"
 
+static void	ft_handle_quotes(char **new_value, char *value, int *i, char **my_envp)
+{
+	*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	while (value[(*i)] && value[(*i)] != DQUOTE && value[(*i)] != SQUOTE)
+	{
+		if (value[(*i)] == '$' && ((ft_isalnum(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
+			ft_handle_expansion(new_value, value, i, my_envp);
+		else
+			*new_value = ft_charjoin(*new_value, value[(*i)++]);
+	}
+	if (value[(*i)] == DQUOTE || value[(*i)] == SQUOTE)
+		*new_value = ft_charjoin(*new_value, value[(*i)++]);
+}
+
+static char	*ft_expand_input(char *input, char **my_envp)
+{
+	char	*new_input;
+	int		i;
+
+	new_input = NULL;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == DQUOTE || input[i] == SQUOTE)
+			ft_handle_quotes(&new_input, input, &i, my_envp);
+		else if (input[i] == '$' && (ft_isalnum(input[i + 1]) || input[i + 1] == '?' || input[i + 1] == '_'))
+			ft_handle_expansion(&new_input, input, &i, my_envp);//
+		else if (input[i] && input[i] != DQUOTE && input[i] != SQUOTE)
+			new_input = ft_charjoin(new_input, input[i++]);
+	}
+	free(input);
+	return (new_input);
+}
+
 static int	count_line(int mode)
 {
 	static int	line;
@@ -11,7 +45,7 @@ static int	count_line(int mode)
 	return (line);
 }
 
-static int	read_heredoc(char *limiter)
+static int	read_heredoc(char *limiter, int flag, char **my_envp)
 {
 	int		fd_write;
 	char	*input;
@@ -31,8 +65,9 @@ static int	read_heredoc(char *limiter)
 			free(input);
 			break ;
 		}
-		printf("\nnext\n");
-		//verificar se realmente precisa salvar o historico
+		add_history(input);
+		if (flag == TRUE)
+			input = ft_expand_input(input, my_envp);
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
 	}
@@ -40,12 +75,12 @@ static int	read_heredoc(char *limiter)
 	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter)
+int	heredoc_fd(char *limiter, char **my_envp)
 {
 	int	fd;
 
 	ft_signal(HEREDOC); //corrigir
-	fd = read_heredoc(limiter);
+	fd = read_heredoc(limiter, 0, my_envp);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	unlink("/tmp/.heredoc_tmp");

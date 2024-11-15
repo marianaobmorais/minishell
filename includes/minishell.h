@@ -58,9 +58,9 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(const char *str, ...);
 void	ft_signal(int type);
 void	ft_cli(char ***envp);
-void	ft_launcher(t_bonsai *bonsai, char ***my_envp);
+//void	ft_launcher(t_bonsai *bonsai, char ***my_envp);
 
-int		heredoc_fd(char *limiter);
+int		heredoc_fd(char *limiter, char **my_envp);
 
 
 
