@@ -46,7 +46,7 @@ void print_tree(void *root, int indent) // delete later
 			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
 	{
 		t_redir *redir_node = (t_redir *)root;
-		printf("%*sREDIRECTION: %s %s\n", indent, "",
+		printf("%*sREDIRECTION: %s %s\n", indent - 5, "",
 			   (redir_node->type == APPEND) ? "APPEND" :
 			   (redir_node->type == HEREDOC) ? "HEREDOC" :
 			   (redir_node->type == INFILE) ? "INFILE" :
@@ -54,7 +54,7 @@ void print_tree(void *root, int indent) // delete later
 		if (redir_node->next)
 			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
 	}
-	else if (((t_exec *)root)->type == EXEC)
+	else if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT || ((t_exec *)root)->type == EXPORT_AP)
 	{
 		t_exec *exec_node = (t_exec *)root;
 		printf("%*sEXEC: %s\n", indent - 5, "", exec_node->pathname);
