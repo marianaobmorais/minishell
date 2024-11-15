@@ -38,8 +38,8 @@ void print_tree(void *root, int indent) // delete later
 		t_pipe *pipe_node = (t_pipe *)root;
 		printf("%*sPIPE\n", indent, "");
 		printf("%*s/\n", indent, "");
-		print_tree(pipe_node->left, indent + 4);  // Print the left child with more indentation
-		printf("%*s\\\n", indent, "");
+		print_tree(pipe_node->left, indent + 0);  // Print the left child with more indentation
+		printf("%*s\\\n", indent + 10, "");
 		print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
 	}
 	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
@@ -57,13 +57,13 @@ void print_tree(void *root, int indent) // delete later
 	else if (((t_exec *)root)->type == EXEC)
 	{
 		t_exec *exec_node = (t_exec *)root;
-		printf("%*sEXEC: %s\n", indent, "", exec_node->pathname);
+		printf("%*sEXEC: %s\n", indent - 5, "", exec_node->pathname);
 		if (exec_node->args)
 		{
-			printf("%*sArguments:\n", indent + 4, "");
+			printf("%*sArguments:\n", indent - 5, "");
 			for (int i = 0; exec_node->args[i] != NULL; i++)
 			{
-				printf("%*s%s\n", indent + 8, "", exec_node->args[i]);
+				printf("%*s%s\n", indent, "", exec_node->args[i]);
 			}
 		}
 	}
