@@ -35,15 +35,15 @@ typedef struct s_token
 
 typedef struct s_pipe
 {
-	t_token	*token; // int		type;
+	int		type;
 	char	*left; // aponta para redir ou exec
 	char	*right; // aponta para pipe 
 }	t_pipe;
 
 typedef struct s_redir
 {
-	t_token	*token; // int		type;
-	char	*file;
+	int		type;
+	t_token	*target; // pointer to next token, file or limiter
 	int		mode;
 	int		fd;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
@@ -51,7 +51,7 @@ typedef struct s_redir
 
 typedef struct s_exec
 {
-	t_token	*token; // int		type;
+	int		type;
 	char	*pathname; // precisa desse?
 	char	**args;
 }	t_exec;
@@ -85,6 +85,9 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
 
-void	*ft_create_tree(t_list **token_list);
+//ft_free_tree.c
+void	ft_free_tree(void *root);
+
+void	*ft_build_tree(t_list **token_list);
 
 #endif //TOKENIZE_H

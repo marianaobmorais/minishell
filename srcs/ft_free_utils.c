@@ -24,21 +24,46 @@ void	ft_free_vector(char **vector)
 	}
 	free(vector);
 }
+/**
+ * @brief Frees memory allocated for a list node and its associated token.
+ * 
+ * Safely deallocates a given list node along with its associated `t_token` structure and
+ * the token's `value` string. This function prevents memory leaks by freeing each component
+ * individually, starting with the token value, then the token itself, and finally the node.
+ * 
+ * @param node Pointer to the list node to be freed.
+ */
+void	ft_free_node(t_list *node)
+{
+	t_token	*token;
+
+	if (node)
+	{
+		token = node->content;
+		if (token)
+		{
+			if (token->value)
+				free(token->value);
+			free(token);
+		}
+		free(node);
+	}
+}
 
 /**
  * @brief Frees all elements of a linked list and the list itself.
  *
- * This function iterates through the linked list, freeing each node's content
- * and the node itself using the `ft_lstclear` function. After clearing the list,
- * it frees the list pointer and sets it to NULL to prevent dangling pointers.
+ * Iterates through each node in the provided list, freeing each node and its associated
+ * `t_token` structure using `ft_free_node`. Once all nodes are freed, the list pointer
+ * itself is deallocated, set to NULL to prevent dangling pointers, ensuring complete
+ * cleanup of the list and its elements.
  *
- * @param list A pointer to the linked list to be freed.
+ * @param list Double pointer to the head of the list to be freed.
  */
 void	ft_free_list(t_list **list)
 {
 	t_list	*current;
 	t_list	*node;
-	t_token	*token;
 
 	if (!list)
 		return ;
@@ -46,17 +71,8 @@ void	ft_free_list(t_list **list)
 	{
 		current = (*list)->next;
 		node = *list;
-		token = node->content;
-		if (node)
-		{
-			if (token->value)
-			{
-				free(token->value);
-				token->value = NULL;
-			}
-			free(node);
-			node = NULL;
-		}
+		ft_free_node(node);
+		node = NULL;
 		*list = current;
 	}	
 	free(list);
