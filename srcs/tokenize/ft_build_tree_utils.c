@@ -32,24 +32,25 @@ char	**ft_add_to_vector(char **vector, char *new_str)
 char	**ft_get_args(t_list **list)
 {
 	char	**args;
-	t_list	*current;
+	t_list	*curr;
 	t_token	*token;
 
 	args = NULL;
-	current = *list;
-	while (current)
+	curr = *list;
+	while (curr)
 	{
-		token = (t_token *)current->content;
+		token = (t_token *)curr->content;
 		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
 			args = ft_add_to_vector(args, token->value);
-		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
+		else if (token->type == APPEND || token->type == OUTFILE
+				|| token->type == HEREDOC || token->type == INFILE)
 		{
-			if (current->next && ((t_token *)current->next->content)->type != PIPE) //the check current->next is redundant
-				current = current->next;
+			if (curr->next && ((t_token *)curr->next->content)->type != PIPE) //the check curr->next is redundant
+				curr = curr->next;
 		}
 		else if (token->type == PIPE)
 			break ;
-		current = current->next;
+		curr = curr->next;
 	}
 	return (args);
 }
@@ -86,7 +87,8 @@ bool	ft_find_next_redir(t_list **list)
 			//printf("find_next_redir loop: found pipe -> break\n"); //debug
 			break ;
 		}
-		if (token->type == OUTFILE || token->type == INFILE || token->type == APPEND || token->type == HEREDOC)
+		if (token->type == OUTFILE || token->type == INFILE
+				|| token->type == APPEND || token->type == HEREDOC)
 		{
 			//printf("redir: Found redir, updated list to: %s\n", (*list) ? ((t_token *)(*list)->content)->value : "NULL"); // debug
 			return (true);

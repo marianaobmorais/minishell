@@ -19,7 +19,7 @@ void	ft_assign_redir_mode(t_redir **redir) //precisamos disso?
 	}
 	else if ((*redir)->type == HEREDOC)
 	{
-		(*redir)->mode = O_RDONLY; //not sure?? //O_WRONLY | O_CREAT | O_APPEND;
+		(*redir)->mode = O_RDONLY; //not sure??
 		(*redir)->fd = 0; // not sure??
 	}
 }
@@ -84,7 +84,8 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	t_redir	*redir;
 
 	token = (*list)->content;
-	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
+	if (!exec && (token->type == EXEC || token->type == EXPORT
+			|| token->type == EXPORT_AP))
 	{
 		exec = ft_create_exec_node(token, list);
 		if (!list || !*list || !exec)
@@ -93,7 +94,8 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		if (token->type == PIPE)
 			return ((void *)exec);
 	}
-	if (token->type == OUTFILE || token->type == INFILE || token->type == APPEND || token->type == HEREDOC)
+	if (token->type == OUTFILE || token->type == INFILE
+			|| token->type == APPEND || token->type == HEREDOC)
 	{
 		redir = ft_create_redir_node(token, list, exec);
 		return ((void *)redir);
@@ -117,7 +119,6 @@ void	*ft_build_tree(t_list **list)
 			token = (*list)->content;
 		}
 	}
-	//start root with pipe struct, regardless of the presence of pipes
 	pipe = (t_pipe *)malloc(sizeof(t_pipe));
 	if (!pipe)
 		return (NULL); //ft_error_hanlder(); malloc failed
@@ -127,12 +128,8 @@ void	*ft_build_tree(t_list **list)
 		return (NULL);
 	if (!list || !*list)
 		return ((void *)pipe);
-	//printf("tree: checking content for right pipe: %s\n", ((t_token *)(*list)->content)->value); //debug
-	if (ft_find_next_pipe(list)) // check is there is pipe and if true, update list_to_the_right
-	{
-		//printf("tree: calling ft_build_tree\n"); //debug
+	if (ft_find_next_pipe(list)) // check if there is a pipe and if true, update list
 		pipe->right = ft_build_tree(list);
-	}
 	else
 		pipe->right = NULL;
 	return ((void *)pipe);
@@ -222,4 +219,40 @@ void	*ft_build_tree(t_list **list)
 // 		return ((void *)redir);
 // 	}
 // 	return (NULL);
+// }
+
+// void	*ft_build_tree(t_list **list) //before refactoring
+// {
+// 	t_token	*token;
+// 	t_pipe	*pipe;
+// 	token = (*list)->content;
+// 	while (*list && (token->type == EXPORT || token->type == EXPORT_AP))
+// 	{
+// 		if (!((*list)->next) || ((t_token *)(*list)->next->content)->type == PIPE)
+// 			break ;
+// 		else
+// 		{
+// 			*list = (*list)->next; //skip node
+// 			token = (*list)->content;
+// 		}
+// 	}
+// 	//start root with pipe struct, regardless of the presence of pipes
+// 	pipe = (t_pipe *)malloc(sizeof(t_pipe));
+// 	if (!pipe)
+// 		return (NULL); //ft_error_hanlder(); malloc failed
+// 	pipe->type = PIPE;
+// 	pipe->left = ft_build_branch(list, NULL);
+// 	if (!pipe->left)
+// 		return (NULL);
+// 	if (!list || !*list)
+// 		return ((void *)pipe);
+// 	//printf("tree: checking content for right pipe: %s\n", ((t_token *)(*list)->content)->value); //debug
+// 	if (ft_find_next_pipe(list)) // check is there is pipe and if true, update list_to_the_right
+// 	{
+// 		//printf("tree: calling ft_build_tree\n"); //debug
+// 		pipe->right = ft_build_tree(list);
+// 	}
+// 	else
+// 		pipe->right = NULL;
+// 	return ((void *)pipe);
 // }
