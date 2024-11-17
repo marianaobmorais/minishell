@@ -23,5 +23,5 @@ int	ft_find_next_quote(char *s, int i, char c)
 			return (i);
 		i++;
 	}
-	return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
+	return (-1);
 }
