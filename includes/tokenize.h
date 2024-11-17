@@ -1,7 +1,8 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "&;()\\{}[^`*"
+# define SPECIALCHARS "{}[^"
+# define INVALIDCHARS "&;()\\`*~"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
@@ -97,5 +98,8 @@ bool	ft_find_next_exec(t_list **list);
 
 //ft_free_tree.c
 void	ft_free_tree(void *root);
+
+//ft_strchrstr.c
+int	ft_strchrstr(const char *s1, const char *s2);
 
 #endif //TOKENIZE_H
