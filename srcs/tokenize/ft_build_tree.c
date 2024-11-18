@@ -1,5 +1,15 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Searches for the next pipe token in the list and advances the pointer.
+ * 
+ * Iterates through the token list to find the next pipe ('|') token. If a pipe is found, 
+ * the list pointer is updated to the token immediately after the pipe and returns true. 
+ * Otherwise, the pointer reaches the end of the list and returns false.
+ * 
+ * @param list A double pointer to the token list, updated to the position after the pipe if found.
+ * @return true if a pipe token is found, otherwise false.
+ */
 static bool	ft_find_next_pipe(t_list **list)
 {
 	t_token	*token;
@@ -9,7 +19,7 @@ static bool	ft_find_next_pipe(t_list **list)
 		token = (t_token *)(*list)->content;
 		if (token->type == PIPE)
 		{
-			*list = (*list)->next; // update list to token after pipe '|' before returning
+			*list = (*list)->next;
 			return (true);
 		}
 		*list = (*list)->next;
@@ -17,6 +27,15 @@ static bool	ft_find_next_pipe(t_list **list)
 	return (false);
 }
 
+/**
+ * @brief Skips consecutive `EXPORT` tokens in the list.
+ * 
+ * Advances the token list pointer past consecutive `EXPORT` or `EXPORT_AP` tokens. 
+ * Stops if a pipe ('|') token or the end of the list is reached.
+ * 
+ * @param list A double pointer to the token list, updated to the first non-`EXPORT` token 
+ *             or a pipe token.
+ */
 static void	ft_skip_export_tokens(t_list **list)
 {
 	t_token	*token;
@@ -29,12 +48,22 @@ static void	ft_skip_export_tokens(t_list **list)
 			break ;
 		else
 		{
-			*list = (*list)->next; //skip node
+			*list = (*list)->next;
 			token = (*list)->content;
 		}
 	}
 }
 
+/**
+ * @brief Constructs a binary tree representing a pipeline structure.
+ * 
+ * Builds a binary tree where each node represents a pipe ('|') and its children 
+ * represent the commands or branches connected by that pipe. The function recursively 
+ * processes the token list, skipping invalid tokens and linking branches. 
+ * 
+ * @param list A double pointer to the token list, updated as tokens are consumed during tree building.
+ * @return A pointer to the root of the constructed binary tree, or NULL if an error occurs.
+ */
 void	*ft_build_tree(t_list **list)
 {
 	t_pipe	*pipe;
@@ -49,7 +78,7 @@ void	*ft_build_tree(t_list **list)
 		return (NULL);
 	if (!list || !*list)
 		return ((void *)pipe);
-	if (ft_find_next_pipe(list)) // check if there is a pipe and if true, update list
+	if (ft_find_next_pipe(list))
 		pipe->right = ft_build_tree(list);
 	else
 		pipe->right = NULL;
