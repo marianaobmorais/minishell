@@ -52,11 +52,11 @@ void ft_parent_process(void *node, char ***my_envp, pid_t pid, int *curr_fds)
 		ft_launcher(((t_pipe *)node)->right, NULL, my_envp, NULL);
 }
 
-void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fds) // receber tree
+void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fds)
 {
-	pid_t pid;
-	int fds[2];
-	int original_stdin;
+	pid_t	pid;
+	int		fds[2];
+	int		original_stdin;
 
 	original_stdin = dup(STDIN_FILENO);
 	if (!curr_node)
@@ -68,17 +68,12 @@ void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fd
 		pid = ft_child_process(curr_node, my_envp, fds);
 		ft_parent_process(curr_node, my_envp, pid, fds);
 	}
-	else if (((t_redir *)curr_node)->type == OUTFILE)
-	{
-		ft_putstr_fd("outfile\n", 2); //fazer funcao para receber e tratar cada um
-		ft_launcher(((t_pipe *)curr_node)->left, next_node, my_envp, curr_fds);
-	}
+	else if (ft_redir(((t_redir *)curr_node), *my_envp))
+		ft_launcher(((t_redir *)curr_node)->next, next_node, my_envp, curr_fds);
 	else if (((t_exec *)curr_node)->type == EXEC)
 	{
 		close(curr_fds[0]);
-		if (next_node == NULL)
-			close(curr_fds[1]);
-		else
+		if (next_node != NULL)
 			dup2(curr_fds[1], STDOUT_FILENO);
 		close(curr_fds[1]);
 		ft_exec(((t_exec *)curr_node)->args, *my_envp);

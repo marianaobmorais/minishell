@@ -45,7 +45,7 @@ static int	count_line(int mode)
 	return (line);
 }
 
-static int	read_heredoc(char *limiter, int flag, char **my_envp)
+static int	read_heredoc(char *limiter, int expand, char **my_envp)
 {
 	int		fd_write;
 	char	*input;
@@ -66,7 +66,7 @@ static int	read_heredoc(char *limiter, int flag, char **my_envp)
 			break ;
 		}
 		add_history(input);
-		if (flag == TRUE)
+		if (expand == FALSE)
 			input = ft_expand_input(input, my_envp);
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
@@ -75,12 +75,12 @@ static int	read_heredoc(char *limiter, int flag, char **my_envp)
 	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter, char **my_envp)
+int	heredoc_fd(char *limiter, char **my_envp, int expand)
 {
 	int	fd;
 
 	ft_signal(HEREDOC_); //corrigir
-	fd = read_heredoc(limiter, 0, my_envp);
+	fd = read_heredoc(limiter, expand, my_envp);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	unlink("/tmp/.heredoc_tmp");
