@@ -32,43 +32,6 @@ int	ft_history(char *input)
 	return (0);	
 }
 
-// void	ft_launcher(char *input, char ***my_envp)
-// {
-// 	pid_t	pid;
-// 	int		status;
-
-// 	ft_process_input(input, *my_envp);
-// 	//heredoc_fd("here");
-// 	if (strcmp(input, "child") == 0) //test
-// 	{
-// 		//ft_signal(DEFAULT);
-// 		if (heredoc_fd("here") == -1)
-// 			return ;
-// 		pid = fork();
-// 		if (pid == 0)
-// 		{
-// 			ft_signal(DEFAULT);
-// 			char *algo[] = {"/usr/bin/cat", NULL};
-// 			execve(algo[0], algo, *my_envp);
-// 		}
-// 		else
-// 		{
-// 			if (waitpid(pid, &status, 0) != -1)
-// 			{
-// 				if (WIFEXITED(status))
-// 					ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); //grava exit status
-//         		else if (WIFSIGNALED(status))
-// 				{
-// 					ft_signal(CHILD);
-// 					ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); //grava exit status
-// 				}
-// 			}
-// 		}
-// 	}
-// 	if (strcmp(input, "status") == 0) //Test
-// 		ft_stderror("Exit Status: %d", ft_exit_status(0, FALSE, FALSE));
-// }
-
 /**
  * @brief Main command-line interface loop for processing user commands.
  *
@@ -107,6 +70,7 @@ void	ft_cli(char ***my_envp)
 			bonsai = ft_process_input(input, *my_envp);
 			if (bonsai)
 				ft_launcher(bonsai, NULL, my_envp, NULL);
+			ft_free_tree(bonsai);
 		}
 	}
 	rl_clear_history();
