@@ -94,7 +94,7 @@ void	*ft_build_tree(t_list **token_list);
 
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);
-//ft_branch_tree_utils.c
+//ft_built_branch_utils.c
 char	**ft_add_to_vector(char **vector, char *new_str);
 char	**ft_get_args(t_list **list);
 bool	ft_find_next_redir(t_list **list);
