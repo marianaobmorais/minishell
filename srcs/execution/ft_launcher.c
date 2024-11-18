@@ -20,7 +20,6 @@ pid_t	ft_child_process(void *bonsai, char ***my_envp, int *fds_current)
 	if (pid == 0)
 	{
 		ft_signal(CHILD_);
-		ft_putstr_fd("Dentro de Child\n", 2);
 		ft_launcher(((t_pipe *)bonsai)->left, ((t_pipe *)bonsai)->right, my_envp, fds_current); //left | Termina apenas no ultimo no da esquerda
 		exit(0);
 	}
@@ -57,9 +56,13 @@ void	ft_launcher(void *curr_bonsai, void *next_bonsai, char ***my_envp, int *fds
 {
 	pid_t	pid;
 	int		fds[2];
+	int		original_stdin;
 
+	original_stdin = dup(STDIN_FILENO);
 	if (!curr_bonsai)
+	{
 		return ;
+	}
 	else if (((t_pipe *)curr_bonsai)->type == PIPE)
 	{
 		if (pipe(fds) == -1)
@@ -84,4 +87,6 @@ void	ft_launcher(void *curr_bonsai, void *next_bonsai, char ***my_envp, int *fds
 	}
 	else
 		ft_putstr_fd("Perdeu a linha\n\n", 2);
+	dup2(original_stdin, STDIN_FILENO);
+	close(original_stdin);
 }
