@@ -28,7 +28,10 @@ int	ft_redir(t_redir *node, char **my_envp)
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
 		fd = ft_open(node->type, node->target->value, node->mode);
-		dup2(fd, STDIN_FILENO);
+		if (node->type == OUTFILE || node->type == APPEND)
+			dup2(fd, STDOUT_FILENO);
+		else
+			dup2(fd, STDIN_FILENO);
 		close(fd);
 		return (1);
 	}
