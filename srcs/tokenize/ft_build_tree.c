@@ -76,11 +76,10 @@ void	*ft_build_tree(t_list **list)
 	pipe->left = ft_build_branch(list, NULL);
 	if (!pipe->left)
 		return (NULL);
+	pipe->right = NULL;
 	if (!list || !*list)
 		return ((void *)pipe);
 	if (ft_find_next_pipe(list))
 		pipe->right = ft_build_tree(list);
-	else
-		pipe->right = NULL;
 	return ((void *)pipe);
 }

@@ -56,6 +56,7 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 		*list = (*list)->next; // move up to target
 		redir->target = (t_token *)(*list)->content;
 	}
+	redir->next = NULL;
 	return (redir);
 }
 
