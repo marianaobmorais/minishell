@@ -83,11 +83,13 @@ int	ft_history(char *input)
 void	ft_cli(char ***my_envp)
 {
 	char	*input;
+	void	**bonsai;
 
 	input = NULL;
-	ft_signal(PARENT);
+	bonsai = NULL;
 	while (1)
 	{
+		ft_signal(PARENT_);
 		if (input)
 		{
 			free(input);
@@ -102,8 +104,9 @@ void	ft_cli(char ***my_envp)
 		}
 		if (ft_history(input))
 		{
-			//ft_process_input()
-			ft_launcher(NULL, my_envp);
+			bonsai = ft_process_input(input, *my_envp);
+			if (bonsai)
+				input = ft_launcher(bonsai, NULL, my_envp, NULL);
 		}
 	}
 	rl_clear_history();
