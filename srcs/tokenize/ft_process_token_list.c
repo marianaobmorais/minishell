@@ -132,7 +132,7 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 
 	current = *list;
 	prev = NULL;
-	while (current)
+	while (current) // tratar como vector
 	{
 		next = current->next;
 		token = (t_token *)current->content;
