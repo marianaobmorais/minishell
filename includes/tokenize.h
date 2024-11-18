@@ -1,7 +1,7 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "{}[^"
+# define SPECIALCHARS "{}[^!"
 # define INVALIDCHARS "&;()\\`*~"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
@@ -62,6 +62,9 @@ int		ft_find_next_quote(char *s, int i, char c);
 
 //ft_charjoin.c
 char	*ft_charjoin(char *str, char c);
+
+//ft_isspace.c
+int	ft_isspace(int c);
 
 //ft_check_syntax.c
 int		ft_validate_syntax(char *s);
