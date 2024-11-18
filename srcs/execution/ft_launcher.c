@@ -10,80 +10,78 @@
 // 	close(fd_stdout);
 // }
 
-pid_t	ft_child_process(void *bonsai, char ***my_envp, int *fds_current)
+pid_t ft_child_process(void *node, char ***my_envp, int *curr_fds)
 {
-	pid_t	pid;
+	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
-		ft_error_handler(); //tratar
+		ft_error_handler(); // tratar
 	if (pid == 0)
 	{
 		ft_signal(CHILD_);
-		ft_launcher(((t_pipe *)bonsai)->left, ((t_pipe *)bonsai)->right, my_envp, fds_current); //left | Termina apenas no ultimo no da esquerda
+		ft_launcher(((t_pipe *)node)->left, ((t_pipe *)node)->right, my_envp, curr_fds); // left | Termina apenas no ultimo no da esquerda
 		exit(0);
 	}
 	return (pid);
 }
 
-void	ft_parent_process(void *bonsai, char ***my_envp, pid_t pid, int *fds_current)
+void ft_parent_process(void *node, char ***my_envp, pid_t pid, int *curr_fds)
 {
-	int		status;
+	int status;
 
 	if (waitpid(pid, &status, 0) != -1)
 	{
 		if (WIFEXITED(status))
-			ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); //grava exit status
+			ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); // grava exit status
 		else if (WIFSIGNALED(status))
 		{
 			ft_signal(CHILD_);
-			ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); //grava exit status
-			//talvez da um return -1 para encerrar a funcao launcher e volta ao cli
+			ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); // grava exit status
+			// talvez da um return -1 para encerrar a funcao launcher e volta ao cli
 		}
 	}
 	ft_signal(PARENT_);
-	if (fds_current)
+	if (curr_fds)
 	{
-		close(fds_current[1]);
-		dup2(fds_current[0], STDIN_FILENO);
-		close(fds_current[0]);
+		close(curr_fds[1]);
+		dup2(curr_fds[0], STDIN_FILENO);
+		close(curr_fds[0]);
 	}
-	if (((t_pipe *)bonsai)->right)
-		ft_launcher(((t_pipe *)bonsai)->right, NULL, my_envp, NULL);
+	if (((t_pipe *)node)->right)
+		ft_launcher(((t_pipe *)node)->right, NULL, my_envp, NULL);
 }
 
-void	ft_launcher(void *curr_bonsai, void *next_bonsai, char ***my_envp, int *fds_current) //receber tree
+void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fds) // receber tree
 {
-	pid_t	pid;
-	int		fds[2];
-	int		original_stdin;
+	pid_t pid;
+	int fds[2];
+	int original_stdin;
 
 	original_stdin = dup(STDIN_FILENO);
-	if (!curr_bonsai)
-	{
-		return ;
-	}
-	else if (((t_pipe *)curr_bonsai)->type == PIPE)
+	if (!curr_node)
+		return;
+	else if (((t_pipe *)curr_node)->type == PIPE)
 	{
 		if (pipe(fds) == -1)
-			ft_error_handler(); //tratar
-		pid = ft_child_process(curr_bonsai, my_envp, fds);
-		ft_parent_process(curr_bonsai, my_envp, pid, fds);
+			ft_error_handler(); // tratar
+		pid = ft_child_process(curr_node, my_envp, fds);
+		ft_parent_process(curr_node, my_envp, pid, fds);
 	}
-	// else if (((t_redir *)curr_bonsai)->type == OUTFILE)
-	// {
-	// 	ft_putstr_fd("outfile\n", 2); //fazer funcao para receber e tratar cada um
-	// 	ft_launcher(((t_pipe *)bonsai)->left, my_envp);
-	// }
-	else if (((t_exec *)curr_bonsai)->type == EXEC)
+	else if (((t_redir *)curr_node)->type == OUTFILE)
 	{
-		close(fds_current[0]);
-		if (next_bonsai == NULL)
-			close(fds_current[1]);
+		ft_putstr_fd("outfile\n", 2); //fazer funcao para receber e tratar cada um
+		ft_launcher(((t_pipe *)curr_node)->left, next_node, my_envp, curr_fds);
+	}
+	else if (((t_exec *)curr_node)->type == EXEC)
+	{
+		close(curr_fds[0]);
+		if (next_node == NULL)
+			close(curr_fds[1]);
 		else
-			dup2(fds_current[1], STDOUT_FILENO);
-		close(fds_current[1]);
-		ft_exec(((t_exec *)curr_bonsai)->args, *my_envp);
+			dup2(curr_fds[1], STDOUT_FILENO);
+		close(curr_fds[1]);
+		ft_exec(((t_exec *)curr_node)->args, *my_envp);
 	}
 	else
 		ft_putstr_fd("Perdeu a linha\n\n", 2);

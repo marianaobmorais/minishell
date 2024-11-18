@@ -106,7 +106,7 @@ void	ft_cli(char ***my_envp)
 		{
 			bonsai = ft_process_input(input, *my_envp);
 			if (bonsai)
-				input = ft_launcher(bonsai, NULL, my_envp, NULL);
+				ft_launcher(bonsai, NULL, my_envp, NULL);
 		}
 	}
 	rl_clear_history();
