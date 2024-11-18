@@ -55,25 +55,6 @@ char	**ft_get_args(t_list **list)
 	return (args);
 }
 
-bool	ft_find_next_pipe(t_list **list)
-{
-	t_token	*token;
-
-	while (*list)
-	{
-		token = (t_token *)(*list)->content;
-		//printf("find_next_pipe loop: Current token: %s\n", token->value); // Debug
-		if (token->type == PIPE)
-		{
-			*list = (*list)->next; // update list to token after pipe '|' before returning
-			//printf("pipe: Found PIPE, updated list to: %s\n", (*list) ? ((t_token *)(*list)->content)->value : "NULL"); // debug
-			return (true);
-		}
-		*list = (*list)->next;
-	}
-	return (false);
-}
-
 bool	ft_find_next_redir(t_list **list)
 {
 	t_token	*token;
@@ -81,18 +62,11 @@ bool	ft_find_next_redir(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		//printf("find_next_redir loop: Current token: %s\n", token->value); // Debug
 		if (token->type == PIPE)
-		{
-			//printf("find_next_redir loop: found pipe -> break\n"); //debug
 			break ;
-		}
 		if (token->type == OUTFILE || token->type == INFILE
 				|| token->type == APPEND || token->type == HEREDOC)
-		{
-			//printf("redir: Found redir, updated list to: %s\n", (*list) ? ((t_token *)(*list)->content)->value : "NULL"); // debug
 			return (true);
-		}
 		*list = (*list)->next;
 	}
 	return (false);
@@ -105,17 +79,10 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		//printf("find_next_exec loop: Current token: %s\n", token->value); // Debug
 		if (token->type == PIPE)
-		{
-			//printf("find_next_exec loop: found pipe -> break\n"); //debug
 			break ;
-		}
 		if (token->type == EXEC)
-		{
-			//printf("exec: Found exec: %s\n", (*list) ? ((t_token *)(*list)->content)->value : "NULL"); // debug
 			return (true);
-		}
 		*list = (*list)->next;
 	}
 	return (false);
