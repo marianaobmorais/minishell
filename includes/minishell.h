@@ -24,6 +24,7 @@
 # include "../libft/libft.h"
 # include "builtins.h"
 # include "tokenize.h"
+# include "execution.h"
 
 # define PROMPT "bashinho: " //"\033[47m\033[1;31mb\033[1;33ma\033[1;32ms\033[1;36mh\033[1;34mi\033[1;35mn\033[1;37mh\033[1;30mo\033[1;91m$\033[0m "
 # define PROG_NAME "bashinho"
@@ -32,10 +33,10 @@
 # define TRUE 1
 # define FALSE 0
 
-# define PARENT 0
-# define CHILD 1
-# define HEREDOC 2
-# define DEFAULT 3
+# define PARENT_ 0
+# define CHILD_ 1
+# define HEREDOC_ 2
+# define DEFAULT_ 3
 
 typedef struct s_bonsai
 {
@@ -59,10 +60,5 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(const char *str, ...);
 void	ft_signal(int type);
 void	ft_cli(char ***envp);
-//void	ft_launcher(t_bonsai *bonsai, char ***my_envp);
-
-int		heredoc_fd(char *limiter, char **my_envp);
-
-
 
 #endif //MINISHELL_H

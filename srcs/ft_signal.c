@@ -65,22 +65,22 @@ void	sig_heredoc_handler(int sig)
 void	ft_signal(int type)
 {
 	signal(SIGTSTP, SIG_IGN);
-	if (type == PARENT)
+	if (type == PARENT_)
 	{
 		signal(SIGINT, sig_parent_handler);
 		signal(SIGQUIT, SIG_IGN);
 	}
-	if (type == HEREDOC)
+	if (type == HEREDOC_)
 	{
 		signal(SIGINT, sig_heredoc_handler);
 		signal(SIGQUIT, SIG_IGN);
 	}
-	if (type == DEFAULT)
+	if (type == DEFAULT_)
 	{
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
 	}
-	if (type == CHILD)
+	if (type == CHILD_)
 	{
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
