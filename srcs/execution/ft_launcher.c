@@ -19,7 +19,6 @@ pid_t ft_child_process(void *node, char ***my_envp, int *curr_fds)
 		ft_error_handler(); // tratar
 	if (pid == 0)
 	{
-		ft_signal(CHILD_);
 		ft_launcher(((t_pipe *)node)->left, ((t_pipe *)node)->right, my_envp, curr_fds); // left | Termina apenas no ultimo no da esquerda
 		exit(0);
 	}
@@ -30,18 +29,17 @@ void ft_parent_process(void *node, char ***my_envp, pid_t pid, int *curr_fds)
 {
 	int status;
 
-	if (waitpid(pid, &status, 0) != -1)
+	if (waitpid(pid, &status, 0) != -1) //esperando demais para um |, vai mudar com && e ||
 	{
 		if (WIFEXITED(status))
 			ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); // grava exit status
 		else if (WIFSIGNALED(status))
 		{
-			ft_signal(CHILD_);
+			//ft_signal(CHILD_);
 			ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); // grava exit status
 			// talvez da um return -1 para encerrar a funcao launcher e volta ao cli
 		}
 	}
-	ft_signal(PARENT_);
 	if (curr_fds)
 	{
 		close(curr_fds[1]);
@@ -59,6 +57,7 @@ void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fd
 	int		original_stdin;
 
 	original_stdin = dup(STDIN_FILENO);
+	ft_signal(CHILD_);
 	if (!curr_node)
 		return;
 	else if (((t_pipe *)curr_node)->type == PIPE)

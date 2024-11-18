@@ -73,6 +73,7 @@ void	*ft_build_tree(t_list **list)
 	if (!pipe)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	pipe->type = PIPE;
+	pipe->right = NULL;
 	pipe->left = ft_build_branch(list, NULL);
 	if (!pipe->left)
 		return (NULL);
@@ -80,7 +81,5 @@ void	*ft_build_tree(t_list **list)
 		return ((void *)pipe);
 	if (ft_find_next_pipe(list))
 		pipe->right = ft_build_tree(list);
-	else
-		pipe->right = NULL;
 	return ((void *)pipe);
 }

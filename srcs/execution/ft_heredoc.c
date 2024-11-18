@@ -34,7 +34,7 @@ static char	*ft_expand_input(char *input, char **my_envp)
 	return (new_input);
 }
 
-static int	count_line(int mode)
+static int	count_line(int mode) //nao funcionando dentro do child
 {
 	static int	line;
 
@@ -45,13 +45,14 @@ static int	count_line(int mode)
 	return (line);
 }
 
-static int	read_heredoc(char *limiter, int expand, char **my_envp)
+static int	read_heredoc(char *limiter, int state, char **my_envp)
 {
 	int		fd_write;
 	char	*input;
 
 	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = NULL;
+	ft_signal(HEREDOC_);
 	while (1)
 	{
 		if (input)
@@ -66,7 +67,7 @@ static int	read_heredoc(char *limiter, int expand, char **my_envp)
 			break ;
 		}
 		add_history(input);
-		if (expand == FALSE)
+		if (state == GENERAL)
 			input = ft_expand_input(input, my_envp);
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
@@ -75,12 +76,11 @@ static int	read_heredoc(char *limiter, int expand, char **my_envp)
 	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter, char **my_envp, int expand)
+int	heredoc_fd(char *limiter, char **my_envp, int state)
 {
 	int	fd;
 
-	ft_signal(HEREDOC_); //corrigir
-	fd = read_heredoc(limiter, expand, my_envp);
+	fd = read_heredoc(limiter, state, my_envp);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	unlink("/tmp/.heredoc_tmp");
