@@ -1,7 +1,8 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "&;()\\{}[^`*"
+# define SPECIALCHARS "{}[^!"
+# define INVALIDCHARS "&;()\\`*~"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
@@ -62,6 +63,9 @@ int		ft_find_next_quote(char *s, int i, char c);
 //ft_charjoin.c
 char	*ft_charjoin(char *str, char c);
 
+//ft_isspace.c
+int	ft_isspace(int c);
+
 //ft_check_syntax.c
 int		ft_validate_syntax(char *s);
 int		ft_isspace(int c);
@@ -72,7 +76,7 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	ft_process_input(char *input, char **my_envp);
+void	*ft_process_input(char *input, char **my_envp);
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char** my_envp);
@@ -87,11 +91,12 @@ char	*ft_expand_env(char *s, int *i, char **my_envp);
 
 //ft_build_tree.c
 void	*ft_build_tree(t_list **token_list);
+
+//ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);
-//ft_build_tree_utils.c
+//ft_built_branch_utils.c
 char	**ft_add_to_vector(char **vector, char *new_str);
 char	**ft_get_args(t_list **list);
-bool	ft_find_next_pipe(t_list **list);
 bool	ft_find_next_redir(t_list **list);
 bool	ft_find_next_exec(t_list **list);
 
