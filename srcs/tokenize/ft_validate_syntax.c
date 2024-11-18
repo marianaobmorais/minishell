@@ -1,23 +1,6 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Checks if a character is a whitespace.
- * 
- * This function returns 1 if the character is a space (ASCII 32) or a whitespace character 
- * within the range of ASCII 9 to 13, otherwise returns 0.
- * 
- * @param c The character to check.
- * @return 1 if whitespace, otherwise 0.
- */
-int	ft_isspace(int c)
-{
-	if (c == 32 || (c >= 9 && c <= 13))
-		return (1);
-	else
-		return (0);
-}
-
-/**
  * @brief Iterates over a string to check for unmatched quotes or invalid syntax characters.
  * 
  * This function navigates through the `trim` string, checking if characters are quotes, 
@@ -37,21 +20,21 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	{
 		i = ft_find_next_quote(trim, i, trim[i]);
 		if (i == -1)
-			return (-1);
+			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
 		*special = false;
 	}
-	if (ft_strchr(SPECIALCHARS, trim[i]))
+	if (ft_strchr(INVALIDCHARS, trim[i]))
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
-	if (ft_strchr(METACHARS, trim[i]))
+	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 	{
 		if (*special == true)
 		{
 			if (special_char == '|')
 			{
-				if (trim[i] == '|')
+				if (trim[i] == '|' || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 			}
-			else
+			else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc, pipes don't
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 		}
 		*special = true;
@@ -76,18 +59,18 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
  */
 static bool	ft_is_invalid_first_char(char *s, bool *special)
 {
-	if (s[0] == '#') // it indicates a comment
+	if (s[0] == '#' /* || s[0] == ':' */) // # it indicates a comment. what is :?
 	{
 		*special = true;
 		return (true); // not an error. doesn't change the last exit_code
 	}
-	if ((s[0] == '%' || s[0] == '~' || s[0] == '.') && s[1] == '\0')
+	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.') && (ft_isspace(s[1]) || s[1] == '\0')))
 	{
 		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
 		*special = true;
 		return (true);
 	}
-	if (ft_strchr(SPECIALCHARS, s[0]) || ft_strchr(METACHARS, s[0]))
+	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0]) || ft_strchr(METACHARS, s[0]))
 	{
 		if (s[0] != '<' && s[0] != '>')
 		{
@@ -99,6 +82,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 	*special = false;
 	return (false);
 }
+
 /**
  * @brief Checks syntax validity of a given input string for proper quote usage, valid metacharacter positioning and env expansion.
  *
@@ -113,17 +97,24 @@ int	ft_validate_syntax(char *s)
 
 	trim = ft_strtrim(s, ISSPACE);
 	if (!trim)
-		return (0); //ft_error_handler();
-	i = 0;
+		return (0); //ft_error_handler(); malloc failed
 	if (ft_is_invalid_first_char(trim, &special))
 		return (free(trim), 0);
+	i = 0;
 	while (trim[i])
 	{
 		i = ft_iterate_str(trim, i, &special);
 		if (i == -1)
-			return (free(trim), 0);
+			return (0);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
+		{
+			if (trim[i] == '#') //update brief
+			{
+				i++;
+				break;
+			}
 			special = false;
+		}
 		if (trim[i])
 			i++;
 	}

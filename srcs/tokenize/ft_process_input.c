@@ -70,38 +70,39 @@ void print_tree(void *root, int indent) // delete later
 }
 
 /**
- * @brief Parses and processes the input string, expanding variables and organizing tokens.
+ * @brief Processes the input string to build an execution tree.
  * 
- * This function first validates the syntax of the input and removes leading/trailing whitespace.
- * It then tokenizes the input, expands any variables, removes quotes, and creates an binary tree
- * based on the tokens. Finally, it frees the allocated token list.
+ * This function validates the syntax of the input, tokenizes and processes the input
+ * string, and builds an execution tree for commands, redirections, and pipes.
  * 
  * @param input The raw input string to process.
- * @param my_envp Environment variable array used for token expansion.
+ * @param my_envp The environment variables for token expansion.
+ * @return A pointer to the root of the execution tree if successful, or NULL on failure.
  */
-void	ft_process_input(char *input, char **my_envp)
+void	*ft_process_input(char *input, char **my_envp)
 {
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
 
 	if (!ft_validate_syntax(input))
-		return ;
+		return (NULL); //invalid syntax
 	trimmed = ft_strtrim(input, ISSPACE);
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
-		return ;
-	ft_print_list(token_list); // delete later
-	printf("after expansion:\n");
+		return (NULL); //ft_error_handler // malloc failed
+	ft_print_list(token_list); // debug
+	printf("after expansion:\n"); //debug
 	ft_process_token_list(token_list, my_envp);
-	ft_print_list(token_list); // delete later
-	//create tree
+	ft_print_list(token_list); // debug
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list);
 		if (root)
 			print_tree(root, 40);
-		ft_free_tree(root);
+		return (root);
 	}
-	ft_free_list(token_list);
+	return (NULL);
+	//ft_free_tree(root);
+	//ft_free_list(token_list);
 }
