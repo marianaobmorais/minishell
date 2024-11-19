@@ -10,27 +10,12 @@
  */
 static void	ft_assign_redir_mode(t_redir **redir)
 {
-	//do we need this function?
 	if ((*redir)->type == OUTFILE) 
-	{
 		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;
-		(*redir)->fd = 1;
-	}
 	else if ((*redir)->type == INFILE)
-	{
 		(*redir)->mode = O_RDONLY;
-		(*redir)->fd = 0;
-	}
 	else if ((*redir)->type == APPEND)
-	{
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
-		(*redir)->fd = 1;
-	}
-	else if ((*redir)->type == HEREDOC)
-	{
-		(*redir)->mode = O_RDONLY; //not sure??
-		(*redir)->fd = 0; // not sure??
-	}
 }
 /**
  * @brief Initializes a redirection node based on the current token.
@@ -48,10 +33,12 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
-		return (NULL);
+		return (NULL); //ft_error_hanlder(); malloc failed
+	redir->target = NULL;
+	redir->next = NULL;
 	redir->type = token->type;
 	ft_assign_redir_mode(&redir); //precisamos disso?
-	if ((*list)->next && (*list)->next->content)
+	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next; // move up to target
 		redir->target = (t_token *)(*list)->content;
@@ -78,7 +65,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); 
 	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
 		redir->next =  (void *)exec;
 	else
@@ -145,8 +132,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	t_redir	*redir;
 
 	token = (*list)->content;
-	if (!exec && (token->type == EXEC || token->type == EXPORT
-			|| token->type == EXPORT_AP))
+	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
 	{
 		exec = ft_create_exec_node(token, list);
 		if (!list || !*list || !exec)
