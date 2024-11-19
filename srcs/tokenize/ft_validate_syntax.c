@@ -14,6 +14,7 @@
  */
 static int	ft_iterate_str(char *trim, int i, bool *special)
 {
+	//update brief
 	static char	special_char;
 
 	if (trim[i] == SQUOTE || trim[i] == DQUOTE)
@@ -27,19 +28,23 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 	{
+		if (trim[i] == '&' && trim[i + 1] != '&')
+			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1);
 		if (*special == true)
 		{
-			if (special_char == '|')
+			if (special_char == '|' || special_char == '&') //this is to validate: trailing redirs after pipes (it is accepted)
 			{
-				if (trim[i] == '|' || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
+				if ((trim[i] == '&' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
+					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+				if ((trim[i] == '|' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 			}
-			else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc, pipes don't
+			else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc (BUT NEED TO STUDY THIS), pipes don't
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
 		}
 		*special = true;
 		special_char = trim[i];
-		if (((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i]) || (trim[i] == '>' && trim[i + 1] == '|'))
+		if ((ft_strchr(METACHARS, trim[i]) && trim[i + 1] == trim[i]) || (trim[i] == '>' && trim[i + 1] == '|'))
 			i += 1;
 	}
 	return (i);

@@ -42,7 +42,11 @@ static t_type	ft_get_token_type(char *s)
 	t_type	type;
 
 	if (s[0] == '|')
+	{
+		if (s[1] == '|')
+			return (OR);
 		return (PIPE);
+	}
 	else if (s[0] == '>')
 	{
 		if (s[1] == '>')
@@ -55,6 +59,8 @@ static t_type	ft_get_token_type(char *s)
 			return (HEREDOC);
 		return (INFILE);
 	}
+	else if (s[0] == '&')
+		return (AND);
 	else
 	{
 		type = ft_get_cmd_type(s);
