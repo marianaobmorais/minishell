@@ -53,7 +53,7 @@ void print_tree(void *root, int indent) // delete later
 		t_redir *redir_node = (t_redir *)root;
 		printf("%*sREDIRECTION: %s ", indent - 5, "",
 			   (redir_node->type == APPEND) ? "APPEND" :
-			   (redir_node->type == HEREDOC) ? "HEREDOC" :
+			   (redir_node->type == HEREDOC) ? "HEREDOC" : //why is it printng heredoc when it's supposed to print outfile?
 			   (redir_node->type == INFILE) ? "INFILE" :
 			   "OUTFILE");
 
@@ -86,7 +86,7 @@ void print_tree(void *root, int indent) // delete later
 			while (current)
 			{
 				token = (t_token *)current->content;
-				printf("%s\n", token->value);
+				printf("%*s%s\n", indent, "", token->value);
 				current = current->next;
 			}
 		}
@@ -121,17 +121,18 @@ void	*ft_process_input(char *input, char **my_envp)
 	if (!token_list)
 		return (NULL); //ft_error_handler // malloc failed
 	ft_print_list(token_list); // debug
-	printf("after expansion:\n"); //debug
-	ft_process_token_list(token_list, my_envp);
-	ft_print_list(token_list); // debug
+	//printf("after expansion:\n"); //debug
+	//ft_process_token_list(token_list, my_envp); // will move to execution
+	//ft_print_list(token_list); // debug
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list);
 		if (root)
 			print_tree(root, 40);
+		ft_free_list(token_list); //update brief
 		return (root);
 	}
+	ft_free_list(token_list);
 	return (NULL);
 	//ft_free_tree(root);
-	//ft_free_list(token_list);
 }
