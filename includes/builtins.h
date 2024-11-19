@@ -16,4 +16,8 @@ int		ft_unset(int argc, char **argv, char ***my_envp);
 int		ft_export(int argc, char **argv, char ***my_envp);
 void	ft_print_export(char **envp);
 
+//manage
+bool	ft_isbuiltin(char **args);
+void	ft_exec_builtin(char **args, char **my_envp);
+
 #endif //BUILTINS_H

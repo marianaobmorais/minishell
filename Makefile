@@ -39,6 +39,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/builtins/ft_export_utils.c \
 		$(SRCS_DIR)/builtins/ft_unset.c \
 		$(SRCS_DIR)/builtins/ft_exit.c \
+		$(SRCS_DIR)/builtins/builtins_utils.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 

@@ -33,11 +33,6 @@
 # define TRUE 1
 # define FALSE 0
 
-# define PARENT_ 0
-# define CHILD_ 1
-# define HEREDOC_ 2
-# define DEFAULT_ 3
-
 typedef struct s_bonsai
 {
 	t_token		*left;
