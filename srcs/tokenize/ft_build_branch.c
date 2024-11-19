@@ -16,6 +16,8 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = O_RDONLY;
 	else if ((*redir)->type == APPEND)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
+	else if ((*redir)->type == HEREDOC)
+		(*redir)->mode = -1; //just to init
 }
 /**
  * @brief Initializes a redirection node based on the current token.
@@ -35,18 +37,18 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); malloc failed
-	target = (t_list **)malloc(sizeof(t_list *)); //create t_list **
+	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
 	if (!target)
 		return (NULL); // ft_error_handler();
 	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;
 	redir->type = token->type;
-	ft_assign_redir_mode(&redir); //precisamos disso?
+	ft_assign_redir_mode(&redir);
 	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next; // move up to target
-		ft_lstadd_back(target, *list);
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
 		redir->target = target;
 	}
 	return (redir);

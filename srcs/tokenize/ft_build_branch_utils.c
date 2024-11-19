@@ -10,7 +10,7 @@
  * @param new_str String to add to the vector.
  * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
  */
-/* t_list	**ft_add_to_vector(char **vector, char *new_str) //not used
+char	**ft_add_to_vector(char **vector, char *new_str) //not used here. most likely will do to execution
 {
 	char	**res;
 	int		i;
@@ -37,7 +37,7 @@
 	}
 	res[i] = NULL;
 	return (res);
-} */
+}
 
 /**
  * @brief Extracts a list of argument strings from a token list.
@@ -65,7 +65,7 @@ t_list	**ft_get_args(t_list **list)
 	{
 		token = (t_token *)curr->content;
 		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
-			ft_lstadd_back(args, curr);
+			ft_lstadd_back(args, ft_lstnew(curr->content)); //update brief
 		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
