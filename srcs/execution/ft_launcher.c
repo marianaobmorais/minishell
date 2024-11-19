@@ -6,7 +6,7 @@ pid_t ft_child_process(void *node, char ***my_envp, int *curr_fds)
 
 	pid = fork();
 	if (pid == -1)
-		ft_stderror("erro no fork"); // tratar
+		ft_stderror(TRUE, ""); // tratar encerrar minishell ou apenas falhar linha de comando
 	if (pid == 0)
 	{
 		ft_signal(CHILD_);

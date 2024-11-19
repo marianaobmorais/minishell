@@ -62,7 +62,7 @@ static int	read_heredoc(char *limiter, int state, char **my_envp)
 			&& !ft_strncmp(limiter, input, ft_strlen(input))) || !input)
 		{
 			if (!input)
-				ft_stderror("warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
+				ft_stderror(FALSE, "warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
 			free(input);
 			break ;
 		}
