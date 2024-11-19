@@ -103,9 +103,9 @@ void	ft_cli(char **my_envp)
 		}
 		if (ft_history(input))
 		{
-			ft_process_input(input/* , my_envp */);
+			ft_process_input(input, my_envp);
 			//ft_launcher(NULL, my_envp);
 		}
 	}
-	//rl_clear_history();
+	rl_clear_history();
 }
