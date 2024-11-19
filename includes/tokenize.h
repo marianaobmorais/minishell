@@ -2,8 +2,8 @@
 # define TOKENIZE_H
 
 # define SPECIALCHARS "{}[^!"
-# define INVALIDCHARS "&;()\\`*~"
-# define METACHARS "|<>"
+# define INVALIDCHARS ";()\\`*~"
+# define METACHARS "|<>&"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
 # define DQUOTE 34
@@ -17,7 +17,11 @@ typedef enum e_type
 	INFILE,
 	EXEC,
 	EXPORT,
-	EXPORT_AP
+	EXPORT_AP,
+	AND,
+	OR,
+	PRTHESIS,
+	ROOT
 }	t_type;
 
 typedef enum e_state
@@ -81,7 +85,7 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	*ft_process_input(char *input);
+void	*ft_process_input(char *input, char **my_envp);
 
 //ft_process_token_list.c // move to execution
 void	ft_process_token_list(t_list **token_list, char** my_envp); // move to execution
@@ -95,6 +99,7 @@ char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
 
 //ft_build_tree.c
+void	*ft_build_root(t_list **list, t_type type);
 void	*ft_build_tree(t_list **token_list);
 
 //ft_build_branch.c
