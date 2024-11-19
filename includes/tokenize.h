@@ -44,7 +44,6 @@ typedef struct s_pipe
 typedef struct s_redir
 {
 	int		type;
-	//t_token	*target; //t_list **?? // pointer to next token, file or limiter
 	t_list	**target;
 	int		mode;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
@@ -53,7 +52,7 @@ typedef struct s_redir
 typedef struct s_exec
 {
 	int		type;
-	char	*pathname;
+	char	*pathname;//useful for debug when printing
 	t_list	**args;
 }	t_exec;
 
@@ -82,7 +81,7 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	*ft_process_input(char *input, char **my_envp);
+void	*ft_process_input(char *input, char **my_envp); // move to execution
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char** my_envp);
@@ -101,10 +100,10 @@ void	*ft_build_tree(t_list **token_list);
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);
 //ft_built_branch_utils.c
-t_list	**ft_add_to_vector(char **vector, char *new_str);
 t_list	**ft_get_args(t_list **list);
 bool	ft_find_next_redir(t_list **list);
 bool	ft_find_next_exec(t_list **list);
+char	**ft_add_to_vector(char **vector, char *new_str); // move to execution
 
 //ft_free_tree.c
 void	ft_free_tree(void *root);
