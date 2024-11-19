@@ -124,6 +124,7 @@ void	*ft_process_input(char *input, char **my_envp)
 	//printf("after expansion:\n"); //debug
 	//ft_process_token_list(token_list, my_envp); // will move to execution
 	//ft_print_list(token_list); // debug
+	
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list);
