@@ -108,8 +108,9 @@ void print_tree(void *root, int indent) // delete later
  * @param my_envp The environment variables for token expansion.
  * @return A pointer to the root of the execution tree if successful, or NULL on failure.
  */
-void	*ft_process_input(char *input/* , char **my_envp */)
+void	*ft_process_input(char *input, char **my_envp)
 {
+	(void)my_envp; //delete later
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
@@ -121,13 +122,12 @@ void	*ft_process_input(char *input/* , char **my_envp */)
 	if (!token_list)
 		return (NULL); //ft_error_handler // malloc failed
 	ft_print_list(token_list); // debug
-	//printf("after expansion:\n"); //debug
-	//ft_process_token_list(token_list, my_envp); // will move to execution
-	//ft_print_list(token_list); // debug
-	
+	printf("after expansion:\n"); //debug
+	ft_process_token_list(token_list, my_envp); // will move to execution
+	ft_print_list(token_list); // debug
 	if (token_list && *token_list)
 	{
-		root = ft_build_tree(token_list);
+		root = ft_build_root(token_list, ROOT);
 		if (root)
 			print_tree(root, 40);
 		ft_free_list(token_list); //update brief

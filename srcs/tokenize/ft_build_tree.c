@@ -84,3 +84,32 @@ void	*ft_build_tree(t_list **list)
 		pipe->right = ft_build_tree(list);
 	return ((void *)pipe);
 }
+
+void	*ft_build_root(t_list **list, t_type type)
+{
+	t_pipe	*root;
+	t_pipe	*pipe;
+
+	ft_skip_export_tokens(list);
+	root = (t_pipe *)malloc(sizeof(t_pipe));
+	if (!root)
+		return (NULL); //ft_error_hanlder(); malloc failed
+	pipe = (t_pipe *)malloc(sizeof(t_pipe));
+	if (!pipe)
+		return (NULL); //ft_error_hanlder(); malloc failed
+	root->left = NULL;
+	root->right = NULL;
+	root->type = type;
+
+	root->left = ft_build_tree(*list);
+	if (!root->left)
+		return (NULL);
+	if (!list || !*list)
+		return ((void *)root);
+	if (ft_find_next_root(list)) //to do
+	{
+		//what type??
+		root->right = ft_build_root(list, AND);
+	}
+	return ((void *)root);
+}
