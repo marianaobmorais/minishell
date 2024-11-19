@@ -132,7 +132,7 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 
 	current = *list;
 	prev = NULL;
-	while (current) // tratar como vector
+	while (current)
 	{
 		next = current->next;
 		token = (t_token *)current->content;
@@ -146,4 +146,12 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 			prev = current;
 		current = next;
 	}
+	//no caso da t_list **args pra transformar em char **args // fazer em outra funcão?
+	// while (curr)
+	// {
+	// 	token = (t_token *)curr->content;
+	// 	args = ft_add_to_vector(args, token->value); //malloc check? free allocated mem?
+	// 	curr = curr->next;
+	// }
 }
+
