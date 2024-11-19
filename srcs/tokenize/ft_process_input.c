@@ -29,9 +29,11 @@ void	ft_print_list(t_list **token_list)
 
 void print_tree(void *root, int indent) // delete later
 {
+	t_list	*current;
+	t_token	*token;
+
 	if (!root)
 		return;
-
 	// Check if the node is a PIPE
 	if (((t_pipe *)root)->type == PIPE)
 	{
@@ -44,7 +46,6 @@ void print_tree(void *root, int indent) // delete later
 		if (pipe_node && pipe_node->right)
 			print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
 	}
-
 	// Check if the node is a REDIRECTION
 	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
 			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
@@ -57,15 +58,22 @@ void print_tree(void *root, int indent) // delete later
 			   "OUTFILE");
 
 		// Safely check and print target value
-		if (redir_node->target && ((t_token *)redir_node->target)->value)
-			printf("%s\n", ((t_token *)redir_node->target)->value);
+		if (redir_node->target)
+		{
+			current = *(redir_node->target);
+			while (current)
+			{
+				token = (t_token *)current->content;
+				printf("%s\n", token->value);
+				current = current->next;
+			}
+		}
 		else
 			printf("(no target)\n");
 
 		if (redir_node && redir_node->next)
 			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
 	}
-
 	// Check if the node is an EXEC
 	else if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT || ((t_exec *)root)->type == EXPORT_AP)
 	{
@@ -74,9 +82,12 @@ void print_tree(void *root, int indent) // delete later
 		if (exec_node && exec_node->args)
 		{
 			printf("%*sArguments:\n", indent - 5, "");
-			for (int i = 0; exec_node->args[i] != NULL; i++)
+			current = *(exec_node->args);
+			while (current)
 			{
-				printf("%*s%s\n", indent, "", exec_node->args[i]);
+				token = (t_token *)current->content;
+				printf("%s\n", token->value);
+				current = current->next;
 			}
 		}
 	}
@@ -86,50 +97,6 @@ void print_tree(void *root, int indent) // delete later
 	}
 }
 
-// void print_tree(void *root, int indent) // delete later
-// {
-// 	if (!root)
-// 		return;
-// 	// Print the corresponding node type
-// 	if (((t_pipe *)root)->type == PIPE)
-// 	{
-// 		t_pipe *pipe_node = (t_pipe *)root;
-// 		printf("%*sPIPE\n", indent, "");
-// 		printf("%*s/\n", indent, "");
-// 		if (pipe_node && pipe_node->left)
-// 			print_tree(pipe_node->left, indent + 0);  // Print the left child with more indentation
-// 		printf("%*s\\\n", indent + 10, "");
-// 		if (pipe_node && pipe_node->right)
-// 			print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
-// 	}
-// 	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
-// 			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
-// 	{
-// 		t_redir *redir_node = (t_redir *)root;
-// 		if (redir_node && redir_node->target && redir_node->target->value)
-// 			printf("%*sREDIRECTION: %s %s\n", indent - 5, "",
-// 				   (redir_node->type == APPEND) ? "APPEND" :
-// 				   (redir_node->type == HEREDOC) ? "HEREDOC" :
-// 				   (redir_node->type == INFILE) ? "INFILE" :
-// 				   "OUTFILE", redir_node->target->value);
-// 		if (redir_node && redir_node->next)
-// 			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
-// 	}
-// 	else if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT || ((t_exec *)root)->type == EXPORT_AP)
-// 	{
-// 		t_exec *exec_node = (t_exec *)root;
-// 		if (exec_node)
-// 			printf("%*sEXEC: %s\n", indent - 5, "", exec_node->pathname);
-// 		if (exec_node && exec_node->args)
-// 		{
-// 			printf("%*sArguments:\n", indent - 5, "");
-// 			for (int i = 0; exec_node->args[i] != NULL; i++)
-// 			{
-// 				printf("%*s%s\n", indent, "", exec_node->args[i]);
-// 			}
-// 		}
-// 	}
-// }
 
 /**
  * @brief Processes the input string to build an execution tree.

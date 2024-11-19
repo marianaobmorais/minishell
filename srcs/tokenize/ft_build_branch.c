@@ -30,10 +30,15 @@ static void	ft_assign_redir_mode(t_redir **redir)
 static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
 	t_redir	*redir;
+	t_list	**target;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); malloc failed
+	target = (t_list **)malloc(sizeof(t_list *)); //create t_list **
+	if (!target)
+		return (NULL); // ft_error_handler();
+	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;
 	redir->type = token->type;
@@ -41,7 +46,8 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next; // move up to target
-		redir->target = (t_token *)(*list)->content;
+		ft_lstadd_back(target, *list);
+		redir->target = target;
 	}
 	return (redir);
 }
@@ -101,7 +107,7 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	exec->type = token->type;
 	exec->pathname = token->value;
-	exec->args = ft_get_args(list); //malloc check? execve wiht pahtname but no args
+	exec->args = ft_get_args(list); //malloc check? possible problem: execve wiht pahtname but no args
 	token = (*list)->content;
 	while (*list && (token->type == EXEC || token->type == EXPORT
 			|| token->type == EXPORT_AP))

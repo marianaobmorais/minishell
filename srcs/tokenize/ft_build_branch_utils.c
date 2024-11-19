@@ -10,7 +10,7 @@
  * @param new_str String to add to the vector.
  * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
  */
-char	**ft_add_to_vector(char **vector, char *new_str)
+/* t_list	**ft_add_to_vector(char **vector, char *new_str) //not used
 {
 	char	**res;
 	int		i;
@@ -37,7 +37,7 @@ char	**ft_add_to_vector(char **vector, char *new_str)
 	}
 	res[i] = NULL;
 	return (res);
-}
+} */
 
 /**
  * @brief Extracts a list of argument strings from a token list.
@@ -50,19 +50,22 @@ char	**ft_add_to_vector(char **vector, char *new_str)
  * @return A dynamically allocated string vector containing the extracted arguments, 
  *         or NULL if no arguments are found.
  */
-char	**ft_get_args(t_list **list)
+t_list	**ft_get_args(t_list **list)
 {
-	char	**args;
+	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
 
-	args = NULL;
+	args = (t_list **)malloc(sizeof(t_list *)); //create t_list **
+	if (!args)
+		return (NULL); // ft_error_handler();
+	*args = NULL;
 	curr = *list;
 	while (curr)
 	{
 		token = (t_token *)curr->content;
 		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
-			args = ft_add_to_vector(args, token->value); //malloc check? free allocated mem?
+			ft_lstadd_back(args, curr);
 		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
