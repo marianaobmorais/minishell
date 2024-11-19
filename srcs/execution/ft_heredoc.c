@@ -52,9 +52,9 @@ static int	read_heredoc(char *limiter, int state, char **my_envp)
 
 	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = NULL;
-	ft_signal(HEREDOC_);
 	while (1)
 	{
+		ft_signal(HEREDOC_);
 		if (input)
 			free(input);
 		input = readline("> ");
@@ -81,6 +81,7 @@ int	heredoc_fd(char *limiter, char **my_envp, int state)
 	int	fd;
 
 	fd = read_heredoc(limiter, state, my_envp);
+	ft_signal(DEFAULT_);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	unlink("/tmp/.heredoc_tmp");
