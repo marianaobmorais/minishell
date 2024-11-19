@@ -82,6 +82,7 @@ int	ft_history(char *input)
  */
 void	ft_cli(char **my_envp)
 {
+	(void)my_envp; //remove this line later
 	char	*input;
 
 	input = NULL;
@@ -102,7 +103,7 @@ void	ft_cli(char **my_envp)
 		}
 		if (ft_history(input))
 		{
-			ft_process_input(input, my_envp);
+			ft_process_input(input/* , my_envp */);
 			//ft_launcher(NULL, my_envp);
 		}
 	}

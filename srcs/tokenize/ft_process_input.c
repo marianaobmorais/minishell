@@ -108,7 +108,7 @@ void print_tree(void *root, int indent) // delete later
  * @param my_envp The environment variables for token expansion.
  * @return A pointer to the root of the execution tree if successful, or NULL on failure.
  */
-void	*ft_process_input(char *input, char **my_envp)
+void	*ft_process_input(char *input/* , char **my_envp */)
 {
 	t_list	**token_list;
 	char	*trimmed;

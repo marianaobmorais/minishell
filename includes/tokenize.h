@@ -81,10 +81,10 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	*ft_process_input(char *input, char **my_envp); // move to execution
+void	*ft_process_input(char *input);
 
-//ft_process_token_list.c
-void	ft_process_token_list(t_list **token_list, char** my_envp);
+//ft_process_token_list.c // move to execution
+void	ft_process_token_list(t_list **token_list, char** my_envp); // move to execution
 bool	ft_is_expandable(char *s);
 
 //ft_process_token_list_utils.c
