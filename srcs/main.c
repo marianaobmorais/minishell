@@ -19,7 +19,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_error_handler();
 		return (1); //conferir numero de saida
 	}
-	ft_cli(&my_envp);
+	ft_cli(my_envp);
 	ft_free_vector(my_envp);
 	return (0);
 }
