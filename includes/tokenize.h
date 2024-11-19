@@ -44,7 +44,8 @@ typedef struct s_pipe
 typedef struct s_redir
 {
 	int		type;
-	t_token	*target; // pointer to next token, file or limiter
+	//t_token	*target; //t_list **?? // pointer to next token, file or limiter
+	t_list	**target;
 	int		mode;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
 }	t_redir;
@@ -52,8 +53,8 @@ typedef struct s_redir
 typedef struct s_exec
 {
 	int		type;
-	char	*pathname; // precisa desse?
-	char	**args;
+	char	*pathname;
+	t_list	**args;
 }	t_exec;
 
 typedef struct s_envp
@@ -100,8 +101,8 @@ void	*ft_build_tree(t_list **token_list);
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);
 //ft_built_branch_utils.c
-char	**ft_add_to_vector(char **vector, char *new_str);
-char	**ft_get_args(t_list **list);
+t_list	**ft_add_to_vector(char **vector, char *new_str);
+t_list	**ft_get_args(t_list **list);
 bool	ft_find_next_redir(t_list **list);
 bool	ft_find_next_exec(t_list **list);
 
