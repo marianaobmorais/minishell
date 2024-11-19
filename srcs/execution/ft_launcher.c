@@ -1,26 +1,17 @@
 #include "../../includes/minishell.h"
 
-// static void	ft_restore_fd(int fd_stdin, int fd_stdout)
-// {
-// 	if (dup2(fd_stdin, STDIN_FILENO) == -1)
-// 		ft_error_handler();
-// 	if (dup2(fd_stdout, STDOUT_FILENO) == -1)
-// 		ft_error_handler();
-// 	close(fd_stdin);
-// 	close(fd_stdout);
-// }
-
 pid_t ft_child_process(void *node, char ***my_envp, int *curr_fds)
 {
 	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
-		ft_error_handler(); // tratar
+		ft_stderror("erro no fork"); // tratar
 	if (pid == 0)
 	{
+		ft_signal(CHILD_);
 		ft_launcher(((t_pipe *)node)->left, ((t_pipe *)node)->right, my_envp, curr_fds); // left | Termina apenas no ultimo no da esquerda
-		exit(0);
+		ft_exit_status(0, TRUE, TRUE);
 	}
 	return (pid);
 }
@@ -28,18 +19,23 @@ pid_t ft_child_process(void *node, char ***my_envp, int *curr_fds)
 void ft_parent_process(void *node, char ***my_envp, pid_t pid, int *curr_fds)
 {
 	int status;
+	static int	i; //remover
 
-	if (waitpid(pid, &status, 0) != -1) //esperando demais para um |, vai mudar com && e ||
+	status = 999; // fora do range para assegura que seja um valor valido
+	if (!((t_pipe *)node)->right) //entra apenas no ultimo validar se funciona o signal
 	{
-		if (WIFEXITED(status))
-			ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); // grava exit status
-		else if (WIFSIGNALED(status))
+		if (waitpid(pid, &status, 0) != -1) //esperando demais para um |, vai mudar com && e ||
 		{
-			//ft_signal(CHILD_);
-			ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); // grava exit status
-			// talvez da um return -1 para encerrar a funcao launcher e volta ao cli
+			if (WIFEXITED(status))
+				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE); // grava exit status
+			else if (WIFSIGNALED(status))
+			{
+				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE); // grava exit status
+				// talvez da um return -1 para encerrar a funcao launcher e volta ao cli
+			}
 		}
 	}
+	printf("\n[%d] PID = %d, Status = %d\n", i++, pid, ft_exit_status(0, FALSE, FALSE)); //remover
 	if (curr_fds)
 	{
 		close(curr_fds[1]);
@@ -57,7 +53,6 @@ void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fd
 	int		original_stdin;
 
 	original_stdin = dup(STDIN_FILENO);
-	ft_signal(CHILD_);
 	if (!curr_node)
 		return;
 	else if (((t_pipe *)curr_node)->type == PIPE)
@@ -71,6 +66,7 @@ void ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fd
 		ft_launcher(((t_redir *)curr_node)->next, next_node, my_envp, curr_fds);
 	else if (((t_exec *)curr_node)->type == EXEC)
 	{
+		ft_signal(CHILD_);
 		close(curr_fds[0]);
 		if (next_node != NULL)
 			dup2(curr_fds[1], STDOUT_FILENO);
