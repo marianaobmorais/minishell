@@ -1,5 +1,5 @@
 #ifndef EXECUTION_H
-#define EXECUTION_H
+# define EXECUTION_H
 
 typedef enum e_signal
 {
@@ -9,7 +9,13 @@ typedef enum e_signal
 	DEFAULT_
 }	t_signal;
 
-void	ft_launcher(void *curr_node, void *next_node, char ***my_envp, int *curr_fds);
+typedef struct s_env
+{
+	char	**global;
+	char	**local;
+}	t_env;
+
+void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds);
 void	ft_exec(char **args, char **my_envp);
 int		ft_redir(t_redir *node, char **my_envp);
 int		heredoc_fd(char *limiter, char **my_envp, int state);

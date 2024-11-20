@@ -43,7 +43,7 @@ int	ft_history(char *input)
  * @param my_envp A pointer to the array of environment variables, passed to functions 
  *                that execute commands with the current environment.
  */
-void	ft_cli(char ***my_envp)
+void	ft_cli(t_env *env)
 {
 	char	*input;
 	void	**bonsai;
@@ -67,10 +67,10 @@ void	ft_cli(char ***my_envp)
 		}
 		if (ft_history(input))
 		{
-			bonsai = ft_process_input(input, *my_envp);
+			bonsai = ft_process_input(input, env->global);
 			if (bonsai)
-				ft_launcher(bonsai, NULL, my_envp, NULL);
-			ft_free_tree(bonsai);
+				ft_launcher(bonsai, NULL, env, NULL);
+			//ft_free_tree(bonsai);
 		}
 	}
 	rl_clear_history();

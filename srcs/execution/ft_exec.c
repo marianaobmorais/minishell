@@ -57,6 +57,6 @@ void	ft_exec(char **args, char **my_envp)
 	{
 		pathname = ft_findpath(my_envp, args);
 		if (execve(pathname, args, my_envp) == -1)
-			ft_error_handler();
+			ft_stderror(TRUE, "%s", pathname);
 	}
 }

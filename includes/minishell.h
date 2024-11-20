@@ -26,22 +26,12 @@
 # include "tokenize.h"
 # include "execution.h"
 
-# define PROMPT "bashinho: " //"\033[47m\033[1;31mb\033[1;33ma\033[1;32ms\033[1;36mh\033[1;34mi\033[1;35mn\033[1;37mh\033[1;30mo\033[1;91m$\033[0m "
+# define PROMPT "\001\002\033[47m\033[1;31mb\033[1;33ma\033[1;32ms\033[1;36mh\033[1;34mi\033[1;35mn\033[1;37mh\033[1;30mo\033[1;91m$\033[0m\001\002 \b "
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
 # define TRUE 1
 # define FALSE 0
-
-typedef struct s_bonsai
-{
-	t_token		*left;
-	t_token		*right;
-	t_type	type;
-	t_state	state;
-	bool	expand;
-
-}	t_bonsai;
 
 int		ft_error_handler(void);
 char	**ft_get_my_envp(char **envp);
@@ -53,7 +43,9 @@ void	ft_free_node(t_list *node);
 
 int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(int perror_, const char *str, ...);
+
+//talvez enviar para execution
 void	ft_signal(int type);
-void	ft_cli(char ***envp);
+void	ft_cli(t_env *env);
 
 #endif //MINISHELL_H
