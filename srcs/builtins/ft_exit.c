@@ -1,5 +1,32 @@
 #include "../../includes/minishell.h"
 
+static long	arg_convert(char *arg)
+{
+	int			i;
+	long long	num;
+
+	i = 0;
+	
+	if (arg[i] == '-' || arg[i] == '+')
+		i++;
+	while (arg[i])
+	{
+		if (ft_isdigit(arg[i]) == 0)
+		{
+			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
+			ft_exit_status(2, TRUE, TRUE);
+		}
+		i++;
+	}
+	num = atoll(arg); //rever isso
+	//printf("num %lld\nmax %ld\n long long max %lld", num, LONG_MAX, LLONG_MAX);
+	if (num > LONG_MAX || num < LONG_MIN)
+	{
+		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
+		ft_exit_status(2, TRUE, TRUE);
+	}
+	return ((long) num);
+}
 /**
  * @brief Exits the program with a specified exit status and displays an exit
  * message.
@@ -13,8 +40,29 @@
  *              If `FALSE`, it only updates the exit status without terminating.
  * @param exit_status Terminate the program with the current exit status.
  */
-void	ft_exit(int exit_, int exit_status)
+void	ft_exit(char **args)
 {
+	unsigned char	exit_status;
+	int				i;
+
+	i = 1;
+	exit_status = 0;
+	while (args[i])
+	{
+		if (i == 2)
+		{
+			ft_stderror(FALSE, "exit: too many arguments");
+			ft_exit_status(1, TRUE, TRUE);
+		}
+		if (args[i][0] == '\0' || ((args[i][0] == '-'
+			|| args[i][0] == '+') && !ft_isdigit(args[i][1])))
+		{
+			ft_stderror(FALSE, "exit: %s: numeric argument required", args[i]);
+			ft_exit_status(2, TRUE, TRUE);
+		}
+		exit_status = (unsigned char) arg_convert(args[i]);
+		i++;
+	}
 	ft_putendl_fd("exit", 2);
-	ft_exit_status(exit_status, TRUE, exit_);
+	ft_exit_status(exit_status, TRUE, TRUE);
 }
