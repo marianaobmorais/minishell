@@ -1,5 +1,15 @@
 #include "../../includes/minishell.h"
 
+static int	isvalid(char *pathname, char **args)
+{
+	if (access(pathname, X_OK) == -1)
+	{
+		ft_stderror(TRUE, "%s: ", args[0]);
+		ft_exit_status(126, TRUE, TRUE);
+	}
+	return (0);
+}
+
 static char	*merge(char *s1, char *s2)
 {
 	char	*merge;
@@ -26,7 +36,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 
 	i = 0;
 	paths = NULL;
-	if (access(cmds[0], F_OK) == 0 && access(cmds[0], X_OK) == 0)
+	if (access(cmds[0], F_OK) == 0 && isvalid(cmds[0], cmds) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -38,7 +48,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 	while (paths[i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && access(pathname, X_OK) == 0)
+		if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 		i++;
@@ -51,12 +61,19 @@ void	ft_exec(char **args, char **my_envp)
 {
 	char *pathname;
 
+	pathname = NULL;
 	if (ft_isbuiltin(args))
 		ft_exec_builtin(args, my_envp);
 	else
 	{
 		pathname = ft_findpath(my_envp, args);
+		if (!pathname)
+		{
+			ft_stderror(FALSE, "%s: command not found", args[0]);
+			ft_exit_status(127, TRUE, TRUE);
+		}
 		if (execve(pathname, args, my_envp) == -1)
-			ft_stderror(TRUE, "%s", pathname);
+			ft_stderror(TRUE, "%s:", args[0]);
+		free(pathname);
 	}
 }
