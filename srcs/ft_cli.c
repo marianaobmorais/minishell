@@ -58,11 +58,11 @@ void	ft_cli(t_env *env)
 			free(input);
 			input = NULL;
 		}
-		input = readline("$ ");
+		input = readline(PROMPT);
 		if (!input)
 		{
 			free(input);
-			ft_exit(FALSE, 0);
+			ft_putstr_fd("exit\n", 2);
 			break;
 		}
 		if (ft_history(input))

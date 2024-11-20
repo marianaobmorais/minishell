@@ -19,6 +19,7 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+# include <limits.h>
 
 // our own libraries
 # include "../libft/libft.h"
@@ -27,7 +28,7 @@
 # include "execution.h"
 # include "colors.h"
 
-# define PROMPT "\001\002\033[47m\033[1;31mb\033[1;33ma\033[1;32ms\033[1;36mh\033[1;34mi\033[1;35mn\033[1;37mh\033[1;30mo\033[1;91m$\033[0m\001\002 \b "
+# define PROMPT "bashinho [pwd] $ "
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
