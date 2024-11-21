@@ -37,7 +37,7 @@ void	sig_child_handler(int sig)
 {
 	if (sig == SIGINT)
 		write(1, "\n", 1);
-	else if (sig == SIGQUIT)
+	if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", 1);
 }
 
@@ -67,21 +67,25 @@ void	ft_signal(int type)
 	signal(SIGTSTP, SIG_IGN);
 	if (type == PARENT_)
 	{
+		signal(SIGTSTP, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	if (type == HEREDOC_)
 	{
-		signal(SIGINT, sig_heredoc_handler);
+		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sig_heredoc_handler);
 	}
 	if (type == DEFAULT_)
 	{
+		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
 	}
 	if (type == CHILD_)
 	{
+		signal(SIGTSTP, SIG_IGN);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
 	}

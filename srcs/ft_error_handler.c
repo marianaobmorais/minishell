@@ -44,7 +44,7 @@ static char	*ft_format(va_list args, const char fmt)
  *            as the format specifier (e.g., `%s` for strings).
  * @param ... The variable arguments matching the format specifiers in `str`.
  */
-void	ft_stderror(const char *str, ...)
+void	ft_stderror(int perror_, const char *str, ...)
 {
 	va_list	args;
 	char	*fmt_specifier;
@@ -64,7 +64,10 @@ void	ft_stderror(const char *str, ...)
 			ft_putchar_fd(*str, 2);
 		str++;
 	}
-	ft_putchar_fd('\n', 2);
+	if (perror_ == TRUE)
+		perror("");
+	else
+		ft_putchar_fd('\n', 2);
 	va_end(args);
 }
 
