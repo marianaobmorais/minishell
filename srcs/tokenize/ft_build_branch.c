@@ -25,9 +25,12 @@ static void	ft_assign_redir_mode(t_redir **redir)
 	{
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	else if ((*redir)->type == HEREDOC)
 		(*redir)->mode = -1; //just to init
 =======
+=======
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 		(*redir)->fd = 1;
 	}
 	else if ((*redir)->type == HEREDOC)
@@ -35,6 +38,9 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = O_RDONLY; //not sure??
 		(*redir)->fd = 0; // not sure??
 	}
+<<<<<<< HEAD
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
+=======
 >>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 }
 /**
@@ -55,6 +61,7 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return (NULL); //ft_error_hanlder(); malloc failed
 	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
 	if (!target)
@@ -65,6 +72,12 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	redir->type = token->type;
 	ft_assign_redir_mode(&redir);
 	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
+=======
+		return (NULL);
+	redir->type = token->type;
+	ft_assign_redir_mode(&redir); //precisamos disso?
+	if ((*list)->next && (*list)->next->content)
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 =======
 		return (NULL);
 	redir->type = token->type;
@@ -100,10 +113,13 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 	redir = ft_init_redir(token, list);
 	if (!redir)
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return (NULL);
 	if (!(*list)->next || !ft_validate_next_token(list)) //check whether next is not NULL or PIPE or AND or OR
 		redir->next = (void *)exec;
 =======
+=======
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
 		redir->next =  (void *)exec;

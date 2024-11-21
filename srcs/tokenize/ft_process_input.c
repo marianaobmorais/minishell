@@ -36,6 +36,7 @@ void print_root(void *root, int indent) // Updated function
 		return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// Check if the node is ROOT
 	if (((t_pipe *)root)->type == ROOT)
 	{
@@ -116,6 +117,8 @@ void print_root(void *root, int indent) // Updated function
 		t_exec *exec_node = (t_exec *)root;
 		printf("%*sEXEC: %s\n", indent - 10, "", exec_node->pathname ? exec_node->pathname : "(no pathname)");
 =======
+=======
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 	// Print the corresponding node type
 	if (((t_pipe *)root)->type == PIPE)
 	{
@@ -142,6 +145,9 @@ void print_root(void *root, int indent) // Updated function
 	{
 		t_exec *exec_node = (t_exec *)root;
 		printf("%*sEXEC: %s\n", indent - 5, "", exec_node->pathname);
+<<<<<<< HEAD
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
+=======
 >>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 		if (exec_node->args)
 		{
