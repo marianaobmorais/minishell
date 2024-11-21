@@ -20,5 +20,6 @@ void	ft_print_export(char **envp);
 bool	ft_isbuiltin(char **args);
 void	ft_exec_builtin(char **args, char **my_envp);
 int		ft_argslen(char **args);
+int		ft_isjustbuiltin(void *node);
 
 #endif //BUILTINS_H

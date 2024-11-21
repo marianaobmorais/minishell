@@ -69,7 +69,10 @@ void	ft_cli(t_env *env)
 		{
 			bonsai = ft_process_input(input, env->global);
 			if (bonsai)
-				ft_launcher(bonsai, NULL, env, NULL);
+			{
+				if (!ft_single_command(bonsai, env))
+					ft_launcher(bonsai, NULL, env, NULL);
+			}
 			//ft_free_tree(bonsai);
 		}
 	}

@@ -6,6 +6,7 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char	*error_msg;
 
+	//verificar necessidade de manipular SHLVL
 	error_msg = "arguments are not accepted when initializing the program";
 	env = (t_env *) malloc(sizeof(t_env));
 	env->global = NULL;

@@ -1,5 +1,32 @@
 #include "../../includes/minishell.h"
 
+int	ft_single_command(void *node, t_env *env)
+{
+	void	*curr_node;
+	int		original_stdin;
+	int		original_stdout;
+
+	original_stdin = dup(STDIN_FILENO);
+	original_stdout = dup(STDOUT_FILENO);
+	if (ft_isjustbuiltin(node))
+	{
+		curr_node = ((t_pipe *)node)->left;
+		while (ft_redir(((t_redir *)curr_node), env->global))
+			curr_node = ((t_redir *)curr_node)->next;
+		if (((t_exec *)curr_node)->type == EXEC)
+		{
+			if (ft_isbuiltin(((t_exec *)curr_node)->args))
+				ft_exec_builtin(((t_exec *)curr_node)->args, env->global);
+		}
+		dup2(original_stdout, STDOUT_FILENO);
+		dup2(original_stdin, STDIN_FILENO);
+		close(original_stdin);
+		close(original_stdout);
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
 pid_t ft_child_process(void *node, t_env *env, int *curr_fds)
 {
 	pid_t pid;
@@ -11,7 +38,7 @@ pid_t ft_child_process(void *node, t_env *env, int *curr_fds)
 	{
 		ft_signal(CHILD_);
 		ft_launcher(((t_pipe *)node)->left, ((t_pipe *)node)->right, env, curr_fds); // left | Termina apenas no ultimo no da esquerda
-		ft_exit_status(0, TRUE, TRUE);
+		ft_exit_status(0, TRUE, TRUE); // exit com exit status da finalizacao
 	}
 	return (pid);
 }

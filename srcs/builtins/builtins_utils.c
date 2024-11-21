@@ -44,3 +44,31 @@ void	ft_exec_builtin(char **args, char **my_envp)
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
 		ft_env(my_envp);
 }
+
+int	ft_isjustbuiltin(void *node)
+{
+	void	*curr_node;
+	int		flag;
+
+	flag = 0;
+	if (!((t_pipe *)node)->right)
+	{
+		curr_node = ((t_pipe *)node)->left;
+		while (!flag)
+		{
+			if (((t_redir *)curr_node)->type == OUTFILE 
+				|| ((t_redir *)curr_node)->type == INFILE
+				|| ((t_redir *)curr_node)->type == APPEND
+				|| ((t_redir *)curr_node)->type == HEREDOC)
+				curr_node = ((t_redir *)curr_node)->next;
+			else
+				flag++;
+		}
+		if (((t_exec *)curr_node)->type == EXEC)
+		{
+			if (ft_isbuiltin(((t_exec *)curr_node)->args))
+				return (TRUE);
+		}
+	}
+	return (FALSE);
+}
