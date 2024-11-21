@@ -11,12 +11,12 @@ int	ft_single_command(void *node, t_env *env)
 	if (ft_isjustbuiltin(node))
 	{
 		curr_node = ((t_pipe *)node)->left;
-		while (ft_redir(((t_redir *)curr_node), env->global))
+		while (ft_redir(((t_redir *)curr_node), *(env)->global))
 			curr_node = ((t_redir *)curr_node)->next;
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
 			if (ft_isbuiltin(((t_exec *)curr_node)->args))
-				ft_exec_builtin(((t_exec *)curr_node)->args, env->global);
+				ft_exec_builtin(((t_exec *)curr_node)->args, env);
 		}
 		dup2(original_stdout, STDOUT_FILENO);
 		dup2(original_stdin, STDIN_FILENO);
@@ -89,7 +89,7 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds)
 		pid = ft_child_process(curr_node, env, fds);
 		ft_parent_process(curr_node, env, pid, fds);
 	}
-	else if (ft_redir(((t_redir *)curr_node), env->global))
+	else if (ft_redir(((t_redir *)curr_node), *(env)->global))
 		ft_launcher(((t_redir *)curr_node)->next, next_node, env, curr_fds);
 	else if (((t_exec *)curr_node)->type == EXEC)
 	{
@@ -98,7 +98,7 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds)
 		if (next_node != NULL)
 			dup2(curr_fds[1], STDOUT_FILENO);
 		close(curr_fds[1]);
-		ft_exec(((t_exec *)curr_node)->args, env->global);
+		ft_exec(((t_exec *)curr_node)->args, env);
 	}
 	else
 		ft_putstr_fd("Perdeu a linha\n\n", 2);

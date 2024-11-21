@@ -57,22 +57,22 @@ static char	*ft_findpath(char **envp, char **cmds)
 	return (NULL);
 }
 
-void	ft_exec(char **args, char **my_envp)
+void	ft_exec(char **args, t_env *env)
 {
 	char *pathname;
 
 	pathname = NULL;
 	if (ft_isbuiltin(args))
-		ft_exec_builtin(args, my_envp);
+		ft_exec_builtin(args, env);
 	else
 	{
-		pathname = ft_findpath(my_envp, args);
+		pathname = ft_findpath(*(env)->global, args);
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", args[0]);
 			ft_exit_status(127, TRUE, TRUE);
 		}
-		if (execve(pathname, args, my_envp) == -1)
+		if (execve(pathname, args, *(env)->global) == -1)
 			ft_stderror(TRUE, "%s:", args[0]);
 		free(pathname);
 	}
