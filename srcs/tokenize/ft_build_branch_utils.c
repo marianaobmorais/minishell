@@ -10,8 +10,9 @@
  * @param new_str String to add to the vector.
  * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
  */
-char	**ft_add_to_vector(char **vector, char *new_str) //not used here. most likely will do to execution
+char	**ft_add_to_vector(char **vector, char *new_str)
 {
+	//not used here. most likely will do to execution
 	char	**res;
 	int		i;
 
@@ -52,6 +53,7 @@ char	**ft_add_to_vector(char **vector, char *new_str) //not used here. most like
  */
 t_list	**ft_get_args(t_list **list)
 {
+	//update brief
 	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
@@ -65,13 +67,13 @@ t_list	**ft_get_args(t_list **list)
 	{
 		token = (t_token *)curr->content;
 		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
-			ft_lstadd_back(args, ft_lstnew(curr->content)); //update brief
+			ft_lstadd_back(args, ft_lstnew(curr->content));
 		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
 		}
-		else if (token->type == PIPE)
+		else if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		curr = curr->next;
 	}
@@ -88,12 +90,13 @@ t_list	**ft_get_args(t_list **list)
  */
 bool	ft_find_next_redir(t_list **list)
 {
+	//update brief
 	t_token	*token;
 
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		if (token->type == OUTFILE || token->type == INFILE
 				|| token->type == APPEND || token->type == HEREDOC)
@@ -119,7 +122,7 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		if (token->type == EXEC)
 			return (true);

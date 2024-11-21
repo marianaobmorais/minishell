@@ -1,5 +1,18 @@
 #include "../../includes/minishell.h"
 
+bool	ft_validate_next_token(t_list **list)
+{
+	//write brief
+	if (((t_token *)(*list)->next->content)->type == PIPE)
+		return (false);
+	else if (((t_token *)(*list)->next->content)->type == AND)
+		return (false);
+	else if (((t_token *)(*list)->next->content)->type == OR)
+		return (false);
+	else
+		return (true);
+}
+
 /**
  * @brief Searches for the next pipe token in the list and advances the pointer.
  * 
@@ -12,6 +25,7 @@
  */
 static bool	ft_find_next_pipe(t_list **list)
 {
+	//update brief
 	t_token	*token;
 
 	while (*list)
@@ -22,37 +36,13 @@ static bool	ft_find_next_pipe(t_list **list)
 			*list = (*list)->next;
 			return (true);
 		}
+		if (token->type == AND || token->type == OR) // and PRTHESIS?
+			return (false);
 		*list = (*list)->next;
 	}
 	return (false);
 }
 
-/**
- * @brief Skips consecutive `EXPORT` tokens in the list.
- * 
- * Advances the token list pointer past consecutive `EXPORT` or `EXPORT_AP` tokens. 
- * Stops if a pipe ('|') token or the end of the list is reached.
- * 
- * @param list A double pointer to the token list, updated to the first non-`EXPORT` token 
- *             or a pipe token.
- */
-static void	ft_skip_export_tokens(t_list **list)
-{
-	t_token	*token;
-
-	token = (*list)->content;
-	while (*list && (token->type == EXPORT || token->type == EXPORT_AP))
-	{
-		if (!((*list)->next) 
-				|| ((t_token *)(*list)->next->content)->type == PIPE)
-			break ;
-		else
-		{
-			*list = (*list)->next;
-			token = (*list)->content;
-		}
-	}
-}
 
 /**
  * @brief Constructs a binary tree representing a pipeline structure.
@@ -83,33 +73,4 @@ void	*ft_build_tree(t_list **list)
 	if (ft_find_next_pipe(list))
 		pipe->right = ft_build_tree(list);
 	return ((void *)pipe);
-}
-
-void	*ft_build_root(t_list **list, t_type type)
-{
-	t_pipe	*root;
-	t_pipe	*pipe;
-
-	ft_skip_export_tokens(list);
-	root = (t_pipe *)malloc(sizeof(t_pipe));
-	if (!root)
-		return (NULL); //ft_error_hanlder(); malloc failed
-	pipe = (t_pipe *)malloc(sizeof(t_pipe));
-	if (!pipe)
-		return (NULL); //ft_error_hanlder(); malloc failed
-	root->left = NULL;
-	root->right = NULL;
-	root->type = type;
-
-	root->left = ft_build_tree(*list);
-	if (!root->left)
-		return (NULL);
-	if (!list || !*list)
-		return ((void *)root);
-	if (ft_find_next_root(list)) //to do
-	{
-		//what type??
-		root->right = ft_build_root(list, AND);
-	}
-	return ((void *)root);
 }

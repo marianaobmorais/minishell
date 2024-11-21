@@ -68,14 +68,15 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
  */
 static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec)
 {
+	//update brief
 	t_redir	*redir;
 	t_list	*list_next;
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL); 
-	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
-		redir->next =  (void *)exec;
+		return (NULL);
+	if (!(*list)->next || !ft_validate_next_token(list)) //check whether next is not NULL or PIPE or AND or OR
+		redir->next = (void *)exec;
 	else
 	{
 		*list = (*list)->next; // move up to next node
@@ -136,6 +137,7 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  */
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
+	//update brief
 	t_token	*token;
 	t_redir	*redir;
 
@@ -146,7 +148,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		if (!list || !*list || !exec)
 			return ((void *)exec);
 		token = (*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			return ((void *)exec);
 	}
 	if (token->type == OUTFILE || token->type == INFILE
