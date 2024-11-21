@@ -50,32 +50,32 @@ static size_t	is_var(char *str, char **my_envp)
  * 
  * @return 0 on success, or -1 if memory allocation fails.
  */
-static int	delete_var(char *str, char **my_envp, size_t size_env)
+static int	delete_var(char *str, char ***my_envp, size_t size_env)
 {
 	size_t	i;
 	size_t	j;
 	size_t	size;
-	char	**new_environ;
+	char	**new_envp;
 
 	size = ft_strlen(str);
 	i = 0;
 	j = 0;
-	new_environ = (char **) malloc(size_env * sizeof(char *));
-	if (!new_environ)
+	new_envp = (char **) malloc(size_env * sizeof(char *));
+	if (!new_envp)
 		return (-1); //error handler
 	while (i < size_env)
 	{
-		if (ft_strncmp(str, (my_envp)[i], size) == 0
-			&& (my_envp)[i][size] == '=')
+		if (ft_strncmp(str, (*my_envp)[i], size) == 0
+			&& (*my_envp)[i][size] == '=')
 		{
-			free((my_envp)[i]);
+			free((*my_envp)[i]);
 			i++;
 		}
-		new_environ[j++] = (my_envp)[i++];
+		new_envp[j++] = (*my_envp)[i++];
 	}
-	new_environ[j] = NULL;
-	free((my_envp));
-	my_envp = new_environ;
+	new_envp[j] = NULL;
+	free((*my_envp));
+	*my_envp = new_envp;
 	return (0);
 }
 
@@ -93,7 +93,7 @@ static int	delete_var(char *str, char **my_envp, size_t size_env)
  *
  * @return The exit status, with 0 indicating successful execution.
  */
-int	ft_unset(int argc, char **argv, char **my_envp)
+int	ft_unset(int argc, char **argv, char ***my_envp)
 {
 	size_t	size_env;
 
@@ -102,7 +102,7 @@ int	ft_unset(int argc, char **argv, char **my_envp)
 	++argv;
 	while (*argv)
 	{
-		size_env = is_var(*argv, my_envp);
+		size_env = is_var(*argv, *my_envp);
 		if (size_env > 0)
 			delete_var(*argv, my_envp, size_env); //missing delete VAR without '='
 		argv++;
