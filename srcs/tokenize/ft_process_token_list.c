@@ -131,14 +131,7 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 	t_token	*token;
 
 	current = *list;
-<<<<<<< HEAD
 	//prev = NULL;
-=======
-	prev = NULL;
-<<<<<<< HEAD
->>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
-=======
->>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 	while (current)
 	{
 		next = current->next;
@@ -161,4 +154,3 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 	// 	curr = curr->next;
 	// }
 }
-
