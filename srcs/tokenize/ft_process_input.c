@@ -36,9 +36,9 @@ void print_root(void *root, int indent) // Updated function
 		return;
 
 	// Check if the node is ROOT
-	if (((t_pipe *)root)->type == ROOT)
+	if (((t_node *)root)->type == ROOT)
 	{
-		t_pipe *root_node = (t_pipe *)root;
+		t_node *root_node = (t_node *)root;
 		printf("%*sROOT\n", indent, "");
 		printf("%*s/\n", indent, "");
 		if (root_node->left)
@@ -48,9 +48,9 @@ void print_root(void *root, int indent) // Updated function
 			print_root(root_node->right, indent + 10); // Print right child
 	}
 	// Check if the node is AND
-	if (((t_pipe *)root)->type == AND)
+	if (((t_node *)root)->type == AND)
 	{
-		t_pipe *and_node = (t_pipe *)root;
+		t_node *and_node = (t_node *)root;
 		printf("%*sAND\n", indent, "");
 		printf("%*s/\n", indent, "");
 		if (and_node->left)
@@ -60,9 +60,9 @@ void print_root(void *root, int indent) // Updated function
 			print_root(and_node->right, indent + 10); // Print right child
 	}
 	// Check if the node is OR
-	if (((t_pipe *)root)->type == OR)
+	if (((t_node *)root)->type == OR)
 	{
-		t_pipe *or_node = (t_pipe *)root;
+		t_node *or_node = (t_node *)root;
 		printf("%*sOR\n", indent, "");
 		printf("%*s/\n", indent, "");
 		if (or_node->left)
@@ -72,9 +72,9 @@ void print_root(void *root, int indent) // Updated function
 			print_root(or_node->right, indent + 15); // Print right child
 	}
 	// Check if the node is PIPE
-	if (((t_pipe *)root)->type == PIPE)
+	if (((t_node *)root)->type == PIPE)
 	{
-		t_pipe *pipe_node = (t_pipe *)root;
+		t_node *pipe_node = (t_node *)root;
 		printf("%*sPIPE\n", indent - 5, "");
 		printf("%*s//\n", indent - 5, "");
 		if (pipe_node->left)

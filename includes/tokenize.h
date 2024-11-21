@@ -38,12 +38,20 @@ typedef struct s_token
 	bool	expand;
 }	t_token;
 
-typedef struct s_pipe
+// typedef struct s_pipe
+// {
+// 	int		type;
+// 	char	*left; // aponta para redir ou exec
+// 	char	*right; // aponta para pipe
+// }	t_pipe;
+
+typedef struct s_node
 {
 	int		type;
-	char	*left; // aponta para redir ou exec
-	char	*right; // aponta para pipe 
-}	t_pipe;
+	void	*left;
+	void	*right;
+	t_node	*parent_node; //insert to tree
+}	t_node;
 
 typedef struct s_redir
 {

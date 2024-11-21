@@ -44,10 +44,10 @@ static bool ft_find_next_root(t_list **list)
 void	*ft_build_root(t_list **list, t_type type)
 {
 	//write brief
-	t_pipe	*root;
+	t_node	*root;
 
 	ft_skip_export_tokens(list);
-	root = (t_pipe *)malloc(sizeof(t_pipe));
+	root = (t_node *)malloc(sizeof(t_node));
 	if (!root)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	root->left = NULL;

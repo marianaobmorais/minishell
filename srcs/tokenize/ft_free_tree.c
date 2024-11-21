@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void	ft_free_pipe(t_pipe *pipe)
+static void	ft_free_pipe(t_node *pipe)
 {
 	if (!pipe)
 		return ;
@@ -34,7 +34,7 @@ void	ft_free_tree(void *root)
 		return ;
 	type = *(int *)root;
 	if (type == PIPE)
-		ft_free_pipe((t_pipe *)root);
+		ft_free_pipe((t_node *)root);
 	else if (type == EXEC || type == EXPORT || type == EXPORT_AP)
 		ft_free_exec((t_exec *)root);
 	else if (type == OUTFILE || type == INFILE || type == APPEND || type == HEREDOC)

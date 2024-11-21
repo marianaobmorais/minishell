@@ -55,22 +55,22 @@ static bool	ft_find_next_pipe(t_list **list)
  */
 void	*ft_build_tree(t_list **list)
 {
-	t_pipe	*pipe;
+	t_node	*node;
 
 	ft_skip_export_tokens(list);
-	pipe = (t_pipe *)malloc(sizeof(t_pipe));
-	if (!pipe)
+	node = (t_node *)malloc(sizeof(t_node));
+	if (!node)
 		return (NULL); //ft_error_hanlder(); malloc failed
-	pipe->type = PIPE;
-	pipe->right = NULL;
-	pipe->left = ft_build_branch(list, NULL);
-	if (!pipe->left)
+	node->type = PIPE;
+	node->right = NULL;
+	node->left = ft_build_branch(list, NULL);
+	if (!node->left)
 		return (NULL);
 	if (!list || !*list)
-		return ((void *)pipe);
+		return ((void *)node);
 	if (ft_find_next_pipe(list))
-		pipe->right = ft_build_tree(list);
+		node->right = ft_build_tree(list);
 	else
-		pipe->right = NULL;
-	return ((void *)pipe);
+		node->right = NULL;
+	return ((void *)node);
 }
