@@ -43,7 +43,6 @@ static bool	ft_find_next_pipe(t_list **list)
 	return (false);
 }
 
-
 /**
  * @brief Constructs a binary tree representing a pipeline structure.
  * 
