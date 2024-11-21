@@ -126,12 +126,12 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
 	t_list	*current;
-	t_list	*prev;
+	//t_list	*prev;
 	t_list	*next;
 	t_token	*token;
 
 	current = *list;
-	prev = NULL;
+	//prev = NULL;
 	while (current)
 	{
 		next = current->next;
@@ -140,10 +140,10 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 			ft_expand_tokens(token, my_envp);
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
-		if (token->expand && token->value[0] == '\0')
-			ft_remove_current_node(list, prev, current);
-		else
-			prev = current;
+		//if (token->expand && token->value[0] == '\0')
+		//	ft_remove_current_node(list, prev, current);
+		//else
+		//	prev = current;
 		current = next;
 	}
 	//no caso da t_list **args pra transformar em char **args // fazer em outra funcão?
