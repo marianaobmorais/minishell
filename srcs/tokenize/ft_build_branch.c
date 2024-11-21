@@ -10,14 +10,32 @@
  */
 static void	ft_assign_redir_mode(t_redir **redir)
 {
+	//do we need this function?
 	if ((*redir)->type == OUTFILE) 
+	{
 		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;
+		(*redir)->fd = 1;
+	}
 	else if ((*redir)->type == INFILE)
+	{
 		(*redir)->mode = O_RDONLY;
+		(*redir)->fd = 0;
+	}
 	else if ((*redir)->type == APPEND)
+	{
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
+<<<<<<< HEAD
 	else if ((*redir)->type == HEREDOC)
 		(*redir)->mode = -1; //just to init
+=======
+		(*redir)->fd = 1;
+	}
+	else if ((*redir)->type == HEREDOC)
+	{
+		(*redir)->mode = O_RDONLY; //not sure??
+		(*redir)->fd = 0; // not sure??
+	}
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 }
 /**
  * @brief Initializes a redirection node based on the current token.
@@ -36,6 +54,7 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
+<<<<<<< HEAD
 		return (NULL); //ft_error_hanlder(); malloc failed
 	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
 	if (!target)
@@ -46,6 +65,12 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	redir->type = token->type;
 	ft_assign_redir_mode(&redir);
 	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
+=======
+		return (NULL);
+	redir->type = token->type;
+	ft_assign_redir_mode(&redir); //precisamos disso?
+	if ((*list)->next && (*list)->next->content)
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 	{
 		*list = (*list)->next; // move up to target
 		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
@@ -74,9 +99,15 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
+<<<<<<< HEAD
 		return (NULL);
 	if (!(*list)->next || !ft_validate_next_token(list)) //check whether next is not NULL or PIPE or AND or OR
 		redir->next = (void *)exec;
+=======
+		return (NULL); //ft_error_hanlder(); malloc failed
+	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
+		redir->next =  (void *)exec;
+>>>>>>> parent of 9cfdf8e (Merge pull request #20 from marianaobmorais/parse---mariana)
 	else
 	{
 		*list = (*list)->next; // move up to next node
@@ -142,7 +173,8 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	t_redir	*redir;
 
 	token = (*list)->content;
-	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
+	if (!exec && (token->type == EXEC || token->type == EXPORT
+			|| token->type == EXPORT_AP))
 	{
 		exec = ft_create_exec_node(token, list);
 		if (!list || !*list || !exec)

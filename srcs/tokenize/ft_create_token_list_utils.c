@@ -128,20 +128,6 @@ static bool	ft_has_expandable_var(char *s)
 	return (false);
 }
 
-bool	ft_is_heredoc_target(t_list **list)
-{
-	t_list	*last;
-	t_token	*token;
-
-	last = ft_lstlast(*list);
-	if (!last || !last->content)
-		return (false);
-	token = (t_token *)last->content;
-	if (token->type == HEREDOC)
-		return (true);
-	return (false);
-}
-
 /**
  * @brief Adds a new token to the token list after initializing it.
  * 
@@ -167,8 +153,7 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 			return (free(new_token));
 		new_token->type = ft_get_token_type(*value);
 		new_token->state = ft_get_token_state(*value);
-		if (!ft_is_heredoc_target(token_list))
-			new_token->expand = ft_has_expandable_var(*value);
+		new_token->expand = ft_has_expandable_var(*value);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
 			return (free(new_token->value), free(new_token));

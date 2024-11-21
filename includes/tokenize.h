@@ -50,6 +50,7 @@ typedef struct s_redir
 	int		type;
 	t_list	**target;
 	int		mode;
+	int		fd;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
 }	t_redir;
 
@@ -59,12 +60,6 @@ typedef struct s_exec
 	char	*pathname;//useful for debug when printing
 	t_list	**args;
 }	t_exec;
-
-typedef struct s_envp
-{
-	char	**envp_global;
-	char	**envp_local;
-}	t_envp;
 
 //ft_find_next_quote.c
 int		ft_find_next_quote(char *s, int i, char c);
