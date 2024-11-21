@@ -98,9 +98,13 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
 
-//ft_build_tree.c
+//ft_build_root.c
 void	*ft_build_root(t_list **list, t_type type);
+void	ft_skip_export_tokens(t_list **list);
+
+//ft_build_tree.c
 void	*ft_build_tree(t_list **token_list);
+bool	ft_validate_next_token(t_list **list);
 
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);
@@ -111,6 +115,6 @@ bool	ft_find_next_exec(t_list **list);
 char	**ft_add_to_vector(char **vector, char *new_str); // move to execution
 
 //ft_free_tree.c
-void	ft_free_tree(void *root);
+void	ft_free_tree(void *root); //update this
 
 #endif //TOKENIZE_H
