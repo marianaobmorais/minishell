@@ -62,10 +62,10 @@ void	ft_exec(char **args, t_env *env)
 	char *pathname;
 
 	pathname = NULL;
-	if (ft_isbuiltin(args))
-		ft_exec_builtin(args, env);
-	else
-	{
+	//if (ft_isbuiltin(args))
+	//	ft_exec_builtin(args, env);
+	//else
+	//{
 		pathname = ft_findpath(*(env)->global, args);
 		if (!pathname)
 		{
@@ -75,5 +75,5 @@ void	ft_exec(char **args, t_env *env)
 		if (execve(pathname, args, *(env)->global) == -1)
 			ft_stderror(TRUE, "%s:", args[0]);
 		free(pathname);
-	}
+	//}
 }

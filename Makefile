@@ -15,9 +15,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_exit_status.c \
 		$(SRCS_DIR)/ft_signal.c \
 		$(SRCS_DIR)/execution/ft_heredoc.c \
-		$(SRCS_DIR)/execution/ft_launcher.c \
 		$(SRCS_DIR)/execution/ft_exec.c \
-		$(SRCS_DIR)/execution/ft_redir.c \
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_isspace.c \
@@ -40,7 +38,9 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/builtins/ft_export_utils.c \
 		$(SRCS_DIR)/builtins/ft_unset.c \
 		$(SRCS_DIR)/builtins/ft_exit.c \
-		$(SRCS_DIR)/builtins/builtins_utils.c \
+		#$(SRCS_DIR)/builtins/builtins_utils.c \
+		$(SRCS_DIR)/execution/ft_launcher.c \
+		$(SRCS_DIR)/execution/ft_redir.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
