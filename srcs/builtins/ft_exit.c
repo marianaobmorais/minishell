@@ -63,6 +63,7 @@ void	ft_exit(char **args)
 		exit_status = (unsigned char) arg_convert(args[i]);
 		i++;
 	}
-	ft_putendl_fd("exit", 2);
+	if (isatty(STDOUT_FILENO))
+		ft_putendl_fd("exit", 2);
 	ft_exit_status(exit_status, TRUE, TRUE);
 }
