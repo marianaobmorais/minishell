@@ -27,77 +27,6 @@ void	ft_print_list(t_list **token_list)
 	printf("------------------------------------------------------\n");
 }
 
-/* void print_tree(void *root, int indent) // delete later
-{
-	t_list	*current;
-	t_token	*token;
-
-	if (!root)
-		return;
-	// Check if the node is a PIPE
-	if (((t_pipe *)root)->type == PIPE)
-	{
-		t_pipe *pipe_node = (t_pipe *)root;
-		printf("%*sPIPE\n", indent, "");
-		printf("%*s/\n", indent, "");
-		if (pipe_node && pipe_node->left)
-			print_tree(pipe_node->left, indent + 0);  // Print the left child with more indentation
-		printf("%*s\\\n", indent + 10, "");
-		if (pipe_node && pipe_node->right)
-			print_tree(pipe_node->right, indent + 4); // Print the right child with more indentation
-	}
-	// Check if the node is a REDIRECTION
-	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
-			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
-	{
-		t_redir *redir_node = (t_redir *)root;
-		printf("%*sREDIRECTION: %s ", indent - 5, "",
-			   (redir_node->type == APPEND) ? "APPEND" :
-			   (redir_node->type == HEREDOC) ? "HEREDOC" : //why is it printng heredoc when it's supposed to print outfile?
-			   (redir_node->type == INFILE) ? "INFILE" :
-			   "OUTFILE");
-
-		// Safely check and print target value
-		if (redir_node->target)
-		{
-			current = *(redir_node->target);
-			while (current)
-			{
-				token = (t_token *)current->content;
-				printf("%s\n", token->value);
-				current = current->next;
-			}
-		}
-		else
-			printf("(no target)\n");
-
-		if (redir_node && redir_node->next)
-			print_tree(redir_node->next, indent + 4);  // Print the next node (could be another redir or exec)
-	}
-	// Check if the node is an EXEC
-	else if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT || ((t_exec *)root)->type == EXPORT_AP)
-	{
-		t_exec *exec_node = (t_exec *)root;
-		printf("%*sEXEC: %s\n", indent - 5, "", exec_node->pathname ? exec_node->pathname : "(no pathname)");
-		if (exec_node && exec_node->args)
-		{
-			printf("%*sArguments:\n", indent - 5, "");
-			current = *(exec_node->args);
-			while (current)
-			{
-				token = (t_token *)current->content;
-				printf("%*s%s\n", indent, "", token->value);
-				current = current->next;
-			}
-		}
-	}
-	else
-	{
-		printf("%*sUNKNOWN NODE TYPE\n", indent, "");
-	}
-} */
-
-
 void print_root(void *root, int indent) // Updated function
 {
 	t_list  *current;
@@ -198,7 +127,6 @@ void print_root(void *root, int indent) // Updated function
 		}
 	}
 }
-
 
 /**
  * @brief Processes the input string to build an execution tree.
