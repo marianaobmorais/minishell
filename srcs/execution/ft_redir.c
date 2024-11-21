@@ -25,9 +25,10 @@ int	ft_redir(t_redir *node, char **my_envp)
 {
 	int	fd;
 
+	ft_process_token_list(node->target, my_envp);
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
-		fd = ft_open(node->type, node->target->value, node->mode);
+		fd = ft_open(node->type, ((t_token *)node->target)->value, node->mode);
 		if (node->type == OUTFILE || node->type == APPEND)
 			dup2(fd, STDOUT_FILENO);
 		else
@@ -37,7 +38,7 @@ int	ft_redir(t_redir *node, char **my_envp)
 	}
 	else if (node->type == HEREDOC)
 	{
-		heredoc_fd(node->target->value, my_envp, node->target->state);
+		heredoc_fd(((t_token *)node->target)->value, my_envp, ((t_token *)node->target)->state);
 		return (TRUE);
 	}
 	return (FALSE);

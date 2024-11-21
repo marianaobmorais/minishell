@@ -57,11 +57,12 @@ static char	*ft_findpath(char **envp, char **cmds)
 	return (NULL);
 }
 
-void	ft_exec(char **args, t_env *env)
+void	ft_exec(t_list **args, t_env *env)
 {
 	char *pathname;
 
 	pathname = NULL;
+	ft_process_token_list(args, *env->global); //transformar o t_list em char **
 	if (ft_isbuiltin(args))
 		ft_exec_builtin(args, env);
 	else
