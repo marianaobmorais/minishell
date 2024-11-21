@@ -14,16 +14,16 @@ static long	arg_convert(char *arg)
 		if (ft_isdigit(arg[i]) == 0)
 		{
 			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-			ft_exit_status(2, TRUE, TRUE);
+			ft_exit_status(2, TRUE, FALSE);
 		}
 		i++;
 	}
 	num = atoll(arg); //rever isso
 	//printf("num %lld\nmax %ld\n long long max %lld", num, LONG_MAX, LLONG_MAX);
-	if (num > LONG_MAX || num < LONG_MIN)
+	if (num > 5555 || num < -5555)
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-		ft_exit_status(2, TRUE, TRUE);
+		ft_exit_status(2, TRUE, FALSE);
 	}
 	return ((long) num);
 }
@@ -52,13 +52,13 @@ void	ft_exit(char **args)
 		if (i == 2)
 		{
 			ft_stderror(FALSE, "exit: too many arguments");
-			ft_exit_status(1, TRUE, TRUE);
+			ft_exit_status(1, TRUE, FALSE);
 		}
 		if (args[i][0] == '\0' || ((args[i][0] == '-'
 			|| args[i][0] == '+') && !ft_isdigit(args[i][1])))
 		{
 			ft_stderror(FALSE, "exit: %s: numeric argument required", args[i]);
-			ft_exit_status(2, TRUE, TRUE);
+			ft_exit_status(2, TRUE, FALSE);
 		}
 		exit_status = (unsigned char) arg_convert(args[i]);
 		i++;

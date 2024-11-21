@@ -80,6 +80,7 @@ int	heredoc_fd(char *limiter, char **my_envp, int state)
 {
 	int	fd;
 
+	unlink("/tmp/.heredoc_tmp");
 	fd = read_heredoc(limiter, state, my_envp);
 	ft_signal(DEFAULT_);
 	dup2(fd, STDIN_FILENO);
