@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static void	ft_handle_quotes(char **new_value, char *value, int *i, char **my_envp)
 {
@@ -34,7 +34,7 @@ static char	*ft_expand_input(char *input, char **my_envp)
 	return (new_input);
 }
 
-static int	count_line(int mode)
+static int	count_line(int mode) //nao funcionando dentro do child
 {
 	static int	line;
 
@@ -45,7 +45,7 @@ static int	count_line(int mode)
 	return (line);
 }
 
-static int	read_heredoc(char *limiter, int flag, char **my_envp)
+static int	read_heredoc(char *limiter, int state, char **my_envp)
 {
 	int		fd_write;
 	char	*input;
@@ -54,6 +54,7 @@ static int	read_heredoc(char *limiter, int flag, char **my_envp)
 	input = NULL;
 	while (1)
 	{
+		ft_signal(HEREDOC_);
 		if (input)
 			free(input);
 		input = readline("> ");
@@ -61,12 +62,12 @@ static int	read_heredoc(char *limiter, int flag, char **my_envp)
 			&& !ft_strncmp(limiter, input, ft_strlen(input))) || !input)
 		{
 			if (!input)
-				ft_stderror("warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
+				ft_stderror(FALSE, "warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
 			free(input);
 			break ;
 		}
 		add_history(input);
-		if (flag == TRUE)
+		if (state == GENERAL)
 			input = ft_expand_input(input, my_envp);
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
@@ -75,12 +76,13 @@ static int	read_heredoc(char *limiter, int flag, char **my_envp)
 	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter, char **my_envp)
+int	heredoc_fd(char *limiter, char **my_envp, int state)
 {
 	int	fd;
 
-	ft_signal(HEREDOC); //corrigir
-	fd = read_heredoc(limiter, 0, my_envp);
+	unlink("/tmp/.heredoc_tmp");
+	fd = read_heredoc(limiter, state, my_envp);
+	ft_signal(DEFAULT_);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	unlink("/tmp/.heredoc_tmp");

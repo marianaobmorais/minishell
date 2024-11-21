@@ -11,23 +11,25 @@
  *
  * @return 0 if all identifiers are valid, or an error message and non-zero value if any identifier is invalid.
  */
-static int check_key(char **argv)
+static int	check_key(char **argv)
 {
-	size_t i;
+	size_t	i;
+	char	*error_msg;
 
+	error_msg = "export: '%s' not a valid identifier";
 	while (*argv)
 	{
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
-			return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
+			return (ft_stderror(FALSE, error_msg, (*argv)), 2);
 		while ((*argv)[i] != '=')
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
 			{
 				if ((*argv)[i] != '+')
-					return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
+					return (ft_stderror(FALSE, error_msg, (*argv)), 2);
 				else if ((*argv)[i] == '+' && (*argv)[i + 1] != '=')
-					return (ft_stderror("export: '%s' not a valid identifier\n", (*argv)), 2);
+					return (ft_stderror(FALSE, error_msg, (*argv)), 2);
 			}
 			i++;
 		}

@@ -64,6 +64,7 @@ void	*ft_build_tree(t_list **list)
 	pipe->left = NULL;
 	pipe->right = NULL;
 	pipe->type = PIPE;
+	pipe->right = NULL;
 	pipe->left = ft_build_branch(list, NULL);
 	if (!pipe->left)
 		return (NULL);

@@ -14,7 +14,7 @@
  * 
  * @return The length of the environment variable; otherwise, 0.
  */
-static size_t	is_var(char *str, char ***my_envp)
+static size_t	is_var(char *str, char **my_envp)
 {
 	size_t	index_envp;
 	size_t	flag;
@@ -23,10 +23,10 @@ static size_t	is_var(char *str, char ***my_envp)
 	flag = 0;
 	index_envp = 0;
 	size_var = ft_strlen(str);
-	while ((*my_envp)[index_envp])
+	while ((my_envp)[index_envp])
 	{
-		if (ft_strncmp(str, (*my_envp)[index_envp], size_var) == 0
-			&& (*my_envp)[index_envp][size_var] == '=')
+		if (ft_strncmp(str, (my_envp)[index_envp], size_var) == 0
+			&& (my_envp)[index_envp][size_var] == '=')
 			flag++;
 		index_envp++;
 	}
@@ -55,13 +55,13 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	size_t	i;
 	size_t	j;
 	size_t	size;
-	char	**new_environ;
+	char	**new_envp;
 
 	size = ft_strlen(str);
 	i = 0;
 	j = 0;
-	new_environ = (char **) malloc(size_env * sizeof(char *));
-	if (!new_environ)
+	new_envp = (char **) malloc(size_env * sizeof(char *));
+	if (!new_envp)
 		return (-1); //error handler
 	while (i < size_env)
 	{
@@ -71,11 +71,11 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 			free((*my_envp)[i]);
 			i++;
 		}
-		new_environ[j++] = (*my_envp)[i++];
+		new_envp[j++] = (*my_envp)[i++];
 	}
-	new_environ[j] = NULL;
+	new_envp[j] = NULL;
 	free((*my_envp));
-	*my_envp = new_environ;
+	*my_envp = new_envp;
 	return (0);
 }
 
@@ -102,7 +102,7 @@ int	ft_unset(int argc, char **argv, char ***my_envp)
 	++argv;
 	while (*argv)
 	{
-		size_env = is_var(*argv, my_envp);
+		size_env = is_var(*argv, *my_envp);
 		if (size_env > 0)
 			delete_var(*argv, my_envp, size_env); //missing delete VAR without '='
 		argv++;
