@@ -14,7 +14,7 @@ static void	ft_free_exec(t_exec *exec)
 	if (!exec)
 		return ;
 	if (exec->args)
-		ft_free_vector(exec->args);
+		ft_free_list(exec->args);
 	free(exec);
 }
 

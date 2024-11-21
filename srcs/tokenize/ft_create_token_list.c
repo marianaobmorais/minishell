@@ -16,10 +16,16 @@
  */
 static int	ft_handle_metachar(char **value, char *s, int i, t_list **token_list)
 {
+	//update brief
 	if (value)
-		ft_add_to_token_list(value, token_list); //update brief
+		ft_add_to_token_list(value, token_list);
 	*value = ft_charjoin(*value, s[0]);
-	if ((s[0] == '>' || s[0] == '<') && ft_strchr(METACHARS, s[1]))
+	if (s[0] == '>' && s[1] == '|') // review this later
+	{
+		*value = ft_charjoin(*value, s[1]);
+		i++;
+	}
+	else if ((ft_strchr(METACHARS, s[0])) && (s[0] == s[1]))
 	{
 		*value = ft_charjoin(*value, s[1]);
 		i++;
