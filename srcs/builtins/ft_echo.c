@@ -43,25 +43,26 @@ void	ft_echo(char **args)
 	int		i;
 
 	flag = false;
-	if (args == NULL) // no argument
+	if (!args[1]) // no argument
 	{
 		printf("\n");
 		return ;
 	}
-	if (!args)
-		return ;
-	i = 0;
-	while (ft_arg_is_flag(args[i]))
+	i = 1;
+	while (args[i] && ft_arg_is_flag(args[i]))
 	{
 		flag = true;
 		i++;
 	}
-	while (args[i])
+	if (args[i])
 	{
-		printf("%s", args[i]);
-		if (args[i + 1])
-			printf(" ");
-		i++;
+		while (args[i])
+		{
+			printf("%s", args[i]);
+			if (args[i + 1])
+				printf(" ");
+			i++;
+		}
 	}
 	if (!flag)
 		printf("\n");
