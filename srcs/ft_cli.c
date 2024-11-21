@@ -80,12 +80,13 @@ int	ft_history(char *input)
  * @param my_envp A pointer to the array of environment variables, passed to functions 
  *                that execute commands with the current environment.
  */
-void	ft_cli(char ***my_envp)
+void	ft_cli(char **my_envp)
 {
+	(void)my_envp; //remove this line later
 	char	*input;
 
 	input = NULL;
-	ft_signal(PARENT);
+	ft_signal(PARENT_);
 	while (1)
 	{
 		if (input)
@@ -102,8 +103,8 @@ void	ft_cli(char ***my_envp)
 		}
 		if (ft_history(input))
 		{
-			//ft_process_input()
-			ft_launcher(NULL, my_envp);
+			ft_process_input(input, my_envp);
+			//ft_launcher(NULL, my_envp);
 		}
 	}
 	rl_clear_history();

@@ -16,6 +16,8 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = O_RDONLY;
 	else if ((*redir)->type == APPEND)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
+	else if ((*redir)->type == HEREDOC)
+		(*redir)->mode = -1; //just to init
 }
 /**
  * @brief Initializes a redirection node based on the current token.
@@ -30,18 +32,24 @@ static void	ft_assign_redir_mode(t_redir **redir)
 static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
 	t_redir	*redir;
+	t_list	**target;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); malloc failed
+	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
+	if (!target)
+		return (NULL); // ft_error_handler();
+	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;
 	redir->type = token->type;
-	ft_assign_redir_mode(&redir); //precisamos disso?
+	ft_assign_redir_mode(&redir);
 	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next; // move up to target
-		redir->target = (t_token *)(*list)->content;
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
+		redir->target = target;
 	}
 	return (redir);
 }
@@ -60,14 +68,15 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
  */
 static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec)
 {
+	//update brief
 	t_redir	*redir;
 	t_list	*list_next;
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL); 
-	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
-		redir->next =  (void *)exec;
+		return (NULL);
+	if (!(*list)->next || !ft_validate_next_token(list)) //check whether next is not NULL or PIPE or AND or OR
+		redir->next = (void *)exec;
 	else
 	{
 		*list = (*list)->next; // move up to next node
@@ -101,7 +110,7 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	exec->type = token->type;
 	exec->pathname = token->value;
-	exec->args = ft_get_args(list); //malloc check? execve wiht pahtname but no args
+	exec->args = ft_get_args(list); //malloc check? possible problem: execve wiht pahtname but no args
 	token = (*list)->content;
 	while (*list && (token->type == EXEC || token->type == EXPORT
 			|| token->type == EXPORT_AP))
@@ -128,6 +137,7 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  */
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
+	//update brief
 	t_token	*token;
 	t_redir	*redir;
 
@@ -138,7 +148,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		if (!list || !*list || !exec)
 			return ((void *)exec);
 		token = (*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			return ((void *)exec);
 	}
 	if (token->type == OUTFILE || token->type == INFILE

@@ -12,6 +12,7 @@
  */
 char	**ft_add_to_vector(char **vector, char *new_str)
 {
+	//not used here. most likely will do to execution
 	char	**res;
 	int		i;
 
@@ -50,25 +51,29 @@ char	**ft_add_to_vector(char **vector, char *new_str)
  * @return A dynamically allocated string vector containing the extracted arguments, 
  *         or NULL if no arguments are found.
  */
-char	**ft_get_args(t_list **list)
+t_list	**ft_get_args(t_list **list)
 {
-	char	**args;
+	//update brief
+	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
 
-	args = NULL;
+	args = (t_list **)malloc(sizeof(t_list *)); //create t_list **
+	if (!args)
+		return (NULL); // ft_error_handler();
+	*args = NULL;
 	curr = *list;
 	while (curr)
 	{
 		token = (t_token *)curr->content;
 		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
-			args = ft_add_to_vector(args, token->value); //malloc check? free allocated mem?
+			ft_lstadd_back(args, ft_lstnew(curr->content));
 		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
 		}
-		else if (token->type == PIPE)
+		else if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		curr = curr->next;
 	}
@@ -85,12 +90,13 @@ char	**ft_get_args(t_list **list)
  */
 bool	ft_find_next_redir(t_list **list)
 {
+	//update brief
 	t_token	*token;
 
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		if (token->type == OUTFILE || token->type == INFILE
 				|| token->type == APPEND || token->type == HEREDOC)
@@ -116,7 +122,7 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE)
+		if (token->type == PIPE || token->type == AND || token->type == OR)
 			break ;
 		if (token->type == EXEC)
 			return (true);

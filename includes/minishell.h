@@ -32,10 +32,10 @@
 # define TRUE 1
 # define FALSE 0
 
-# define PARENT 0
-# define CHILD 1
-# define HEREDOC 2
-# define DEFAULT 3
+# define PARENT_ 0
+# define CHILD_ 1
+# define HEREDOC_ 2
+# define DEFAULT_ 3
 
 typedef struct s_bonsai
 {
@@ -58,7 +58,7 @@ void	ft_free_node(t_list *node);
 int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(const char *str, ...);
 void	ft_signal(int type);
-void	ft_cli(char ***envp);
+void	ft_cli(char **envp);
 //void	ft_launcher(t_bonsai *bonsai, char ***my_envp);
 
 int		heredoc_fd(char *limiter, char **my_envp);

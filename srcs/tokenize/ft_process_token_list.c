@@ -126,13 +126,13 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
 	t_list	*current;
-	t_list	*prev;
+	//t_list	*prev;
 	t_list	*next;
 	t_token	*token;
 
 	current = *list;
-	prev = NULL;
-	while (current) // tratar como vector
+	//prev = NULL;
+	while (current)
 	{
 		next = current->next;
 		token = (t_token *)current->content;
@@ -140,10 +140,18 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 			ft_expand_tokens(token, my_envp);
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
-		if (token->expand && token->value[0] == '\0')
-			ft_remove_current_node(list, prev, current);
-		else
-			prev = current;
+		//if (token->expand && token->value[0] == '\0')
+		//	ft_remove_current_node(list, prev, current);
+		//else
+		//	prev = current;
 		current = next;
 	}
+	//no caso da t_list **args pra transformar em char **args // fazer em outra funcão?
+	// while (curr)
+	// {
+	// 	token = (t_token *)curr->content;
+	// 	args = ft_add_to_vector(args, token->value); //malloc check? free allocated mem?
+	// 	curr = curr->next;
+	// }
 }
+
