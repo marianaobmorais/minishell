@@ -46,7 +46,7 @@ int	ft_history(char *input)
 void	ft_cli(t_env *env)
 {
 	char	*input;
-	void	**bonsai;
+	void	*bonsai;
 
 	input = NULL;
 	bonsai = NULL;
@@ -73,7 +73,7 @@ void	ft_cli(t_env *env)
 			// 	if (!ft_single_command(bonsai, env))
 			// 		ft_launcher(bonsai, NULL, env, NULL);
 			// }
-			//ft_free_tree(bonsai);
+			ft_free_tree(bonsai);
 		}
 	}
 	rl_clear_history();
