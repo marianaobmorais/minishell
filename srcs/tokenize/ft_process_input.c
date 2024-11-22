@@ -153,11 +153,11 @@ void	*ft_process_input(char *input, char **my_envp)
 		return (NULL); //ft_error_handler // malloc failed
 	ft_print_list(token_list); // debug
 	printf("after expansion:\n"); //debug
-	ft_process_token_list(token_list, my_envp); // will move to execution
+	//ft_process_token_list(token_list, my_envp); // will move to execution
 	ft_print_list(token_list); // debug
 	if (token_list && *token_list)
 	{
-		root = ft_build_root(token_list, ROOT);
+		root = ft_build_tree(token_list); //MODIFICAO REMOVER
 		printf("print root\n");
 		print_root(root, 40);
 		if (root)
