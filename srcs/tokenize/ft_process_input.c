@@ -75,7 +75,12 @@ void print_root(void *root, int indent) // Updated function
 	if (((t_node *)root)->type == PIPE)
 	{
 		t_node *pipe_node = (t_node *)root;
+		t_node	*parent = (t_node *)pipe_node->parent_node;
 		printf("%*sPIPE\n", indent - 5, "");
+		printf("%*sparent: %s\n", indent - 5,
+				"", 
+				(parent->type == ROOT) ? "ROOT" :
+				(parent->type == AND) ? "AND" : "OR");
 		printf("%*s//\n", indent - 5, "");
 		if (pipe_node->left)
 			print_root(pipe_node->left, indent + 0); // Print left child

@@ -38,19 +38,12 @@ typedef struct s_token
 	bool	expand;
 }	t_token;
 
-// typedef struct s_pipe
-// {
-// 	int		type;
-// 	char	*left; // aponta para redir ou exec
-// 	char	*right; // aponta para pipe
-// }	t_pipe;
-
 typedef struct s_node
 {
 	int		type;
 	void	*left;
 	void	*right;
-	t_node	*parent_node; //insert to tree
+	struct s_node	*parent_node;
 }	t_node;
 
 typedef struct s_redir
@@ -106,7 +99,7 @@ void	*ft_build_root(t_list **list, t_type type);
 void	ft_skip_export_tokens(t_list **list);
 
 //ft_build_tree.c
-void	*ft_build_tree(t_list **token_list);
+void	*ft_build_tree(t_list **token_list, t_node **parent_node);
 bool	ft_validate_next_token(t_list **list);
 
 //ft_build_branch.c

@@ -53,7 +53,7 @@ static bool	ft_find_next_pipe(t_list **list)
  * @param list A double pointer to the token list, updated as tokens are consumed during tree building.
  * @return A pointer to the root of the constructed binary tree, or NULL if an error occurs.
  */
-void	*ft_build_tree(t_list **list)
+void	*ft_build_tree(t_list **list, t_node **parent_node)
 {
 	t_node	*node;
 
@@ -63,13 +63,15 @@ void	*ft_build_tree(t_list **list)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	node->type = PIPE;
 	node->right = NULL;
+	node->left = NULL;
+	node->parent_node = *parent_node;
 	node->left = ft_build_branch(list, NULL);
 	if (!node->left)
 		return (NULL);
 	if (!list || !*list)
 		return ((void *)node);
 	if (ft_find_next_pipe(list))
-		node->right = ft_build_tree(list);
+		node->right = ft_build_tree(list, parent_node);
 	else
 		node->right = NULL;
 	return ((void *)node);

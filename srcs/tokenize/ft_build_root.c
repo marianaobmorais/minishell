@@ -52,10 +52,11 @@ void	*ft_build_root(t_list **list, t_type type)
 		return (NULL); //ft_error_hanlder(); malloc failed
 	root->left = NULL;
 	root->right = NULL;
+	root->parent_node = NULL;
 	root->type = type;
 	if (type != ROOT) // move up to next node in token list
 		*list = (*list)->next;
-	root->left = ft_build_tree(list);
+	root->left = ft_build_tree(list, &root);
 	if (!root->left)
 		return (NULL);
 	if (!list || !*list)
