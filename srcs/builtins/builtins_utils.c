@@ -55,7 +55,7 @@ int	ft_isjustbuiltin(void *node, t_env *env)
 	if (!((t_pipe *)node)->right)
 	{
 		curr_node = ((t_pipe *)node)->left;
-		while (!flag)
+		while (!flag && curr_node)
 		{
 			if (((t_redir *)curr_node)->type == OUTFILE 
 				|| ((t_redir *)curr_node)->type == INFILE
@@ -65,16 +65,33 @@ int	ft_isjustbuiltin(void *node, t_env *env)
 			else
 				flag++;
 		}
-		if (((t_exec *)curr_node)->type == EXEC)
+		if (curr_node)
 		{
-			ft_process_token_list(((t_exec *)curr_node)->args, *env->global); //transformar o t_list em char **
-			new_args = tokentostring(((t_exec *)curr_node)->args);
-			if (ft_isbuiltin(new_args))
+			if (((t_exec *)curr_node)->type == EXEC)
 			{
-				//free new args
-				return (TRUE);
+				ft_process_token_list(((t_exec *)curr_node)->args, *env->global);
+				new_args = tokentostring(((t_exec *)curr_node)->args);
+				if (ft_isbuiltin(new_args))
+				{
+					ft_free_vector(new_args);
+					return (TRUE);
+				}
 			}
 		}
+	}
+	return (FALSE);
+}
+
+int	ft_isheredoc(void *node)
+{
+	void	*curr_node;
+
+	curr_node = ((t_pipe *)node)->left;
+	while (curr_node)
+	{
+		if (((t_redir *)curr_node)->type == HEREDOC)
+			return (TRUE);
+		curr_node = ((t_redir *)curr_node)->next;
 	}
 	return (FALSE);
 }

@@ -101,6 +101,6 @@ void	ft_exec(t_list **args, t_env *env)
 		if (execve(pathname, new_args, *(env)->global) == -1)
 			ft_stderror(TRUE, "%s:", new_args[0]);
 		free(pathname);
-		//free new args
+		ft_free_vector(new_args);
 	}
 }

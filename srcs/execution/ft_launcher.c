@@ -16,11 +16,10 @@ int	ft_single_command(void *node, t_env *env)
 			curr_node = ((t_redir *)curr_node)->next;
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
-			//ft_process_token_list(((t_exec *)curr_node)->args, *env->global); //transformar o t_list em char **
 			new_args = tokentostring(((t_exec *)curr_node)->args);
 			if (ft_isbuiltin(new_args))
 				ft_exec_builtin(new_args, env);
-			//free new args
+			ft_free_vector(new_args);
 		}
 		dup2(original_stdout, STDOUT_FILENO);
 		dup2(original_stdin, STDIN_FILENO);
@@ -53,7 +52,7 @@ void ft_parent_process(void *node, t_env *env, pid_t pid, int *curr_fds)
 	static int	i; //remover
 
 	status = 999; // fora do range para assegura que seja um valor valido
-	if (!((t_pipe *)node)->right) //entra apenas no ultimo validar se funciona o signal
+	if (!((t_pipe *)node)->right || ft_isheredoc(node)) //entra apenas no ultimo validar se funciona o signal
 	{
 		if (waitpid(pid, &status, 0) != -1) //esperando demais para um |, vai mudar com && e ||
 		{
@@ -82,8 +81,10 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds)
 	pid_t	pid;
 	int		fds[2];
 	int		original_stdin;
+	int		original_stdout;
 
 	original_stdin = dup(STDIN_FILENO);
+	original_stdout = dup(STDOUT_FILENO);
 	if (!curr_node)
 		return;
 	else if (((t_pipe *)curr_node)->type == PIPE)
@@ -106,6 +107,8 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds)
 	}
 	else
 		ft_putstr_fd("Perdeu a linha\n\n", 2);
+	dup2(original_stdout, STDOUT_FILENO);
 	dup2(original_stdin, STDIN_FILENO);
 	close(original_stdin);
+	close(original_stdout);
 }

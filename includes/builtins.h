@@ -23,5 +23,6 @@ bool	ft_isbuiltin(char **args);
 void	ft_exec_builtin(char **args, t_env *env);
 int		ft_argslen(char **args);
 int		ft_isjustbuiltin(void *node, t_env *env);
+int		ft_isheredoc(void *node);
 
 #endif //BUILTINS_H
