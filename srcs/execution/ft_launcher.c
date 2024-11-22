@@ -3,20 +3,24 @@
 int	ft_single_command(void *node, t_env *env)
 {
 	void	*curr_node;
+	char	**new_args;
 	int		original_stdin;
 	int		original_stdout;
 
 	original_stdin = dup(STDIN_FILENO);
 	original_stdout = dup(STDOUT_FILENO);
-	if (ft_isjustbuiltin(node))
+	if (ft_isjustbuiltin(node, env))
 	{
 		curr_node = ((t_pipe *)node)->left;
 		while (ft_redir(((t_redir *)curr_node), *(env)->global))
 			curr_node = ((t_redir *)curr_node)->next;
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
-			if (ft_isbuiltin(((t_exec *)curr_node)->args))
-				ft_exec_builtin(((t_exec *)curr_node)->args, env);
+			//ft_process_token_list(((t_exec *)curr_node)->args, *env->global); //transformar o t_list em char **
+			new_args = tokentostring(((t_exec *)curr_node)->args);
+			if (ft_isbuiltin(new_args))
+				ft_exec_builtin(new_args, env);
+			//free new args
 		}
 		dup2(original_stdout, STDOUT_FILENO);
 		dup2(original_stdin, STDIN_FILENO);

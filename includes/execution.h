@@ -20,5 +20,6 @@ void	ft_exec(t_list **args, t_env *env);
 int		ft_redir(t_redir *node, char **my_envp);
 int		heredoc_fd(char *limiter, char **my_envp, int state);
 int		ft_single_command(void *node, t_env *env);
+char	**tokentostring(t_list **args);
 
 #endif //EXECUTION_H

@@ -57,24 +57,50 @@ static char	*ft_findpath(char **envp, char **cmds)
 	return (NULL);
 }
 
+char	**tokentostring(t_list **args)
+{
+	char	**new_args;
+	t_list	*curr_list;
+	int		size;
+	int		i;
+
+	curr_list = *args;
+	size = ft_lstsize(curr_list);
+	i = 0;
+	new_args = (char **) malloc((size + 1) * sizeof(char *));
+	if (!new_args)
+		ft_error_handler();
+	while (curr_list)
+	{
+		new_args[i] = ft_strdup(((t_token *) (curr_list)->content)->value);
+		curr_list = (curr_list)->next;
+		i++;
+	}
+	new_args[i] = NULL;
+	return (new_args);
+}
+
 void	ft_exec(t_list **args, t_env *env)
 {
-	char *pathname;
+	char	*pathname;
+	char	**new_args;
 
 	pathname = NULL;
 	ft_process_token_list(args, *env->global); //transformar o t_list em char **
-	if (ft_isbuiltin(args))
-		ft_exec_builtin(args, env);
+	new_args = tokentostring(args);
+	if (ft_isbuiltin(new_args))
+		ft_exec_builtin(new_args, env);
 	else
 	{
-		pathname = ft_findpath(*(env)->global, args);
+		pathname = ft_findpath(*(env)->global, new_args);
 		if (!pathname)
 		{
-			ft_stderror(FALSE, "%s: command not found", args[0]);
+			ft_stderror(FALSE, "%s: command not found", new_args[0]);
 			ft_exit_status(127, TRUE, TRUE);
 		}
-		if (execve(pathname, args, *(env)->global) == -1)
-			ft_stderror(TRUE, "%s:", args[0]);
+		if (execve(pathname, new_args, *(env)->global) == -1)
+			ft_stderror(TRUE, "%s:", new_args[0]);
 		free(pathname);
+		//free new args
 	}
 }

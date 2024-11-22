@@ -45,9 +45,10 @@ void	ft_exec_builtin(char **args, t_env *env)
 		ft_env(*(env)->global);
 }
 
-int	ft_isjustbuiltin(void *node)
+int	ft_isjustbuiltin(void *node, t_env *env)
 {
 	void	*curr_node;
+	char	**new_args;
 	int		flag;
 
 	flag = 0;
@@ -66,8 +67,13 @@ int	ft_isjustbuiltin(void *node)
 		}
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
-			if (ft_isbuiltin(((t_exec *)curr_node)->args))
+			ft_process_token_list(((t_exec *)curr_node)->args, *env->global); //transformar o t_list em char **
+			new_args = tokentostring(((t_exec *)curr_node)->args);
+			if (ft_isbuiltin(new_args))
+			{
+				//free new args
 				return (TRUE);
+			}
 		}
 	}
 	return (FALSE);
