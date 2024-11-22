@@ -1,8 +1,9 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "{}[^!"
-# define INVALIDCHARS ";()\\`*~"
+# define SPECIALCHARS "{}[^!()"
+# define INVALIDCHARS ";\\`*~"
+//# define PRTHESISCHARS "()"
 # define METACHARS "|<>&"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
@@ -18,10 +19,9 @@ typedef enum e_type
 	EXEC,
 	EXPORT,
 	EXPORT_AP,
+	ROOT,
 	AND,
-	OR,
-	PRTHESIS,
-	ROOT
+	OR
 }	t_type;
 
 typedef enum e_state

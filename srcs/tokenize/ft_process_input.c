@@ -163,7 +163,6 @@ void	*ft_process_input(char *input, char **my_envp)
 	if (token_list && *token_list)
 	{
 		root = ft_build_root(token_list, ROOT);
-		printf("print root\n");
 		print_root(root, 40);
 		if (root)
 			ft_free_list(token_list); //update brief

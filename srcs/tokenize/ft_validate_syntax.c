@@ -64,20 +64,23 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
  */
 static bool	ft_is_invalid_first_char(char *s, bool *special)
 {
+	//update brief
 	if (s[0] == '#' /* || s[0] == ':' */) // # it indicates a comment. what is :?
 	{
 		*special = true;
 		return (true); // not an error. doesn't change the last exit_code
 	}
-	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.') && (ft_isspace(s[1]) || s[1] == '\0')))
+	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.')
+			&& (ft_isspace(s[1]) || s[1] == '\0')))
 	{
 		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
 		*special = true;
 		return (true);
 	}
-	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0]) || ft_strchr(METACHARS, s[0]))
+	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
+			|| ft_strchr(METACHARS, s[0]))
 	{
-		if (s[0] != '<' && s[0] != '>')
+		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
 			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
 			*special = true;
@@ -88,6 +91,50 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 	return (false);
 }
 
+bool ft_validate_parenthesis(char *s)
+{
+	int		i;
+	bool	left;
+	char	c;
+	bool	right;
+
+	//ft_find matching parentheses
+	i = 0;
+	left = false;
+	right = false;
+	while (s[i])
+	{
+		if (s[i] == '(')
+		{
+			if (c == '<' || c == '>' || ft_isalnum(c))
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
+			left = true;
+		}
+		else if (s[i] == ')')
+		{
+			if (left || c == '|')
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
+			right = true;
+		}
+		else if (left && s[i] == '|')
+			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
+		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+			i = ft_find_next_quote(s, i, s[i]);
+		else if (!ft_isspace(s[i]))
+		{
+			if (right && s[i] != '|' && s[i] != '&')
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, ')'), false); //ft_error_handler();
+			c = s[i];
+			left = false;
+			right = false;
+		}
+		i++;
+	}
+	if (left)
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, '('), false); //ft_error_handler();
+	return (true);
+}
+
 /**
  * @brief Checks syntax validity of a given input string for proper quote usage, valid metacharacter positioning and env expansion.
  *
@@ -96,6 +143,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
  */
 int	ft_validate_syntax(char *s)
 {
+	//update brief
 	char	*trim;
 	int		i;
 	bool	special;
@@ -105,6 +153,8 @@ int	ft_validate_syntax(char *s)
 		return (0); //ft_error_handler(); malloc failed
 	if (ft_is_invalid_first_char(trim, &special))
 		return (free(trim), 0);
+	if (!ft_validate_parenthesis(trim))
+		return (free(trim), 0);
 	i = 0;
 	while (trim[i])
 	{
@@ -113,7 +163,7 @@ int	ft_validate_syntax(char *s)
 			return (0);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 		{
-			if (trim[i] == '#') //update brief
+			if (trim[i] == '#')
 			{
 				i++;
 				break;
