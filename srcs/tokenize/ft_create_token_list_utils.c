@@ -39,7 +39,7 @@ static t_type	ft_get_cmd_type(char *s)
  */
 static t_type	ft_get_token_type(char *s)
 {
-	t_type	type;
+	t_type	type; //update brief
 
 	if (s[0] == '|')
 	{
@@ -61,6 +61,8 @@ static t_type	ft_get_token_type(char *s)
 	}
 	else if (s[0] == '&')
 		return (AND);
+	else if (s[0] == '(' || s[0] == ')')
+		return (PRTHESES);
 	else
 	{
 		type = ft_get_cmd_type(s);
