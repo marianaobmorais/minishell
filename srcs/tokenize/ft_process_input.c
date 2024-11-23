@@ -145,17 +145,18 @@ void print_root(void *root, int indent) // Updated function
  */
 void	*ft_process_input(char *input, char **my_envp)
 {
+	//update brief
 	(void)my_envp; //delete later
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
 
-	if (!ft_validate_syntax(input))
-		return (NULL); //invalid syntax
-	trimmed = ft_strtrim(input, ISSPACE);
+	trimmed = ft_strtrim(input, ISSPACE); //check malloc?
+	if (!ft_validate_syntax(trimmed))
+		return (free(trimmed), NULL); //invalid syntax
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
-		return (NULL); //ft_error_handler // malloc failed
+		return (free(trimmed), NULL); //ft_error_handler // malloc failed
 	ft_print_list(token_list); // debug
 	printf("after expansion:\n"); //debug
 	ft_process_token_list(token_list, my_envp); // will move to execution
@@ -163,12 +164,11 @@ void	*ft_process_input(char *input, char **my_envp)
 	if (token_list && *token_list)
 	{
 		root = ft_build_root(token_list, ROOT);
-		print_root(root, 40);
-		if (root)
-			ft_free_list(token_list); //update brief
-		return (root);
+		print_root(root, 40); //debug
 	}
+	free(trimmed);
 	ft_free_list(token_list);
+	if (root)
+		return (root);
 	return (NULL);
-	//ft_free_tree(root);
 }

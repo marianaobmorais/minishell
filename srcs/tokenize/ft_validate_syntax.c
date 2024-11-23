@@ -122,8 +122,8 @@ bool ft_validate_parenthesis(char *s)
 	//write brief
 	int		i;
 	bool	left;
-	char	c;
 	bool	right;
+	char	c;
 
 	if (!ft_count_parentheses(s))
 		return (false);
@@ -169,18 +169,14 @@ bool ft_validate_parenthesis(char *s)
  * @param input The input string to validate.
  * @return 1 if syntax is valid, otherwise 0.
  */
-int	ft_validate_syntax(char *s)
+int	ft_validate_syntax(char *trim)
 {
 	//update brief
-	char	*trim;
 	int		i;
 	bool	special;
 
-	trim = ft_strtrim(s, ISSPACE);
-	if (!trim)
-		return (0); //ft_error_handler(); malloc failed
 	if (ft_is_invalid_first_char(trim, &special) || !ft_validate_parenthesis(trim))
-		return (free(trim), 0);
+		return (0);
 	i = 0;
 	while (trim[i])
 	{
@@ -200,6 +196,6 @@ int	ft_validate_syntax(char *s)
 			i++;
 	}
 	if (special == true)
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
-	return (free(trim), 1);
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), 0); //ft_error_handler();
+	return (1);
 }
