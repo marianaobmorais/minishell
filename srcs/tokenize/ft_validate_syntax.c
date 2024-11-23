@@ -93,9 +93,8 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 
 bool ft_count_parentheses(char *s)
 {
-	//write brief
-	int		i;
-	int		count;
+	int	i; //write brief
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -109,6 +108,8 @@ bool ft_count_parentheses(char *s)
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
 			count--;
 		}
+		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+			i = ft_find_next_quote(s, i, s[i]);
 		i++;
 	}
 	if (count == 0)
@@ -134,7 +135,7 @@ bool ft_validate_parenthesis(char *s)
 	{
 		if (s[i] == '(')
 		{
-			if (c == '<' || c == '>' || ft_isalnum(c))
+			if (i > 0 && (c == '<' || c == '>' || ft_isalnum(c)))
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
 			left = true;
 		}
