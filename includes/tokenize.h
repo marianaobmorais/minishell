@@ -21,7 +21,8 @@ typedef enum e_type
 	EXPORT_AP,
 	ROOT,
 	AND,
-	OR
+	OR,
+	PRTHESES
 }	t_type;
 
 typedef enum e_state
