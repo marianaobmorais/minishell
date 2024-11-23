@@ -81,7 +81,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
 	{
 		if (!ft_isspace(s[i]))
 		{
-			if (ft_strchr(METACHARS, s[i]))
+			if (ft_strchr(METACHARS, s[i]) || ft_strchr(PRTHESESCHARS, s[i]))
 				i = ft_handle_metachar(&value, &s[i], i, token_list); 
 			else if (s[i] == SQUOTE || s[i] == DQUOTE)
 				i = ft_handle_quotes(&value, s, i, s[i]);
@@ -108,7 +108,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  */
 void	ft_validate_export_tokens(t_list **list)
 {
-	t_list	*current;
+	t_list	*current; //update brief
 	t_token	*token;
 	t_list	*prev;
 	int	pos;
@@ -120,7 +120,11 @@ void	ft_validate_export_tokens(t_list **list)
 	{
 		token = (t_token *)current->content;
 		if ((token->type == EXPORT || token->type == EXPORT_AP) && pos > 0
-				&& !(((t_token *)prev->content)->type == PIPE))
+				&& !(((t_token *)prev->content)->type == PIPE
+				|| ((t_token *)prev->content)->type == AND
+				|| ((t_token *)prev->content)->type == OR
+				|| ((t_token *)prev->content)->type == EXPORT
+				|| ((t_token *)prev->content)->type == EXPORT_AP))
 			token->type = EXEC;
 		pos++;
 		prev = current;
@@ -140,7 +144,7 @@ void	ft_validate_export_tokens(t_list **list)
  */
 t_list	**ft_create_token_list(char *s)
 {
-	t_list	**token_list;
+	t_list	**token_list; //update brief
 
 	token_list = (t_list **)malloc(sizeof(t_list **));
 	if (!token_list)
@@ -148,5 +152,5 @@ t_list	**ft_create_token_list(char *s)
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
-	return (free(s), token_list);
+	return (token_list);
 }
