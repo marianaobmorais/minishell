@@ -78,7 +78,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 		return (true);
 	}
 	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
-			|| ft_strchr(METACHARS, s[0]))
+			|| ft_strchr(METACHARS, s[0]) || ft_strchr(PRTHESESCHARS, s[0]))
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
@@ -91,14 +91,42 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 	return (false);
 }
 
+bool ft_count_parentheses(char *s)
+{
+	//write brief
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == '(')
+			count++;
+		else if (s[i] == ')')
+		{
+			if (count == 0)
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
+			count--;
+		}
+		i++;
+	}
+	if (count == 0)
+		return (true);
+	return (printf("%s: open parentheses are not supported\n", PROG_NAME), false); //ft_error_handler();
+ 
+}
+
 bool ft_validate_parenthesis(char *s)
 {
+	//write brief
 	int		i;
 	bool	left;
 	char	c;
 	bool	right;
 
-	//ft_find matching parentheses
+	if (!ft_count_parentheses(s))
+		return (false);
 	i = 0;
 	left = false;
 	right = false;

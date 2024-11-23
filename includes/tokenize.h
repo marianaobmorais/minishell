@@ -1,9 +1,9 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
-# define SPECIALCHARS "{}[^!()"
+# define SPECIALCHARS "{}[^!"
 # define INVALIDCHARS ";\\`*~"
-//# define PRTHESISCHARS "()"
+# define PRTHESESCHARS "()"
 # define METACHARS "|<>&"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
