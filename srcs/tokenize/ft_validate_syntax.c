@@ -179,9 +179,7 @@ int	ft_validate_syntax(char *s)
 	trim = ft_strtrim(s, ISSPACE);
 	if (!trim)
 		return (0); //ft_error_handler(); malloc failed
-	if (ft_is_invalid_first_char(trim, &special))
-		return (free(trim), 0);
-	if (!ft_validate_parenthesis(trim))
+	if (ft_is_invalid_first_char(trim, &special) || !ft_validate_parenthesis(trim))
 		return (free(trim), 0);
 	i = 0;
 	while (trim[i])
