@@ -17,7 +17,7 @@ static void	ft_assign_redir_mode(t_redir **redir)
 	else if ((*redir)->type == APPEND)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
 	else if ((*redir)->type == HEREDOC)
-		(*redir)->mode = -1; //just to init
+		(*redir)->mode = -1;
 }
 /**
  * @brief Initializes a redirection node based on the current token.
@@ -36,10 +36,10 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); //ft_error_hanlder(); 1 // malloc failed
 	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
 	if (!target)
-		return (NULL); // ft_error_handler();
+		return (NULL); // ft_error_handler(); 1 // malloc failed
 	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;
@@ -74,7 +74,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL);
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
 	if (!(*list)->next || !ft_validate_next_token(list)) 
 		redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR or PRTHESES
 	else
@@ -107,10 +107,12 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 
 	exec = (t_exec *)malloc(sizeof(t_exec));
 	if (!exec)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
 	exec->type = token->type;
 	exec->pathname = token->value;
-	exec->args = ft_get_args(list); //malloc check? possible problem: execve wiht pahtname but no args
+	exec->args = ft_get_args(list);
+	if (!exec->args)
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
 	token = (*list)->content;
 	while (*list && (ft_is_token_type(token, EXEC)))
 	{
@@ -159,5 +161,5 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		sub_root = ft_create_subroot_node(list);
 		return ((void *)sub_root);
 	}
-	return (NULL); //error in creating branch
+	return (NULL); //error in creating branch; 1
 }

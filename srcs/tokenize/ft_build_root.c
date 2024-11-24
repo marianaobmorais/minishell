@@ -76,7 +76,7 @@ void	*ft_build_root(t_list **list, t_type type)
 	ft_skip_export_tokens(list);
 	root = (t_node *)malloc(sizeof(t_node));
 	if (!root)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); //ft_error_hanlder(); 1 // malloc failed
 	root->left = NULL;
 	root->right = NULL;
 	root->parent_node = NULL;

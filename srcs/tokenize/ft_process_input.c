@@ -169,12 +169,12 @@ void	*ft_process_input(char *input)
 
 	trimmed = ft_strtrim(input, ISSPACE); 
 	if (!trimmed)
-		return (NULL); //ft_error_handler // malloc failed
+		return (NULL); //ft_error_handler; 1 // malloc failed 
 	if (!ft_validate_syntax(trimmed))
 		return (free(trimmed), NULL); //invalid syntax
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
-		return (free(trimmed), NULL); //ft_error_handler // malloc failed
+		return (free(trimmed), NULL); //ft_error_handler; 1 // malloc failed
 	ft_print_list(token_list); // debug
 	root = NULL;
 	if (token_list && *token_list)
