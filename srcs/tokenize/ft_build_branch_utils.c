@@ -1,46 +1,6 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Adds a new string to a dynamically allocated string vector.
- * 
- * Creates a new vector by appending a given string to an existing vector of strings.
- * Frees the original vector and duplicates its contents into the new one.
- * 
- * @param vector Pointer to the original string vector, or NULL if creating a new vector.
- * @param new_str String to add to the vector.
- * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
- */
-char	**ft_add_to_vector(char **vector, char *new_str)
-{
-	//not used here. most likely will do to execution
-	char	**res;
-	int		i;
-
-	i = 0;
-	if (vector)
-		while (vector[i])
-			i++;
-	res = (char **)malloc(sizeof(char *) * (i + 2));
-	if (!res)
-		return (NULL); //ft_error_handler // malloc failed
-	i = 0;
-	if (!vector)
-		res[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
-	else
-	{
-		while (vector[i])
-		{
-			res[i] = ft_strdup(vector[i]); //malloc check? free allocated mem?
-			i++;
-		}
-		res[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
-		ft_free_vector(vector);
-	}
-	res[i] = NULL;
-	return (res);
-}
-
-/**
  * @brief Extracts a list of argument strings from a token list.
  * 
  * Iterates through a token list, collecting values of tokens with types `EXEC`, `EXPORT`, 
