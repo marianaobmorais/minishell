@@ -131,11 +131,12 @@ bool ft_validate_parenthesis(char *s)
 	i = 0;
 	left = false;
 	right = false;
+	c = ' ';
 	while (s[i])
 	{
 		if (s[i] == '(')
 		{
-			if (i > 0 && (c == '<' || c == '>' || ft_isalnum(c)))
+			if (c == '<' || c == '>' || ft_isalnum(c))
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
 			left = true;
 		}
