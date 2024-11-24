@@ -124,7 +124,8 @@ void	ft_validate_export_tokens(t_list **list)
 				|| ((t_token *)prev->content)->type == AND
 				|| ((t_token *)prev->content)->type == OR
 				|| ((t_token *)prev->content)->type == EXPORT
-				|| ((t_token *)prev->content)->type == EXPORT_AP))
+				|| ((t_token *)prev->content)->type == EXPORT_AP
+				|| ((t_token *)prev->content)->type == PRTHESES))
 			token->type = EXEC;
 		pos++;
 		prev = current;

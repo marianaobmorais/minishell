@@ -19,10 +19,11 @@ typedef enum e_type
 	EXEC,
 	EXPORT,
 	EXPORT_AP,
-	ROOT,
 	AND,
 	OR,
-	PRTHESES
+	PRTHESES,
+	ROOT,
+	SUB_ROOT
 }	t_type;
 
 typedef enum e_state

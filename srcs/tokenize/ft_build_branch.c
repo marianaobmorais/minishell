@@ -75,8 +75,8 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 	redir = ft_init_redir(token, list);
 	if (!redir)
 		return (NULL);
-	if (!(*list)->next || !ft_validate_next_token(list)) //check whether next is not NULL or PIPE or AND or OR
-		redir->next = (void *)exec;
+	if (!(*list)->next || !ft_validate_next_token(list)) 
+		redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR or PRTHESES
 	else
 	{
 		*list = (*list)->next; // move up to next node
@@ -119,7 +119,7 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 		if (!(token->type == EXEC || token->type == EXPORT
 				|| token->type == EXPORT_AP))
 			break ;
-		*list = (*list)->next;
+		*list = (*list)->next; //advances in list memory
 	}
 	return (exec);
 }
@@ -135,20 +135,58 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  * @param exec Pointer to an existing execution node, if available, for linking.
  * @return A pointer to the created branch node (either execution or redirection), or NULL on failure.
  */
+// void	*ft_build_branch(t_list **list, t_exec *exec)
+// {
+// 	//update brief
+// 	t_token	*token;
+// 	t_redir	*redir;
+
+// 	token = (*list)->content;
+// 	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
+// 	{
+// 		exec = ft_create_exec_node(token, list);
+// 		if (!list || !*list || !exec)
+// 			return ((void *)exec);
+// 		token = (*list)->content;
+// 		if (token->type == PIPE || token->type == AND || token->type == OR)
+// 			return ((void *)exec);
+// 	}
+// 	if (token->type == OUTFILE || token->type == INFILE
+// 			|| token->type == APPEND || token->type == HEREDOC)
+// 	{
+// 		redir = ft_create_redir_node(token, list, exec);
+// 		return ((void *)redir);
+// 	}
+// 	return (NULL);
+// }
+
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
 	//update brief
 	t_token	*token;
 	t_redir	*redir;
+	t_node	*sub_root;
 
 	token = (*list)->content;
+	if (token->type == PRTHESES)
+	{
+		//printf("token type PARENTHESES\n"); //debug
+		sub_root = NULL;
+		if (token->value[0] == '(')
+		{
+			*list = (*list)->next; //skip '('
+			//printf("list->next: %s\n", ((t_token *)(*list)->content)->value); //debug
+			sub_root = ft_build_root(list, SUB_ROOT);
+			return (sub_root);
+		}
+	}
 	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
 	{
-		exec = ft_create_exec_node(token, list);
+		exec = ft_create_exec_node(token, list); //advances token_list
 		if (!list || !*list || !exec)
 			return ((void *)exec);
 		token = (*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR)
+		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //included PRTHESES check (it is for ')'. don't think I need to specify it further)
 			return ((void *)exec);
 	}
 	if (token->type == OUTFILE || token->type == INFILE

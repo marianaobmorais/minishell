@@ -33,55 +33,59 @@ void print_root(void *root, int indent) // Updated function
 	t_token *token;
 
 	if (!root)
-		return;
+	{
+		printf("!root\n");
+		return ;
+	}
 
 	// Check if the node is ROOT
 	if (((t_node *)root)->type == ROOT)
 	{
 		t_node *root_node = (t_node *)root;
-		printf("%*sROOT\n", indent, "");
-		printf("%*s/\n", indent, "");
+		printf("%*sROOT\n", indent + 10, "");
+		printf("%*s/\n", indent + 10, "");
 		if (root_node->left)
 			print_root(root_node->left, indent + 2); // Print left child
-		printf("%*s\\\n", indent + 10, "");
+		printf("%*s\\\n", indent + 40, "");
 		if (root_node->right)
-			print_root(root_node->right, indent + 10); // Print right child
+			print_root(root_node->right, indent + 40); // Print right child
 	}
 	// Check if the node is AND
-	if (((t_node *)root)->type == AND)
+	else if (((t_node *)root)->type == AND)
 	{
 		t_node *and_node = (t_node *)root;
 		printf("%*sAND\n", indent, "");
 		printf("%*s/\n", indent, "");
 		if (and_node->left)
-			print_root(and_node->left, indent + 0); // Print left child
-		printf("%*s\\\n", indent + 10, "");
+			print_root(and_node->left, indent - 15); // Print left child
+		printf("%*s\\\n", indent + 20, "");
 		if (and_node->right)
 			print_root(and_node->right, indent + 10); // Print right child
 	}
 	// Check if the node is OR
-	if (((t_node *)root)->type == OR)
+	else if (((t_node *)root)->type == OR)
 	{
 		t_node *or_node = (t_node *)root;
 		printf("%*sOR\n", indent, "");
 		printf("%*s/\n", indent, "");
 		if (or_node->left)
-			print_root(or_node->left, indent + 0); // Print left child
-		printf("%*s\\\n", indent + 15, "");
+			print_root(or_node->left, indent - 15); // Print left child
+		printf("%*s\\\n", indent + 20, "");
 		if (or_node->right)
-			print_root(or_node->right, indent + 15); // Print right child
+			print_root(or_node->right, indent + 10); // Print right child
 	}
 	// Check if the node is PIPE
-	if (((t_node *)root)->type == PIPE)
+	else if (((t_node *)root)->type == PIPE)
 	{
 		t_node *pipe_node = (t_node *)root;
 		t_node	*parent = (t_node *)pipe_node->parent_node;
-		printf("%*sPIPE\n", indent - 5, "");
-		printf("%*sparent: %s\n", indent - 5,
+		printf("%*sPIPE\n", indent - 7, "");
+		printf("%*sparent: %s\n", indent - 7,
 				"", 
 				(parent->type == ROOT) ? "ROOT" :
+				(parent->type == SUB_ROOT) ? "SUB_ROOT" :
 				(parent->type == AND) ? "AND" : "OR");
-		printf("%*s//\n", indent - 5, "");
+		printf("%*s//\n", indent - 7, "");
 		if (pipe_node->left)
 			print_root(pipe_node->left, indent + 0); // Print left child
 		printf("%*s\\\\\n", indent, "");
@@ -89,7 +93,7 @@ void print_root(void *root, int indent) // Updated function
 			print_root(pipe_node->right, indent + 5); // Print right child
 	}
 	// Check if the node is a REDIRECTION
-	if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
+	else if (((t_redir *)root)->type == OUTFILE || ((t_redir *)root)->type == INFILE ||
 			 ((t_redir *)root)->type == APPEND || ((t_redir *)root)->type == HEREDOC)
 	{
 		t_redir *redir_node = (t_redir *)root;
@@ -114,7 +118,7 @@ void print_root(void *root, int indent) // Updated function
 			print_root(redir_node->next, indent + 2); // Print next node
 	}
 	// Check if the node is EXEC
-	if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT ||
+	else if (((t_exec *)root)->type == EXEC || ((t_exec *)root)->type == EXPORT ||
 			 ((t_exec *)root)->type == EXPORT_AP)
 	{
 		t_exec *exec_node = (t_exec *)root;
@@ -131,6 +135,19 @@ void print_root(void *root, int indent) // Updated function
 			}
 		}
 	}
+	else if (((t_node *)root)->type == SUB_ROOT)
+	{
+		t_node *subroot_node = (t_node *)root;
+		printf("%*sSUB_ROOT\n", indent - 20, "");
+		printf("%*s///\n", indent - 20, "");
+		if (subroot_node->left)
+			print_root(subroot_node->left, indent - 20);
+		printf("%*s\\\\\\\n", indent - 10, "");
+		if (subroot_node->right)
+			print_root(subroot_node->right, indent - 10);
+	}
+	else
+		printf("Type not found\n");
 }
 
 /**
@@ -150,6 +167,7 @@ void	*ft_process_input(char *input, char **my_envp)
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
+	//bool	parentheses;
 
 	trimmed = ft_strtrim(input, ISSPACE); //check malloc?
 	if (!ft_validate_syntax(trimmed))
@@ -158,17 +176,15 @@ void	*ft_process_input(char *input, char **my_envp)
 	if (!token_list)
 		return (free(trimmed), NULL); //ft_error_handler // malloc failed
 	ft_print_list(token_list); // debug
-	printf("after expansion:\n"); //debug
-	ft_process_token_list(token_list, my_envp); // will move to execution
-	ft_print_list(token_list); // debug
+	root = NULL;
 	if (token_list && *token_list)
 	{
-		root = ft_build_root(token_list, ROOT);
+		//parentheses = false;
+		root = ft_build_root(token_list, ROOT/* , &parentheses */);
+		//printf("try to print tree\n"); //debug
 		print_root(root, 40); //debug
 	}
 	free(trimmed);
 	ft_free_list(token_list);
-	if (root)
-		return (root);
-	return (NULL);
+	return (root);
 }

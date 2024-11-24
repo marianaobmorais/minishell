@@ -73,7 +73,7 @@ t_list	**ft_get_args(t_list **list)
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
 		}
-		else if (token->type == PIPE || token->type == AND || token->type == OR)
+		else if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //included PRTHESIS check
 			break ;
 		curr = curr->next;
 	}
@@ -96,7 +96,7 @@ bool	ft_find_next_redir(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR)
+		if (token->type == PIPE || token->type == AND || token->type == OR/*  || token->type == PRTHESES only break if *parentheses == true */) //included PRTHESES check
 			break ;
 		if (token->type == OUTFILE || token->type == INFILE
 				|| token->type == APPEND || token->type == HEREDOC)
@@ -122,7 +122,7 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR)
+		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //include PRTHESES check
 			break ;
 		if (token->type == EXEC)
 			return (true);

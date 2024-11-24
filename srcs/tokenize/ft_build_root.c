@@ -27,41 +27,70 @@ void	ft_skip_export_tokens(t_list **list)
 	}
 }
 
-static bool ft_find_next_root(t_list **list)
+static bool ft_find_next_root(t_list **list) 
 {
 	t_token	*token;
 
-	while (*list)
+	while (*list) // need to skip the logic operators inside parentheses
 	{
 		token = (t_token *)(*list)->content;
 		if (token->type == AND || token->type == OR)
 			return (true);
-		*list = (*list)->next;
+		if (token->type == PRTHESES) //included PRTHESES check
+			break ;
+		*list = (*list)->next; //this function changes memory
 	}
 	return (false);
 }
 
+// void	*ft_build_root(t_list **list, t_type type)
+// {
+// 	t_node	*root; //write brief
+
+// 	ft_skip_export_tokens(list);
+// 	root = (t_node *)malloc(sizeof(t_node));
+// 	if (!root)
+// 		return (NULL); //ft_error_hanlder(); malloc failed
+// 	root->left = NULL;
+// 	root->right = NULL;
+// 	root->parent_node = NULL;
+// 	root->type = type;
+// 	if (type != ROOT) // move up to next node in token list
+// 		*list = (*list)->next;
+// 	root->left = ft_build_tree(list, &root);
+// 	if (!root->left)
+// 		return (NULL);
+// 	if (!list || !*list)
+// 		return ((void *)root);
+// 	if (ft_find_next_root(list))
+// 	{
+// 		type = ((t_token *)(*list)->content)->type;
+// 		root->right = ft_build_root(list, type);
+// 	}
+// 	return ((void *)root);
+// }
+
 void	*ft_build_root(t_list **list, t_type type)
 {
-	//write brief
-	t_node	*root;
+	t_node	*root; //write brief
 
 	ft_skip_export_tokens(list);
 	root = (t_node *)malloc(sizeof(t_node));
 	if (!root)
 		return (NULL); //ft_error_hanlder(); malloc failed
+	//root = NULL; //why this gives me seg fault?
 	root->left = NULL;
 	root->right = NULL;
 	root->parent_node = NULL;
 	root->type = type;
-	if (type != ROOT) // move up to next node in token list
+	if (type == AND || type == OR) // move up to next node in token list. skip && or ||
 		*list = (*list)->next;
 	root->left = ft_build_tree(list, &root);
 	if (!root->left)
 		return (NULL);
 	if (!list || !*list)
 		return ((void *)root);
-	if (ft_find_next_root(list))
+	if (ft_find_next_root(list)) // need to skip logic operators inside parentheses
 	{
 		type = ((t_token *)(*list)->content)->type;
 		root->right = ft_build_root(list, type);
