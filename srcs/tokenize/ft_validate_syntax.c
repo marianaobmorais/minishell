@@ -21,11 +21,11 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 	{
 		i = ft_find_next_quote(trim, i, trim[i]);
 		if (i == -1)
-			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
+			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler(); 2
 		*special = false;
 	}
 	if (ft_strchr(INVALIDCHARS, trim[i]))
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 	{
 		if (trim[i] == '&' && trim[i + 1] != '&')
@@ -35,12 +35,12 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 			if (special_char == '|' || special_char == '&') //this is to validate: trailing redirs after pipes (it is accepted)
 			{
 				if ((trim[i] == '&' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
-					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 				if ((trim[i] == '|' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
-					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler(); 259
 			}
 			else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc (BUT NEED TO STUDY THIS), pipes don't
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 		}
 		*special = true;
 		special_char = trim[i];
@@ -73,7 +73,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.')
 			&& (ft_isspace(s[1]) || s[1] == '\0')))
 	{
-		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
+		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler(); 258
 		*special = true;
 		return (true);
 	}
@@ -82,7 +82,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
-			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
+			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler(); 258
 			*special = true;
 			return (true);
 		}
@@ -105,64 +105,21 @@ bool ft_count_parentheses(char *s)
 		else if (s[i] == ')')
 		{
 			if (count == 0)
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler(); 258
 			count--;
 		}
 		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+		{
 			i = ft_find_next_quote(s, i, s[i]);
+			if (i == -1)
+				return (printf("%s: open quotes are not supported\n", PROG_NAME), false); //ft_error_handler(); 2
+		}
 		i++;
 	}
 	if (count == 0)
 		return (true);
-	return (printf("%s: open parentheses are not supported\n", PROG_NAME), false); //ft_error_handler();
+	return (printf("%s: open parentheses are not supported\n", PROG_NAME), false); //ft_error_handler(); 2
  
-}
-
-bool ft_validate_parenthesis(char *s)
-{
-	//write brief
-	int		i;
-	bool	left;
-	bool	right;
-	char	c;
-
-	if (!ft_count_parentheses(s))
-		return (false);
-	i = 0;
-	left = false;
-	right = false;
-	c = ' ';
-	while (s[i])
-	{
-		if (s[i] == '(')
-		{
-			if (c == '<' || c == '>' || ft_isalnum(c))
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
-			left = true;
-		}
-		else if (s[i] == ')')
-		{
-			if (left || c == '|')
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
-			right = true;
-		}
-		else if (left && s[i] == '|')
-			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler();
-		else if (s[i] == DQUOTE || s[i] == SQUOTE)
-			i = ft_find_next_quote(s, i, s[i]);
-		else if (!ft_isspace(s[i]))
-		{
-			if (right && s[i] != '|' && s[i] != '&')
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, ')'), false); //ft_error_handler();
-			c = s[i];
-			left = false;
-			right = false;
-		}
-		i++;
-	}
-	if (left)
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, '('), false); //ft_error_handler();
-	return (true);
 }
 
 /**
@@ -198,6 +155,6 @@ int	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (special == true)
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), 0); //ft_error_handler();
+		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), 0); //ft_error_handler(); 258
 	return (1);
 }

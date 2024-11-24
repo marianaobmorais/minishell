@@ -75,9 +75,11 @@ char	*ft_charjoin(char *str, char c);
 //ft_isspace.c
 int	ft_isspace(int c);
 
-//ft_check_syntax.c
+//ft_validate_syntax.c
 int		ft_validate_syntax(char *s);
 int		ft_isspace(int c);
+//ft_validate_syntax_utils.c
+bool ft_validate_parentheses(char *s);
 
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
