@@ -1,5 +1,36 @@
 #include "../../includes/minishell.h"
 
+static bool ft_count_parentheses(char *s)
+{
+	int	i; //write brief
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == '(')
+			count++;
+		else if (s[i] == ')')
+		{
+			if (count == 0)
+				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler(); 258
+			count--;
+		}
+		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+		{
+			i = ft_find_next_quote(s, i, s[i]);
+			if (i == -1)
+				return (printf("%s: open quotes are not supported\n", PROG_NAME), false); //ft_error_handler(); 2
+		}
+		i++;
+	}
+	if (count == 0)
+		return (true);
+	return (printf("%s: open parentheses are not supported\n", PROG_NAME), false); //ft_error_handler(); 2
+ 
+}
+
 bool ft_validate_parentheses(char *s)
 {
 	//write brief
