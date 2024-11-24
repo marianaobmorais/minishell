@@ -115,4 +115,7 @@ char	**ft_add_to_vector(char **vector, char *new_str); // move to execution
 //ft_free_tree.c
 void	ft_free_tree(void *root); //update this
 
+//delete later
+void	ft_print_list(t_list **token_list);
+
 #endif //TOKENIZE_H

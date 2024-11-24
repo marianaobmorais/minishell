@@ -93,7 +93,7 @@ void	*ft_build_root(t_list **list, t_type type)
 	if (ft_find_next_root(list)) // need to skip logic operators inside parentheses
 	{
 		type = ((t_token *)(*list)->content)->type;
-		root->right = ft_build_root(list, type);
+		root->right = ft_build_root(list, type); //colocar parent_node?
 	}
 	return ((void *)root);
 }

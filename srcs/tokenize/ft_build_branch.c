@@ -160,25 +160,56 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 // 	return (NULL);
 // }
 
+t_list	**ft_create_sub_list(t_list **list)
+{
+	t_list	**sub;
+	t_token	*token;
+	int		count;
+
+	sub = (t_list **)malloc(sizeof(t_list *));
+	if (!sub)
+		return (NULL); //error malooc
+	*sub = NULL;
+	count = 1;
+	while (*list)
+	{
+		token = (t_token *)(*list)->content;
+		//printf("value: %s, count: %d\n", token->value, count); 
+		if (token->type == PRTHESES && token->value[0] == '(')
+			count++;
+		if (token->type == PRTHESES && token->value[0] == ')')
+			count--;
+		if (count == 0)
+		{
+			*list = (*list)->next; //does not include last ')' to sub
+			break;
+		}
+		ft_lstadd_back(sub, ft_lstnew(token));
+		*list = (*list)->next; //advances in list memory
+	}
+	return (sub);
+}
+
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
 	//update brief
 	t_token	*token;
 	t_redir	*redir;
 	t_node	*sub_root;
+	t_list	**sub_list;
 
 	token = (*list)->content;
-	if (token->type == PRTHESES)
+	if (token->type == PRTHESES && token->value[0] == '(')
 	{
-		//printf("token type PARENTHESES\n"); //debug
 		sub_root = NULL;
-		if (token->value[0] == '(')
-		{
-			*list = (*list)->next; //skip '('
-			//printf("list->next: %s\n", ((t_token *)(*list)->content)->value); //debug
-			sub_root = ft_build_root(list, SUB_ROOT);
-			return (sub_root);
-		}
+		*list = (*list)->next; //skip '('
+		sub_list = ft_create_sub_list(list);
+		if (!sub_list || !*sub_list)
+			return (NULL); // Error or empty sublist
+		printf("sub list:\n"); //debug
+		ft_print_list(sub_list); //debug
+		sub_root = ft_build_root(sub_list, SUB_ROOT);
+		return ((void *)sub_root);
 	}
 	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
 	{
@@ -195,5 +226,6 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		redir = ft_create_redir_node(token, list, exec);
 		return ((void *)redir);
 	}
-	return (NULL);
+	else
+		return (NULL);
 }

@@ -167,7 +167,6 @@ void	*ft_process_input(char *input, char **my_envp)
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
-	//bool	parentheses;
 
 	trimmed = ft_strtrim(input, ISSPACE); //check malloc?
 	if (!ft_validate_syntax(trimmed))
@@ -179,10 +178,8 @@ void	*ft_process_input(char *input, char **my_envp)
 	root = NULL;
 	if (token_list && *token_list)
 	{
-		//parentheses = false;
 		root = ft_build_root(token_list, ROOT/* , &parentheses */);
-		//printf("try to print tree\n"); //debug
-		print_root(root, 40); //debug
+		print_root(root, 60); //debug
 	}
 	free(trimmed);
 	ft_free_list(token_list);

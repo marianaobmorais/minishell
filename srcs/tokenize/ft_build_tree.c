@@ -38,7 +38,7 @@ static bool	ft_find_next_pipe(t_list **list)
 			*list = (*list)->next;
 			return (true);
 		}
-		if (token->type == AND || token->type == OR /* || token->type == PRTHESES, return false if *parentheses == true */) //included PRTHESES check
+		if (token->type == AND || token->type == OR /* || (token->type == PRTHESES && token->value[0] == ')') */)//|| token->type == PRTHESES, return false if *parentheses == true //included PRTHESES check
 			return (false);
 		*list = (*list)->next;
 	}
@@ -93,10 +93,13 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 	node->parent_node = *parent_node;
 	node->left = ft_build_branch(list, NULL);
 	if (!node->left)
+	{
+		printf("node left == NULL\n");
 		return (NULL);
+	}
 	if (!list || !*list)
 		return ((void *)node);
-	if (ft_find_next_pipe(list)) //cannot consider pipes inside parentheses??
+	if (ft_find_next_pipe(list))
 		node->right = ft_build_tree(list, parent_node);
 	else
 		node->right = NULL;

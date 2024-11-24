@@ -96,7 +96,7 @@ bool	ft_find_next_redir(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR/*  || token->type == PRTHESES only break if *parentheses == true */) //included PRTHESES check
+		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //only break if *parentheses == true //included PRTHESES check
 			break ;
 		if (token->type == OUTFILE || token->type == INFILE
 				|| token->type == APPEND || token->type == HEREDOC)
