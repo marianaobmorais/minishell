@@ -167,7 +167,9 @@ void	*ft_process_input(char *input)
 	char	*trimmed;
 	void	*root;
 
-	trimmed = ft_strtrim(input, ISSPACE); //check malloc?
+	trimmed = ft_strtrim(input, ISSPACE); 
+	if (!trimmed)
+		return (NULL); //ft_error_handler // malloc failed
 	if (!ft_validate_syntax(trimmed))
 		return (free(trimmed), NULL); //invalid syntax
 	token_list = ft_create_token_list(trimmed);
