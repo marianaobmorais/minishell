@@ -45,6 +45,7 @@ int	ft_history(char *input)
  */
 void	ft_cli(t_env *env)
 {
+	(void)env; //delete later
 	char	*input;
 	void	*bonsai;
 
@@ -67,7 +68,7 @@ void	ft_cli(t_env *env)
 		}
 		if (ft_history(input))
 		{
-			bonsai = ft_process_input(input, *(env->global));
+			bonsai = ft_process_input(input);
 			// if (bonsai)
 			// {
 			// 	if (!ft_single_command(bonsai, env))
