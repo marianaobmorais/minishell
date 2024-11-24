@@ -112,12 +112,10 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 	exec->pathname = token->value;
 	exec->args = ft_get_args(list); //malloc check? possible problem: execve wiht pahtname but no args
 	token = (*list)->content;
-	while (*list && (token->type == EXEC || token->type == EXPORT
-			|| token->type == EXPORT_AP))
+	while (*list && (ft_is_token_type(token, EXEC)))
 	{
 		token = (t_token *)(*list)->content;
-		if (!(token->type == EXEC || token->type == EXPORT
-				|| token->type == EXPORT_AP))
+		if (!ft_is_token_type(token, EXEC))
 			break ;
 		*list = (*list)->next; //advances in list memory
 	}
@@ -135,97 +133,31 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  * @param exec Pointer to an existing execution node, if available, for linking.
  * @return A pointer to the created branch node (either execution or redirection), or NULL on failure.
  */
-// void	*ft_build_branch(t_list **list, t_exec *exec)
-// {
-// 	//update brief
-// 	t_token	*token;
-// 	t_redir	*redir;
-
-// 	token = (*list)->content;
-// 	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
-// 	{
-// 		exec = ft_create_exec_node(token, list);
-// 		if (!list || !*list || !exec)
-// 			return ((void *)exec);
-// 		token = (*list)->content;
-// 		if (token->type == PIPE || token->type == AND || token->type == OR)
-// 			return ((void *)exec);
-// 	}
-// 	if (token->type == OUTFILE || token->type == INFILE
-// 			|| token->type == APPEND || token->type == HEREDOC)
-// 	{
-// 		redir = ft_create_redir_node(token, list, exec);
-// 		return ((void *)redir);
-// 	}
-// 	return (NULL);
-// }
-
-t_list	**ft_create_sub_list(t_list **list)
-{
-	t_list	**sub;
-	t_token	*token;
-	int		count;
-
-	sub = (t_list **)malloc(sizeof(t_list *));
-	if (!sub)
-		return (NULL); //error malooc
-	*sub = NULL;
-	count = 1;
-	while (*list)
-	{
-		token = (t_token *)(*list)->content;
-		//printf("value: %s, count: %d\n", token->value, count); 
-		if (token->type == PRTHESES && token->value[0] == '(')
-			count++;
-		if (token->type == PRTHESES && token->value[0] == ')')
-			count--;
-		if (count == 0)
-		{
-			*list = (*list)->next; //does not include last ')' to sub
-			break;
-		}
-		ft_lstadd_back(sub, ft_lstnew(token));
-		*list = (*list)->next; //advances in list memory
-	}
-	return (sub);
-}
-
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
-	//update brief
-	t_token	*token;
+	t_token	*token; //update brief
 	t_redir	*redir;
 	t_node	*sub_root;
-	t_list	**sub_list;
 
 	token = (*list)->content;
-	if (token->type == PRTHESES && token->value[0] == '(')
-	{
-		sub_root = NULL;
-		*list = (*list)->next; //skip '('
-		sub_list = ft_create_sub_list(list);
-		if (!sub_list || !*sub_list)
-			return (NULL); // Error or empty sublist
-		printf("sub list:\n"); //debug
-		ft_print_list(sub_list); //debug
-		sub_root = ft_build_root(sub_list, SUB_ROOT);
-		return ((void *)sub_root);
-	}
-	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
+	if (!exec && (ft_is_token_type(token, EXEC)))
 	{
 		exec = ft_create_exec_node(token, list); //advances token_list
 		if (!list || !*list || !exec)
 			return ((void *)exec);
 		token = (*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //included PRTHESES check (it is for ')'. don't think I need to specify it further)
+		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
 			return ((void *)exec);
 	}
-	if (token->type == OUTFILE || token->type == INFILE
-			|| token->type == APPEND || token->type == HEREDOC)
+	if (ft_is_token_type(token, REDIR))
 	{
 		redir = ft_create_redir_node(token, list, exec);
 		return ((void *)redir);
 	}
-	else
-		return (NULL);
+	if (token->type == PRTHESES && token->value[0] == '(')
+	{
+		sub_root = ft_create_subroot_node(list);
+		return ((void *)sub_root);
+	}
+	return (NULL); //error in creating branch
 }

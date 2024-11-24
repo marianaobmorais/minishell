@@ -1,5 +1,51 @@
 #include "../../includes/minishell.h"
 
+t_list	**ft_create_sub_list(t_list **list)
+{
+	t_list	**sub; //write brief
+	t_token	*token;
+	int		count;
+
+	sub = (t_list **)malloc(sizeof(t_list *));
+	if (!sub)
+		return (NULL); //error malooc
+	*sub = NULL;
+	count = 1;
+	while (*list)
+	{
+		token = (t_token *)(*list)->content;
+		if (token->type == PRTHESES && token->value[0] == '(')
+			count++;
+		if (token->type == PRTHESES && token->value[0] == ')')
+			count--;
+		if (count == 0)
+		{
+			*list = (*list)->next; //does not include last ')' to sub
+			break;
+		}
+		ft_lstadd_back(sub, ft_lstnew(token));
+		*list = (*list)->next; //advances in list memory
+	}
+	return (sub);
+}
+
+t_node	*ft_create_subroot_node(t_list **list)
+{
+	t_node	*sub_root; //write brief
+	t_list	**sub_list;
+
+	sub_root = NULL;
+	*list = (*list)->next; //skip '('
+	sub_list = ft_create_sub_list(list);
+	if (!sub_list || !*sub_list)
+		return (NULL); // Error malloc //but also empty sublist??
+	printf("sub list:\n"); //debug
+	ft_print_list(sub_list); //debug
+	sub_root = ft_build_root(sub_list, SUB_ROOT); // Process sublist into a subtree
+	ft_free_list(sub_list);
+	return (sub_root);
+}
+
 /**
  * @brief Extracts a list of argument strings from a token list.
  * 
@@ -26,14 +72,14 @@ t_list	**ft_get_args(t_list **list)
 	while (curr)
 	{
 		token = (t_token *)curr->content;
-		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
+		if (ft_is_token_type(token, EXEC))
 			ft_lstadd_back(args, ft_lstnew(curr->content));
-		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
+		else if (ft_is_token_type(token, REDIR))
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
 		}
-		else if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //included PRTHESIS check
+		else if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
 			break ;
 		curr = curr->next;
 	}
@@ -56,10 +102,9 @@ bool	ft_find_next_redir(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //only break if *parentheses == true //included PRTHESES check
+		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
 			break ;
-		if (token->type == OUTFILE || token->type == INFILE
-				|| token->type == APPEND || token->type == HEREDOC)
+		if (ft_is_token_type(token, REDIR))
 			return (true);
 		*list = (*list)->next;
 	}
@@ -82,7 +127,7 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (token->type == PIPE || token->type == AND || token->type == OR || token->type == PRTHESES) //include PRTHESES check
+		if (ft_is_token_type(token, NODE) || token->type == PRTHESES) //include PRTHESES check
 			break ;
 		if (token->type == EXEC)
 			return (true);

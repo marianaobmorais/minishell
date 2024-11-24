@@ -23,7 +23,9 @@ typedef enum e_type
 	OR,
 	PRTHESES,
 	ROOT,
-	SUB_ROOT
+	SUB_ROOT,
+	REDIR,
+	NODE
 }	t_type;
 
 typedef enum e_state
@@ -110,13 +112,17 @@ void	*ft_build_branch(t_list **list, t_exec *exec);
 t_list	**ft_get_args(t_list **list);
 bool	ft_find_next_redir(t_list **list);
 bool	ft_find_next_exec(t_list **list);
-char	**ft_add_to_vector(char **vector, char *new_str); // move to execution
+t_list	**ft_create_sub_list(t_list **list);
+t_node	*ft_create_subroot_node(t_list **list);
 
 //ft_free_tree.c
 void	ft_free_tree(void *root);
 void	ft_free_node(void *node);
 void	ft_free_redir(t_redir *redir);
 void	ft_free_exec(t_exec *exec);
+
+//ft_is_token_type.c
+bool	ft_is_token_type(t_token *token, t_type type);
 
 //delete later
 void	ft_print_list(t_list **token_list);
