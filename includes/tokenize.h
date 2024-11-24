@@ -113,7 +113,10 @@ bool	ft_find_next_exec(t_list **list);
 char	**ft_add_to_vector(char **vector, char *new_str); // move to execution
 
 //ft_free_tree.c
-void	ft_free_tree(void *root); //update this
+void	ft_free_tree(void *root);
+void	ft_free_node(void *node);
+void	ft_free_redir(t_redir *redir);
+void	ft_free_exec(t_exec *exec);
 
 //delete later
 void	ft_print_list(t_list **token_list);
