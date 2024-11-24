@@ -160,10 +160,9 @@ void print_root(void *root, int indent) // Updated function
  * @param my_envp The environment variables for token expansion.
  * @return A pointer to the root of the execution tree if successful, or NULL on failure.
  */
-void	*ft_process_input(char *input, char **my_envp)
+void	*ft_process_input(char *input)
 {
 	//update brief
-	(void)my_envp; //delete later
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
@@ -178,7 +177,7 @@ void	*ft_process_input(char *input, char **my_envp)
 	root = NULL;
 	if (token_list && *token_list)
 	{
-		root = ft_build_root(token_list, ROOT/* , &parentheses */);
+		root = ft_build_root(token_list, ROOT);
 		print_root(root, 60); //debug
 	}
 	free(trimmed);
