@@ -103,7 +103,7 @@ int	ft_validate_syntax(char *trim)
 	int		i;
 	bool	special;
 
-	if (ft_is_invalid_first_char(trim, &special) || !ft_validate_parenthesis(trim))
+	if (ft_is_invalid_first_char(trim, &special) || !ft_validate_parentheses(trim))
 		return (0);
 	i = 0;
 	while (trim[i])
