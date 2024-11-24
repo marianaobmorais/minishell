@@ -41,24 +41,18 @@ static t_type	ft_get_token_type(char *s)
 {
 	t_type	type; //update brief
 
-	if (s[0] == '|')
-	{
-		if (s[1] == '|')
+	if (s[0] == '|' && s[1] == '|')
 			return (OR);
+	else if (s[0] == '|')
 		return (PIPE);
-	}
+	else if (s[0] == '>' && s[1] == '>')
+		return (APPEND);
 	else if (s[0] == '>')
-	{
-		if (s[1] == '>')
-			return (APPEND);
 		return (OUTFILE);
-	}
+	else if (s[0] == '<' && s[1] == '<')
+		return (HEREDOC);
 	else if (s[0] == '<')
-	{
-		if (s[1] == '<')
-			return (HEREDOC);
 		return (INFILE);
-	}
 	else if (s[0] == '&')
 		return (AND);
 	else if (s[0] == '(' || s[0] == ')')
