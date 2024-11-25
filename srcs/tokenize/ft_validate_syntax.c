@@ -1,12 +1,27 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Handles and validates special characters in a trimmed input string.
+ * 
+ * This function checks for syntax errors related to special characters (e.g., `&`, `|`, redirections)
+ * in the input. It identifies unexpected tokens, validates character sequences, and updates the
+ * state of the `is_special` flag and the current special character tracker. If an error is encountered,
+ * an appropriate error message is printed, and the function returns `-1`. Otherwise, it returns the
+ * updated index after handling multi-character tokens.
+ * 
+ * @param trim The trimmed input string being validated.
+ * @param i The current index in the input string.
+ * @param is_special Pointer to a flag indicating if the previous character was special.
+ * @param c Pointer to the current special character being tracked.
+ * @return The updated index after handling special characters, or `-1` on error.
+ */
 static int	ft_handle_specialchars(char *trim, int i, bool *is_special, char *c)
 {
 	if (trim[i] == '&' && trim[i + 1] != '&')
 		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 	if (*is_special == true)
 	{
-		if (*c == '|' || *c == '&') //this is to validate: trailing redirs after both pipes and logic operators are accepted
+		if (*c == '|' || *c == '&')
 		{
 			if ((*c == '|' && trim[i] == '&') || (*c == '&' && trim[i] == '|'))
 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
@@ -15,7 +30,7 @@ static int	ft_handle_specialchars(char *trim, int i, bool *is_special, char *c)
 			if ((trim[i] == '|' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 259
 		}
-		else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc, pipes don't
+		else if (trim[i] != '.')
 			return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 	}
 	*is_special = true;
