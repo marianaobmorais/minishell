@@ -85,7 +85,8 @@ int	ft_isspace(int c);
 int		ft_validate_syntax(char *s);
 int		ft_isspace(int c);
 //ft_validate_syntax_utils.c
-bool ft_validate_parentheses(char *s);
+bool	ft_validate_parentheses(char *s);
+bool	ft_count_parentheses(char *s);
 
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
