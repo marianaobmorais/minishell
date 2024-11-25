@@ -98,7 +98,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *is_special)
 	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.')
 			&& (ft_isspace(s[1]) || s[1] == '\0')))
 	{
-		printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 258
+		printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 2
 		*is_special = true;
 		return (true);
 	}
@@ -107,7 +107,7 @@ static bool	ft_is_invalid_first_char(char *s, bool *is_special)
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
-			printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 258
+			printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 2
 			*is_special = true;
 			return (true);
 		}
@@ -124,11 +124,12 @@ static bool	ft_is_invalid_first_char(char *s, bool *is_special)
  */
 int	ft_validate_syntax(char *trim)
 {
-	//update brief
-	int		i;
+	int		i; //update brief
 	bool	is_special;
 
-	if (ft_is_invalid_first_char(trim, &is_special) || !ft_validate_parentheses(trim))
+	if (ft_is_invalid_first_char(trim, &is_special)/*  || !ft_validate_parentheses(trim) */)
+		return (0);
+	if (!ft_validate_parentheses(trim)) //debug
 		return (0);
 	i = 0;
 	while (trim[i])
@@ -149,6 +150,6 @@ int	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (is_special == true)
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i - 1]), 0); //ft_error_handler(); 258
+		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i - 1]), 0); //ft_error_handler(); 2
 	return (1);
 }

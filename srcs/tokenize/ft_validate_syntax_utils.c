@@ -14,7 +14,7 @@ static bool ft_count_parentheses(char *s)
 		else if (s[i] == ')')
 		{
 			if (count == 0)
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 258
+				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
 			count--;
 		}
 		else if (s[i] == DQUOTE || s[i] == SQUOTE)
@@ -31,145 +31,121 @@ static bool ft_count_parentheses(char *s)
  
 }
 
+bool	ft_validate_left(char c, char curr, bool *left)
+{
+	if (curr == '<' || curr == '>' || ft_isalnum(curr))
+		return (printf(UNEXPECTED_TOKEN, PROG_NAME, c), false); //ft_error_handler(); 2
+	*left = true;
+	return (true);
+}
+
+bool	ft_validade_right(char c, char curr, bool *left, bool *right)
+{
+	if (*left || curr == '|')
+		return (printf(UNEXPECTED_TOKEN, PROG_NAME, c), false); //ft_error_handler(); 2
+	*right = true;
+	return (true);
+}
+
+bool	ft_validate_char(char c, char *curr, bool *left, bool *right)
+{
+	if (c != '(' && c != ')' && !ft_isspace(c))
+	{
+		if (*right && c != '|' && c != '&')
+			return (printf(UNEXPECTED_TOKEN, PROG_NAME, ')'), false); //ft_error_handler(); 2
+		*curr = c;
+		*left = false;
+		*right = false;
+	}
+	return (true);
+}
+
 bool ft_validate_parentheses(char *s)
 {
-	//write brief
 	int		i;
 	bool	left;
 	bool	right;
-	char	c;
+	char	curr;
 
 	if (!ft_count_parentheses(s))
 		return (false);
 	i = 0;
 	left = false;
 	right = false;
-	c = ' ';
+	curr = ' ';
 	while (s[i])
 	{
-		if (s[i] == '(')
-		{
-			if (c == '<' || c == '>' || ft_isalnum(c))
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 258
-			left = true;
-		}
-		else if (s[i] == ')')
-		{
-			if (left || c == '|')
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 258
-			right = true;
-		}
+		if (s[i] == '(' && !ft_validate_left(s[i], curr, &left))
+			return (false);
+		else if (s[i] == ')' && !ft_validade_right(s[i], curr, &left, &right))
+			return (false);
 		else if (left && (s[i] == '|' || (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
-			return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 258
-		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+			return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
+		else if ((s[i] == DQUOTE || s[i] == SQUOTE))
 		{
-			c = s[i];
+			curr = s[i];
 			i = ft_find_next_quote(s, i, s[i]);
 			left = false;
 			right = false;
 		}
-		else if (!ft_isspace(s[i]))
-		{
-			if (right && s[i] != '|' && s[i] != '&')
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, ')'), false); //ft_error_handler(); 258
-			c = s[i];
-			left = false;
-			right = false;
-		}
+		else if (!ft_validate_char(s[i], &curr, &left, &right))//(s[i] != '(' && s[i] != ')' && !ft_isspace(s[i]))
+			return (false);
 		i++;
 	}
 	if (left)
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, '('), false); //ft_error_handler(); 258
+		return (printf(UNEXPECTED_TOKEN, PROG_NAME, '('), false); //ft_error_handler(); 2
 	return (true);
 }
 
-// static bool	validate_open_parenthesis(char c, char current)
-// {
-// 	if (current == '<' || current == '>' || ft_isalnum(current))
-// 	{
-// 		printf(UNEXPECTED_TOKEN, PROG_NAME, c);
-// 		return (false);
-// 	}
-// 	return (true);
-// }
 
-// static bool	validate_close_parenthesis(char c, bool left, char current)
+// bool ft_validate_parentheses(char *s)
 // {
-// 	if (left || current == '|')
-// 	{
-// 		printf(UNEXPECTED_TOKEN, PROG_NAME, c);
-// 		return (false);
-// 	}
-// 	return (true);
-// }
-
-// static bool	validate_left_context(char *s, int i, bool left)
-// {
-// 	if (left && (s[i] == '|' || (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
-// 	{
-// 		printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]);
-// 		return (false);
-// 	}
-// 	return (true);
-// }
-
-// static int	handle_quotes_skip(char *s, int i, char *current, bool *left, bool *right)
-// {
-// 	*current = s[i];
-// 	i = ft_find_next_quote(s, i, s[i]);
-// 	*left = false;
-// 	*right = false;
-// 	return (i);
-// }
-
-// static bool	validate_character(char *s, int i, bool right, char *current)
-// {
-// 	if (right && s[i] != '|' && s[i] != '&')
-// 	{
-// 		printf(UNEXPECTED_TOKEN, PROG_NAME, ')');
-// 		return (false);
-// 	}
-// 	*current = s[i];
-// 	return (true);
-// }
-
-// static bool	validate_loop(char *s, int *i, bool *left, bool *right, char *current)
-// {
-// 	if (s[*i] == '(' && !validate_open_parenthesis(s[*i], *current))
-// 		return (false);
-// 	if (s[*i] == ')' && !validate_close_parenthesis(s[*i], *left, *current))
-// 		return (false);
-// 	if (!validate_left_context(s, *i, *left))
-// 		return (false);
-// 	if (s[*i] == DQUOTE || s[*i] == SQUOTE)
-// 		*i = handle_quotes_skip(s, *i, current, left, right);
-// 	else if (!ft_isspace(s[*i]) && !validate_character(s, *i, *right, current))
-// 		return (false);
-// 	*left = (s[*i] == '(');
-// 	*right = (s[*i] == ')');
-// 	return (true);
-// }
-
-// bool	ft_validate_parentheses(char *s)
-// {
+// 	//write brief
 // 	int		i;
 // 	bool	left;
 // 	bool	right;
-// 	char	current;
-
+// 	char	curr;
 // 	if (!ft_count_parentheses(s))
 // 		return (false);
 // 	i = 0;
 // 	left = false;
 // 	right = false;
-// 	current = ' ';
+// 	curr = ' ';
 // 	while (s[i])
 // 	{
-// 		if (!validate_loop(s, &i, &left, &right, &current))
-// 			return (false);
+// 		if (s[i] == '(')
+// 		{
+// 			if (curr == '<' || curr == '>' || ft_isalnum(curr))
+// 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
+// 			left = true;
+// 		}
+// 		else if (s[i] == ')')
+// 		{
+// 			if (left || curr == '|')
+// 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
+// 			right = true;
+// 		}
+// 		else if (left && (s[i] == '|' || (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
+// 			return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
+// 		else if (s[i] == DQUOTE || s[i] == SQUOTE)
+// 		{
+// 			curr = s[i];
+// 			i = ft_find_next_quote(s, i, s[i]);
+// 			left = false;
+// 			right = false;
+// 		}
+// 		else if (!ft_isspace(s[i]))
+// 		{
+// 			if (right && s[i] != '|' && s[i] != '&')
+// 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, ')'), false); //ft_error_handler(); 2
+// 			curr = s[i];
+// 			left = false;
+// 			right = false;
+// 		}
 // 		i++;
 // 	}
 // 	if (left)
-// 		printf(UNEXPECTED_TOKEN, PROG_NAME, '(');
-// 	return (!left);
+// 		return (printf(UNEXPECTED_TOKEN, PROG_NAME, '('), false); //ft_error_handler(); 2
+// 	return (true);
 // }
+
