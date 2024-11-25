@@ -1,6 +1,7 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
+//chars
 # define SPECIALCHARS "{}[^!"
 # define INVALIDCHARS ";\\`*~"
 # define PRTHESESCHARS "()"
@@ -8,6 +9,11 @@
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
 # define DQUOTE 34
+
+//messages
+# define UNEXPECTED_TOKEN "%s: syntax error near unexpected token `%c'\n"
+# define OPEN_QUOTE "%s: open quotes are not supported\n"
+# define OPEN_PRTHESES "%s: open parentheses are not supported\n"
 
 typedef enum e_type
 {
