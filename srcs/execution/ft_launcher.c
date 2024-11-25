@@ -100,8 +100,8 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds)
 	{
 		ft_signal(CHILD_);
 		close(curr_fds[0]);
-		if (next_node != NULL)
-			dup2(curr_fds[1], STDOUT_FILENO);
+		if (next_node != NULL) //ha mais comandos para serem executados
+			dup2(curr_fds[1], STDOUT_FILENO); // a saida do comando vai ser gravada no pipe fd 1
 		close(curr_fds[1]);
 		ft_exec(((t_exec *)curr_node)->args, env);
 	}

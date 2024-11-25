@@ -28,7 +28,6 @@ bool	ft_isbuiltin(char **args)
 
 void	ft_exec_builtin(char **args, t_env *env)
 {
-	// TODO builtin nao esta sendo salvo as alteracoes
 	if (ft_strncmp("cd", args[0], ft_strlen(args[0])) == 0)
 		ft_cd(ft_argslen(args), args[1], *(env)->global);
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
@@ -91,7 +90,10 @@ int	ft_isheredoc(void *node)
 	{
 		if (((t_redir *)curr_node)->type == HEREDOC)
 			return (TRUE);
-		curr_node = ((t_redir *)curr_node)->next;
+		else if (((t_redir *)curr_node)->type != EXEC)
+			curr_node = ((t_redir *)curr_node)->next;
+		else
+			break ;
 	}
 	return (FALSE);
 }

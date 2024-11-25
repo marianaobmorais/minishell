@@ -45,24 +45,22 @@ static int	count_line(int mode) //nao funcionando dentro do child
 	return (line);
 }
 
-static int	read_heredoc(char *limiter, int state, char **my_envp)
+static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 {
-	int		fd_write;
 	char	*input;
 
-	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = NULL;
+	ft_signal(HEREDOC_);
 	while (1)
 	{
-		ft_signal(HEREDOC_);
 		if (input)
 			free(input);
 		input = readline("> ");
-		if ((ft_strlen(input) != 0
-			&& !ft_strncmp(limiter, input, ft_strlen(input))) || !input)
+		if (!input || !ft_strcmp(eof, input))
 		{
 			if (!input)
-				ft_stderror(FALSE, "warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
+				ft_stderror(FALSE, "warning: here-document at line %d"\
+				" delimited by end-of-file (wanted `%s')", count_line(0), eof);
 			free(input);
 			break ;
 		}
@@ -72,19 +70,32 @@ static int	read_heredoc(char *limiter, int state, char **my_envp)
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
 	}
-	close(fd_write);
-	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter, char **my_envp, int state)
+int	heredoc_fd(char *eof, char **my_envp, int state)
 {
-	int	fd;
+	int		fd[2];
+	pid_t	pid;
+	int		original_stdin;
 
-	unlink("/tmp/.heredoc_tmp");
-	fd = read_heredoc(limiter, state, my_envp);
+	original_stdin = dup(STDIN_FILENO);
+	if (pipe(fd) == -1)
+		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), -1);
+	pid = fork();
+	if (pid == -1)
+		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), -1);
+	if (pid == 0)
+	{
+		close(fd[0]);
+		read_heredoc(eof, state, my_envp, fd[1]);
+		close(fd[1]);
+		ft_exit_status(0, TRUE, TRUE);
+	}
 	ft_signal(DEFAULT_);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
-	unlink("/tmp/.heredoc_tmp");
+	waitpid(pid, NULL, 0);
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
+	close(original_stdin);
 	return (ft_exit_status(0, TRUE, FALSE));
 }

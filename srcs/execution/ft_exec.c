@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static int	isvalid(char *pathname, char **args)
+int	isvalid(char *pathname, char **args)
 {
 	if (access(pathname, X_OK) == -1)
 	{
@@ -99,7 +99,10 @@ void	ft_exec(t_list **args, t_env *env)
 			ft_exit_status(127, TRUE, TRUE);
 		}
 		if (execve(pathname, new_args, *(env)->global) == -1)
+		{
 			ft_stderror(TRUE, "%s:", new_args[0]);
+			ft_exit_status(1, TRUE, TRUE);
+		}
 		free(pathname);
 		ft_free_vector(new_args);
 	}
