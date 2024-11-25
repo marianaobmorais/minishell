@@ -17,7 +17,7 @@ typedef struct s_env
 
 void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds);
 void	ft_exec(t_list **args, t_env *env);
-int		ft_redir(t_redir *node, char **my_envp);
+int		ft_redir(t_redir *node, char **my_envp, int *fds);
 int		heredoc_fd(char *eof, char **my_envp, int state);
 int		ft_single_command(void *node, t_env *env);
 char	**tokentostring(t_list **args);

@@ -21,9 +21,10 @@ int	ft_open(int type, char *pathname, int mode)
 	return (fd);
 }
 
-int	ft_redir(t_redir *node, char **my_envp)
+int	ft_redir(t_redir *node, char **my_envp, int *fds)
 {
 	int	fd;
+	(void)fds;
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
