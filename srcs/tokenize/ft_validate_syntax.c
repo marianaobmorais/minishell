@@ -8,6 +8,8 @@ static int	ft_handle_specialchars(char *trim, int i, bool *is_special, char *c)
 	{
 		if (*c == '|' || *c == '&') //this is to validate: trailing redirs after both pipes and logic operators are accepted
 		{
+			if ((*c == '|' && trim[i] == '&') || (*c == '&' && trim[i] == '|'))
+				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 			if ((trim[i] == '&' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
 				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
 			if ((trim[i] == '|' && ft_isspace(trim[i - 1])) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
