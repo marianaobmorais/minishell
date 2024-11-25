@@ -153,16 +153,16 @@ void print_root(void *root, int indent) // Updated function
 /**
  * @brief Processes the input string to build an execution tree.
  * 
- * This function validates the syntax of the input, tokenizes and processes the input
- * string, and builds an execution tree for commands, redirections, and pipes.
+ * This function takes input string, trims leading and trailing whitespace,
+ * validates its syntax, and tokenizes it into a list. It then constructs a syntax tree
+ * representing the input commands and redirections. If any step fails, the function
+ * cleans up allocated memory and returns NULL.
  * 
  * @param input The raw input string to process.
- * @param my_envp The environment variables for token expansion.
- * @return A pointer to the root of the execution tree if successful, or NULL on failure.
+ * @return A pointer to the root of the syntax tree (AST) if successful, or NULL on failure.
  */
 void	*ft_process_input(char *input)
 {
-	//update brief
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
@@ -171,7 +171,7 @@ void	*ft_process_input(char *input)
 	if (!trimmed)
 		return (NULL); //ft_error_handler; 1 // malloc failed 
 	if (!ft_validate_syntax(trimmed))
-		return (free(trimmed), NULL); //invalid syntax
+		return (free(trimmed), NULL);
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL); //ft_error_handler; 1 // malloc failed
