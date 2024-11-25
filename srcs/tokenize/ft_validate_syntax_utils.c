@@ -59,7 +59,7 @@ bool ft_validate_parentheses(char *s)
 				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler(); 258
 			right = true;
 		}
-		else if (left && s[i] == '|')
+		else if (left && (s[i] == '|' || (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
 			return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[i]), false); //ft_error_handler(); 258
 		else if (s[i] == DQUOTE || s[i] == SQUOTE)
 		{
