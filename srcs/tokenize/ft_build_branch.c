@@ -76,21 +76,26 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); 1 //malloc failed
 	if (!(*list)->next || ft_is_token_type(((t_token *)(*list)->next->content), NODE))
-		redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
+	{
+		if (sub_root)
+			redir->next = (void *)sub_root;
+		else
+			redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
+	}
 	else
 	{
 		*list = (*list)->next; // move up to next node
 		list_next = *list;
-
-		if (sub_root)
-			redir->next = (void *)sub_root;
-
-		else if (!exec && ((t_token *)(*list)->content)->type == EXEC)
-			redir->next = ft_build_branch(&list_next, exec);
+		if (!exec && ((t_token *)(*list)->content)->type == EXEC)
+			redir->next = ft_build_branch(&list_next, exec, sub_root);
 		else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
-			redir->next = ft_build_branch(&list_next, exec);
+			redir->next = ft_build_branch(&list_next, exec, sub_root);
 		else
+		{
+			if (sub_root)
+				redir->next = (void *)sub_root;
 			redir->next = (void *)exec; //whether it's is NULL or not
+		}
 	}
 	return (redir);
 }
@@ -139,13 +144,11 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  * @param exec Pointer to an existing execution node, if available, for linking.
  * @return A pointer to the created branch node (either execution or redirection), or NULL on failure.
  */
-void	*ft_build_branch(t_list **list, t_exec *exec)
+void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
 {
 	t_token	*token; //update brief
 	t_redir	*redir;
-	t_node	*sub_root;
 
-	sub_root = NULL;
 	token = (*list)->content;
 	if (!exec && (ft_is_token_type(token, EXEC)))
 	{
@@ -159,7 +162,8 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	if (token->type == PRTHESES && token->value[0] == '(')
 	{
 		sub_root = ft_create_subroot_node(list); //advanced in token list
-		//need to do checks of list and malloc here
+		if (!list || !*list || !sub_root)
+			return ((void *)sub_root);
 		token = (*list)->content;
 		if (!ft_is_token_type(token, REDIR))
 			return ((void *)sub_root);

@@ -102,7 +102,7 @@ bool	ft_find_next_redir(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
+		if (ft_is_token_type(token, NODE) /* || token->type == PRTHESES */)
 			break ;
 		if (ft_is_token_type(token, REDIR))
 			return (true);
