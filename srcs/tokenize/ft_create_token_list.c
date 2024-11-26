@@ -120,9 +120,7 @@ void	ft_validate_export_tokens(t_list **list)
 	{
 		token = (t_token *)current->content;
 		if ((token->type == EXPORT || token->type == EXPORT_AP) && pos > 0
-				&& !(((t_token *)prev->content)->type == PIPE
-				|| ((t_token *)prev->content)->type == AND
-				|| ((t_token *)prev->content)->type == OR
+				&& !(ft_is_token_type(((t_token *)prev->content), NODE)
 				|| ((t_token *)prev->content)->type == EXPORT
 				|| ((t_token *)prev->content)->type == EXPORT_AP
 				|| ((t_token *)prev->content)->type == PRTHESES))
@@ -131,6 +129,40 @@ void	ft_validate_export_tokens(t_list **list)
 		prev = current;
 		current = current->next;
 	}
+}
+
+bool	ft_validate_exec_tokens(t_list **list)
+{
+	t_list	*current; //update brief
+	t_token	*token;
+	bool	right;
+
+	current = *list;
+	right = false;
+	while (current)
+	{
+		token = (t_token *)current->content;
+		if (token->value[0] == '(' || ft_is_token_type(token, NODE))
+			right = false;
+		if (token->value[0] == ')')
+			right = true;
+		if (ft_is_token_type(token, REDIR))
+		{
+			current = current->next; //reach target
+			if (current->next)
+			{
+				current = current->next; //see what's after target
+				token = (t_token *)current->content;
+				if (right == true && ft_is_token_type(token, EXEC))
+				{
+					printf("%s: syntax error near unexpected token `%s'\n", PROG_NAME, token->value); //ft_error_handler(); 2
+					return (false);
+				}
+			}
+		}
+		current = current->next;
+	}
+	return (true);
 }
 
 /**
@@ -149,9 +181,11 @@ t_list	**ft_create_token_list(char *s)
 
 	token_list = (t_list **)malloc(sizeof(t_list **));
 	if (!token_list)
-		return (NULL); // ft_error_handler();
+		return (NULL); // ft_error_handler(); 1 //malloc failed
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
+	if (!ft_validate_exec_tokens(token_list))
+		return (NULL); // error_handler
 	return (token_list);
 }
