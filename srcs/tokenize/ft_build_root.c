@@ -18,7 +18,8 @@ void	ft_skip_export_tokens(t_list **list)
 	token = (*list)->content;
 	while (*list && (token->type == EXPORT || token->type == EXPORT_AP))
 	{
-		if (!((*list)->next) || !ft_validate_next_token(list))
+		if (!((*list)->next)
+				|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
 			break ;
 		else
 		{

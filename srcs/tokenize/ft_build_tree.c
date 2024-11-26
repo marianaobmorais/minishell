@@ -1,30 +1,6 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Validates the next token in the list for expected syntax.
- * 
- * This function checks if the next token in the list is a valid type for continuation in the
- * current context. It returns false if the next token is a pipe, logical AND, logical OR,
- * or parentheses (which are invalid in this context), and true otherwise.
- * 
- * @param list The list of tokens to check.
- * @return true if the next token is valid, false otherwise.
- */
-bool	ft_validate_next_token(t_list **list)
-{
-	if (((t_token *)(*list)->next->content)->type == PIPE)
-		return (false);
-	else if (((t_token *)(*list)->next->content)->type == AND)
-		return (false);
-	else if (((t_token *)(*list)->next->content)->type == OR)
-		return (false);
-	else if (((t_token *)(*list)->next->content)->type == PRTHESES)
-		return (false);
-	else
-		return (true);
-}
-
-/**
  * @brief Searches for the next pipe token in the list and advances the pointer.
  * 
  * Iterates through the token list to find the next pipe ('|') token. If a pipe is found, 

@@ -31,13 +31,13 @@ static void	ft_assign_redir_mode(t_redir **redir)
  */
 static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
-	t_redir	*redir;
+	t_redir	*redir; //update brief
 	t_list	**target;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); 1 // malloc failed
-	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** //update brief
+	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** 
 	if (!target)
 		return (NULL); // ft_error_handler(); 1 // malloc failed
 	*target = NULL;
@@ -66,7 +66,7 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
  * @param exec Pointer to the execution node, if available, for linking.
  * @return A pointer to the created redirection node, or NULL on failure.
  */
-static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec)
+static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec, t_node *sub_root)
 {
 	//update brief
 	t_redir	*redir;
@@ -75,13 +75,17 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 	redir = ft_init_redir(token, list);
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); 1 //malloc failed
-	if (!(*list)->next || !ft_validate_next_token(list)) 
-		redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR or PRTHESES
+	if (!(*list)->next || ft_is_token_type(((t_token *)(*list)->next->content), NODE))
+		redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
 	else
 	{
 		*list = (*list)->next; // move up to next node
 		list_next = *list;
-		if (!exec && ((t_token *)(*list)->content)->type == EXEC)
+
+		if (sub_root)
+			redir->next = (void *)sub_root;
+
+		else if (!exec && ((t_token *)(*list)->content)->type == EXEC)
 			redir->next = ft_build_branch(&list_next, exec);
 		else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
 			redir->next = ft_build_branch(&list_next, exec);
@@ -141,6 +145,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	t_redir	*redir;
 	t_node	*sub_root;
 
+	sub_root = NULL;
 	token = (*list)->content;
 	if (!exec && (ft_is_token_type(token, EXEC)))
 	{
@@ -151,15 +156,18 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
 			return ((void *)exec);
 	}
-	if (ft_is_token_type(token, REDIR))
-	{
-		redir = ft_create_redir_node(token, list, exec);
-		return ((void *)redir);
-	}
 	if (token->type == PRTHESES && token->value[0] == '(')
 	{
-		sub_root = ft_create_subroot_node(list);
-		return ((void *)sub_root);
+		sub_root = ft_create_subroot_node(list); //advanced in token list
+		//need to do checks of list and malloc here
+		token = (*list)->content;
+		if (!ft_is_token_type(token, REDIR))
+			return ((void *)sub_root);
+	}
+	if (ft_is_token_type(token, REDIR))
+	{
+		redir = ft_create_redir_node(token, list, exec, sub_root);
+		return ((void *)redir);
 	}
 	return (NULL); //error in creating branch; 1
 }

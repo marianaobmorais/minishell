@@ -89,8 +89,8 @@ bool	ft_validate_parentheses(char *s);
 //ft_ft_validate_parentheses_utils.c
 bool	ft_validate_left(char c, char last, bool *left);
 bool	ft_validade_right(char c, char last, bool *left, bool *right);
-bool	ft_validate_left_context(char *s, int i, char *last, bool *left);
-bool	ft_handle_chars(char *s, int *i, bool *left, bool *right);
+bool	ft_validate_left_context(char *s, int i, bool *left);
+bool	ft_handle_chars(char *s, int *i, bool *left, bool *right, char *last);
 
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
@@ -117,7 +117,6 @@ void	ft_skip_export_tokens(t_list **list);
 
 //ft_build_tree.c
 void	*ft_build_tree(t_list **token_list, t_node **parent_node);
-bool	ft_validate_next_token(t_list **list);
 
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec);

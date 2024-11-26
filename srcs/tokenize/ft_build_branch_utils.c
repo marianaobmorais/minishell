@@ -38,7 +38,7 @@ t_node	*ft_create_subroot_node(t_list **list)
 	*list = (*list)->next; //skip '('
 	sub_list = ft_create_sub_list(list);
 	if (!sub_list || !*sub_list)
-		return (NULL); // Error malloc //but also empty sublist??
+		return (NULL); // Error malloc //but also empty sublist?? empty sublist is ruled out in syntax validation
 	printf("sub list:\n"); //debug
 	ft_print_list(sub_list); //debug
 	sub_root = ft_build_root(sub_list, SUB_ROOT); // Process sublist into a subtree
