@@ -67,7 +67,7 @@ static int	ft_iterate_str(char *trim, int i, bool *special)
 		*special = false;
 	}
 	if (ft_strchr(INVALIDCHARS, trim[i]))
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
+		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 2
 	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i])
 			|| (trim[i] == '.' && (ft_isspace(trim[i + 1])
 			|| trim[i + 1] == '\0')))
@@ -120,6 +120,16 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 	return (false);
 }
 
+bool	ft_is_comment(char c, int *i)
+{
+	if (c == '#')
+	{
+		(*i)++;
+		return (true);
+	}
+	return (false);
+}
+
 /**
  * @brief Checks syntax validity of a given input string for proper quote usage, valid metacharacter positioning and env expansion.
  *
@@ -141,11 +151,8 @@ int	ft_validate_syntax(char *trim)
 			return (0);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 		{
-			if (trim[i] == '#')
-			{
-				i++;
-				break;
-			}
+			if (ft_is_comment(trim[i], &i))
+				break ;
 			special = false;
 		}
 		if (trim[i])
