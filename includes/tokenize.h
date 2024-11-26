@@ -119,7 +119,7 @@ void	ft_skip_export_tokens(t_list **list);
 void	*ft_build_tree(t_list **token_list, t_node **parent_node);
 
 //ft_build_branch.c
-void	*ft_build_branch(t_list **list, t_exec *exec);
+void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root);
 //ft_built_branch_utils.c
 t_list	**ft_get_args(t_list **list);
 bool	ft_find_next_redir(t_list **list);
