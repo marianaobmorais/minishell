@@ -46,11 +46,11 @@ bool	ft_validate_parentheses(char *s)
 	{
 		if (s[i] == '(' && !ft_validate_left(s[i], last, &left))
 			return (false);
-		else if (s[i] == ')' && !ft_validade_right(s[i], last, &left, &right))
+		else if (s[i] == ')' && !ft_validade_right(s[i], last, &left, &right)) //maybe join this
 			return (false);
-		else if (!ft_validate_left_context(s, i, &last, &left))
+		else if (!ft_validate_left_context(s, i, &left)) //with this??
 			return (false);
-		else if (!ft_handle_chars(s, &i, &left, &right))
+		else if (!ft_handle_chars(s, &i, &left, &right, &last))
 			return (false);
 	}
 	if (left)

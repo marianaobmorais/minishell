@@ -16,21 +16,22 @@ bool	ft_validade_right(char c, char last, bool *left, bool *right)
 	return (true);
 }
 
-bool	ft_validate_left_context(char *s, int i, char *last, bool *left)
+bool	ft_validate_left_context(char *s, int i, bool *left)
 {
 	if (*left && (s[i] == '|'
 			|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
 		return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
-	*last = s[i];
 	return (true);
 }
 
-bool	ft_handle_chars(char *s, int *i, bool *left, bool *right)
+bool	ft_handle_chars(char *s, int *i, bool *left, bool *right, char *last)
 {
+	//to many args
 	if (s[*i] != '(' && s[*i] != ')' && !ft_isspace(s[*i]))
 	{
 		if (*right && !ft_strchr(METACHARS, s[*i]))
 			return (printf(UNEXPECTED_TOKEN, PROG_NAME, ')'), false);
+		*last = s[*i];
 		if (s[*i] == DQUOTE || s[*i] == SQUOTE)
 			*i = ft_find_next_quote(s, *i, s[*i]);
 		*left = false;
