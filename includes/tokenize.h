@@ -83,10 +83,14 @@ int	ft_isspace(int c);
 
 //ft_validate_syntax.c
 int		ft_validate_syntax(char *s);
-int		ft_isspace(int c);
-//ft_validate_syntax_utils.c
+
+//ft_ft_validate_parentheses.c
 bool	ft_validate_parentheses(char *s);
-bool	ft_count_parentheses(char *s);
+//ft_ft_validate_parentheses_utils.c
+bool	ft_validate_left(char c, char last, bool *left);
+bool	ft_validade_right(char c, char last, bool *left, bool *right);
+bool	ft_validate_left_context(char *s, int i, char *last, bool *left);
+bool	ft_handle_chars(char *s, int *i, bool *left, bool *right);
 
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
