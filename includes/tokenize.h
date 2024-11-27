@@ -80,10 +80,13 @@ int		ft_find_next_quote(char *s, int i, char c);
 char	*ft_charjoin(char *str, char c);
 
 //ft_isspace.c
-int	ft_isspace(int c);
+int		ft_isspace(int c);
 
 //ft_validate_syntax.c
-int		ft_validate_syntax(char *s);
+bool	ft_validate_syntax(char *s);
+//ft_validate_syntax_utils.c
+bool	ft_validate_logic_operator(char *s , int i);
+bool	ft_is_comment(char c, int *i);
 
 //ft_ft_validate_parentheses.c
 bool	ft_validate_parentheses(char *s);
