@@ -3,59 +3,67 @@
 /**
  * @brief Handles and validates special characters in a trimmed input string.
  * 
- * This function checks for syntax errors related to special characters (e.g., `&`, `|`, redirections)
- * in the input. It identifies unexpected tokens, validates character sequences, and updates the
- * state of the `is_special` flag and the current special character tracker. If an error is encountered,
- * an appropriate error message is printed, and the function returns `-1`. Otherwise, it returns the
- * updated index after handling multi-character tokens.
+ * This function checks for syntax errors related to special characters (e.g.,
+ * `&`, `|`, redirections) in the input. It identifies unexpected tokens,
+ * validates character sequences, and updates the state of the `is_special`
+ * flag and the current special character tracker. If an error is encountered,
+ * an appropriate error message is printed, and the function returns `-1`.
+ * Otherwise, it returns the updated index after handling multi-character
+ * tokens.
  * 
  * @param trim The trimmed input string being validated.
  * @param i The current index in the input string.
- * @param special Pointer to a flag indicating if the previous character was special.
+ * @param special Pointer to a flag indicating if the previous character
+ *                was special.
  * @param c Pointer to the current special character being tracked.
- * @return The updated index after handling special characters, or `-1` on error.
+ * @return The updated index after handling special characters, or `-1`
+ *         on error.
  */
 static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 {
 	if (s[i] == '&' && s[i + 1] != '&')
 		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-				ft_exit_status(2, TRUE, FALSE), -1);
+			ft_exit_status(2, TRUE, FALSE), -1);
 	if (*special == true)
 	{
 		if (*c == '|' || *c == '&')
 		{
 			if ((*c == '|' && s[i] == '&') || (*c == '&' && s[i] == '|'))
 				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-						ft_exit_status(2, TRUE, FALSE), -1);
+					ft_exit_status(2, TRUE, FALSE), -1);
 			if (!ft_validate_logic_operator(s, i))
 				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-						ft_exit_status(2, TRUE, FALSE), -1);
+					ft_exit_status(2, TRUE, FALSE), -1);
 		}
 		else if (s[i] != '.')
 			return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-					ft_exit_status(2, TRUE, FALSE), -1);
+				ft_exit_status(2, TRUE, FALSE), -1);
 	}
 	*special = true;
 	*c = s[i];
 	if ((ft_strchr(METACHARS, s[i]) && s[i + 1] == s[i])
-			|| (s[i] == '>' && s[i + 1] == '|'))
+		|| (s[i] == '>' && s[i + 1] == '|'))
 		i += 1;
 	return (i);
 }
 
 /**
- * @brief Processes a string character by character to validate and identify special syntax.
+ * @brief Processes a string character by character to validate and identify
+ *        special syntax.
  * 
- * This function iterates through a string, checking for special characters, quotes, 
- * and invalid tokens. It handles special syntax like quotes, meta-characters, 
- * and unexpected tokens. If a syntax issue is encountered, an error is reported, 
- * and the function returns `-1`. It also updates the `special` flag to indicate 
- * whether the current character is part of a special sequence.
+ * This function iterates through a string, checking for special characters,
+ * quotes, and invalid tokens. It handles special syntax like quotes, meta-
+ * characters, and unexpected tokens. If a syntax issue is encountered, an
+ * error is reported, and the function returns `-1`. It also updates the
+ * special` flag to indicate whether the current character is part of a special
+ * sequence.
  * 
  * @param s The input string to process.
  * @param i The current index in the string.
- * @param special Pointer to a boolean flag indicating if the current character is special.
- * @return The updated index after processing the current character, or `-1` if an error occurs.
+ * @param special Pointer to a boolean flag indicating if the current character
+ *                is special.
+ * @return The updated index after processing the current character, or `-1` if
+ *         an error occurs.
  */
 static int	ft_iterate_str(char *s, int i, bool *special)
 {
@@ -65,14 +73,16 @@ static int	ft_iterate_str(char *s, int i, bool *special)
 	{
 		i = ft_find_next_quote(s, i, s[i]);
 		if (i == -1)
-			return (ft_stderror(FALSE, OPEN_QUOTE), ft_exit_status(2, TRUE, FALSE), -1);
+			return (ft_stderror(FALSE, OPEN_QUOTE),
+				ft_exit_status(2, TRUE, FALSE), -1);
 		*special = false;
 	}
 	if (ft_strchr(INVALIDCHARS, s[i]))
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1);
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
+			ft_exit_status(2, TRUE, FALSE), -1);
 	if (ft_strchr(METACHARS, s[i]) || ft_strchr(SPECIALCHARS, s[i])
-			|| (s[i] == '.' && (ft_isspace(s[i + 1])
-			|| s[i + 1] == '\0')))
+		|| (s[i] == '.' && (ft_isspace(s[i + 1])
+				|| s[i + 1] == '\0')))
 	{
 		i = ft_handle_specialchars(s, i, special, &special_char);
 		if (i == -1)
@@ -80,17 +90,20 @@ static int	ft_iterate_str(char *s, int i, bool *special)
 	}
 	return (i);
 }
+
 /**
  * @brief Validates the first character of a string for syntax correctness.
  * 
- * This function checks if the first character of the input string is valid according 
- * to predefined rules. It identifies special cases like comments (`#`), invalid characters, 
- * and unsupported tokens. If the first character is invalid, an error is reported, 
- * the exit status is updated, and the function returns `true`. Otherwise, it updates 
- * the `special` flag and returns `false`.
+ * This function checks if the first character of the input string is valid
+ * according to predefined rules. It identifies special cases like comments
+ * (`#`), invalid characters, and unsupported tokens. If the first character
+ * is invalid, an error is reported, the exit status is updated, and the
+ * function returns `true`. Otherwise, it updates the `special` flag and
+ * returns `false`.
  * 
  * @param s The input string to validate.
- * @param special Pointer to a boolean flag indicating if the first character is special.
+ * @param special Pointer to a boolean flag indicating if the first character
+ *                is special.
  * @return `true` if the first character is invalid; `false` otherwise.
  */
 static bool	ft_invalid_first_chr(char *s, bool *special)
@@ -105,7 +118,7 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 		return (true);
 	}
 	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
-			|| ft_strchr(METACHARS, s[0]) || ft_strchr(PRTHESESCHARS, s[0]))
+		|| ft_strchr(METACHARS, s[0]) || ft_strchr(PRTHESESCHARS, s[0]))
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
@@ -121,12 +134,13 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 /**
  * @brief Validates the syntax of a trimmed shell input string.
  * 
- * This function checks the input string for syntax errors, including invalid characters,
- * unbalanced parentheses and quotes, and improper placement of special characters (e.g.,
- * pipes, redirections). It iterates through the string, updating the state of special
- * characters and comments, and handles errors with appropriate messages and exit codes.
- * The function ensures that the input adheres to shell syntax rules before proceeding to
- * parsing or execution.
+ * This function checks the input string for syntax errors, including invalid
+ * characters, unbalanced parentheses and quotes, and improper placement of
+ * special characters (e.g., pipes, redirections). It iterates through the
+ * string, updating the state of special characters and comments, and handles
+ * errors with appropriate messages and exit codes. The function ensures that
+ * the input adheres to shell syntax rules before proceeding to parsing or
+ * execution.
  * 
  * @param trim The trimmed input string to validate.
  * @return `true` if the syntax is valid, otherwise `false`.
@@ -155,6 +169,6 @@ bool	ft_validate_syntax(char *trim)
 	}
 	if (special == true)
 		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, trim[i - 1]),
-				ft_exit_status(2, TRUE, FALSE), 0);
+			ft_exit_status(2, TRUE, FALSE), 0);
 	return (true);
 }
