@@ -12,6 +12,7 @@
 
 //messages
 # define UNEXPECTED_TOKEN "syntax error near unexpected token `%c'"
+# define UNEXPECTED_TOKEN_S "syntax error near unexpected token `%s'"
 # define OPEN_QUOTE "open quotes are not supported"
 # define OPEN_PRTHESES "open parentheses are not supported"
 

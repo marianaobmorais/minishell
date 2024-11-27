@@ -155,7 +155,7 @@ bool	ft_validate_exec_tokens(t_list **list)
 				token = (t_token *)current->content;
 				if (right == true && ft_is_token_type(token, EXEC))
 				{
-					ft_stderror(FALSE, "syntax error near unexpected token `%s'\n", token->value);
+					ft_stderror(FALSE, UNEXPECTED_TOKEN_S, token->value);
 					ft_exit_status(2, TRUE, FALSE);
 					return (false);
 				}
