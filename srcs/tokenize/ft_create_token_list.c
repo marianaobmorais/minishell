@@ -155,7 +155,8 @@ bool	ft_validate_exec_tokens(t_list **list)
 				token = (t_token *)current->content;
 				if (right == true && ft_is_token_type(token, EXEC))
 				{
-					printf("%s: syntax error near unexpected token `%s'\n", PROG_NAME, token->value); //ft_error_handler(); 2
+					ft_stderror(FALSE, "syntax error near unexpected token `%s'\n", token->value);
+					ft_exit_status(2, TRUE, FALSE);
 					return (false);
 				}
 			}
@@ -181,7 +182,11 @@ t_list	**ft_create_token_list(char *s)
 
 	token_list = (t_list **)malloc(sizeof(t_list **));
 	if (!token_list)
-		return (NULL); // ft_error_handler(); 1 //malloc failed
+	{
+		ft_stderror(TRUE, MALLOC);
+		ft_exit_status(1, TRUE, FALSE);
+		return (NULL);
+	}
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);

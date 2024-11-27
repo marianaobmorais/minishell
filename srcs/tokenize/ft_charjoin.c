@@ -21,7 +21,11 @@ char	*ft_charjoin(char *str, char c)
 	len = ft_strlen(str);
 	res = (char *)malloc(sizeof(char) * (len + 2));
 	if (res == NULL)
-		return (NULL); // error_handler; 1 //malloc failed
+	{
+		ft_stderror(TRUE, MALLOC);
+		ft_exit_status(1, TRUE, FALSE);
+		return (NULL);
+	}
 	i = 0;
 	while (i < len)
 	{

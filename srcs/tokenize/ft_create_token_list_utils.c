@@ -143,16 +143,18 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 	{
 		new_token = (t_token *)malloc(sizeof(t_token));
 		if (!new_token)
-			return ; // ft_error_handler(); 1 //malloc failed
+			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, MALLOC));
 		new_token->value = ft_strdup(*value);
 		if (!new_token->value)
-			return (free(new_token));  // ft_error_handler(); 1 //malloc failed
+			return (ft_exit_status(1, TRUE, FALSE),
+					ft_stderror(TRUE, MALLOC), free(new_token)); 
 		new_token->type = ft_get_token_type(*value);
 		new_token->state = ft_get_token_state(*value);
 		new_token->expand = ft_has_expandable_var(*value);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
-			return (free(new_token->value), free(new_token));  // ft_error_handler(); 1 //malloc failed
+			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, MALLOC),
+					free(new_token->value), free(new_token));
 		ft_lstadd_back(token_list, new_node);
 		free(*value);
 		*value = NULL;

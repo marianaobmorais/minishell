@@ -173,5 +173,5 @@ void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
 		redir = ft_create_redir_node(token, list, exec, sub_root);
 		return ((void *)redir);
 	}
-	return (NULL); //error in creating branch; 1
+	return (NULL); //error type not found; 1
 }

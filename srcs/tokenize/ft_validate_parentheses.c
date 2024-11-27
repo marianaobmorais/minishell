@@ -14,19 +14,19 @@ static bool	ft_count_parentheses(char *s)
 		else if (s[i] == ')')
 		{
 			if (count == 0)
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, s[i]), false); //ft_error_handler(); 2
+				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), false);
 			count--;
 		}
 		else if (s[i] == DQUOTE || s[i] == SQUOTE)
 		{
 			i = ft_find_next_quote(s, i, s[i]);
 			if (i == -1)
-				return (printf(OPEN_QUOTE, PROG_NAME), false); //ft_error_handler(); 2
+				return (ft_stderror(FALSE, OPEN_QUOTE), ft_exit_status(2, TRUE, FALSE), false);
 		}
 	}
 	if (count == 0)
 		return (true);
-	return (printf(OPEN_PRTHESES, PROG_NAME), false); //ft_error_handler(); 2
+	return (ft_stderror(FALSE, OPEN_PRTHESES), ft_exit_status(2, TRUE, FALSE), false);
 }
 
 bool	ft_validate_parentheses(char *s)
@@ -50,11 +50,11 @@ bool	ft_validate_parentheses(char *s)
 			return (false);
 		else if (!ft_validate_left_context(s, i, &left)) //with this??
 			return (false);
-		else if (!ft_handle_chars(s, &i, &left, &right, &last))
+		else if (!ft_handle_chars(s, &i, &left, &right, &last)) //to many paramenters
 			return (false);
 	}
 	if (left)
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, '('), false); //ft_error_handler(); 2
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, '('), ft_exit_status(2, TRUE, FALSE), false);
 	return (true);
 }
 

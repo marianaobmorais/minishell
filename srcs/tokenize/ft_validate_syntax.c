@@ -63,11 +63,11 @@ static int	ft_iterate_str(char *s, int i, bool *special)
 	{
 		i = ft_find_next_quote(s, i, s[i]);
 		if (i == -1)
-			return (ft_stderror(FALSE, OPEN_QUOTE), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
+			return (ft_stderror(FALSE, OPEN_QUOTE), ft_exit_status(2, TRUE, FALSE), -1);
 		*special = false;
 	}
 	if (ft_strchr(INVALIDCHARS, s[i]))
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1);
 	if (ft_strchr(METACHARS, s[i]) || ft_strchr(SPECIALCHARS, s[i])
 			|| (s[i] == '.' && (ft_isspace(s[i + 1])
 			|| s[i + 1] == '\0')))
@@ -156,7 +156,7 @@ int	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (special == true)
-		return (ft_stderror(FALSE, "syntax error near unexpected token `%c'", trim[i - 1]),
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, trim[i - 1]),
 				ft_exit_status(2, TRUE, FALSE), 0);
 	return (1);
 }

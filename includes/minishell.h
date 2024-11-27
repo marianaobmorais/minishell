@@ -34,7 +34,7 @@
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
 //messages
-# define MALLOC_ERROR "memory allocation failed"
+# define MALLOC "memory allocation failed"
 
 # define TRUE 1
 # define FALSE 0

@@ -125,13 +125,11 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
  */
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
-	t_list	*current;
-	//t_list	*prev;
+	t_list	*current; //update brief
 	t_list	*next;
 	t_token	*token;
 
 	current = *list;
-	//prev = NULL;
 	while (current)
 	{
 		next = current->next;
