@@ -91,8 +91,6 @@ int	heredoc_fd(char *eof, char **my_envp, int state)
 	}
 	waitpid(pid, NULL, 0);
 	close(fd[1]);
-	// dup2(fd[0], STDIN_FILENO);
-	// close(fd[0]);
 	ft_exit_status(0, TRUE, FALSE);
 	return (fd[0]);
 }
