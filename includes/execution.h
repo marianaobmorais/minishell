@@ -17,13 +17,13 @@ typedef struct s_env
 
 typedef struct s_shell
 {
-	int	stdin_;
-	int	stdout_;
-	int	fds_saved;
-	void *curr;
-	void *next;
-	void *prev;
-	int heredoc;
+	int		stdin_;
+	int		stdout_;
+	int		fds_saved;
+	void	*curr;
+	void	*next;
+	void	*prev;
+	int		heredoc;
 }	t_shell;
 
 void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_shell *sh);
@@ -32,5 +32,6 @@ int		ft_redir(t_redir *node, char **my_envp, int *fds,t_redir *next_node, t_shel
 int		heredoc_fd(char *eof, char **my_envp, int state);
 int		ft_single_command(void *node, t_env *env, t_shell *sh);
 char	**tokentostring(t_list **args);
+char	**ft_split_argv(char *s, char c);
 
 #endif //EXECUTION_H
