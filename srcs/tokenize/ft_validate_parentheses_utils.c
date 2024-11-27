@@ -1,18 +1,27 @@
 #include "../../includes/minishell.h"
 
-bool	ft_validate_left(char c, char last, bool *left)
+bool	ft_handle_paretheses(char c, char *last, bool *left, bool *right)
 {
-	if (last == '<' || last == '>' || ft_isalnum(last))
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, c), ft_exit_status(2, TRUE, FALSE), false);
-	*left = true;
-	return (true);
-}
-
-bool	ft_validade_right(char c, char last, bool *left, bool *right)
-{
-	if (*left || last == '|')
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, c), ft_exit_status(2, TRUE, FALSE), false);
-	*right = true;
+	if (c == '(')
+	{
+		if (*last == '<' || *last == '>' || ft_isalnum(*last))
+		{
+			ft_stderror(FALSE, UNEXPECTED_TOKEN, c);
+			ft_exit_status(2, TRUE, FALSE);
+			return (false);
+		}
+		*left = true;
+	}
+	else if (c == ')')
+	{
+		if (*left || *last == '|')
+		{
+			ft_stderror(FALSE, UNEXPECTED_TOKEN, c);
+			ft_exit_status(2, TRUE, FALSE);
+			return (false);
+		}
+		*right = true;
+	}
 	return (true);
 }
 
@@ -20,7 +29,11 @@ bool	ft_validate_left_context(char *s, int i, bool *left)
 {
 	if (*left && (s[i] == '|'
 			|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == ')'))))
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), false);
+	{
+		ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]);
+		ft_exit_status(2, TRUE, FALSE);
+		return (false);
+	}
 	return (true);
 }
 

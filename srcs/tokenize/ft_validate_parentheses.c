@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static bool	ft_count_parentheses(char *s)
+bool	ft_count_parentheses(char *s)
 {
 	int	i; //write brief
 	int	count;
@@ -36,27 +36,62 @@ bool	ft_validate_parentheses(char *s)
 	bool	right;
 	char	last;
 
-	if (!ft_count_parentheses(s))
-		return (false);
 	left = false;
 	right = false;
 	last = ' ';
 	i = -1;
 	while (s[++i])
 	{
-		if (s[i] == '(' && !ft_validate_left(s[i], last, &left))
+		if (!ft_handle_paretheses(s[i], &last, &left, &right))
 			return (false);
-		else if (s[i] == ')' && !ft_validade_right(s[i], last, &left, &right)) //maybe join this
+		else if (!ft_validate_left_context(s, i, &left))
 			return (false);
-		else if (!ft_validate_left_context(s, i, &left)) //with this??
-			return (false);
-		else if (!ft_handle_chars(s, &i, &left, &right, &last)) //to many paramenters
-			return (false);
+		else if (s[i] != '(' && s[i] != ')' && !ft_isspace(s[i]))
+		{
+			if (s[i] == DQUOTE || s[i] == SQUOTE)
+				i = ft_find_next_quote(s, i, s[i]);
+			else if (right && s[i] != '|' && s[i] != '&')
+				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, ')'), ft_exit_status(2, TRUE, FALSE), false);
+			last = s[i];
+			left = false;
+			right = false;
+		}
 	}
 	if (left)
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, '('), ft_exit_status(2, TRUE, FALSE), false);
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, '('),
+			ft_exit_status(2, TRUE, FALSE), false);
 	return (true);
 }
+
+
+// bool	ft_validate_parentheses(char *s)
+// {
+// 	int		i;
+// 	bool	left;
+// 	bool	right;
+// 	char	last;
+
+// 	if (!ft_count_parentheses(s))
+// 		return (false);
+// 	left = false;
+// 	right = false;
+// 	last = ' ';
+// 	i = -1;
+// 	while (s[++i])
+// 	{
+// 		if (s[i] == '(' && !ft_validate_left(s[i], last, &left))
+// 			return (false);
+// 		else if (s[i] == ')' && !ft_validade_right(s[i], last, &left, &right)) //maybe join this
+// 			return (false);
+// 		else if (!ft_validate_left_context(s, i, &left)) //with this??
+// 			return (false);
+// 		else if (!ft_handle_chars(s, &i, &left, &right, &last)) //to many paramenters
+// 			return (false);
+// 	}
+// 	if (left)
+// 		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, '('), ft_exit_status(2, TRUE, FALSE), false);
+// 	return (true);
+// }
 
 
 // bool	ft_validate_parentheses(char *s)
