@@ -52,8 +52,13 @@ char	*ft_expand_env(char *s, int *i, char **my_envp)
  */
 char	*ft_get_exit_code(int *i)
 {
+	int		status_code;
+	char	*status_str;
+
 	(*i)++;
-	return (ft_strdup("EXIT_CODE")); // to do
+	status_code = ft_exit_status(0, FALSE, FALSE);
+	status_str = ft_itoa(status_code);
+	return (status_str);
 }
 
 /**
