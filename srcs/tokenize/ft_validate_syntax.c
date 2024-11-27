@@ -15,29 +15,29 @@
  * @param c Pointer to the current special character being tracked.
  * @return The updated index after handling special characters, or `-1` on error.
  */
-static int	ft_handle_specialchars(char *trim, int i, bool *special, char *c)
+static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 {
-	if (trim[i] == '&' && trim[i + 1] != '&')
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
+	if (s[i] == '&' && s[i + 1] != '&')
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1);
 	if (*special == true)
 	{
 		if (*c == '|' || *c == '&')
 		{
-			if ((*c == '|' && trim[i] == '&') || (*c == '&' && trim[i] == '|'))
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
-			if (((trim[i] == '&' || trim[i] == '|') && ft_isspace(trim[i - 1]))
-					|| ft_strchr(SPECIALCHARS, trim[i])
-					|| (trim[i] == '.' && (ft_isspace(trim[i + 1])
-					|| trim[i + 1] == '\0')))
-				return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
+			if ((*c == '|' && s[i] == '&') || (*c == '&' && s[i] == '|'))
+				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1);
+			if (((s[i] == '&' || s[i] == '|') && ft_isspace(s[i - 1]))
+					|| ft_strchr(SPECIALCHARS, s[i])
+					|| (s[i] == '.' && (ft_isspace(s[i + 1])
+					|| s[i + 1] == '\0')))
+				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
 		}
-		else if (trim[i] != '.')
-			return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 258
+		else if (s[i] != '.')
+			return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
 	}
 	*special = true;
-	*c = trim[i];
-	if ((ft_strchr(METACHARS, trim[i]) && trim[i + 1] == trim[i])
-			|| (trim[i] == '>' && trim[i + 1] == '|'))
+	*c = s[i];
+	if ((ft_strchr(METACHARS, s[i]) && s[i + 1] == s[i])
+			|| (s[i] == '>' && s[i + 1] == '|'))
 		i += 1;
 	return (i);
 }
@@ -54,25 +54,25 @@ static int	ft_handle_specialchars(char *trim, int i, bool *special, char *c)
  * @param special Pointer to a boolean that tracks consecutive special characters.
  * @return Updated index if successful, -1 if syntax error.
  */
-static int	ft_iterate_str(char *trim, int i, bool *special)
+static int	ft_iterate_str(char *s, int i, bool *special)
 {
 	//update brief
 	static char	special_char;
 
-	if (trim[i] == SQUOTE || trim[i] == DQUOTE)
+	if (s[i] == SQUOTE || s[i] == DQUOTE)
 	{
-		i = ft_find_next_quote(trim, i, trim[i]);
+		i = ft_find_next_quote(s, i, s[i]);
 		if (i == -1)
-			return (printf(OPEN_QUOTE, PROG_NAME), -1); //ft_error_handler(); 2
+			return (ft_stderror(FALSE, OPEN_QUOTE), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
 		*special = false;
 	}
-	if (ft_strchr(INVALIDCHARS, trim[i]))
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i]), -1); //ft_error_handler(); 2
-	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i])
-			|| (trim[i] == '.' && (ft_isspace(trim[i + 1])
-			|| trim[i + 1] == '\0')))
+	if (ft_strchr(INVALIDCHARS, s[i]))
+		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]), ft_exit_status(2, TRUE, FALSE), -1); //ft_error_handler(); 2
+	if (ft_strchr(METACHARS, s[i]) || ft_strchr(SPECIALCHARS, s[i])
+			|| (s[i] == '.' && (ft_isspace(s[i + 1])
+			|| s[i + 1] == '\0')))
 	{
-		i = ft_handle_specialchars(trim, i, special, &special_char);
+		i = ft_handle_specialchars(s, i, special, &special_char);
 		if (i == -1)
 			return (-1);
 	}
@@ -95,15 +95,12 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 {
 	//update brief
 	if (s[0] == '#' /* || s[0] == ':' */) // # it indicates a comment. what is :?
-	{
-		*special = true;
 		return (true); // not an error. doesn't change the last exit_code
-	}
 	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.')
 			&& (ft_isspace(s[1]) || s[1] == '\0')))
 	{
-		printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 2
-		*special = true;
+		ft_stderror(FALSE, UNEXPECTED_TOKEN, s[0]);
+		ft_exit_status(2, TRUE, FALSE);
 		return (true);
 	}
 	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
@@ -111,8 +108,8 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
-			printf(UNEXPECTED_TOKEN, PROG_NAME, s[0]); //ft_error_handler(); 2
-			*special = true;
+			ft_stderror(FALSE, UNEXPECTED_TOKEN, s[0]);
+			ft_exit_status(2, TRUE, FALSE);
 			return (true);
 		}
 	}
@@ -159,6 +156,7 @@ int	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (special == true)
-		return (printf(UNEXPECTED_TOKEN, PROG_NAME, trim[i - 1]), 0); //ft_error_handler(); 2
+		return (ft_stderror(FALSE, "syntax error near unexpected token `%c'", trim[i - 1]),
+				ft_exit_status(2, TRUE, FALSE), 0);
 	return (1);
 }
