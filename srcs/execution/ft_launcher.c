@@ -3,23 +3,22 @@
 
 void ft_save_original_fds(t_shell *sh) 
 {
-
-    sh->stdin_ = dup(STDIN_FILENO);
-    sh->stdout_ = dup(STDOUT_FILENO);
-    if (sh->stdin_ == -1 || sh->stdout_ == -1) {
-        perror("Error saving original FDs");
-        exit(EXIT_FAILURE); // Saia ou lide com o erro adequadamente
-    }
+	sh->stdin_ = dup(STDIN_FILENO);
+	sh->stdout_ = dup(STDOUT_FILENO);
+	if (sh->stdin_ == -1 || sh->stdout_ == -1) {
+		perror("Error saving original FDs");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void ft_restore_original_fds(t_shell *sh)
 {
 
-    if (dup2(sh->stdin_, STDIN_FILENO) == -1 || dup2(sh->stdout_, STDOUT_FILENO) == -1) {
-        perror("Error restoring original FDs");
-    }
-    close(sh->stdin_);
-    close(sh->stdout_);
+	if (dup2(sh->stdin_, STDIN_FILENO) == -1 || dup2(sh->stdout_, STDOUT_FILENO) == -1) {
+		perror("Error restoring original FDs");
+	}
+	close(sh->stdin_);
+	close(sh->stdout_);
 }
 
 int	ft_single_command(void *node, t_env *env, t_shell *sh)
@@ -223,10 +222,10 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
 			if (pipe(curr_fds) == -1)
-				ft_stderror(TRUE, ""); // tratar
+				ft_stderror(TRUE, "PIPE PIPE PIPE"); // tratar
 			pid = fork();
 			if (pid == -1)
-				ft_stderror(TRUE, ""); // tratar encerrar minishell ou apenas falhar linha de comando
+				ft_stderror(TRUE, "PID PID PID"); // tratar encerrar minishell ou apenas falhar linha de comando
 			if (pid == 0)
 			{
 				close(curr_fds[0]);

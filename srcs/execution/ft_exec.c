@@ -6,6 +6,18 @@ int	isvalid(char *pathname, char **args)
 	{
 		ft_stderror(TRUE, "%s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	return (0);
+}
+
+int	isvalid_(char *pathname, char **args)
+{
+	if (access(pathname, R_OK | X_OK ) == -1)
+	{
+		ft_stderror(TRUE, "%s: ", args[0]);
+		ft_exit_status(126, TRUE, TRUE);
+		return (-1);
 	}
 	return (0);
 }
@@ -36,7 +48,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 
 	i = 0;
 	paths = NULL;
-	if (access(cmds[0], F_OK) == 0 && isvalid(cmds[0], cmds) == 0)
+	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0) // ajeitar
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -84,6 +96,7 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 {
 	char	*pathname;
 	char	**new_args;
+	(void)sh;
 
 	pathname = NULL;
 	ft_process_token_list(args, *env->global); //transformar o t_list em char **
@@ -92,6 +105,7 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 		ft_exec_builtin(new_args, env);
 	else
 	{
+		//char	**ft_split_argv(char *s, char c);
 		pathname = ft_findpath(*(env)->global, new_args);
 		if (!pathname)
 		{
@@ -105,8 +119,8 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 		}
 		free(pathname);
 		ft_free_vector(new_args);
-		if (sh->heredoc)
-			dup2(sh->stdin_, STDIN_FILENO);
+		// if (sh->heredoc)
+		// 	dup2(sh->stdin_, STDIN_FILENO);
 	}
 	ft_exit_status(0, TRUE, TRUE);
 }
