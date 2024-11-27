@@ -154,12 +154,13 @@ void print_root(void *root, int indent) // Updated function
  * @brief Processes the input string to build an execution tree.
  * 
  * This function takes input string, trims leading and trailing whitespace,
- * validates its syntax, and tokenizes it into a list. It then constructs a syntax tree
- * representing the input commands and redirections. If any step fails, the function
- * cleans up allocated memory and returns NULL.
+ * validates its syntax, and tokenizes it into a list. It then constructs a
+ * syntax tree representing the input commands and redirections. If any step
+ * fails, the function cleans up allocated memory and returns NULL.
  * 
  * @param input The raw input string to process.
- * @return A pointer to the root of the syntax tree (AST) if successful, or NULL on failure.
+ * @return A pointer to the root of the syntax tree (AST) if successful, or
+ *         NULL on failure.
  */
 void	*ft_process_input(char *input)
 {

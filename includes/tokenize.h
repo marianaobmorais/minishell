@@ -51,9 +51,9 @@ typedef struct s_token
 
 typedef struct s_node
 {
-	int		type;
-	void	*left;
-	void	*right;
+	int				type;
+	void			*left;
+	void			*right;
 	struct s_node	*parent_node;
 }	t_node;
 
@@ -85,14 +85,14 @@ int		ft_isspace(int c);
 //ft_validate_syntax.c
 bool	ft_validate_syntax(char *s);
 //ft_validate_syntax_utils.c
-bool	ft_validate_logic_operator(char *s , int i);
+bool	ft_validate_logic_operator(char *s, int i);
 bool	ft_is_comment(char c, int *i);
 
 //ft_ft_validate_parentheses.c
 bool	ft_validate_parentheses(char *s);
+bool	ft_count_parentheses(char *s);
 //ft_ft_validate_parentheses_utils.c
-bool	ft_validate_left(char c, char last, bool *left);
-bool	ft_validade_right(char c, char last, bool *left, bool *right);
+bool	ft_handle_paretheses(char c, char *last, bool *left, bool *right);
 bool	ft_validate_left_context(char *s, int i, bool *left);
 bool	ft_handle_chars(char *s, int *i, bool *left, bool *right, char *last);
 
@@ -104,14 +104,17 @@ void	ft_add_to_token_list(char **value, t_list **token_list);
 //ft_process_input.c
 void	*ft_process_input(char *input);
 
-//ft_process_token_list.c // move to execution
-void	ft_process_token_list(t_list **token_list, char** my_envp); // move to execution
+//ft_process_token_list.c
+void	ft_process_token_list(t_list **token_list, \
+		char **my_envp);
 bool	ft_is_expandable(char *s);
 
 //ft_process_token_list_utils.c
-void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp);
+void	ft_handle_dquotes(char **new_value, char *value, int *i, \
+		char **my_envp);
 void	ft_handle_squotes(char **new_value, char *value, int *i);
-void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp);
+void	ft_handle_expansion(char **new_value, char *value, int *i, \
+		char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
 

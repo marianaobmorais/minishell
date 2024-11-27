@@ -150,7 +150,8 @@ bool	ft_validate_syntax(char *trim)
 	int		i;
 	bool	special;
 
-	if (ft_invalid_first_chr(trim, &special) || !ft_validate_parentheses(trim))
+	if (ft_invalid_first_chr(trim, &special) || !ft_count_parentheses(trim)
+		|| !ft_validate_parentheses(trim))
 		return (false);
 	i = 0;
 	while (trim[i])
