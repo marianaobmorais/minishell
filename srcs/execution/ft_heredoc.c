@@ -76,9 +76,7 @@ int	heredoc_fd(char *eof, char **my_envp, int state)
 {
 	int		fd[2];
 	pid_t	pid;
-	//int		original_stdin;
 
-	//original_stdin = dup(STDIN_FILENO);
 	if (pipe(fd) == -1)
 		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), -1);
 	pid = fork();
@@ -93,9 +91,8 @@ int	heredoc_fd(char *eof, char **my_envp, int state)
 	}
 	waitpid(pid, NULL, 0);
 	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
-	//ft_putendl_fd(get_next_line(fd[0]), 2);
-	close(fd[0]);
-	//close(original_stdin);
-	return (ft_exit_status(0, TRUE, FALSE));
+	// dup2(fd[0], STDIN_FILENO);
+	// close(fd[0]);
+	ft_exit_status(0, TRUE, FALSE);
+	return (fd[0]);
 }

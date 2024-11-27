@@ -80,7 +80,7 @@ char	**tokentostring(t_list **args)
 	return (new_args);
 }
 
-void	ft_exec(t_list **args, t_env *env)
+void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 {
 	char	*pathname;
 	char	**new_args;
@@ -105,5 +105,8 @@ void	ft_exec(t_list **args, t_env *env)
 		}
 		free(pathname);
 		ft_free_vector(new_args);
+		if (sh->heredoc)
+			dup2(sh->stdin_, STDIN_FILENO);
 	}
+	ft_exit_status(0, TRUE, TRUE);
 }

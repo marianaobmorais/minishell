@@ -21,7 +21,7 @@ int	ft_open(int type, char *pathname, int mode)
 	return (fd);
 }
 
-int	ft_redir(t_redir *node, char **my_envp, int *fds)
+int	ft_redir(t_redir *node, char **my_envp, int *fds, t_redir *next_node, t_shell *sh) //alterar nome args
 {
 	int	fd;
 	(void)fds;
@@ -40,7 +40,11 @@ int	ft_redir(t_redir *node, char **my_envp, int *fds)
 	else if (node->type == HEREDOC)
 	{
 		ft_process_token_list(node->target, my_envp);
-		heredoc_fd(((t_token *)(*node->target)->content)->value, my_envp, ((t_token *)node->target)->state);
+		fd = heredoc_fd(((t_token *)(*node->target)->content)->value, my_envp, ((t_token *)node->target)->state);
+		if (next_node->type != HEREDOC)
+			dup2(fd, STDIN_FILENO);
+		close(fd);
+		sh->heredoc = TRUE;
 		return (TRUE);
 	}
 	return (FALSE);
