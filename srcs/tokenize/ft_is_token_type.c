@@ -12,7 +12,7 @@
  * 
  * The function supports checking the following categories:
  * - `REDIR`: checks for output redirection (`OUTFILE`, `INFILE`, `APPEND`,
- *            `HEREDOC`);
+ *   `HEREDOC`);
  * - `EXEC`: checks for execution-related types (`EXEC`, `EXPORT`,`EXPORT_AP`);
  * - `NODE`: checks for logical operators (`PIPE`, `AND`, `OR`)
  * 

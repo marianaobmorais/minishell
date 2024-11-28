@@ -19,12 +19,14 @@ void	ft_free_exec(t_exec *exec_node)
 /**
  * @brief Frees the resources associated with a redirection node.
  *
- * This function frees the memory allocated for the target of a redirection node. 
- * It checks if the `target` list is non-NULL and, if so, calls `ft_free_list` 
- * to deallocate the list of target tokens associated with the redirection node. 
- * The redirection node itself is not freed here, as it's handled elsewhere.
+ * This function frees the memory allocated for the target of a redirection
+ * node. It checks if the `target` list is non-NULL and, if so, calls
+ * `ft_free_list` to deallocate the list of target tokens associated with the
+ * redirection node. The redirection node itself is not freed here, as it's
+ * handled elsewhere.
  *
- * @param redir_node A pointer to the redirection node whose target should be freed.
+ * @param redir_node A pointer to the redirection node whose target should be
+ *        freed.
  */
 void	ft_free_redir(t_redir *redir_node)
 {
@@ -33,20 +35,27 @@ void	ft_free_redir(t_redir *redir_node)
 }
 
 /**
- * @brief Recursively frees a tree of nodes, deallocating memory for each node and its associated data.
+ * @brief Recursively frees a tree of nodes, deallocating memory for each node
+ *        and its associated data.
  *
- * This function takes a node of type `t_node` (or its subtypes like `t_exec`, `t_redir`) and frees all associated resources, 
- * including left and right subtrees, as well as specific data contained within the node. 
- * It handles different node types such as ROOT, AND, OR, PIPE, SUB_ROOT, EXEC, and REDIR, ensuring all relevant 
- * structures (e.g., argument lists for EXEC nodes, target lists for REDIR nodes) are properly freed.
+ * This function takes a node of type `t_node` (or its subtypes like `t_exec`,
+ * `t_redir`) and frees all associated resources, including left and right
+ * subtrees, as well as specific data contained within the node. It handles
+ * different node types such as ROOT, AND, OR, PIPE, SUB_ROOT, EXEC, and REDIR,
+ * ensuring all relevant structures (e.g., argument lists for EXEC nodes,
+ * target lists for REDIR nodes) are properly freed.
  *
- * - For nodes of type `ROOT`, `AND`, `OR`, `PIPE`, or `SUB_ROOT`, it recursively frees the left and right subtrees.
- * - For nodes of type `EXEC`, `EXPORT`, or `EXPORT_AP`, it frees the argument list (`args`).
- * - For redirection nodes (`OUTFILE`, `INFILE`, `APPEND`, `HEREDOC`), it frees the target list (`target`) and any subsequent tokens (`next`).
+ * - For nodes of type `ROOT`, `AND`, `OR`, `PIPE`, or `SUB_ROOT`, it
+ *   recursively frees the left and right subtrees.
+ * - For nodes of type `EXEC`, `EXPORT`, or `EXPORT_AP`, it frees the argument
+ *   list (`args`).
+ * - For redirection nodes (`OUTFILE`, `INFILE`, `APPEND`, `HEREDOC`), it frees
+ *   the target list (`target`) and any subsequent tokens (`next`).
  * - After processing the node's contents, it frees the node itself.
  *
- * @param root A pointer to the node to be freed. This can be any node in the tree, 
- *             including root nodes, logical operators, pipe nodes, or subtrees.
+ * @param root A pointer to the node to be freed. This can be any node in the
+ *        tree, including root nodes, logical operators, pipe nodes, or
+ *        subtrees.
  */
 void ft_free_node(void *root)
 {
@@ -56,20 +65,23 @@ void ft_free_node(void *root)
 		return;
 	//printf("Freeing node of type: %d\n", ((t_node *)root)->type); // Debug	
 	node = (t_node *)root;
-	if (node->type == ROOT || node->type == AND || node->type == OR || node->type == PIPE || node->type == SUB_ROOT)
+	if (node->type == ROOT || node->type == AND || node->type == OR
+		|| node->type == PIPE || node->type == SUB_ROOT)
 	{
 		if (node->left)
 			ft_free_node(node->left);
 		if (node->right)
 			ft_free_node(node->right);
 	}
-	else if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND || node->type == HEREDOC)
+	else if (node->type == OUTFILE || node->type == INFILE
+		|| node->type == APPEND || node->type == HEREDOC)
 	{
 		ft_free_redir((t_redir *)root);
 		if (((t_redir *)root)->next)
 			ft_free_tree(((t_redir *)root)->next);
 	}
-	else if (node->type == EXEC || node->type == EXPORT || node->type == EXPORT_AP)
+	else if (node->type == EXEC || node->type == EXPORT
+		|| node->type == EXPORT_AP)
 		ft_free_exec((t_exec *)root);
 	free(node);
 }
@@ -77,13 +89,16 @@ void ft_free_node(void *root)
 /**
  * @brief Frees the entire tree structure, starting from the root node.
  *
- * This function acts as the entry point to deallocate the entire tree of nodes, starting with the given root node. 
- * It calls the `ft_free_node` function to recursively free all nodes in the tree, including all associated resources 
- * such as subtrees and data within the nodes. The function ensures that memory is properly freed for the entire tree 
- * structure, including EXEC nodes, REDIR nodes, and logical operator nodes (ROOT, AND, OR, PIPE, etc.).
+ * This function acts as the entry point to deallocate the entire tree of
+ * nodes, starting with the given root node. It calls the `ft_free_node`
+ * function to recursively free all nodes in the tree, including all associated
+ * resources such as subtrees and data within the nodes. The function ensures
+ * that memory is properly freed for the entire tree structure, including EXEC
+ * nodes, REDIR nodes, and logical operator nodes (ROOT, AND, OR, PIPE, etc.).
  *
- * @param root A pointer to the root node of the tree structure. The tree and all of its nodes, including any subtrees, 
- *             will be recursively freed starting from this node.
+ * @param root A pointer to the root node of the tree structure. The tree and
+ *        all of its nodes, including any subtrees, will be recursively freed
+ *        starting from this node.
  */
 void	ft_free_tree(void *root)
 {

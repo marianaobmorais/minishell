@@ -9,8 +9,8 @@
  * predefined error value.
  * 
  * @param message The error message to be displayed.
- * @param c The optional character causing the syntax error. If `0`, no character
- *          is displayed.
+ * @param c The optional character causing the syntax error. If `0`, no
+ *        character is displayed.
  */
 void	ft_error_syntax(char *message, char c)
 {
@@ -35,7 +35,7 @@ void	ft_error_syntax(char *message, char c)
  * @param trim The trimmed input string being validated.
  * @param i The current index in the input string.
  * @param special Pointer to a flag indicating if the previous character
- *                was special.
+ *        was special.
  * @param c Pointer to the current special character being tracked.
  * @return The updated index after handling special characters, or `-1`
  *         on error.
@@ -78,7 +78,7 @@ static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
  * @param s The input string to process.
  * @param i The current index in the string.
  * @param special Pointer to a boolean flag indicating if the current character
- *                is special.
+ *        is special.
  * @return The updated index after processing the current character, or `-1` if
  *         an error occurs.
  */
@@ -118,7 +118,7 @@ static int	ft_iterate_str(char *s, int i, bool *special)
  * 
  * @param s The input string to validate.
  * @param special Pointer to a boolean flag indicating if the first character
- *                is special.
+ *        is special.
  * @return `true` if the first character is invalid; `false` otherwise.
  */
 static bool	ft_invalid_first_chr(char *s, bool *special)

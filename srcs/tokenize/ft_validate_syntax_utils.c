@@ -32,9 +32,9 @@ bool	ft_validate_logic_operator(char *s, int i)
  * 
  * @param c The character to check.
  * @param i Pointer to the current index in the input string, updated if a
- *          comment is detected.
+ *        comment is detected.
  * @return `true` if the character indicates the start of a comment, otherwise
- *          `false`.
+ *         `false`.
  */
 bool	ft_is_comment(char c, int *i)
 {

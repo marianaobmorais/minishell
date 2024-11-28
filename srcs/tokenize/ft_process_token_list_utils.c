@@ -10,7 +10,7 @@
  * 
  * @param s Pointer to the current position in the input string.
  * @param i Pointer to the index, which is updated to skip past the variable
- *          name.
+ *        name.
  * @param my_envp Array of environment variables.
  * @return The expanded environment variable value or an empty string.
  */

@@ -14,9 +14,9 @@
  * @param c The current character being checked.
  * @param last The previous significant character in the input string.
  * @param left Pointer to the flag tracking the presence of unmatched left
- *             parentheses.
+ *        parentheses.
  * @param right Pointer to the flag tracking the presence of unmatched right
- *              parentheses.
+ *        parentheses.
  * 
  * @return `true` if the character is valid in its context; `false` otherwise,
  *         with an error message printed and the exit status updated.
@@ -95,7 +95,6 @@ bool	ft_validate_left_context(char *s, int i, bool *left)
  * @return `true` if the character is valid in its context; `false` otherwise,
  *         with an error message printed and the exit status updated.
  */
-
 bool	ft_handle_chars(char *s, int *i, bool *right, bool *left)
 {
 	if (s[*i] == DQUOTE || s[*i] == SQUOTE)
