@@ -136,6 +136,39 @@ t_list	**ft_get_args(t_list **list)
 }
 
 /**
+ * @brief Creates an execution node based on the current token.
+ * 
+ * Allocates memory for an execution node, assigns its type, pathname, and arguments, 
+ * and processes subsequent tokens in the list until a pipe, redirection, or NULL is encountered.
+ * 
+ * @param token The current token representing the execution command.
+ * @param list Pointer to the token list, updated as nodes are processed.
+ * @return A pointer to the created execution node, or NULL on failure.
+ */
+t_exec	*ft_create_exec_node(t_token *token, t_list **list)
+{
+	t_exec	*exec;
+
+	exec = (t_exec *)malloc(sizeof(t_exec));
+	if (!exec)
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
+	exec->type = token->type;
+	exec->pathname = token->value;
+	exec->args = ft_get_args(list);
+	if (!exec->args)
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
+	token = (*list)->content;
+	while (*list && (ft_is_token_type(token, EXEC)))
+	{
+		token = (t_token *)(*list)->content;
+		if (!ft_is_token_type(token, EXEC))
+			break ;
+		*list = (*list)->next;
+	}
+	return (exec);
+}
+
+/**
  * @brief Searches for the next redirection token in the token list.
  * 
  * This function iterates through a token list, starting from the 
@@ -151,7 +184,6 @@ t_list	**ft_get_args(t_list **list)
  * 
  * @return `true` if a redirection token is found; `false` otherwise.
  */
-
 bool	ft_find_next_redir(t_list **list)
 {
 	t_token	*token;
@@ -169,34 +201,64 @@ bool	ft_find_next_redir(t_list **list)
 }
 
 /**
- * @brief Searches for the next executable token in the token list.
+ * @brief Assigns mode and file descriptor values based on redirection type.
  * 
- * This function iterates through a token list, starting from the 
- * current position, to locate the next token of type `EXEC`. The search 
- * stops at tokens of type `PIPE`, `AND`, `OR` or `PRTHESES`, or at the end of
- * the list.
+ * Configures the file opening mode (e.g., read, write, append) and the
+ * standard file descriptor (e.g., stdin, stdout) for a redirection node based
+ * on its type.
  * 
- * If an executable token is found, the function returns `true`, and the 
- * pointer to the list is updated to the position of the found token. 
- * Otherwise, it returns `false`.
- * 
- * @param list A double pointer to the current position in the token list. 
- *        If an executable token is found, the pointer will point to it.
- * 
- * @return `true` if an executable token is found; `false` otherwise.
+ * @param redir Double pointer to the redirection structure to configure.
  */
-bool	ft_find_next_exec(t_list **list)
+void	ft_assign_redir_mode(t_redir **redir)
 {
-	t_token	*token;
+	if ((*redir)->type == OUTFILE) 
+		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;
+	else if ((*redir)->type == INFILE)
+		(*redir)->mode = O_RDONLY;
+	else if ((*redir)->type == APPEND)
+		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
+	else if ((*redir)->type == HEREDOC)
+		(*redir)->mode = -1;
+}
+/**
+ * @brief Initializes a redirection structure based on the given token.
+ * 
+ * This function creates and initializes a `t_redir` structure,which represents
+ * a redirection in the shell. It also sets up a linked list (`t_list **`) to 
+ * store the target of the redirection. The type of redirection (e.g., input, 
+ * output, append, etc.) is determined from the token, and the appropriate
+ * redirection mode is assigned. If the next token is an executable, it is
+ * considered the target of the redirection, and added to the target list.
+ * 
+ * @param token The token representing the redirection.
+ * @param list The list of tokens to extract the redirection target from.
+ * 
+ * @return A pointer to the initialized `t_redir` structure, or `NULL` if
+ *         memory allocation fails.
+ */
 
-	while (*list)
+t_redir	*ft_init_redir(t_token *token, t_list **list)
+{
+	t_redir	*redir;
+	t_list	**target;
+
+	redir = (t_redir *)malloc(sizeof(t_redir));
+	if (!redir)
+		return (NULL); //ft_error_hanlder(); 1 // malloc failed
+	target = (t_list **)malloc(sizeof(t_list *));
+	if (!target)
+		return (NULL); // ft_error_handler(); 1 // malloc failed
+	*target = NULL;
+	redir->target = NULL;
+	redir->next = NULL;
+	redir->type = token->type;
+	ft_assign_redir_mode(&redir);
+	if ((*list)->next && (*list)->next->content
+		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
-		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
-			break ;
-		if (token->type == EXEC)
-			return (true);
 		*list = (*list)->next;
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
+		redir->target = target;
 	}
-	return (false);
+	return (redir);
 }
