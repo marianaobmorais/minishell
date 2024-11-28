@@ -1,10 +1,30 @@
 #include "../../includes/minishell.h"
 
-static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec, t_node *sub_root)
+static void	*ft_handle_next_node(t_list **list, t_redir *redir, \
+	t_exec *exec, t_node *sub_r)
+{
+	t_list	*list_next;
+
+	*list = (*list)->next; // move up to next node
+	list_next = *list;
+	if (!exec && ((t_token *)(*list)->content)->type == EXEC)
+		redir->next = ft_build_branch(&list_next, exec, sub_r);
+	else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
+		redir->next = ft_build_branch(&list_next, exec, sub_r);
+	else
+	{
+		if (sub_r)
+			redir->next = (void *)sub_r;
+		redir->next = (void *)exec; //whether it's is NULL or not
+	}
+	return (redir);
+}
+
+static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
+	t_exec *exec, t_node *sub_root)
 {
 	//update brief
 	t_redir	*redir;
-	t_list	*list_next;
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
@@ -17,20 +37,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 			redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
 	}
 	else
-	{
-		*list = (*list)->next; // move up to next node
-		list_next = *list;
-		if (!exec && ((t_token *)(*list)->content)->type == EXEC)
-			redir->next = ft_build_branch(&list_next, exec, sub_root);
-		else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
-			redir->next = ft_build_branch(&list_next, exec, sub_root);
-		else
-		{
-			if (sub_root)
-				redir->next = (void *)sub_root;
-			redir->next = (void *)exec; //whether it's is NULL or not
-		}
-	}
+		redir = ft_handle_next_node(list, redir, exec, sub_root);
 	return (redir);
 }
 
