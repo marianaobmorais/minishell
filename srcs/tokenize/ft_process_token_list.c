@@ -1,12 +1,13 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Determines if a string represents an expandable environment or status variable.
+ * @brief Determines if a string represents an expandable environment or status
+ *        variable.
  * 
- * Checks if the string `s` begins with a valid environment variable name (alphabetic character
- * or underscore followed by an alphanumeric character) or with `$?`, indicating the exit status.
- * If so, the function returns `true`, indicating that the string can be expanded; otherwise, 
- * it returns `false`.
+ * Checks if the string `s` begins with a valid environment variable name
+ * (alphabetic character or underscore followed by an alphanumeric character)
+ * or with `$?`, indicating the exit status. If so, the function returns `true`
+ * indicating that the string can be expanded; otherwise, it returns `false`.
  * 
  * @param s Pointer to the string to check for expandability.
  * @return true if `s` represents an expandable variable, otherwise false.
@@ -38,16 +39,20 @@ static void	ft_remove_quotes(t_token *token)
 	i = 0;
 	while (token->value[i])
 	{
-		if (token->value[i] == '$' && (token->value[i + 1] == SQUOTE || token->value[i + 1] == DQUOTE))
-			ft_memmove(&token->value[i], &token->value[i + 1], ft_strlen(&token->value[i + 1]) + 1);
+		if (token->value[i] == '$' &&
+			(token->value[i + 1] == SQUOTE || token->value[i + 1] == DQUOTE))
+			ft_memmove(&token->value[i], &token->value[i + 1],
+				ft_strlen(&token->value[i + 1]) + 1);
 		if (token->value[i] == SQUOTE || token->value[i] == DQUOTE)
 		{
 			quote = token->value[i];
-			ft_memmove(&token->value[i], &token->value[i + 1], ft_strlen(&token->value[i + 1]) + 1);
+			ft_memmove(&token->value[i], &token->value[i + 1],
+				ft_strlen(&token->value[i + 1]) + 1);
 			while (token->value[i] && token->value[i] != quote)
 				i++;
 			if (token->value[i] == quote)
-				ft_memmove(&token->value[i], &token->value[i + 1], ft_strlen(&token->value[i + 1]) + 1);
+				ft_memmove(&token->value[i], &token->value[i + 1],
+					ft_strlen(&token->value[i + 1]) + 1);
 		}
 		else
 			i++;
@@ -58,10 +63,10 @@ static void	ft_remove_quotes(t_token *token)
 /**
  * @brief Expands environment variables in a token's value.
  * 
- * This function iterates through each character in a token's value. If it encounters
- * single quotes, expansion doesn't occur. If it finds a `$` followed by
- * an expandable identifier, that is either between double quotes or none, it replaces it
- * with the corresponding environment variable value
+ * This function iterates through each character in a token's value. If it
+ * encounters single quotes, expansion doesn't occur. If it finds a `$`
+ * followed by an expandable identifier, that is either between double quotes
+ * or none, it replaces it with the corresponding environment variable value
  * The resulting expanded string is assigned to the token's value.
  * 
  * @param token Pointer to the token to be expanded.
@@ -80,7 +85,8 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 			ft_handle_squotes(&new_value, token->value, &i);
 		else if (token->value[i] == DQUOTE)
 			ft_handle_dquotes(&new_value, token->value, &i, my_envp);
-		else if (token->value[i] == '$' && ft_is_expandable(&token->value[i + 1]))
+		else if (token->value[i] == '$'
+			&& ft_is_expandable(&token->value[i + 1]))
 			ft_handle_expansion(&new_value, token->value, &i, my_envp);
 		else if (token->value[i] && token->value[i] != DQUOTE
 				&& token->value[i] != SQUOTE)
@@ -94,8 +100,9 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
  * @brief Removes a specified node from a linked list.
  * 
  * Detaches the `current` node from the linked list, adjusting the pointers
- * of the previous node (`prev`) or the head of the list if `current` is the first node.
- * Frees the memory allocated to the `current` node using `ft_free_node`.
+ * of the previous node (`prev`) or the head of the list if `current` is the
+ * first node. Frees the memory allocated to the `current` node using
+ * `ft_free_node`.
  * 
  * @param list Double pointer to the head of the list.
  * @param prev Pointer to the previous node, or NULL if `current` is the head.
@@ -114,18 +121,23 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 }
 
 /**
- * @brief Processes a list of tokens to handle expansions and remove quotes.
+ * @brief Processes the token list for expansion and quote removal.
  * 
- * Iterates over a list of tokens, expanding environment variables if needed,
- * removing quotes, and removing any token whose value becomes empty after expansion.
- * Updates the linked list to reflect any removed nodes.
+ * Iterates over a list of tokens, applying transformations to each token:
+ * - Expands tokens that require environment variable expansion (`expand` flag
+ *   set).
+ * - Removes quotes from tokens that are marked as being inside quotes
+ *   (`state == IN_QUOTE`).
  * 
- * @param list Double pointer to the head of the list of tokens.
- * @param my_envp Array of environment variables for token expansion.
+ * Ensures each token is fully prepared for further parsing or execution. This
+ * function does not modify the structure of the token list itself.
+ * 
+ * @param list Double pointer to the head of the token list.
+ * @param my_envp Array of environment variables used for token expansion.
  */
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
-	t_list	*current; //update brief
+	t_list	*current; //need to receive both global and local envp //update brief
 	t_list	*next;
 	t_token	*token;
 
