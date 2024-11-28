@@ -4,7 +4,7 @@ int	isvalid(char *pathname, char **args)
 {
 	if (access(pathname, X_OK) == -1)
 	{
-		ft_stderror(TRUE, "%s: ", args[0]);
+		ft_stderror(TRUE, "ISVALID %s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
@@ -13,13 +13,27 @@ int	isvalid(char *pathname, char **args)
 
 int	isvalid_(char *pathname, char **args)
 {
-	if (access(pathname, R_OK | X_OK ) == -1)
+	struct stat	file;
+	
+	if (stat(pathname, &file) == -1)
 	{
-		ft_stderror(TRUE, "%s: ", args[0]);
+		ft_stderror(TRUE, "STAT %s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
-	return (0);
+	if (S_ISDIR(file.st_mode) != 0)
+	{
+		ft_stderror(FALSE, "STAT %s: Is a directory", args[0]);
+		ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	if (access(pathname, X_OK) == -1)
+	{
+		// ft_stderror(FALSE, "STAT %s:", args[0]);
+		// ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	return (0); 
 }
 
 static char	*merge(char *s1, char *s2)
@@ -100,12 +114,11 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 
 	pathname = NULL;
 	ft_process_token_list(args, *env->global); //transformar o t_list em char **
-	new_args = tokentostring(args);
+	new_args = ft_split_argv(tokentostring(args));
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, env);
 	else
 	{
-		//char	**ft_split_argv(char *s, char c);
 		pathname = ft_findpath(*(env)->global, new_args);
 		if (!pathname)
 		{
@@ -114,13 +127,11 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 		}
 		if (execve(pathname, new_args, *(env)->global) == -1)
 		{
-			ft_stderror(TRUE, "%s:", new_args[0]);
+			ft_stderror(TRUE, "EXECVE %s:", new_args[0]);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
 		ft_free_vector(new_args);
-		// if (sh->heredoc)
-		// 	dup2(sh->stdin_, STDIN_FILENO);
 	}
 	ft_exit_status(0, TRUE, TRUE);
 }

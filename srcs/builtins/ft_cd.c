@@ -102,7 +102,8 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	}
 	if (chdir(new_dir) == -1)
 	{
-		printf("%s: cd: %s: no such file or directory\n", PROG_NAME, new_dir); //ft_error_handler();
+		//printf("%s: cd: %s: no such file or directory\n", PROG_NAME, new_dir); //ft_error_handler();
+		ft_stderror(TRUE, "%s: ", new_dir);
 		return ;
 	}
 	ft_update_my_envp(my_envp, cur_pwd);

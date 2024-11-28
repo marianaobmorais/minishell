@@ -29,86 +29,127 @@ static int	ft_count_words(char *s, char c)
 	return (count);
 }
 
-int	ft_offset_str(char *s, char c)
-{
-	int		len;
+// int	ft_offset_str(char *s, char c)
+// {
+// 	int		len;
 
-	len = 0;
-	while (s[len] != '\0' && s[len] != c)
-	{
-		if (s[len] == 39) 
-			len = ft_find_next_quote(s, len, 39);
-		else if (s[len] == 34)
-			len = ft_find_next_quote(s, len, 34);
-		if (s[len] != c)
-			len++;
-	}
-	return (len);
-}
+// 	len = 0;
+// 	while (s[len] != '\0' && s[len] != c)
+// 	{
+// 		if (s[len] == 39) 
+// 			len = ft_find_next_quote(s, len, 39);
+// 		else if (s[len] == 34)
+// 			len = ft_find_next_quote(s, len, 34);
+// 		if (s[len] != c)
+// 			len++;
+// 	}
+// 	return (len);
+// }
 
-char	*ft_copy_word(char *s, int len)
+// char	*ft_copy_word(char *s, int len)
+// {
+// 	char	*word;
+// 	int		i;
+
+// 	word = NULL;
+// 	i = 0;
+// 	while (i < len)
+// 	{
+// 		word = ft_charjoin(word, s[i]);
+// 		i++;
+// 	}
+// 	return (word);
+// }
+
+// static void	ft_clean(char **str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (str[i] != NULL)
+// 	{
+// 		free(str[i]);
+// 		i++;
+// 	}
+// 	free(str);
+// }
+
+// char	**ft_split_argv(char *s, char c)
+// {
+// 	char	**res;
+// 	int		word_count;
+// 	int		offset;
+// 	size_t	i;
+
+// 	res = NULL;
+// 	word_count = ft_count_words(s, c);
+// 	if (word_count == -1) // if the quotes aren't closed
+// 	{
+// 		printf("%s: open quotes are not supported\n", PROG_NAME); //ft_error_handler();
+// 		return (NULL);
+// 	}
+// 	res = (char **)malloc(sizeof(char **) * (word_count + 1));
+// 	if (res == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	while (*s != '\0')
+// 	{
+// 		if (*s != c)
+// 		{
+// 			offset = ft_offset_str(s, c);
+// 			res[i] = ft_copy_word(s, offset);
+// 			if (res[i] == NULL)
+// 			{
+// 				ft_clean(res); //ft_error_handler(); 1 //malloc failed
+// 				return (NULL);
+// 			}
+// 			s += offset;
+// 			i++;
+// 		}
+// 		else
+// 			s++;
+// 	}
+// 	res[i] = NULL;
+// 	return (res);
+// }
+
+char	**ft_split_argv(char **args)
 {
-	char	*word;
 	int		i;
+	int		z;
+	int		y;
+	int		size;
+	char	**new_args;
+	char	**temp;
 
-	word = NULL;
 	i = 0;
-	while (i < len)
+	y = 0;
+	size = 0;
+	while(args[i])
 	{
-		word = ft_charjoin(word, s[i]);
+		size += ft_count_words(args[i], ' ');
 		i++;
 	}
-	return (word);
-}
-
-static void	ft_clean(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
+	new_args = (char **) malloc((size + 1) * sizeof(char));
+	if (!new_args)
 	{
-		free(str[i]);
-		i++;
+		ft_error_handler();
 	}
-	free(str);
-}
-
-char	**ft_split_argv(char *s, char c)
-{
-	char	**res;
-	int		word_count;
-	int		offset;
-	size_t	i;
-
-	res = NULL;
-	word_count = ft_count_words(s, c);
-	if (word_count == -1) // if the quotes aren't closed
-	{
-		printf("%s: open quotes are not supported\n", PROG_NAME); //ft_error_handler();
-		return (NULL);
-	}
-	res = (char **)malloc(sizeof(char **) * (word_count + 1));
-	if (res == NULL)
-		return (NULL);
 	i = 0;
-	while (*s != '\0')
+	while(args[i])
 	{
-		if (*s != c)
+		temp = ft_split(args[i], ' ');
+		z = 0;
+		while (temp[z])
 		{
-			offset = ft_offset_str(s, c);
-			res[i] = ft_copy_word(s, offset);
-			if (res[i] == NULL)
-			{
-				ft_clean(res); //ft_error_handler(); 1 //malloc failed
-				return (NULL);
-			}
-			s += offset;
-			i++;
+			new_args[y] = temp[z];
+			z++;
+			y++;
 		}
-		else
-			s++;
+		free(temp);
+		i++;
 	}
-	res[i] = NULL;
-	return (res);
+	new_args[y] = NULL;
+	ft_free_vector(args);
+	return (new_args);
 }

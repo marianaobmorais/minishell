@@ -32,6 +32,6 @@ int		ft_redir(t_redir *node, char **my_envp, int *fds,t_redir *next_node, t_shel
 int		heredoc_fd(char *eof, char **my_envp, int state);
 int		ft_single_command(void *node, t_env *env, t_shell *sh);
 char	**tokentostring(t_list **args);
-char	**ft_split_argv(char *s, char c);
+char	**ft_split_argv(char **args);
 
 #endif //EXECUTION_H
