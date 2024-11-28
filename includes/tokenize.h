@@ -84,6 +84,7 @@ int		ft_isspace(int c);
 
 //ft_validate_syntax.c
 bool	ft_validate_syntax(char *s);
+void	ft_error_syntax(char *message, char c);
 //ft_validate_syntax_utils.c
 bool	ft_validate_logic_operator(char *s, int i);
 bool	ft_is_comment(char c, int *i);
@@ -94,7 +95,7 @@ bool	ft_count_parentheses(char *s);
 //ft_ft_validate_parentheses_utils.c
 bool	ft_handle_paretheses(char c, char *last, bool *left, bool *right);
 bool	ft_validate_left_context(char *s, int i, bool *left);
-bool	ft_handle_chars(char *s, int *i, bool *left, bool *right, char *last);
+bool	ft_handle_chars(char *s, int *i, bool *left, bool *right);
 
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
