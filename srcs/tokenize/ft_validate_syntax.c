@@ -1,13 +1,16 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Handles syntax errors by printing an error message and updating the exit status.
+ * @brief Handles syntax errors by printing an error message and updating the
+ *        exit status.
  * 
- * This function outputs a syntax error message, optionally including the character 
- * that caused the error. It also sets the exit status to a predefined error value.
+ * This function outputs a syntax error message, optionally including the
+ * character that caused the error. It also sets the exit status to a
+ * predefined error value.
  * 
  * @param message The error message to be displayed.
- * @param c The optional character causing the syntax error. If `0`, no character is displayed.
+ * @param c The optional character causing the syntax error. If `0`, no character
+ *          is displayed.
  */
 void	ft_error_syntax(char *message, char c)
 {
