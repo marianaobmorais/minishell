@@ -1,91 +1,84 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Handles the linking of the next node in the redirection chain.
+ * 
+ * This function determines and sets the `next` field for a redirection
+ * (`REDIR`) node. It advances the token list and examines the type of the
+ * subsequent token to decide whether to attach an execution (`EXEC`) node, a
+ * subtree (`SUB_ROOT`), or another redirection. If a redirection is
+ * encountered before any pipe or other logical operator, it recursively
+ * processes the redirection chain.
+ * 
+ * @param list A double pointer to the current position in the token list.
+ *        The function advances this pointer to the next token.
+ * @param redir A pointer to the current `REDIR` node being processed.
+ * @param exec A pointer to the `EXEC` node, if present, for execution context.
+ * @param sub_r A pointer to the `SUB_ROOT` node, if present, for subtree
+ *        context.
+ * 
+ * @return A pointer to the updated `REDIR` node with the `next` field
+ *         correctly linked.
+ */
 static void	*ft_handle_next_node(t_list **list, t_redir *redir, \
-	t_exec *exec, t_node *sub_r)
+	t_exec *exec, t_node *sub_root)
 {
 	t_list	*list_next;
 
-	*list = (*list)->next; // move up to next node
+	*list = (*list)->next;
 	list_next = *list;
 	if (!exec && ((t_token *)(*list)->content)->type == EXEC)
-		redir->next = ft_build_branch(&list_next, exec, sub_r);
-	else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
-		redir->next = ft_build_branch(&list_next, exec, sub_r);
+		redir->next = ft_build_branch(&list_next, exec, sub_root);
+	else if (ft_find_next_redir(&list_next))
+		redir->next = ft_build_branch(&list_next, exec, sub_root);
 	else
 	{
-		if (sub_r)
-			redir->next = (void *)sub_r;
-		redir->next = (void *)exec; //whether it's is NULL or not
+		if (sub_root)
+			redir->next = (void *)sub_root;
+		redir->next = (void *)exec;
 	}
 	return (redir);
 }
 
+/**
+ * @brief Creates a redirection (`REDIR`) node and links its subsequent node.
+ * 
+ * This function initializes a `REDIR` node for a redirection token and
+ * determines its `next` field. It handles scenarios where the redirection is
+ * followed by an execution (`EXEC`) node, a subtree (`SUB_ROOT`), or another
+ * redirection. If no further nodes are present, it appropriately sets the
+ * `next` field to `NULL` or to the provided `EXEC` or `SUB_ROOT` node.
+ * 
+ * @param token A pointer to the current token being processed for redirection.
+ * @param list A double pointer to the token list. The function advances
+ *        the list pointer as it processes subsequent tokens.
+ * @param exec A pointer to the `EXEC` node, if present, for execution context.
+ * @param sub_root A pointer to the `SUB_ROOT` node, if present, for subtree
+ *        context.
+ * 
+ * @return A pointer to the newly created `REDIR` node, or `NULL` if an error
+ *         occurs.
+ */
 static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
 	t_exec *exec, t_node *sub_root)
 {
-	//update brief
 	t_redir	*redir;
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); 1 //malloc failed
-	if (!(*list)->next || ft_is_token_type(((t_token *)(*list)->next->content), NODE))
+	if (!(*list)->next
+		|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
 	{
 		if (sub_root)
 			redir->next = (void *)sub_root;
 		else
-			redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
+			redir->next = (void *)exec;
 	}
 	else
 		redir = ft_handle_next_node(list, redir, exec, sub_root);
 	return (redir);
 }
-
-/**
- * @brief Creates a redirection node and links it to subsequent nodes.
- * 
- * Constructs a redirection node for the specified token and links it to the
- * next relevant node (either another redirection, an execution node, or NULL).
- * Updates the token list pointer as nodes are processed.
- * 
- * @param token The current token representing the redirection type.
- * @param list Pointer to the token list, updated during processing.
- * @param exec Pointer to the execution node, if available, for linking.
- * @return A pointer to the created redirection node, or NULL on failure.
- */
-// static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec, t_node *sub_root)
-// {
-// 	//update brief
-// 	t_redir	*redir;
-// 	t_list	*list_next;
-
-// 	redir = ft_init_redir(token, list);
-// 	if (!redir)
-// 		return (NULL); //ft_error_hanlder(); 1 //malloc failed
-// 	if (!(*list)->next || ft_is_token_type(((t_token *)(*list)->next->content), NODE))
-// 	{
-// 		if (sub_root)
-// 			redir->next = (void *)sub_root;
-// 		else
-// 			redir->next = (void *)exec; //if next is NULL or PIPE or AND or OR (NOT PRNTHESES)
-// 	}
-// 	else
-// 	{
-// 		*list = (*list)->next; // move up to next node
-// 		list_next = *list;
-// 		if (!exec && ((t_token *)(*list)->content)->type == EXEC)
-// 			redir->next = ft_build_branch(&list_next, exec, sub_root);
-// 		else if (ft_find_next_redir(&list_next)) // update pointer to next redir before pipe
-// 			redir->next = ft_build_branch(&list_next, exec, sub_root);
-// 		else
-// 		{
-// 			if (sub_root)
-// 				redir->next = (void *)sub_root;
-// 			redir->next = (void *)exec; //whether it's is NULL or not
-// 		}
-// 	}
-// 	return (redir);
-// }
 
 /**
  * @brief Handles the creation of an execution node in the syntax tree.
@@ -105,7 +98,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
  * @return A pointer to the created `EXEC` node, or `NULL` if further processing 
  *         of the token list is required.
  */
-void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
+static void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
 {
 	*exec = ft_create_exec_node(*token, list);
 	if (!list || !*list || !*exec)
