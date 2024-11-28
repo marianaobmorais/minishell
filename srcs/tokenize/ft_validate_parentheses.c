@@ -8,7 +8,6 @@
  * single or double quotes to avoid misinterpreting symbols within quoted strings.
  * 
  * @param s The input string to validate.
- * 
  * @return `true` if all parentheses are balanced; `false` otherwise.
  *         In case of an error (e.g., unbalanced parentheses or open quotes), 
  *         appropriate error messages are printed, and the function terminates with 
@@ -57,7 +56,6 @@ bool	ft_count_parentheses(char *s)
  * proper nesting and no dangling parentheses at the end of the string.
  * 
  * @param s The input string to validate.
- * 
  * @return `true` if the parentheses are valid; `false` otherwise.
  *         In case of errors (e.g., unexpected tokens or unbalanced
  *         parentheses), the function prints error messages and updates the

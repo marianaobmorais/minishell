@@ -1,7 +1,7 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief kips consecutive `EXPORT` tokens in the list.
+ * @brief skips consecutive `EXPORT` tokens in the list.
  * 
  * This function iterates through the token list, advancing the list pointer
  * as long as the current token is of type `EXPORT` or `EXPORT_AP`. It stops
@@ -10,7 +10,7 @@
  * proceeding.
  * 
  * @param list A pointer to the token list, which will be updated to skip over
- *             any `EXPORT` or `EXPORT_AP` tokens.
+ *        any `EXPORT` or `EXPORT_AP` tokens.
  */
 void	ft_skip_export_tokens(t_list **list)
 {
@@ -39,7 +39,7 @@ void	ft_skip_export_tokens(t_list **list)
  * indicating no logical operator is found before a parenthesis.
  * 
  * @param list A pointer to the token list, which will be updated as the function
- *             iterates through it.
+ *        iterates through it.
  * @return `true` if an AND or OR operator is found, `false` otherwise.
  */
 static bool ft_find_next_root(t_list **list) 

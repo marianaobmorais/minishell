@@ -13,7 +13,6 @@
  * dynamically allocated and returned to the caller.
  * 
  * @param list The list of tokens to extract arguments from.
- * 
  * @return A pointer to a new list (`t_list **`) containing the arguments, 
  *         or `NULL` if memory allocation fails.
  */
@@ -91,7 +90,6 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  * 
  * @param list A double pointer to the current position in the token list. 
  *        If a redirection token is found, the pointer will point to it.
- * 
  * @return `true` if a redirection token is found; `false` otherwise.
  */
 bool	ft_find_next_redir(t_list **list)
@@ -142,7 +140,6 @@ void	ft_assign_redir_mode(t_redir **redir)
  * 
  * @param token The token representing the redirection.
  * @param list The list of tokens to extract the redirection target from.
- * 
  * @return A pointer to the initialized `t_redir` structure, or `NULL` if
  *         memory allocation fails.
  */

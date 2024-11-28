@@ -18,7 +18,6 @@
  * @param s Pointer to the current position in the input string.
  * @param i Current index in the input string.
  * @param list Pointer to the list where tokens will be added.
- * 
  * @return The updated index `i` after processing the metacharacter(s).
  */
 static int	ft_handle_metachar(char **value, char *s, int i, t_list **list)
@@ -168,7 +167,6 @@ void	ft_validate_export_tokens(t_list **list)
  * is detected.
  * 
  * @param list Pointer to the token list to be validated.
- * 
  * @return `true` if the tokens are valid, `false` otherwise.
  */
 bool	ft_validate_exec_tokens(t_list **list)

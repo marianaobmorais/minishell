@@ -16,7 +16,6 @@
  * @param exec A pointer to the `EXEC` node, if present, for execution context.
  * @param sub_r A pointer to the `SUB_ROOT` node, if present, for subtree
  *        context.
- * 
  * @return A pointer to the updated `REDIR` node with the `next` field
  *         correctly linked.
  */
@@ -55,7 +54,6 @@ static void	*ft_handle_next_node(t_list **list, t_redir *redir, \
  * @param exec A pointer to the `EXEC` node, if present, for execution context.
  * @param sub_root A pointer to the `SUB_ROOT` node, if present, for subtree
  *        context.
- * 
  * @return A pointer to the newly created `REDIR` node, or `NULL` if an error
  *         occurs.
  */
@@ -94,7 +92,6 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
  *        created `EXEC` node is stored.
  * @param token A double pointer to the current token being processed. The 
  *        function updates this pointer to the next token in the list.
- * 
  * @return A pointer to the created `EXEC` node, or `NULL` if further processing 
  *         of the token list is required.
  */
@@ -125,7 +122,6 @@ static void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
  *        created subroot node is stored.
  * @param token A double pointer to the current token being processed. The 
  *        function updates this pointer to the next token in the list.
- * 
  * @return A pointer to the created subroot node, or `NULL` if further processing 
  *         of the token list is required.
  */
@@ -157,7 +153,6 @@ void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
  * @param sub_root A pointer to a `t_node` structure representing a subroot 
  *        (subtree for parenthesized expressions). It is updated if a subroot 
  *        node is created.
- * 
  * @return A pointer to the created branch node (`t_exec`, `t_node`, or `t_redir`) 
  *         or `NULL` if no branch could be built.
  */

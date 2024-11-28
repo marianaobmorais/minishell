@@ -41,10 +41,8 @@ static t_type	ft_get_cmd_type(char *s)
  *   by calling `ft_get_cmd_type`.
  * 
  * @param s The string representing a token.
- * 
  * @return The token type corresponding to the string.
  */
-
 static t_type	ft_get_token_type(char *s)
 {
 	t_type	type;

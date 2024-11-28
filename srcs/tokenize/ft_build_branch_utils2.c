@@ -17,7 +17,6 @@
  * 
  * @param list A pointer to the list of tokens. This pointer will be updated 
  *        to point to the token immediately following the closing parenthesis.
- * 
  * @return A pointer to a new list (`t_list **`) containing the sub-list 
  *         of tokens, or `NULL` if memory allocation fails.
  */
@@ -66,7 +65,6 @@ t_list	**ft_create_sub_list(t_list **list)
  * @param list A pointer to the current token list. This pointer will 
  *        be updated to point to the token immediately following the 
  *        closing parenthesis `)`.
- * 
  * @return A pointer to the newly created `t_node` representing the 
  *         root of the subtree, or `NULL` if memory allocation fails 
  *         or the sub-list is invalid.

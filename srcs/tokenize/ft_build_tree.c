@@ -9,7 +9,7 @@
  * and returns false.
  * 
  * @param list A double pointer to the token list, updated to the position
- *             after the pipe if found.
+ *        after the pipe if found.
  * @return true if a pipe token is found, otherwise false.
  */
 static bool	ft_find_next_pipe(t_list **list)
@@ -40,7 +40,7 @@ static bool	ft_find_next_pipe(t_list **list)
  * linking branches. 
  * 
  * @param list A double pointer to the token list, updated as tokens are
- *             consumed during tree building.
+ *        consumed during tree building.
  * @return A pointer to the root of the constructed binary tree, or NULL if an
  *         error occurs.
  */

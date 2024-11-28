@@ -17,7 +17,6 @@
  *        parentheses.
  * @param right Pointer to the flag tracking the presence of unmatched right
  *        parentheses.
- * 
  * @return `true` if the character is valid in its context; `false` otherwise,
  *         with an error message printed and the exit status updated.
  */
@@ -57,7 +56,6 @@ bool	ft_handle_paretheses(char c, char *last, bool *left, bool *right)
  * @param i The current index in the string.
  * @param left Pointer to the flag tracking the presence of an unmatched left
  *        parenthesis.
- * 
  * @return `true` if the context after the left parenthesis is valid; `false`
  *         otherwise, and an error message printed and the exit status updated.
  */
@@ -91,7 +89,6 @@ bool	ft_validate_left_context(char *s, int i, bool *left)
  *        parenthesis.
  * @param left Pointer to the flag tracking the presence of an unmatched left
  *        parenthesis.
- * 
  * @return `true` if the character is valid in its context; `false` otherwise,
  *         with an error message printed and the exit status updated.
  */
