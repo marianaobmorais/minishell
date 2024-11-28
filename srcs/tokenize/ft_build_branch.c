@@ -66,9 +66,9 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 /**
  * @brief Creates a redirection node and links it to subsequent nodes.
  * 
- * Constructs a redirection node for the specified token and links it to the next 
- * relevant node (either another redirection, an execution node, or NULL). Updates 
- * the token list pointer as nodes are processed.
+ * Constructs a redirection node for the specified token and links it to the
+ * next relevant node (either another redirection, an execution node, or NULL).
+ * Updates the token list pointer as nodes are processed.
  * 
  * @param token The current token representing the redirection type.
  * @param list Pointer to the token list, updated during processing.
@@ -137,9 +137,57 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 		token = (t_token *)(*list)->content;
 		if (!ft_is_token_type(token, EXEC))
 			break ;
-		*list = (*list)->next; //advances in list memory
+		*list = (*list)->next;
 	}
 	return (exec);
+}
+
+void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
+{
+	*exec = ft_create_exec_node(*token, list); //advances token_list
+	if (!list || !*list || !*exec)
+		return ((void *)*exec);
+	*token = (*list)->content;
+	if (ft_is_token_type(*token, NODE) || (*token)->type == PRTHESES)
+		return ((void *)*exec);
+	return (NULL);
+}
+
+void	*ft_handle_subroot_node(t_list **list, t_node **sub_root, t_token **token)
+{
+	*sub_root = ft_create_subroot_node(list); //advanced in token list
+	if (!list || !*list || !*sub_root)
+		return ((void *)*sub_root);
+	*token = (*list)->content;
+	if (!ft_is_token_type(*token, REDIR))
+		return ((void *)*sub_root);
+	return (NULL);
+}
+
+void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
+{
+	t_token	*token; //update brief
+	void	*result;
+
+	token = (*list)->content;
+	if (!exec && (ft_is_token_type(token, EXEC)))
+	{
+		result = ft_handle_exec_node(list, &exec, &token);
+		if (result)
+			return (result);
+	}
+	if (token->type == PRTHESES && token->value[0] == '(')
+	{
+		result = ft_handle_subroot_node(list, &sub_root, &token);
+		if (result)
+			return (result);
+	}
+	if (ft_is_token_type(token, REDIR))
+	{
+		result = ft_create_redir_node(token, list, exec, sub_root);
+		return ((void *)result);
+	}
+	return (NULL);
 }
 
 /**
@@ -153,34 +201,34 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
  * @param exec Pointer to an existing execution node, if available, for linking.
  * @return A pointer to the created branch node (either execution or redirection), or NULL on failure.
  */
-void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
-{
-	t_token	*token; //update brief
-	t_redir	*redir;
+// void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
+// {
+// 	t_token	*token; //update brief
+// 	t_redir	*redir;
 
-	token = (*list)->content;
-	if (!exec && (ft_is_token_type(token, EXEC)))
-	{
-		exec = ft_create_exec_node(token, list); //advances token_list
-		if (!list || !*list || !exec)
-			return ((void *)exec);
-		token = (*list)->content;
-		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
-			return ((void *)exec);
-	}
-	if (token->type == PRTHESES && token->value[0] == '(')
-	{
-		sub_root = ft_create_subroot_node(list); //advanced in token list
-		if (!list || !*list || !sub_root)
-			return ((void *)sub_root);
-		token = (*list)->content;
-		if (!ft_is_token_type(token, REDIR))
-			return ((void *)sub_root);
-	}
-	if (ft_is_token_type(token, REDIR))
-	{
-		redir = ft_create_redir_node(token, list, exec, sub_root);
-		return ((void *)redir);
-	}
-	return (NULL); //error type not found; 1
-}
+// 	token = (*list)->content;
+// 	if (!exec && (ft_is_token_type(token, EXEC)))
+// 	{
+// 		exec = ft_create_exec_node(token, list); //advances token_list
+// 		if (!list || !*list || !exec)
+// 			return ((void *)exec);
+// 		token = (*list)->content;
+// 		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
+// 			return ((void *)exec);
+// 	}
+// 	if (token->type == PRTHESES && token->value[0] == '(')
+// 	{
+// 		sub_root = ft_create_subroot_node(list); //advanced in token list
+// 		if (!list || !*list || !sub_root)
+// 			return ((void *)sub_root);
+// 		token = (*list)->content;
+// 		if (!ft_is_token_type(token, REDIR))
+// 			return ((void *)sub_root);
+// 	}
+// 	if (ft_is_token_type(token, REDIR))
+// 	{
+// 		redir = ft_create_redir_node(token, list, exec, sub_root);
+// 		return ((void *)redir);
+// 	}
+// 	return (NULL); //error type not found; 1
+// }
