@@ -1,14 +1,36 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Creates a sub-list of tokens enclosed within parentheses.
+ * 
+ * This function extracts a sub-list of tokens from a token list, starting 
+ * from the current position and including all tokens up to, but not 
+ * including, the closing parenthesis `)` that matches the opening 
+ * parenthesis `(` before the current position.
+ * 
+ * The function maintains a nesting count (`count`) to handle nested 
+ * parentheses correctly, ensuring that the correct closing parenthesis 
+ * is matched.
+ * 
+ * The extracted tokens are stored in a new list (`t_list **`), which is 
+ * dynamically allocated and returned to the caller.
+ * 
+ * @param list A pointer to the list of tokens. This pointer will be updated 
+ *        to point to the token immediately following the closing parenthesis.
+ * 
+ * @return A pointer to a new list (`t_list **`) containing the sub-list 
+ *         of tokens, or `NULL` if memory allocation fails.
+ */
+
 t_list	**ft_create_sub_list(t_list **list)
 {
-	t_list	**sub; //write brief
+	t_list	**sub;
 	t_token	*token;
 	int		count;
 
 	sub = (t_list **)malloc(sizeof(t_list *));
 	if (!sub)
-		return (NULL); //error malooc
+		return (NULL); //error_handler; 1 //malloc failed
 	*sub = NULL;
 	count = 1;
 	while (*list)
@@ -20,53 +42,80 @@ t_list	**ft_create_sub_list(t_list **list)
 			count--;
 		if (count == 0)
 		{
-			*list = (*list)->next; //does not include last ')' to sub
+			*list = (*list)->next;
 			break;
 		}
 		ft_lstadd_back(sub, ft_lstnew(token));
-		*list = (*list)->next; //advances in list memory
+		*list = (*list)->next;
 	}
 	return (sub);
 }
+/**
+ * @brief Creates a subroot node for a subtree from a sub-list of tokens.
+ * 
+ * This function processes a subexpression enclosed in parentheses, 
+ * extracting the tokens between the parentheses, and constructing a 
+ * subtree for those tokens. It skips the opening parenthesis `(` and 
+ * processes the tokens up to, but not including, the matching closing 
+ * parenthesis `)`.
+ * 
+ * The tokens within the parentheses are extracted into a sub-list using 
+ * `ft_create_sub_list`, which is then passed to `ft_build_root` to build 
+ * a subtree. The created subtree is encapsulated in a subroot node of 
+ * type `t_node`.
+ * 
+ * @param list A pointer to the current token list. This pointer will 
+ *        be updated to point to the token immediately following the 
+ *        closing parenthesis `)`.
+ * 
+ * @return A pointer to the newly created `t_node` representing the 
+ *         root of the subtree, or `NULL` if memory allocation fails 
+ *         or the sub-list is invalid.
+ */
 
 t_node	*ft_create_subroot_node(t_list **list)
 {
-	t_node	*sub_root; //write brief
+	t_node	*sub_root; 
 	t_list	**sub_list;
 
 	sub_root = NULL;
-	*list = (*list)->next; //skip '('
+	*list = (*list)->next;
 	sub_list = ft_create_sub_list(list);
 	if (!sub_list || !*sub_list)
-		return (NULL); // Error malloc //but also empty sublist?? empty sublist is ruled out in syntax validation
+		return (NULL); // error_handler; 1 //malloc failed
 	printf("sub list:\n"); //debug
 	ft_print_list(sub_list); //debug
-	sub_root = ft_build_root(sub_list, SUB_ROOT); // Process sublist into a subtree
+	sub_root = ft_build_root(sub_list, SUB_ROOT);
 	ft_free_list(sub_list);
 	return (sub_root);
 }
 
 /**
- * @brief Extracts a list of argument strings from a token list.
+ * @brief Extracts executable arguments from a token list.
  * 
- * Iterates through a token list, collecting values of tokens with types `EXEC`, `EXPORT`, 
- * or `EXPORT_AP` into a dynamically allocated string vector. Skips over redirection tokens 
- * and stops at a pipe (`PIPE`) token or the end of the list.
+ * This function parses a list of tokens to extract arguments that are of 
+ * executable type (`EXEC`). It skips redirection tokens (`REDIR`) and their
+ * associated targets. The function halts processing if it encounters a node 
+ * token (`NODE`) or a parentheses token (`PRTHESES`), as these indicate the 
+ * end of the argument list.
  * 
- * @param list A double pointer to the token list.
- * @return A dynamically allocated string vector containing the extracted arguments, 
- *         or NULL if no arguments are found.
+ * The extracted arguments are stored in a new list (`t_list **`), which is 
+ * dynamically allocated and returned to the caller.
+ * 
+ * @param list The list of tokens to extract arguments from.
+ * 
+ * @return A pointer to a new list (`t_list **`) containing the arguments, 
+ *         or `NULL` if memory allocation fails.
  */
 t_list	**ft_get_args(t_list **list)
 {
-	//update brief
 	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
 
-	args = (t_list **)malloc(sizeof(t_list *)); //create t_list **
+	args = (t_list **)malloc(sizeof(t_list *));
 	if (!args)
-		return (NULL); // ft_error_handler();
+		return (NULL); // ft_error_handler(); 1 // malloc error
 	*args = NULL;
 	curr = *list;
 	while (curr)
@@ -85,24 +134,32 @@ t_list	**ft_get_args(t_list **list)
 	}
 	return (args);
 }
+
 /**
  * @brief Searches for the next redirection token in the token list.
  * 
- * Scans the token list to find the next redirection token (`OUTFILE`, `INFILE`, `APPEND`, 
- * or `HEREDOC`). Stops scanning at a pipe (`PIPE`) token or the end of the list.
+ * This function iterates through a token list, starting from the 
+ * current position, to locate the next token of type `REDIR`. The search 
+ * stops at tokens of type `NODE` or at the end of the list.
  * 
- * @param list A double pointer to the token list, updated as tokens are consumed during the search.
- * @return true if a redirection token is found, otherwise false.
+ * If a redirection token is found, the function returns `true`, and the 
+ * pointer to the list is updated to the position of the found token. 
+ * Otherwise, it returns `false`.
+ * 
+ * @param list A double pointer to the current position in the token list. 
+ *        If a redirection token is found, the pointer will point to it.
+ * 
+ * @return `true` if a redirection token is found; `false` otherwise.
  */
+
 bool	ft_find_next_redir(t_list **list)
 {
-	//update brief
 	t_token	*token;
 
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE) /* || token->type == PRTHESES */)
+		if (ft_is_token_type(token, NODE))
 			break ;
 		if (ft_is_token_type(token, REDIR))
 			return (true);
@@ -114,11 +171,19 @@ bool	ft_find_next_redir(t_list **list)
 /**
  * @brief Searches for the next executable token in the token list.
  * 
- * Scans the token list to find the next executable token (`EXEC`). Stops scanning 
- * at a pipe (`PIPE`) token or the end of the list.
+ * This function iterates through a token list, starting from the 
+ * current position, to locate the next token of type `EXEC`. The search 
+ * stops at tokens of type `PIPE`, `AND`, `OR` or `PRTHESES`, or at the end of
+ * the list.
  * 
- * @param list A double pointer to the token list, updated as tokens are consumed during the search.
- * @return true if an executable token is found, otherwise false.
+ * If an executable token is found, the function returns `true`, and the 
+ * pointer to the list is updated to the position of the found token. 
+ * Otherwise, it returns `false`.
+ * 
+ * @param list A double pointer to the current position in the token list. 
+ *        If an executable token is found, the pointer will point to it.
+ * 
+ * @return `true` if an executable token is found; `false` otherwise.
  */
 bool	ft_find_next_exec(t_list **list)
 {
@@ -127,7 +192,7 @@ bool	ft_find_next_exec(t_list **list)
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE) || token->type == PRTHESES) //include PRTHESES check
+		if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
 			break ;
 		if (token->type == EXEC)
 			return (true);
