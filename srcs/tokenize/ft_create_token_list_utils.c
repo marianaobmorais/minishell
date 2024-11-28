@@ -1,11 +1,12 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Determines if a command token represents an export command or an executable.
+ * @brief Determines if a command token represents an export command or an
+ *        executable.
  * 
- * This function checks if the token string represents an export with an append (`+=`), 
- * a simple export (`=`), or an executable command. It identifies command type based on 
- * the initial characters of `s`.
+ * This function checks if the token string represents an export with an append
+ * (`+=`), a simple export (`=`), or an executable command. It identifies
+ * command type based on the initial characters of `s`.
  * 
  * @param s The token string to check.
  * @return The command type: EXPORT_AP, EXPORT, or EXEC.
@@ -28,21 +29,28 @@ static t_type	ft_get_cmd_type(char *s)
 }
 
 /**
- * @brief Determines the token type based on metacharacters or command type.
+ * @brief Determines the type of a token based on the given string.
  * 
- * This function identifies if the token is a metacharacter (like `|`, `>`, `<`, `>>`, `<<`) or 
- * a command type by checking for specific characters in `s`. If not a metacharacter, it 
- * uses `ft_get_cmd_type` to further classify the token.
+ * The function inspects the provided string and identifies its type according
+ * to the following logic:
+ * - Special characters like `|`, `&`, `>`, `<`, `(`, `)` are mapped to their
+ *   respective token types (e.g., `PIPE`, `AND`, `OUTFILE`, `PRTHESES`).
+ * - The function checks for operators (like `>>`, `<<`, `||`, etc.) and
+ *   matches them to the appropriate token type.
+ * - For other cases, the function attempts to identify the token as a command
+ *   by calling `ft_get_cmd_type`.
  * 
- * @param s The token string to evaluate.
- * @return The type of token, e.g., PIPE, APPEND, OUTFILE, HEREDOC, INFILE, EXPORT, etc.
+ * @param s The string representing a token.
+ * 
+ * @return The token type corresponding to the string.
  */
+
 static t_type	ft_get_token_type(char *s)
 {
-	t_type	type; //update brief
+	t_type	type;
 
 	if (s[0] == '|' && s[1] == '|')
-			return (OR);
+		return (OR);
 	else if (s[0] == '|')
 		return (PIPE);
 	else if (s[0] == '>' && s[1] == '>')
@@ -67,8 +75,9 @@ static t_type	ft_get_token_type(char *s)
 /**
  * @brief Checks if a token contains quoted text and returns its state.
  * 
- * This function scans through the token string to determine if it contains single or 
- * double quotes. If so, it returns `IN_QUOTE`; otherwise, it returns `GENERAL`.
+ * This function scans through the token string to determine if it contains
+ * single or double quotes. If so, it returns `IN_QUOTE`; otherwise, it returns
+ * `GENERAL`.
  * 
  * @param s The token string to examine.
  * @return The state of the token: IN_QUOTE or GENERAL.
@@ -90,12 +99,13 @@ static t_state	ft_get_token_state(char *s)
 /**
  * @brief Checks if a token contains variables that are expandable.
  * 
- * This function analyzes the token string to determine if it contains expandable 
- * variables within double quotes or outside of quotes. Single-quoted variables are not 
- * expandable.
+ * This function analyzes the token string to determine if it contains
+ * expandable variables within double quotes or outside of quotes.
+ * Single-quoted variables are not expandable.
  * 
  * @param s The token string to analyze.
- * @return `true` if the token contains expandable variables; otherwise, `false`.
+ * @return `true` if the token contains expandable variables; otherwise,
+ *         `false`.
  */
 static bool	ft_has_expandable_var(char *s)
 {
@@ -127,9 +137,9 @@ static bool	ft_has_expandable_var(char *s)
 /**
  * @brief Adds a new token to the token list after initializing it.
  * 
- * This function creates a new token from `*value`, determining its type, state, and 
- * whether it contains expandable variables. It then creates a new list node for this 
- * token and adds it to the end of `token_list`.
+ * This function creates a new token from `*value`, determining its type,
+ * state, and whether it contains expandable variables. It then creates a new
+ * list node for this token and adds it to the end of `token_list`.
  * 
  * @param value Pointer to the current token string being built.
  * @param token_list Pointer to the list of tokens.
@@ -143,18 +153,16 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 	{
 		new_token = (t_token *)malloc(sizeof(t_token));
 		if (!new_token)
-			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, MALLOC));
+			return ; //error_handler; 1 //malloc failed
 		new_token->value = ft_strdup(*value);
 		if (!new_token->value)
-			return (ft_exit_status(1, TRUE, FALSE),
-					ft_stderror(TRUE, MALLOC), free(new_token)); 
+			return (free(new_token)); //error_handler; 1 //malloc failed
 		new_token->type = ft_get_token_type(*value);
 		new_token->state = ft_get_token_state(*value);
 		new_token->expand = ft_has_expandable_var(*value);
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
-			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, MALLOC),
-					free(new_token->value), free(new_token));
+			return (free(new_token->value), free(new_token)); //error_handler; 1 //malloc failed
 		ft_lstadd_back(token_list, new_node);
 		free(*value);
 		*value = NULL;
