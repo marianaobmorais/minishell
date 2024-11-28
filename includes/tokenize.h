@@ -62,7 +62,6 @@ typedef struct s_redir
 	int		type;
 	t_list	**target;
 	int		mode;
-	int		fd;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
 }	t_redir;
 
