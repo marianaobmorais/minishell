@@ -3,8 +3,9 @@
 /**
  * @brief Assigns mode and file descriptor values based on redirection type.
  * 
- * Configures the file opening mode (e.g., read, write, append) and the standard 
- * file descriptor (e.g., stdin, stdout) for a redirection node based on its type.
+ * Configures the file opening mode (e.g., read, write, append) and the
+ * standard file descriptor (e.g., stdin, stdout) for a redirection node based
+ * on its type.
  * 
  * @param redir Double pointer to the redirection structure to configure.
  */
@@ -20,24 +21,31 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = -1;
 }
 /**
- * @brief Initializes a redirection node based on the current token.
+ * @brief Initializes a redirection structure based on the given token.
  * 
- * Allocates memory for a redirection node, assigns its type, mode, and file 
- * descriptor, and sets the target based on the next token in the list.
+ * This function creates and initializes a `t_redir` structure,which represents
+ * a redirection in the shell. It also sets up a linked list (`t_list **`) to 
+ * store the target of the redirection. The type of redirection (e.g., input, 
+ * output, append, etc.) is determined from the token, and the appropriate
+ * redirection mode is assigned. If the next token is an executable, it is
+ * considered the target of the redirection, and added to the target list.
  * 
- * @param token The current token representing the redirection type.
- * @param list Pointer to the token list, updated to point to the target node.
- * @return A pointer to the initialized redirection node, or NULL on failure.
+ * @param token The token representing the redirection.
+ * @param list The list of tokens to extract the redirection target from.
+ * 
+ * @return A pointer to the initialized `t_redir` structure, or `NULL` if
+ *         memory allocation fails.
  */
+
 static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
-	t_redir	*redir; //update brief
+	t_redir	*redir;
 	t_list	**target;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL); //ft_error_hanlder(); 1 // malloc failed
-	target = (t_list **)malloc(sizeof(t_list *)); //create t_list ** 
+	target = (t_list **)malloc(sizeof(t_list *));
 	if (!target)
 		return (NULL); // ft_error_handler(); 1 // malloc failed
 	*target = NULL;
@@ -45,9 +53,10 @@ static t_redir	*ft_init_redir(t_token *token, t_list **list)
 	redir->next = NULL;
 	redir->type = token->type;
 	ft_assign_redir_mode(&redir);
-	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
+	if ((*list)->next && (*list)->next->content
+		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
-		*list = (*list)->next; // move up to target
+		*list = (*list)->next;
 		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
 		redir->target = target;
 	}

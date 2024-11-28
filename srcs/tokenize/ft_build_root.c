@@ -6,7 +6,8 @@
  * This function iterates through the token list, advancing the list pointer
  * as long as the current token is of type `EXPORT` or `EXPORT_AP`. It stops
  * when a non-EXPORT token is encountered or if the next token is invalid,
- * ensuring that the list points to a token that is not of these types before proceeding.
+ * ensuring that the list points to a token that is not of these types before
+ * proceeding.
  * 
  * @param list A pointer to the token list, which will be updated to skip over
  *             any `EXPORT` or `EXPORT_AP` tokens.
@@ -32,7 +33,7 @@ void	ft_skip_export_tokens(t_list **list)
  * @brief Searches for the next logical operator (AND/OR) in the token list.
  * 
  * This function iterates through the token list, looking for the first token
- * of type `AND` or `OR`. It returns `true` if such a token is found, indicating
+ * of type `AND` or `OR`. It returns `true` if such a token is found,indicating
  * that a logical operator has been encountered. If a token of type `PRTHESES`
  * (parentheses) is found, the search stops and the function returns `false`, 
  * indicating no logical operator is found before a parenthesis.
@@ -62,13 +63,14 @@ static bool ft_find_next_root(t_list **list)
  * 
  * The function processes the token list to create a root node of type `t_node`.
  * It handles logical operators (`AND`, `OR`) and recursively builds left and 
- * right branches based on the tokens. It skips export tokens and appropriately links 
- * child nodes to the root.
+ * right branches based on the tokens. It skips export tokens and appropriately
+ * links child nodes to the root.
  * 
  * @param list A pointer to the token list that will be parsed.
  * @param type The type of the root node (logical operator or other).
  * 
- * @return A pointer to the newly created root node, or NULL in case of allocation failure.
+ * @return A pointer to the newly created root node, or NULL in case of
+ *         allocation failure.
  */
 void	*ft_build_root(t_list **list, t_type type)
 {
