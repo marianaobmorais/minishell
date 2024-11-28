@@ -1,13 +1,15 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Finds the next matching quote in a string, with special handling for unsupported expansions.
+ * @brief Finds the next matching quote in a string, with special handling for
+ *        unsupported expansions.
  *
- * This function searches for the next occurrence of a specified quote character `c` 
- * in the string `s`, starting from index `i + 1`. If it encounters an unsupported 
- * `$` expansion within double quotes (like `$` followed by certain characters defined 
- * in `NON_EXPANDABLE`), it prints an error message and returns `-1`. If no matching 
- * quote is found, it also prints an error message about open quotes and returns `-1`.
+ * This function searches for the next occurrence of a specified quote
+ * character `c` in the string `s`, starting from index `i + 1`. If it
+ * encounters an unsupported `$` expansion within double quotes (like `$`
+ * followed by certain characters defined in `NON_EXPANDABLE`), it prints an
+ * error message and returns `-1`. If no matching quote is found, it also
+ * prints an error message about open quotes and returns `-1`.
  *
  * @param s The string to search through.
  * @param i The starting index after which to search for the quote.
