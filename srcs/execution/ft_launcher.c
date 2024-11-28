@@ -157,9 +157,9 @@ void ft_parent_process(void *node, t_env *env, pid_t pid, int *curr_fds, t_shell
 	static int	i; //remover
 
 	status = 999; // fora do range para assegura que seja um valor valido
-	//if (!((t_pipe *)node)->right || ft_isheredoc(node)) //entra apenas no ultimo validar se funciona o signal
 	//close(curr_fds[1]);
-	if (!node) //entra apenas no ultimo validar se funciona o signal
+	//if (!node) //entra apenas no ultimo validar se funciona o signal
+	if (!node || ft_isheredoc(node)) //entra apenas no ultimo validar se funciona o signal
 	{
 		ft_signal(CHILD_);
 		if (waitpid(pid, &status, 0) != -1) //esperando demais para um |, vai mudar com && e ||
@@ -201,9 +201,9 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_
 	int fds[2];
 
 	if (sh->fds_saved == 0) {
-        ft_save_original_fds(sh);
-        sh->fds_saved = 1;
-    }
+		ft_save_original_fds(sh);
+		sh->fds_saved = 1;
+	}
 	if (!curr_node)
 		return;
 	else if (((t_pipe *)curr_node)->type == PIPE)
@@ -217,31 +217,39 @@ void ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_
 		sh->prev = curr_node;
 		ft_launcher(((t_redir *)curr_node)->next, next_node, env, curr_fds, sh);
 	}
-	else if (((t_exec *)curr_node)->type == EXEC)
+	else/*  if (((t_exec *)curr_node)->type == EXEC) */
 	{
-		if (((t_exec *)curr_node)->type == EXEC)
+		if (pipe(curr_fds) == -1)
+			ft_stderror(TRUE, "PIPE PIPE PIPE"); // tratar
+		pid = fork();
+		if (pid == -1)
+			ft_stderror(TRUE, "PID PID PID"); // tratar encerrar minishell ou apenas falhar linha de comando
+		if (pid == 0)
 		{
-			if (pipe(curr_fds) == -1)
-				ft_stderror(TRUE, "PIPE PIPE PIPE"); // tratar
-			pid = fork();
-			if (pid == -1)
-				ft_stderror(TRUE, "PID PID PID"); // tratar encerrar minishell ou apenas falhar linha de comando
-			if (pid == 0)
+			t_redir *node = curr_node;
+			if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 			{
-				close(curr_fds[0]);
-				//if (next_node != NULL)
-				if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type != OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
-				{
-					ft_putendl_fd("redirecionado para o parent" ,2);
-					dup2(curr_fds[1], STDOUT_FILENO);
-				}
-				close(curr_fds[1]);
-				ft_exec(((t_exec *)curr_node)->args, env, sh);
+				ft_process_token_list(node->target,*env->global);
+				int fd = ft_open(node->type, ((t_token *)(*node->target)->content)->value, node->mode);
+				if (fd == -1)
+					return /* (FALSE) */;
+				if (node->type == OUTFILE || node->type == APPEND)
+					dup2(fd, STDOUT_FILENO);
+				else
+					dup2(fd, STDIN_FILENO);
+				close(fd);
+				//return (TRUE);
 			}
-			ft_parent_process(next_node, env, pid, curr_fds, sh);
+			close(curr_fds[0]);
+			//if (next_node != NULL)
+			if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type != OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
+			{
+				ft_putendl_fd("redirecionado para o parent" ,2);
+				dup2(curr_fds[1], STDOUT_FILENO);
+			}
+			close(curr_fds[1]);
+			ft_exec(((t_exec *)curr_node)->args, env, sh);
 		}
+		ft_parent_process(next_node, env, pid, curr_fds, sh);
 	}
-	// if (!next_node) {
-	// 	ft_restore_original_fds(sh);
-	// }
 }

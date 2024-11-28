@@ -33,5 +33,6 @@ int		heredoc_fd(char *eof, char **my_envp, int state);
 int		ft_single_command(void *node, t_env *env, t_shell *sh);
 char	**tokentostring(t_list **args);
 char	**ft_split_argv(char **args);
+int		ft_open(int type, char *pathname, int mode);
 
 #endif //EXECUTION_H

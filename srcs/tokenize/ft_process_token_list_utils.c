@@ -44,16 +44,22 @@ char	*ft_expand_env(char *s, int *i, char **my_envp)
 /**
  * @brief Retrieves the exit code as a string.
  * 
- * This function retrieves the last process's exit code. It updates the index 
+ * This function retrieves the last process's exit code. It updates the index
  * and returns the exit_code in string format.
  * 
- * @param i Pointer to the index, incremented to skip past the special character.
+ * @param i Pointer to the index, incremented to skip past the special
+ *        character.
  * @return Exit code value in string format.
  */
 char	*ft_get_exit_code(int *i)
 {
+	int		status_code;
+	char	*status_str;
+
 	(*i)++;
-	return (ft_strdup("EXIT_CODE")); // to do
+	status_code = ft_exit_status(0, FALSE, FALSE);
+	status_str = ft_itoa(status_code);
+	return (status_str);
 }
 
 /**

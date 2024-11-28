@@ -28,7 +28,7 @@ int	ft_redir(t_redir *node, char **my_envp, int *fds, t_redir *next_node, t_shel
 	(void)fds;
 	(void)next_node;
 
-	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
+/* 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
 		ft_process_token_list(node->target, my_envp);
 		fd = ft_open(node->type, ((t_token *)(*node->target)->content)->value, node->mode);
@@ -41,7 +41,7 @@ int	ft_redir(t_redir *node, char **my_envp, int *fds, t_redir *next_node, t_shel
 		close(fd);
 		return (TRUE);
 	}
-	else if (node->type == HEREDOC)
+	else */ if (node->type == HEREDOC)
 	{
 		if (sh->heredoc)
 			dup2(sh->stdin_, STDIN_FILENO);

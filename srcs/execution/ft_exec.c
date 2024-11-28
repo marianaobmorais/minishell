@@ -131,7 +131,7 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
-		ft_free_vector(new_args);
+		ft_free_vector(new_args); //verificar depois leaks quando tiver export var="ls | sort" e $var ser comando, encerra o child antes de chegar aqui
 	}
 	ft_exit_status(0, TRUE, TRUE);
 }

@@ -16,12 +16,12 @@ static int	ft_count_words(char *s, char c)
 			in_word = true;
 			count++;
 		}
-		if (s[i] == 39 || s[i] == 34)
-		{
-			i = ft_find_next_quote(s, i, s[i]);
-			if (i == -1)
-				return (-1);
-		}
+		// if (s[i] == 39 || s[i] == 34)
+		// {
+		// 	i = ft_find_next_quote(s, i, s[i]);
+		// 	if (i == -1)
+		// 		return (-1);
+		// }
 		if (s[i] == c)
 			in_word = false;
 		i++;
