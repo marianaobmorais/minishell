@@ -1,6 +1,24 @@
 #include "../../includes/minishell.h"
 
 /**
+ * @brief Handles syntax errors by printing an error message and updating the exit status.
+ * 
+ * This function outputs a syntax error message, optionally including the character 
+ * that caused the error. It also sets the exit status to a predefined error value.
+ * 
+ * @param message The error message to be displayed.
+ * @param c The optional character causing the syntax error. If `0`, no character is displayed.
+ */
+void	ft_error_syntax(char *message, char c)
+{
+	if (c != 0)
+		ft_stderror(FALSE, message, c);
+	else
+		ft_stderror(FALSE, message);
+	ft_exit_status(2, TRUE, FALSE);
+}
+
+/**
  * @brief Handles and validates special characters in a trimmed input string.
  * 
  * This function checks for syntax errors related to special characters (e.g.,
@@ -22,22 +40,18 @@
 static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 {
 	if (s[i] == '&' && s[i + 1] != '&')
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-			ft_exit_status(2, TRUE, FALSE), -1);
+		return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	if (*special == true)
 	{
 		if (*c == '|' || *c == '&')
 		{
 			if ((*c == '|' && s[i] == '&') || (*c == '&' && s[i] == '|'))
-				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-					ft_exit_status(2, TRUE, FALSE), -1);
+				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 			if (!ft_validate_logic_operator(s, i))
-				return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-					ft_exit_status(2, TRUE, FALSE), -1);
+				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 		}
 		else if (s[i] != '.')
-			return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-				ft_exit_status(2, TRUE, FALSE), -1);
+			return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	}
 	*special = true;
 	*c = s[i];
@@ -73,13 +87,11 @@ static int	ft_iterate_str(char *s, int i, bool *special)
 	{
 		i = ft_find_next_quote(s, i, s[i]);
 		if (i == -1)
-			return (ft_stderror(FALSE, OPEN_QUOTE),
-				ft_exit_status(2, TRUE, FALSE), -1);
+			return (ft_error_syntax(OPEN_QUOTE, 0), -1);
 		*special = false;
 	}
 	if (ft_strchr(INVALIDCHARS, s[i]))
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, s[i]),
-			ft_exit_status(2, TRUE, FALSE), -1);
+		return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	if (ft_strchr(METACHARS, s[i]) || ft_strchr(SPECIALCHARS, s[i])
 		|| (s[i] == '.' && (ft_isspace(s[i + 1])
 				|| s[i + 1] == '\0')))
@@ -113,8 +125,7 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.')
 			&& (ft_isspace(s[1]) || s[1] == '\0')))
 	{
-		ft_stderror(FALSE, UNEXPECTED_TOKEN, s[0]);
-		ft_exit_status(2, TRUE, FALSE);
+		ft_error_syntax(UNEXPECTED_TOKEN, s[0]);
 		return (true);
 	}
 	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
@@ -122,8 +133,7 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 	{
 		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
 		{
-			ft_stderror(FALSE, UNEXPECTED_TOKEN, s[0]);
-			ft_exit_status(2, TRUE, FALSE);
+			ft_error_syntax(UNEXPECTED_TOKEN, s[0]);
 			return (true);
 		}
 	}
@@ -169,7 +179,6 @@ bool	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (special == true)
-		return (ft_stderror(FALSE, UNEXPECTED_TOKEN, trim[i - 1]),
-			ft_exit_status(2, TRUE, FALSE), 0);
+		return (ft_error_syntax(UNEXPECTED_TOKEN, trim[i - 1]), 0);
 	return (true);
 }
