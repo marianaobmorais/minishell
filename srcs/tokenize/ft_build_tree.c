@@ -14,7 +14,7 @@
  */
 static bool	ft_find_next_pipe(t_list **list)
 {
-	t_token	*token;
+	t_token	*token; //update brief
 
 	while (*list)
 	{
@@ -53,7 +53,7 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 	if (!node)
 		return (NULL); //ft_error_hanlder(); 1// malloc failed
 	node->type = PIPE;
-	node->right = NULL;
+	node->right = NULL; //already here
 	node->left = NULL;
 	node->parent_node = *parent_node;
 	node->left = ft_build_branch(list, NULL, NULL);
@@ -64,6 +64,6 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 	if (ft_find_next_pipe(list))
 		node->right = ft_build_tree(list, parent_node);
 	else
-		node->right = NULL;
+		node->right = NULL; //redundat?
 	return ((void *)node);
 }
