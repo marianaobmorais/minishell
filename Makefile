@@ -27,6 +27,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_build_tree.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch_utils.c \
+		$(SRCS_DIR)/tokenize/ft_is_token_type.c \
 		$(SRCS_DIR)/tokenize/ft_free_tree.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \

@@ -33,7 +33,7 @@ void	ft_free_vector(char **vector)
  * 
  * @param node Pointer to the list node to be freed.
  */
-void	ft_free_node(t_list *node)
+void	ft_free_content(t_list *node)
 {
 	t_token	*token;
 
@@ -71,7 +71,7 @@ void	ft_free_list(t_list **list)
 	{
 		current = (*list)->next;
 		node = *list;
-		ft_free_node(node);
+		ft_free_content(node);
 		node = NULL;
 		*list = current;
 	}	

@@ -1,69 +1,37 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Adds a new string to a dynamically allocated string vector.
+ * @brief Extracts executable arguments from a token list.
  * 
- * Creates a new vector by appending a given string to an existing vector of strings.
- * Frees the original vector and duplicates its contents into the new one.
+ * This function parses a list of tokens to extract arguments that are of 
+ * executable type (`EXEC`). It skips redirection tokens (`REDIR`) and their
+ * associated targets. The function halts processing if it encounters a `PIPE`
+ * or a `NULL` as these indicate the end of the argument list.
  * 
- * @param vector Pointer to the original string vector, or NULL if creating a new vector.
- * @param new_str String to add to the vector.
- * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
+ * The extracted arguments are stored in a new list (`t_list **`), which is 
+ * dynamically allocated and returned to the caller.
+ * 
+ * @param list The list of tokens to extract arguments from.
+ * @return A pointer to a new list (`t_list **`) containing the arguments, 
+ *         or `NULL` if memory allocation fails.
  */
-char	**ft_add_to_vector(char **vector, char *new_str)
+t_list	**ft_get_args(t_list **list)
 {
-	char	**res;
-	int		i;
-
-	i = 0;
-	if (vector)
-		while (vector[i])
-			i++;
-	res = (char **)malloc(sizeof(char *) * (i + 2));
-	if (!res)
-		return (NULL); //ft_error_handler // malloc failed
-	i = 0;
-	if (!vector)
-		res[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
-	else
-	{
-		while (vector[i])
-		{
-			res[i] = ft_strdup(vector[i]); //malloc check? free allocated mem?
-			i++;
-		}
-		res[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
-		ft_free_vector(vector);
-	}
-	res[i] = NULL;
-	return (res);
-}
-
-/**
- * @brief Extracts a list of argument strings from a token list.
- * 
- * Iterates through a token list, collecting values of tokens with types `EXEC`, `EXPORT`, 
- * or `EXPORT_AP` into a dynamically allocated string vector. Skips over redirection tokens 
- * and stops at a pipe (`PIPE`) token or the end of the list.
- * 
- * @param list A double pointer to the token list.
- * @return A dynamically allocated string vector containing the extracted arguments, 
- *         or NULL if no arguments are found.
- */
-char	**ft_get_args(t_list **list)
-{
-	char	**args;
+	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
 
-	args = NULL;
+	args = (t_list **)malloc(sizeof(t_list *));
+	if (!args)
+		return (NULL); // ft_error_handler(); 1 // malloc error
+	*args = NULL;
 	curr = *list;
 	while (curr)
 	{
 		token = (t_token *)curr->content;
-		if (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP)
-			args = ft_add_to_vector(args, token->value); //malloc check? free allocated mem?
-		else if (token->type == APPEND || token->type == OUTFILE || token->type == HEREDOC || token->type == INFILE)
+		if (ft_is_token_type(token, EXEC))
+			ft_lstadd_back(args, ft_lstnew(curr->content));
+		else if (ft_is_token_type(token, REDIR))
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
@@ -74,14 +42,21 @@ char	**ft_get_args(t_list **list)
 	}
 	return (args);
 }
+
 /**
  * @brief Searches for the next redirection token in the token list.
  * 
- * Scans the token list to find the next redirection token (`OUTFILE`, `INFILE`, `APPEND`, 
- * or `HEREDOC`). Stops scanning at a pipe (`PIPE`) token or the end of the list.
+ * This function iterates through a token list, starting from the 
+ * current position, to locate the next token of type `REDIR`. The search 
+ * stops at tokens of type `PIPE` or at the end of the list.
  * 
- * @param list A double pointer to the token list, updated as tokens are consumed during the search.
- * @return true if a redirection token is found, otherwise false.
+ * If a redirection token is found, the function returns `true`, and the 
+ * pointer to the list is updated to the position of the found token. 
+ * Otherwise, it returns `false`.
+ * 
+ * @param list A double pointer to the current position in the token list. 
+ *        If a redirection token is found, the pointer will point to it.
+ * @return `true` if a redirection token is found; `false` otherwise.
  */
 bool	ft_find_next_redir(t_list **list)
 {
@@ -92,33 +67,7 @@ bool	ft_find_next_redir(t_list **list)
 		token = (t_token *)(*list)->content;
 		if (token->type == PIPE)
 			break ;
-		if (token->type == OUTFILE || token->type == INFILE
-				|| token->type == APPEND || token->type == HEREDOC)
-			return (true);
-		*list = (*list)->next;
-	}
-	return (false);
-}
-
-/**
- * @brief Searches for the next executable token in the token list.
- * 
- * Scans the token list to find the next executable token (`EXEC`). Stops scanning 
- * at a pipe (`PIPE`) token or the end of the list.
- * 
- * @param list A double pointer to the token list, updated as tokens are consumed during the search.
- * @return true if an executable token is found, otherwise false.
- */
-bool	ft_find_next_exec(t_list **list)
-{
-	t_token	*token;
-
-	while (*list)
-	{
-		token = (t_token *)(*list)->content;
-		if (token->type == PIPE)
-			break ;
-		if (token->type == EXEC)
+		if (ft_is_token_type(token, REDIR))
 			return (true);
 		*list = (*list)->next;
 	}
