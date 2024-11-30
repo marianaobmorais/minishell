@@ -63,17 +63,10 @@ char	*ft_get_exit_code(int *i)
 	return (status_str);
 }
 
-char	*ft_expand_wildcard(char *s)
+char	*ft_skip_wildcard(int *i)
 {
-	//working on it
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		i++;
-	}
-	return (NULL);
+	(*i)++; // skip *
+	return (ft_strdup("\0"));
 }
 
 /**
@@ -98,7 +91,7 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);
 	else if (value[*i] == '*')
-		expansion = ft_expand_wildcard(value);
+		expansion = ft_skip_wildcard(i);
 	else
 		expansion = ft_expand_env(&value[*i], i, my_envp);
 	tmp = ft_strjoin(*new_value, expansion);

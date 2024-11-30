@@ -124,10 +124,10 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		token = (t_token *)current->content;
 		if (token->expand)
 			ft_expand_tokens(token, my_envp);
-		//if (token->wildcard)
-		//	ft_expand_wildcard();
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
+		//if (token->wildcard)
+		//	ft_expand_wildcard(token);
 		current = next;
 	}
 }
