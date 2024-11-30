@@ -182,6 +182,6 @@ bool	ft_validate_syntax(char *trim)
 			i++;
 	}
 	if (special == true)
-		return (ft_error_syntax(UNEXPECTED_TOKEN, trim[i - 1]), 0);
+		return (ft_error_syntax(UNEXPECTED_TOKEN, trim[i - 1]), false);
 	return (true);
 }
