@@ -17,8 +17,8 @@ bool	ft_is_expandable(char *s)
 	int	i;
 
 	i = 0;
-	if (ft_isalpha(s[i]) || s[i] == '?' || (s[i] == '_' && s[i + 1]
-		&& ft_isalnum(s[i + 1])))
+	if (ft_isalpha(s[i]) || s[i] == '?' || s[i] == '*'
+		|| (s[i] == '_' && s[i + 1] && ft_isalnum(s[i + 1])))
 		return (true);
 	return (false);
 }
@@ -97,30 +97,6 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 }
 
 /**
- * @brief Removes a specified node from a linked list.
- * 
- * Detaches the `current` node from the linked list, adjusting the pointers
- * of the previous node (`prev`) or the head of the list if `current` is the
- * first node. Frees the memory allocated to the `current` node using
- * `ft_free_node`.
- * 
- * @param list Double pointer to the head of the list.
- * @param prev Pointer to the previous node, or NULL if `current` is the head.
- * @param current Pointer to the node to be removed.
- */
-void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
-{
-	t_list	*next;
-
-	next = current->next;
-	if (prev)
-		prev->next = next;
-	else
-		*list = next;
-	ft_free_content(current);
-}
-
-/**
  * @brief Processes the token list for expansion and quote removal.
  * 
  * Iterates over a list of tokens, applying transformations to each token:
@@ -148,6 +124,8 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		token = (t_token *)current->content;
 		if (token->expand)
 			ft_expand_tokens(token, my_envp);
+		//if (token->wildcard)
+		//	ft_expand_wildcard();
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
 		current = next;

@@ -3,7 +3,7 @@
 
 //chars
 # define SPECIALCHARS "{}[^!"
-# define INVALIDCHARS ";\\`*~"
+# define INVALIDCHARS ";\\`~"
 # define PRTHESESCHARS "()"
 # define METACHARS "|<>&"
 # define ISSPACE " \t\n\v\f\r"
@@ -47,6 +47,7 @@ typedef struct s_token
 	t_type	type;
 	t_state	state;
 	bool	expand;
+	bool	wildcard;
 }	t_token;
 
 typedef struct s_node
@@ -102,7 +103,7 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	*ft_process_input(char *input);
+void	*ft_process_input(char *input, char **my_envp); //delete my_envp parameter later
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, \

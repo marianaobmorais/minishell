@@ -63,6 +63,19 @@ char	*ft_get_exit_code(int *i)
 	return (status_str);
 }
 
+char	*ft_expand_wildcard(char *s)
+{
+	//working on it
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		i++;
+	}
+	return (NULL);
+}
+
 /**
  * @brief Handles environment variable expansion in a string.
  * 
@@ -84,6 +97,8 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	(*i)++;
 	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);
+	else if (value[*i] == '*')
+		expansion = ft_expand_wildcard(value);
 	else
 		expansion = ft_expand_env(&value[*i], i, my_envp);
 	tmp = ft_strjoin(*new_value, expansion);

@@ -68,7 +68,7 @@ void	ft_cli(t_env *env)
 		}
 		if (ft_history(input))
 		{
-			bonsai = ft_process_input(input);
+			bonsai = ft_process_input(input, *env->global);
 			// if (bonsai)
 			// {
 			// 	if (!ft_single_command(bonsai, env))
@@ -77,5 +77,5 @@ void	ft_cli(t_env *env)
 			ft_free_tree(bonsai);
 		}
 	}
-	rl_clear_history();
+	//rl_clear_history();
 }

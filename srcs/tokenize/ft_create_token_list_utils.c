@@ -147,6 +147,24 @@ bool	ft_is_heredoc_target(t_list **list)
 	return (false);
 }
 
+bool	ft_is_wildcard(char *s)
+{
+	//write brief
+	int		i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == SQUOTE || s[i] == DQUOTE)
+			return (false);//i = ft_find_next_quote(s, i, s[i]) + 1;
+		else if (s[i] == '*' && s[i - 1] != '$')
+			return (true);
+		else if (s[i])
+			i++;
+	}
+	return (false);
+}
+
 /**
  * @brief Adds a new token to the token list after initializing it.
  * 
@@ -176,6 +194,7 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 			new_token->expand = ft_has_expandable_var(*value);
 		else
 			new_token->expand = false;
+		new_token->wildcard = ft_is_wildcard(*value); //update brief
 		new_node = ft_lstnew((t_token *)new_token);
 		if (!new_node)
 			return (free(new_token->value), free(new_token)); //error_handler; 1 //malloc failed

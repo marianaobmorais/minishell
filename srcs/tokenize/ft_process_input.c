@@ -10,21 +10,22 @@ void	ft_print_list(t_list **token_list)
 		printf("List is empty\n");
 		return ;
 	}
-	printf("------------------------------------------------------\n");
-	printf("| %-13s | %-8s | %-10s | %-10s |\n", "token", "type", "state", "expansion");
-	printf("------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------\n");
+	printf("| %-13s | %-8s | %-10s | %-10s | %-10s |\n", "token", "type", "state", "expansion", "wildcard");
+	printf("-------------------------------------------------------------------\n");
 	current = *token_list;
 	while (current)
 	{
 		token = (t_token *)current->content;
-		printf("| %-13s | %-8i | %-10i | %-10i |\n",
+		printf("| %-13s | %-8i | %-10i | %-10i | %-10i |\n",
 			token->value,
 			token->type,
 			token->state,
-			token->expand);
+			token->expand,
+			token->wildcard);
 		current = current->next;
 	}
-	printf("------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------\n");
 }
 
 void print_root(void *root, int indent) // Updated function
@@ -162,8 +163,9 @@ void print_root(void *root, int indent) // Updated function
  * @return A pointer to the root of the syntax tree (AST) if successful, or
  *         NULL on failure.
  */
-void	*ft_process_input(char *input)
-{
+void	*ft_process_input(char *input, char **my_envp)
+{	//delete my_envp parameter later
+	(void)my_envp; //dele later
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
@@ -176,6 +178,9 @@ void	*ft_process_input(char *input)
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL);
+	ft_print_list(token_list); // debug
+	ft_process_token_list(token_list, my_envp); //delete later
+	printf("After expansion:\n"); //debug
 	ft_print_list(token_list); // debug
 	root = NULL;
 	if (token_list && *token_list)
