@@ -1,12 +1,18 @@
 #ifndef TOKENIZE_H
 # define TOKENIZE_H
 
+//chars
 # define SPECIALCHARS "{}[^!"
 # define INVALIDCHARS "&;()\\`*~"
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
 # define DQUOTE 34
+
+//messages
+# define UNEXPECTED_TOKEN "syntax error near unexpected token `%c'"
+# define UNEXPECTED_TOKEN_S "syntax error near unexpected token `%s'"
+# define OPEN_QUOTE "open quotes are not supported"
 
 typedef enum e_type
 {
@@ -38,13 +44,14 @@ typedef struct s_pipe
 {
 	int		type;
 	char	*left; // aponta para redir ou exec
-	char	*right; // aponta para pipe 
+	char	*right; // aponta para pipe
+	//struct s_node	*parent_node; //not necessary in mandatory
 }	t_pipe;
 
 typedef struct s_redir
 {
 	int		type;
-	t_token	*target; // pointer to next token, file or limiter
+	t_list	**target; // pointer to next token, file or limiter
 	int		mode;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
 }	t_redir;
@@ -53,7 +60,7 @@ typedef struct s_exec
 {
 	int		type;
 	char	*pathname; // precisa desse?
-	char	**args;
+	t_list	**args;
 }	t_exec;
 
 typedef struct s_envp
@@ -71,8 +78,12 @@ char	*ft_charjoin(char *str, char c);
 //ft_isspace.c
 int	ft_isspace(int c);
 
-//ft_check_syntax.c
-int		ft_validate_syntax(char *s);
+//ft_validate_syntax.c
+bool	ft_validate_syntax(char *s);
+//ft_validate_syntax_utils.c
+bool	ft_is_comment(char c, int *i);
+
+//ft_isspace.c
 int		ft_isspace(int c);
 
 //ft_create_token_list.c
@@ -81,7 +92,7 @@ t_list	**ft_create_token_list(char *s);
 void	ft_add_to_token_list(char **value, t_list **token_list);
 
 //ft_process_input.c
-void	*ft_process_input(char *input, char **my_envp);
+void	*ft_process_input(char *input);
 
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char** my_envp);

@@ -1,6 +1,67 @@
 #include "../../includes/minishell.h"
 
 /**
+ * @brief Handles syntax errors by printing an error message and updating the
+ *        exit status.
+ * 
+ * This function outputs a syntax error message, optionally including the
+ * character that caused the error. It also sets the exit status to a
+ * predefined error value.
+ * 
+ * @param message The error message to be displayed.
+ * @param c The optional character causing the syntax error. If `0`, no
+ *        character is displayed.
+ */
+void	ft_error_syntax(char *message, char c)
+{
+	if (c != 0)
+		ft_stderror(FALSE, message, c);
+	else
+		ft_stderror(FALSE, message);
+	ft_exit_status(2, TRUE, FALSE);
+}
+
+/**
+ * @brief Handles and validates special characters in a trimmed input string.
+ * 
+ * This function checks for syntax errors related to special characters (e.g.,
+ * `&`, `|`, redirections) in the input. It identifies unexpected tokens,
+ * validates character sequences, and updates the state of the `is_special`
+ * flag and the current special character tracker. If an error is encountered,
+ * an appropriate error message is printed, and the function returns `-1`.
+ * Otherwise, it returns the updated index after handling multi-character
+ * tokens.
+ * 
+ * @param trim The trimmed input string being validated.
+ * @param i The current index in the input string.
+ * @param special Pointer to a flag indicating if the previous character
+ *        was special.
+ * @param c Pointer to the current special character being tracked.
+ * @return The updated index after handling special characters, or `-1`
+ *         on error.
+ */
+static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
+{
+	if (*special == true)
+	{
+		if (*c == '|')
+		{
+			if (s[i] == '|' || ft_strchr(SPECIALCHARS, s[i])
+				|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
+				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
+		}
+		else if (s[i] != '.')
+			return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
+	}
+	*special = true;
+	*c = s[i];
+	if (((s[i] == '<' || s[i] == '>') && s[i + 1] == s[i])
+		|| (s[i] == '>' && s[i + 1] == '|'))
+		i += 1;
+	return (i);
+}
+
+/**
  * @brief Iterates over a string to check for unmatched quotes or invalid syntax characters.
  * 
  * This function navigates through the `trim` string, checking if characters are quotes, 
@@ -12,70 +73,59 @@
  * @param special Pointer to a boolean that tracks consecutive special characters.
  * @return Updated index if successful, -1 if syntax error.
  */
-static int	ft_iterate_str(char *trim, int i, bool *special)
+static int	ft_iterate_str(char *s, int i, bool *special)
 {
 	static char	special_char;
 
-	if (trim[i] == SQUOTE || trim[i] == DQUOTE)
+	if (s[i] == SQUOTE || s[i] == DQUOTE)
 	{
-		i = ft_find_next_quote(trim, i, trim[i]);
+		i = ft_find_next_quote(s, i, s[i]);
 		if (i == -1)
-			return (printf("%s: open quotes are not supported\n", PROG_NAME), -1); //ft_error_handler();
+			return (ft_error_syntax(OPEN_QUOTE, 0), -1);
 		*special = false;
 	}
-	if (ft_strchr(INVALIDCHARS, trim[i]))
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
-	if (ft_strchr(METACHARS, trim[i]) || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
+	if (ft_strchr(INVALIDCHARS, s[i]))
+		return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
+	if (ft_strchr(METACHARS, s[i]) || ft_strchr(SPECIALCHARS, s[i])
+		|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
 	{
-		if (*special == true)
-		{
-			if (special_char == '|')
-			{
-				if (trim[i] == '|' || ft_strchr(SPECIALCHARS, trim[i]) || (trim[i] == '.' && (ft_isspace(trim[i + 1]) || trim[i + 1] == '\0')))
-					return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
-			}
-			else if (trim[i] != '.') // this means: redirs accept . and .. and ... etc, pipes don't
-				return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i]), -1); //ft_error_handler();
-		}
-		*special = true;
-		special_char = trim[i];
-		if (((trim[i] == '<' || trim[i] == '>') && trim[i + 1] == trim[i]) || (trim[i] == '>' && trim[i + 1] == '|'))
-			i += 1;
+		i = ft_handle_specialchars(s, i, special, &special_char);
+		if (i == -1)
+			return (-1);
 	}
 	return (i);
 }
 
 /**
- * @brief Checks if a character is an invalid or special starting character for syntax, updating status.
- *
- * Determines if `c` is an invalid or special character for the start of a command or syntax. If `c` is a 
- * comment character (`#`), it sets `*special` to `true` and returns `true` without error. If `c` is `%` or 
- * another special/metacharacter (excluding `<` and `>`), it prints a syntax error message, sets `*special` 
- * to `true`, and returns `true`. If `c` is valid, it sets `*special` to `false` and returns `false`.
- *
- * @param c The character to check.
- * @param special Pointer to a boolean indicating if the character is special.
- * @return `true` if `c` is invalid or special; otherwise, `false`.
+ * @brief Validates the first character of a string for syntax correctness.
+ * 
+ * This function checks if the first character of the input string is valid
+ * according to predefined rules. It identifies special cases like comments
+ * (`#`), invalid characters, and unsupported tokens. If the first character
+ * is invalid, an error is reported, the exit status is updated, and the
+ * function returns `true`. Otherwise, it updates the `special` flag and
+ * returns `false`.
+ * 
+ * @param s The input string to validate.
+ * @param special Pointer to a boolean flag indicating if the first character
+ *        is special.
+ * @return `true` if the first character is invalid; `false` otherwise.
  */
-static bool	ft_is_invalid_first_char(char *s, bool *special)
+static bool	ft_invalid_first_char(char *s, bool *special)
 {
-	if (s[0] == '#' /* || s[0] == ':' */) // # it indicates a comment. what is :?
-	{
-		*special = true;
-		return (true); // not an error. doesn't change the last exit_code
-	}
+	if (s[0] == '#' || s[0] == ':')
+		return (true);
 	if (s[0] == '%' || s[0] == '!' || ((s[0] == '^' || s[0] == '.') && (ft_isspace(s[1]) || s[1] == '\0')))
 	{
-		printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
-		*special = true;
+		ft_error_syntax(UNEXPECTED_TOKEN, s[0]);
 		return (true);
 	}
-	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0]) || ft_strchr(METACHARS, s[0]))
+	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
+		|| ft_strchr(METACHARS, s[0]))
 	{
 		if (s[0] != '<' && s[0] != '>')
 		{
-			printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, s[0]); //ft_error_handler();
-			*special = true;
+			ft_error_syntax(UNEXPECTED_TOKEN, s[0]);
 			return (true);
 		}
 	}
@@ -84,41 +134,41 @@ static bool	ft_is_invalid_first_char(char *s, bool *special)
 }
 
 /**
- * @brief Checks syntax validity of a given input string for proper quote usage, valid metacharacter positioning and env expansion.
- *
- * @param input The input string to validate.
- * @return 1 if syntax is valid, otherwise 0.
+ * @brief Validates the syntax of a trimmed shell input string.
+ * 
+ * This function checks the input string for syntax errors, including invalid
+ * characters, unbalanced quotes, and improper placement of special characters
+ * (e.g., pipes, redirections). It iterates through the string, updating the
+ * state of special characters and comments,and handles errors with appropriate
+ * messages and exit codes. The function ensures that the input adheres to
+ * shell syntax rules before proceeding to parsing or execution.
+ * 
+ * @param trim The trimmed input string to validate.
+ * @return `true` if the syntax is valid, otherwise `false`.
  */
-int	ft_validate_syntax(char *s)
+bool	ft_validate_syntax(char *trim)
 {
-	char	*trim;
 	int		i;
 	bool	special;
 
-	trim = ft_strtrim(s, ISSPACE);
-	if (!trim)
-		return (0); //ft_error_handler(); malloc failed
-	if (ft_is_invalid_first_char(trim, &special))
-		return (free(trim), 0);
+	if (ft_invalid_first_char(trim, &special))
+		return (false);
 	i = 0;
 	while (trim[i])
 	{
 		i = ft_iterate_str(trim, i, &special);
 		if (i == -1)
-			return (0);
+			return (false);
 		if (trim[i] && !ft_isspace(trim[i]) && !ft_strchr(METACHARS, trim[i]))
 		{
-			if (trim[i] == '#') //update brief
-			{
-				i++;
-				break;
-			}
+			if (ft_is_comment(trim[i], &i))
+				break ;
 			special = false;
 		}
 		if (trim[i])
 			i++;
 	}
 	if (special == true)
-		return (printf("%s: syntax error near unexpected token `%c'\n", PROG_NAME, trim[i - 1]), free(trim), 0); //ft_error_handler();
-	return (free(trim), 1);
+		return (ft_error_syntax(UNEXPECTED_TOKEN, trim[i - 1]), false);
+	return (true);
 }

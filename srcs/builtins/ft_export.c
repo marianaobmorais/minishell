@@ -8,7 +8,7 @@ static int check_key(char **argv)
 	{
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
-			return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)));
+			return (ft_stderror(2, "export: '%s' not a valid identifier\n", (*argv)), -1);
 		while ((*argv)[i] != '=')
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
