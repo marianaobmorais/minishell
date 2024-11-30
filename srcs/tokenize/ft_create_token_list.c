@@ -83,7 +83,6 @@ static int	ft_handle_quotes(char **value, char *s, int i, char quote)
  * @param s The input string to process and tokenize.
  * @param token_list A pointer to the list where tokens will be added.
  */
-
 static void	ft_process_tokens(char *s, t_list **token_list)
 {
 	char	*value;
