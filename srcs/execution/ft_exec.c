@@ -1,39 +1,26 @@
 #include "../../includes/minishell.h"
 
-// int	isvalid(char *pathname, char **args)
-// {
-// 	if (access(pathname, X_OK) == -1)
-// 	{
-// 		ft_stderror(TRUE, "ISVALID %s: ", args[0]);
-// 		ft_exit_status(126, TRUE, TRUE);
-// 		return (-1);
-// 	}
-// 	return (0);
-// }
-
-int	isvalid_(char *pathname, char **args)
+int	isvalid(char *pathname, char **args)
 {
 	struct stat	file;
 	
 	if (stat(pathname, &file) == -1)
 	{
-		ft_stderror(TRUE, "STAT %s: ", args[0]);
+		ft_stderror(TRUE, "%s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (S_ISDIR(file.st_mode) != 0)
 	{
-		ft_stderror(FALSE, "STAT %s: Is a directory", args[0]);
+		ft_stderror(FALSE, "%s: Is a directory", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (access(pathname, X_OK) == -1)
 	{
-		// ft_stderror(FALSE, "STAT %s:", args[0]);
-		// ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
-	return (0); 
+	return (0);
 }
 
 static char	*merge(char *s1, char *s2)
@@ -62,7 +49,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 
 	i = 0;
 	paths = NULL;
-	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0) // ajeitar
+	if (access(cmds[0], F_OK) == 0 && isvalid(cmds[0], cmds) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -74,36 +61,13 @@ static char	*ft_findpath(char **envp, char **cmds)
 	while (paths[i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && isvalid_(pathname, cmds) == 0)
+		if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 		i++;
 	}
 	free(paths);
 	return (NULL);
-}
-
-char	**tokentostring(t_list **args)
-{
-	char	**new_args;
-	t_list	*curr_list;
-	int		size;
-	int		i;
-
-	curr_list = *args;
-	size = ft_lstsize(curr_list);
-	i = 0;
-	new_args = (char **) malloc((size + 1) * sizeof(char *));
-	if (!new_args)
-		ft_error_handler();
-	while (curr_list)
-	{
-		new_args[i] = ft_strdup(((t_token *) (curr_list)->content)->value);
-		curr_list = (curr_list)->next;
-		i++;
-	}
-	new_args[i] = NULL;
-	return (new_args);
 }
 
 void	ft_exec(t_list **args, t_env *env, t_shell *sh)
@@ -127,11 +91,11 @@ void	ft_exec(t_list **args, t_env *env, t_shell *sh)
 		}
 		if (execve(pathname, new_args, *(env)->global) == -1)
 		{
-			ft_stderror(TRUE, "EXECVE %s:", new_args[0]);
+			ft_stderror(TRUE, "%s:", new_args[0]);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
-		ft_free_vector(new_args); //verificar depois leaks quando tiver export var="ls | sort" e $var ser comando, encerra o child antes de chegar aqui
+		ft_free_vector(new_args);
 	}
 	ft_exit_status(0, TRUE, TRUE);
 }

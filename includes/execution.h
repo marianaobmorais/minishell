@@ -44,10 +44,13 @@ int		ft_open(int type, char *pathname, int mode);
 
 void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_shell *sh);
 int		ft_single_command(void *node, t_env *env, t_shell *sh);
+void	ft_restore_original_fds(t_shell *sh);
+void	ft_save_original_fds(t_shell *sh);
+
+/* Exec */
+
 char	**tokentostring(t_list **args);
 char	**ft_split_argv(char **args);
 void	ft_exec(t_list **args, t_env *env,t_shell *sh);
-void	ft_save_original_fds(t_shell *sh);
-void	ft_restore_original_fds(t_shell *sh);
 
 #endif //EXECUTION_H
