@@ -22,7 +22,26 @@ int	ft_open(int type, char *pathname, int mode)
 	return (fd);
 }
 
-void	ft_redir_heredoc(t_shell *sh)
+int	ft_search_exec(t_redir *node)
+{
+	int		exec;
+	t_redir	*curr;
+
+	exec = FALSE;
+	curr = node->next;
+	while (curr)
+	{
+		if (curr->type == EXEC)
+		{
+			exec = TRUE;
+			break ;
+		}
+		curr = curr->next;
+	}
+	return (exec);
+}
+
+void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 {
 	char	*pathname;
 	int		fd;
@@ -30,9 +49,12 @@ void	ft_redir_heredoc(t_shell *sh)
 
 	pathname = (char *)(*sh->heredoc_list)->content;
 	tmp = (*sh->heredoc_list)->next;
-	fd = open(pathname, O_RDONLY);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	if (ft_search_exec(node) == TRUE)
+	{
+		fd = open(pathname, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
 	ft_lstdelone((*sh->heredoc_list), free);
 	*sh->heredoc_list = tmp;
 	unlink(pathname);
@@ -59,7 +81,7 @@ int	ft_redir(t_redir *node, char **my_envp, t_shell *sh)
 	}
 	else if (node->type == HEREDOC)
 	{
-		ft_redir_heredoc(sh);
+		ft_redir_heredoc(sh, node);
 		return (TRUE);
 	}
 	return (FALSE);

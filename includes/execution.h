@@ -36,13 +36,18 @@ int		count_line(int mode);
 void	ft_search_heredoc(void *curr_node, t_env *env, t_shell *sh);
 
 /* Redir */
+
 int		ft_redir(t_redir *node, char **my_envp, t_shell *sh);
+int		ft_open(int type, char *pathname, int mode);
+
+/* Launcher */
 
 void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_shell *sh);
-void	ft_exec(t_list **args, t_env *env,t_shell *sh);
 int		ft_single_command(void *node, t_env *env, t_shell *sh);
 char	**tokentostring(t_list **args);
 char	**ft_split_argv(char **args);
-int		ft_open(int type, char *pathname, int mode);
+void	ft_exec(t_list **args, t_env *env,t_shell *sh);
+void	ft_save_original_fds(t_shell *sh);
+void	ft_restore_original_fds(t_shell *sh);
 
 #endif //EXECUTION_H
