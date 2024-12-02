@@ -120,7 +120,7 @@ char	*ft_expand_env(char *s, int *i, char **my_envp);
 
 //ft_expand_wildcard.c
 t_list	**ft_get_wildcard_list(char *s);
-void	ft_update_list(t_list *curr, t_list *prev, t_list **head, \
+void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
 		t_list **w_list);
 
 //ft_build_root.c

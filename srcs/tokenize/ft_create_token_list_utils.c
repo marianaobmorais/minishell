@@ -163,15 +163,12 @@ bool	ft_is_wildcard(char *s)
 			while (s[i] && s[i] != SQUOTE)
 			{
 				if (s[i] == '*') 
-				{
-					wildcard = false;
-					return (wildcard);
-				}
+					return (false);
 				i++;
 			}
 			i++;
 		}
-		if (s[i] == DQUOTE)
+		else if (s[i] == DQUOTE)
 		{
 			i++;
 			while (s[i] && s[i] != DQUOTE)
@@ -179,10 +176,7 @@ bool	ft_is_wildcard(char *s)
 				if (s[i] == '*' && s[i - 1] == '$')
 					wildcard = false;
 				else if (s[i] == '*' && s[i - 1] != '$') 
-				{
-					wildcard = false;
-					return (wildcard);
-				}
+					return (false);
 				i++;
 			}
 			i++;
@@ -192,6 +186,8 @@ bool	ft_is_wildcard(char *s)
 			wildcard = true;
 			i++;
 		}
+		else if (s[i] == '/'/*  && (s[i - 1] == '*' || s[i + 1] == '*') */)
+			return (false);
 		else if (s[i])
 			i++;
 	}

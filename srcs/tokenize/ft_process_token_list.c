@@ -114,7 +114,6 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
 	t_list	*current; //need to receive both global and local envp //update brief
-	//	*next;
 	t_list	*prev;
 	t_token	*token;
 	t_list	**wild_list;
@@ -123,7 +122,6 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 	prev = NULL;
 	while (current)
 	{
-		//next = current->next;
 		token = (t_token *)current->content;
 		if (token->expand)
 			ft_expand_tokens(token, my_envp);
@@ -134,13 +132,10 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 			wild_list = ft_get_wildcard_list(token->value); //allocated memory for wild_list
 			if (*wild_list)
 			{
-				ft_update_list(current, prev, list, wild_list);
-				//free(wild_list);
-				current = *list;
-				//prev = NULL; //  prev should be reinitialized to NULL so that we don’t mistakenly link the previous node to the wrong part of the list.
-				//continue ; // If a wildcard expansion occurs, we use continue to skip the rest of the current loop iteration. This avoids the problem of processing nodes that have already been replaced. //After the wildcard expansion, we use continue to skip the rest of the loop's processing, effectively reprocessing the newly expanded list from the beginning. This is important because the list has changed, and the next pointers are now different.
+				ft_update_token_list(current, prev, list, wild_list);
+				current = *wild_list;
 			}
-			//else
+			if (wild_list) //should I break it here in case !wild_list?
 				free(wild_list);
 		}
 		prev = current;
