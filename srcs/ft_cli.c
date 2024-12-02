@@ -70,12 +70,15 @@ void	ft_cli(t_env *env)
 		if (ft_history(input))
 		{
 			sh->fds_saved = 0;
-			sh->heredoc = FALSE;
+			sh->heredoc = TRUE;
 			sh->prev = NULL;
+			sh->heredoc_list = (t_list **)malloc(sizeof(t_list **));
+			*(sh->heredoc_list) = NULL;
 			bonsai = ft_process_input(input, *(env->global));
 			if (bonsai)
 			{
-				if (!ft_single_command(bonsai, env, sh))
+				ft_search_heredoc(bonsai, env, sh);
+				if (sh->heredoc == TRUE && !ft_single_command(bonsai, env, sh))
 					ft_launcher(bonsai, ((t_pipe *)bonsai)->right, env, NULL, sh);
 			}
 			//free(sh);
