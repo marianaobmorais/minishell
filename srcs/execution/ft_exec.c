@@ -1,15 +1,15 @@
 #include "../../includes/minishell.h"
 
-int	isvalid(char *pathname, char **args)
-{
-	if (access(pathname, X_OK) == -1)
-	{
-		ft_stderror(TRUE, "ISVALID %s: ", args[0]);
-		ft_exit_status(126, TRUE, TRUE);
-		return (-1);
-	}
-	return (0);
-}
+// int	isvalid(char *pathname, char **args)
+// {
+// 	if (access(pathname, X_OK) == -1)
+// 	{
+// 		ft_stderror(TRUE, "ISVALID %s: ", args[0]);
+// 		ft_exit_status(126, TRUE, TRUE);
+// 		return (-1);
+// 	}
+// 	return (0);
+// }
 
 int	isvalid_(char *pathname, char **args)
 {
@@ -74,7 +74,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 	while (paths[i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
+		if (access(pathname, F_OK) == 0 && isvalid_(pathname, cmds) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 		i++;

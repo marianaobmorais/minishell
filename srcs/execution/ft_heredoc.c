@@ -37,6 +37,7 @@ static void	save_heredoc(char *pathname, int fd, t_shell *sh)
 	if (fd_save == -1)
 	{
 		ft_stderror(TRUE, "");
+		ft_exit_status(1, TRUE, FALSE);
 		return ;
 	}
 	buffer = malloc(BUFFER_SIZE * sizeof(BUFFER_SIZE));
