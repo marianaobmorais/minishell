@@ -177,7 +177,7 @@ bool	ft_is_wildcard(char *s)
 			while (s[i] && s[i] != DQUOTE)
 			{
 				if (s[i] == '*' && s[i - 1] == '$')
-					wildcard = true;
+					wildcard = false;
 				else if (s[i] == '*' && s[i - 1] != '$') 
 				{
 					wildcard = false;

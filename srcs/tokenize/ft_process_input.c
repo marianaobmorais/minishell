@@ -180,7 +180,7 @@ void	*ft_process_input(char *input, char **my_envp)
 		return (free(trimmed), NULL);
 	ft_print_list(token_list); // debug
 	ft_process_token_list(token_list, my_envp); //delete later
-	printf("After expansion:\n"); //debug
+	printf("\nAfter expansion:\n"); //debug
 	ft_print_list(token_list); // debug
 	root = NULL;
 	if (token_list && *token_list)

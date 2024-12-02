@@ -216,7 +216,7 @@ t_list	**ft_create_token_list(char *s)
 {
 	t_list	**token_list;
 
-	token_list = (t_list **)malloc(sizeof(t_list **));
+	token_list = (t_list **)malloc(sizeof(t_list *));
 	if (!token_list)
 		return (NULL); // error_handler //malloc failed
 	*token_list = NULL;
