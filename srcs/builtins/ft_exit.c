@@ -63,7 +63,7 @@ void	ft_exit(char **args)
 		exit_status = (unsigned char) arg_convert(args[i]);
 		i++;
 	}
-	if (isatty(STDOUT_FILENO)) //resolver pois se for o ultimo cmd imprime na mesma
+	if (isatty(STDIN_FILENO)) //resolver pois se for o ultimo cmd imprime na mesma
 		ft_putendl_fd("exit", 2);
 	ft_exit_status(exit_status, TRUE, TRUE);
 }
