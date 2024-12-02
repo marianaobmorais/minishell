@@ -109,7 +109,6 @@ void	*ft_process_input(char *input, char **my_envp); //delete my_envp parameter 
 void	ft_process_token_list(t_list **token_list, \
 		char **my_envp);
 bool	ft_is_expandable(char *s);
-
 //ft_process_token_list_utils.c
 void	ft_handle_dquotes(char **new_value, char *value, int *i, \
 		char **my_envp);
@@ -118,6 +117,9 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, \
 		char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
+
+//ft_expand_wildcard.c
+void	ft_expand_wildcard(t_list *current, t_list	*prev, t_list **head);
 
 //ft_build_root.c
 void	*ft_build_root(t_list **list, t_type type);

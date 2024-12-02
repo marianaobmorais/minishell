@@ -96,51 +96,6 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 	token->value = new_value;
 }
 
-void	ft_expand_wildcard(t_list *current)
-{
-	t_list			**wild_list;
-	t_list			*wild_last;
-	t_list			*tmp;
-	char			dir_path[1024];
-	DIR				*dir;
-	struct dirent	*entry;
-
-	wild_list = (t_list **)malloc(sizeof(t_list *));
-	if (!wild_list)
-		return ;  //error_handler; 1 //malloc failed
-	if (!getcwd(dir_path, 1024))
-	{
-		perror("getcwd"); //error_handler;
-		return ;
-	}
-	dir = opendir(dir_path);
-	if (!dir)
-	{
-		perror("opendir"); //error_handler;
-		return ;
-	}
-	entry = readdir(dir);
-	while (entry)
-	{
-		if (entry->d_name[0] != '.') //ignore hidden files and directories
-		{
-			printf("%s ", entry->d_name);
-			ft_add_to_token_list(entry->d_name, wild_list);
-		}
-		entry = readdir(dir);
-	}
-	if (closedir(dir) == -1)
-	{
-		perror("closedir"); //error_handler;
-		return ;
-	}
-
-	tmp = current->next;
-	current->next = *wild_list;
-	wild_last = ft_lstlast(*wild_list);
-	wild_last->next = tmp;
-}
-
 /**
  * @brief Processes the token list for expansion and quote removal.
  * 
@@ -160,9 +115,11 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 {
 	t_list	*current; //need to receive both global and local envp //update brief
 	t_list	*next;
+	t_list	*prev;
 	t_token	*token;
 
 	current = *list;
+	prev = NULL;
 	while (current)
 	{
 		next = current->next;
@@ -172,7 +129,13 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
 		if (token->wildcard)
-			ft_expand_wildcard(current); //need to expand the token list itself
+		{
+			ft_expand_wildcard(current, prev, list); //need to expand the token list itself
+			current = *list;
+			prev = NULL; //  prev should be reinitialized to NULL so that we don’t mistakenly link the previous node to the wrong part of the list.
+			continue ; // If a wildcard expansion occurs, we use continue to skip the rest of the current loop iteration. This avoids the problem of processing nodes that have already been replaced. //After the wildcard expansion, we use continue to skip the rest of the loop's processing, effectively reprocessing the newly expanded list from the beginning. This is important because the list has changed, and the next pointers are now different.
+		}
+		prev = current;
 		current = next;
 	}
 }
