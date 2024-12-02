@@ -76,7 +76,7 @@ void	ft_launcher(void *curr_node, void *next_node, t_env *env, int *curr_fds, t_
 		sh->prev = curr_node;
 		ft_launcher(((t_pipe *)curr_node)->left, ((t_pipe *)curr_node)->right, env, fds, sh);
 	}
-	else if (ft_redir(((t_redir *)curr_node), *(env)->global, sh))
+	else if (ft_redir(((t_redir *)curr_node), env->global, sh))
 	{
 		sh->prev = curr_node;
 		ft_launcher(((t_redir *)curr_node)->next, next_node, env, curr_fds, sh);

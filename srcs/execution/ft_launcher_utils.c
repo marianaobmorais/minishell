@@ -37,7 +37,7 @@ int	ft_single_command(void *node, t_env *env, t_shell *sh)
 			sh->fds_saved = 1;
 		}
 		curr_node = ((t_pipe *)node)->left;
-		while (ft_redir(((t_redir *)curr_node), *(env)->global, sh))
+		while (ft_redir(((t_redir *)curr_node), env->global, sh))
 			curr_node = ((t_redir *)curr_node)->next;
 		if (((t_exec *)curr_node)->type == EXEC)
 		{

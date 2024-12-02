@@ -46,11 +46,11 @@ int	ft_history(char *input)
 void	ft_cli(t_env *env)
 {
 	char	*input;
-	void	**bonsai;
+	void	**tree;
 	t_shell	*sh;
 
 	input = NULL;
-	bonsai = NULL;
+	tree = NULL;
 	sh = (t_shell *) malloc(sizeof(t_shell));
 	while (1)
 	{
@@ -70,19 +70,19 @@ void	ft_cli(t_env *env)
 		if (ft_history(input))
 		{
 			sh->fds_saved = 0;
-			sh->heredoc = TRUE;
+			sh->run = TRUE;
 			sh->prev = NULL;
-			sh->heredoc_list = (t_list **)malloc(sizeof(t_list **));
+			sh->heredoc_list = (t_list **) malloc(sizeof(t_list **));
 			*(sh->heredoc_list) = NULL;
-			bonsai = ft_process_input(input, *(env->global));
-			if (bonsai)
+			tree = ft_process_input(input, env->global);
+			if (tree)
 			{
-				ft_search_heredoc(bonsai, env, sh);
-				if (sh->heredoc == TRUE && !ft_single_command(bonsai, env, sh))
-					ft_launcher(bonsai, ((t_pipe *)bonsai)->right, env, NULL, sh);
+				ft_search_heredoc(tree, env, sh);
+				if (sh->run == TRUE && !ft_single_command(tree, env, sh))
+					ft_launcher(tree, ((t_pipe *)tree)->right, env, NULL, sh);
 			}
 			//free(sh);
-			//ft_free_tree(bonsai);
+			//ft_free_tree(tree);
 		}
 	}
 	rl_clear_history();

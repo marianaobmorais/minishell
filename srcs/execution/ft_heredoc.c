@@ -109,14 +109,16 @@ void	ft_search_heredoc(void *node, t_env *env, t_shell *sh)
 		ft_search_heredoc(((t_pipe *)node)->right, env, sh);
 		return ;
 	}
-	else if (((t_redir *)node)->type == HEREDOC && sh->heredoc == TRUE)
+	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
 		rnode = (t_redir *)node;
 		tnode = (t_token *)(*rnode->target)->content;
 		state = ((t_token *)rnode->target)->state;
-		sh->heredoc = heredoc_fd(tnode->value, *env->global, state, sh);
+		sh->run = heredoc_fd(tnode->value, env->global, state, sh);
 	}
-	else if (((t_redir *)node)->type == EXEC)
+	else if (((t_redir *)node)->type == EXEC
+		|| ((t_redir *)node)->type == EXPORT
+		|| ((t_redir *)node)->type == EXPORT_AP)
 		return ;
 	ft_search_heredoc(((t_redir *)node)->next, env, sh);
 }

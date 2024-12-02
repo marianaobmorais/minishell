@@ -11,8 +11,8 @@ typedef enum e_signal
 
 typedef struct s_env
 {
-	char	***global;
-	char	***local;
+	char	**global;
+	char	**local;
 }	t_env;
 
 typedef struct s_shell
@@ -24,7 +24,8 @@ typedef struct s_shell
 	void	*next;
 	void	*prev;
 	t_list	**heredoc_list;
-	int		heredoc;
+	t_env	*envp;
+	int		run;
 }	t_shell;
 
 /* Heredoc */
