@@ -19,6 +19,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/execution/ft_exec.c \
 		$(SRCS_DIR)/execution/ft_redir.c \
 		$(SRCS_DIR)/execution/ft_split_args.c \
+		$(SRCS_DIR)/execution/ft_heredoc_utils.c\
 		$(SRCS_DIR)/tokenize/ft_process_input.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_isspace.c \
