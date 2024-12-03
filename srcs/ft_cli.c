@@ -114,7 +114,10 @@ void	ft_cli(t_shell *sh)
 			{
 				ft_search_heredoc(tree, sh);
 				if (sh->run == TRUE && !ft_single_command(tree, sh))
+				{
+					ft_signal(DEFAULT_);
 					ft_launcher(tree, ((t_pipe *)tree)->right, NULL, sh);
+				}
 			}
 			ft_restore_cli(sh, tree);
 		}
