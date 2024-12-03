@@ -39,6 +39,8 @@ SRCS = $(SRCS_DIR)/main.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
+OBJS = $(SRCS:.c=.o)
+
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
 
@@ -47,8 +49,8 @@ RM = rm -f
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
 
 
-$(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
 
 #bonus: $(BONUS_NAME)
 
@@ -57,10 +59,14 @@ $(NAME): $(LIBFT) $(SRCS)
 
 all: $(NAME) #bonus
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
+	$(RM) $(OBJS)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
