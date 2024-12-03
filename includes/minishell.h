@@ -28,9 +28,14 @@
 # include "execution.h"
 # include "colors.h"
 
+
+//program name
 # define PROMPT "bashinho [pwd] $ "
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
+
+//messages
+# define MALLOC "memory allocation failed"
 
 # define TRUE 1
 # define FALSE 0
@@ -46,7 +51,7 @@ int		ft_error_handler(void);
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
 void	ft_free_list(t_list **list);
-void	ft_free_node(t_list *node);
+void	ft_free_content(t_list *node);
 
 int		ft_exit_status(int exit_status, int write_, int exit_);
 void	ft_stderror(int perror_, const char *str, ...);
@@ -60,3 +65,4 @@ char	**ft_get_my_envp(char **envp);
 char	**ft_merge_env(t_shell *sh);
 
 #endif //MINISHELL_H
+

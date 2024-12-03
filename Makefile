@@ -25,16 +25,23 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_charjoin.c \
 		$(SRCS_DIR)/tokenize/ft_isspace.c \
 		$(SRCS_DIR)/tokenize/ft_validate_syntax.c \
+		$(SRCS_DIR)/tokenize/ft_validate_syntax_utils.c \
+		$(SRCS_DIR)/tokenize/ft_validate_parentheses.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list_utils.c \
+		$(SRCS_DIR)/tokenize/ft_create_token_list_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list_utils.c \
+		$(SRCS_DIR)/tokenize/ft_get_wildcard_list.c \
+		$(SRCS_DIR)/tokenize/ft_get_wildcard_list_utils.c \
 		$(SRCS_DIR)/tokenize/ft_find_next_quote.c \
 		$(SRCS_DIR)/tokenize/ft_build_root.c \
 		$(SRCS_DIR)/tokenize/ft_build_tree.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch_utils.c \
+		$(SRCS_DIR)/tokenize/ft_build_branch_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_free_tree.c \
+		$(SRCS_DIR)/tokenize/ft_is_token_type.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
 		$(SRCS_DIR)/builtins/ft_cd.c \
 		$(SRCS_DIR)/builtins/ft_echo.c \
@@ -47,6 +54,8 @@ SRCS = $(SRCS_DIR)/main.c \
 
 #BONUS_SRCS = $(BONUS_DIR)/
 
+OBJS = $(SRCS:.c=.o)
+
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
 
@@ -55,8 +64,8 @@ RM = rm -f
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
 
 
-$(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
 
 #bonus: $(BONUS_NAME)
 
@@ -65,10 +74,14 @@ $(NAME): $(LIBFT) $(SRCS)
 
 all: $(NAME) #bonus
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
+	$(RM) $(OBJS)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
