@@ -103,19 +103,19 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 
 	if (!node)
 		return ;
-	else if (((t_pipe *)node)->type == PIPE)
+	else if (((t_node *)node)->type == PIPE)
 	{
-		ft_search_heredoc(((t_pipe *)node)->left, sh);
-		ft_search_heredoc(((t_pipe *)node)->right, sh);
+		ft_search_heredoc(((t_node *)node)->left, sh);
+		ft_search_heredoc(((t_node *)node)->right, sh);
 		return ;
 	}
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
 		rnode = (t_redir *)node;
-		ft_process_token_list(rnode->target, sh->global); //ft_merge_env
+		ft_process_token_list(rnode->target, ft_merge_env(sh)); //ft_merge_env
 		tnode = (t_token *)(*rnode->target)->content;
 		state = tnode->state;
-		sh->run = heredoc_fd(tnode->value, sh->global, state, sh); //ft_merge_env
+		sh->run = heredoc_fd(tnode->value, ft_merge_env(sh), state, sh); //ft_merge_env
 	}
 	else if (((t_redir *)node)->type == EXEC
 		|| ((t_redir *)node)->type == EXPORT

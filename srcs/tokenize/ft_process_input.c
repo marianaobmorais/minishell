@@ -81,7 +81,8 @@ void print_root(void *root, int indent) // Updated function
 		t_node *pipe_node = (t_node *)root;
 		t_node	*parent = (t_node *)pipe_node->parent_node;
 		printf("%*sPIPE\n", indent - 7, "");
-		printf("%*sparent: %s\n", indent - 7,
+		if ((t_node *)pipe_node->parent_node)
+			printf("%*sparent: %s\n", indent - 7,
 				"", 
 				(parent->type == ROOT) ? "ROOT" :
 				(parent->type == SUB_ROOT) ? "SUB_ROOT" :
@@ -179,13 +180,13 @@ void	*ft_process_input(char *input, char **my_envp)
 	if (!token_list)
 		return (free(trimmed), NULL);
 	ft_print_list(token_list); // debug
-	ft_process_token_list(token_list, my_envp); //delete later
-	printf("\nAfter expansion:\n"); //debug
-	ft_print_list(token_list); // debug
+	//ft_process_token_list(token_list, my_envp); //delete later
+	//printf("\nAfter expansion:\n"); //debug
+	//ft_print_list(token_list); // debug
 	root = NULL;
 	if (token_list && *token_list)
 	{
-		root = ft_build_root(token_list, ROOT);
+		root = ft_build_tree(token_list, NULL); //ft_build_root(token_list, ROOT);
 		print_root(root, 60); //debug
 	}
 	free(trimmed);

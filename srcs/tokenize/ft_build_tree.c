@@ -56,7 +56,10 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 	node->type = PIPE;
 	node->right = NULL; //already here
 	node->left = NULL;
-	node->parent_node = *parent_node;
+	if (parent_node)
+		node->parent_node = *parent_node;
+	else
+		node->parent_node = NULL;
 	node->left = ft_build_branch(list, NULL, NULL);
 	if (!node->left)
 		return (NULL);

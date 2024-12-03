@@ -19,16 +19,21 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 t_shell	*ft_init_sh(char **envp)
 {
 	t_shell	*sh;
-	char	**my_envp;
+	char	**global_envp;
+	char	**local_envp;
 
 	sh = (t_shell *) malloc(sizeof(t_shell));
 	if (!sh)
 		return (ft_stderror(TRUE, ""), NULL);
-	my_envp = ft_get_my_envp(envp);
-	if (!my_envp)
+	global_envp = ft_get_my_envp(envp);
+	if (!global_envp)
 		return (ft_stderror(TRUE, ""), NULL);
-	sh->global = my_envp;
-	sh->local = NULL;
+	local_envp = (char **)malloc(sizeof(char *));
+	if (!local_envp)
+		return (ft_stderror(TRUE, ""), NULL);
+	*local_envp = NULL;
+	sh->global = global_envp;
+	sh->local = local_envp;
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -109,14 +114,14 @@ void	ft_cli(t_shell *sh)
 		}
 		if (ft_history(input))
 		{
-			tree = ft_process_input(input, sh->global); //ft_merge_env
+			tree = ft_process_input(input, ft_merge_env(sh));
 			if (tree)
 			{
 				ft_search_heredoc(tree, sh);
 				if (sh->run == TRUE && !ft_single_command(tree, sh))
 				{
 					ft_signal(DEFAULT_);
-					ft_launcher(tree, ((t_pipe *)tree)->right, NULL, sh);
+					ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
 				}
 			}
 			ft_restore_cli(sh, tree);
