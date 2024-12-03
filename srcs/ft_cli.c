@@ -21,7 +21,7 @@ void	ft_launcher(char *input, char ***my_envp)
 {
 	pid_t pid;
 
-	ft_process_input(input, *my_envp);
+	ft_process_input(input);
 	if (strcmp(input, "bad") == 0)
 	{
 		//printf("Start...");
@@ -67,5 +67,5 @@ void	ft_cli(char ***my_envp)
 			ft_launcher(input, my_envp);
 		}
 	}
-	rl_clear_history();
+	//rl_clear_history();
 }

@@ -6,7 +6,7 @@ void handler_sigint(int sig)
 	printf("\n");
 	ft_exit_status(130, TRUE, FALSE);
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	//rl_replace_line("", 0);
 	rl_redisplay();
 }
 

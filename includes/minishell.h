@@ -25,9 +25,10 @@
 # include "builtins.h"
 # include "tokenize.h"
 
-# define PROMPT "bashinho: " //"\033[47m\033[1;31mb\033[1;33ma\033[1;32ms\033[1;36mh\033[1;34mi\033[1;35mn\033[1;37mh\033[1;30mo\033[1;91m$\033[0m "
+//program name
+# define PROMPT "bashinho [pwd] $ "
 # define PROG_NAME "bashinho"
-# define PROG_NAME_ERRO "\033[1;31mbashinho: \033[0m"
+# define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
 # define TRUE 1
 # define FALSE 0
@@ -38,10 +39,10 @@ char	**ft_get_my_envp(char **envp);
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
 void	ft_free_list(t_list **list);
-void	ft_free_node(t_list *node);
+void	ft_free_content(t_list *node);
 
 int		ft_exit_status(int status, int write_, int exit_);
-int		ft_stderror(int error, const char *str, ...);
+void	ft_stderror(int perror_, const char *str, ...);
 void	ft_signal_parent(void);
 void	ft_signal_child(void);
 void	ft_cli(char ***envp);

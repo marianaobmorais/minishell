@@ -3,8 +3,9 @@
 /**
  * @brief Assigns mode and file descriptor values based on redirection type.
  * 
- * Configures the file opening mode (e.g., read, write, append) and the standard 
- * file descriptor (e.g., stdin, stdout) for a redirection node based on its type.
+ * Configures the file opening mode (e.g., read, write, append) and the
+ * standard file descriptor (e.g., stdin, stdout) for a redirection node based
+ * on its type.
  * 
  * @param redir Double pointer to the redirection structure to configure.
  */
@@ -16,47 +17,65 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = O_RDONLY;
 	else if ((*redir)->type == APPEND)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
+	else if ((*redir)->type == HEREDOC)
+		(*redir)->mode = -1;
 }
 /**
- * @brief Initializes a redirection node based on the current token.
+ * @brief Initializes a redirection structure based on the given token.
  * 
- * Allocates memory for a redirection node, assigns its type, mode, and file 
- * descriptor, and sets the target based on the next token in the list.
+ * This function creates and initializes a `t_redir` structure,which represents
+ * a redirection in the shell. It also sets up a linked list (`t_list **`) to 
+ * store the target of the redirection. The type of redirection (e.g., input, 
+ * output, append, etc.) is determined from the token, and the appropriate
+ * redirection mode is assigned. If the next token is an executable, it is
+ * considered the target of the redirection, and added to the target list.
  * 
- * @param token The current token representing the redirection type.
- * @param list Pointer to the token list, updated to point to the target node.
- * @return A pointer to the initialized redirection node, or NULL on failure.
+ * @param token The token representing the redirection.
+ * @param list The list of tokens to extract the redirection target from.
+ * @return A pointer to the initialized `t_redir` structure, or `NULL` if
+ *         memory allocation fails.
  */
 static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
 	t_redir	*redir;
+	t_list	**target;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); //ft_error_hanlder(); 1// malloc failed
+	target = (t_list **)malloc(sizeof(t_list *));
+	if (!target)
+		return (NULL); // ft_error_handler(); 1 // malloc failed
+	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;
 	redir->type = token->type;
-	ft_assign_redir_mode(&redir); //precisamos disso?
-	if ((*list)->next && (*list)->next->content && ((t_token *)(*list)->next->content)->type == EXEC)
+	ft_assign_redir_mode(&redir);
+	if ((*list)->next && (*list)->next->content
+		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next; // move up to target
-		redir->target = (t_token *)(*list)->content;
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content));
+		redir->target = target;
 	}
 	return (redir);
 }
 
 /**
- * @brief Creates a redirection node and links it to subsequent nodes.
+ * @brief Creates a redirection (`REDIR`) node and links its subsequent node.
  * 
- * Constructs a redirection node for the specified token and links it to the next 
- * relevant node (either another redirection, an execution node, or NULL). Updates 
- * the token list pointer as nodes are processed.
+ * This function initializes a `REDIR` node for a redirection token and
+ * determines its `next` field. It handles scenarios where the redirection is
+ * followed by an execution (`EXEC`) node, or another redirection. If no
+ * further nodes are present, it appropriately sets the next` field to `NULL`
+ * or to the provided `EXEC` node.
  * 
- * @param token The current token representing the redirection type.
- * @param list Pointer to the token list, updated during processing.
- * @param exec Pointer to the execution node, if available, for linking.
- * @return A pointer to the created redirection node, or NULL on failure.
+ * @param token A pointer to the current token being processed for redirection.
+ * @param list A double pointer to the token list. The function advances
+ *        the list pointer as it processes subsequent tokens.
+ * @param exec A pointer to the `EXEC` node, if present, for execution context.
+ * @return A pointer to the newly created `REDIR` node, or `NULL` if an error
+ *         occurs.
  */
 static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec)
 {
@@ -65,7 +84,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, t_exec *exec
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL); 
+		return (NULL);
 	if (!(*list)->next || ((t_token *)(*list)->next->content == PIPE)) //check whether next is not NULL or PIPE
 		redir->next =  (void *)exec;
 	else
@@ -98,17 +117,17 @@ static t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 
 	exec = (t_exec *)malloc(sizeof(t_exec));
 	if (!exec)
-		return (NULL); //ft_error_hanlder(); malloc failed
+		return (NULL); //ft_error_hanlder(); 1// malloc failed
 	exec->type = token->type;
 	exec->pathname = token->value;
-	exec->args = ft_get_args(list); //malloc check? execve wiht pahtname but no args
+	exec->args = ft_get_args(list);
+	if (!exec->args)
+		return (NULL); //ft_error_hanlder(); 1 //malloc failed
 	token = (*list)->content;
-	while (*list && (token->type == EXEC || token->type == EXPORT
-			|| token->type == EXPORT_AP))
+	while (*list && (ft_is_token_type(token, EXEC)))
 	{
 		token = (t_token *)(*list)->content;
-		if (!(token->type == EXEC || token->type == EXPORT
-				|| token->type == EXPORT_AP))
+		if (!ft_is_token_type(token, EXEC))
 			break ;
 		*list = (*list)->next;
 	}
@@ -132,7 +151,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 	t_redir	*redir;
 
 	token = (*list)->content;
-	if (!exec && (token->type == EXEC || token->type == EXPORT || token->type == EXPORT_AP))
+	if (!exec && (ft_is_token_type(token, EXEC)))
 	{
 		exec = ft_create_exec_node(token, list);
 		if (!list || !*list || !exec)
@@ -141,8 +160,7 @@ void	*ft_build_branch(t_list **list, t_exec *exec)
 		if (token->type == PIPE)
 			return ((void *)exec);
 	}
-	if (token->type == OUTFILE || token->type == INFILE
-			|| token->type == APPEND || token->type == HEREDOC)
+	if (ft_is_token_type(token, REDIR))
 	{
 		redir = ft_create_redir_node(token, list, exec);
 		return ((void *)redir);
