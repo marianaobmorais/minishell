@@ -150,13 +150,13 @@ static int concatenate_var(char *str, char ***my_envp)
  * @param my_envp A pointer to the array of environment variables to be updated.
  * @return Returns 0 on success, or the exit status code for various error conditions.
  */
-int	ft_export(int argc, char **argv, char ***my_envp)
+int	ft_export(int argc, char **argv, t_shell *sh, int mode)
 {
 	size_t s_key;
 
 	if (argc == 1)
 	{
-		ft_print_export(*my_envp);
+		ft_print_export(sh->global);
 		return (ft_exit_status(0, TRUE, FALSE));
 	}
 	argv++;
@@ -169,9 +169,19 @@ int	ft_export(int argc, char **argv, char ***my_envp)
 		// nao fazer nada e guardar junto com as variaveis que foram exportadas
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
-			concatenate_var(*argv, my_envp);
+		{
+			if (mode == 0)
+				concatenate_var(*argv, &sh->global);
+			else
+				concatenate_var(*argv, &sh->local);
+		}
 		else
-			replace_var(*argv, s_key, my_envp);
+		{
+			if (mode == 0)
+				replace_var(*argv, s_key, &sh->global);
+			else
+				replace_var(*argv, s_key, &sh->local);
+		}
 		argv++;
 	}
 	return (ft_exit_status(0, TRUE, FALSE));

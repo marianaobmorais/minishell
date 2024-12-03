@@ -3,7 +3,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
-	t_env	env;
+	t_shell	*sh;
 	char	*error_msg;
 	char	**my_envp;
 
@@ -13,11 +13,12 @@ int	main(int argc, char **argv, char **envp)
 	env.local = NULL;
 	if (argc != 1)
 		return (ft_stderror(FALSE, error_msg), 1);
-	my_envp = ft_get_my_envp(envp);
-	if (!my_envp)
-		return (ft_stderror(TRUE, ""), 1);
-	env.global = &my_envp;
-	ft_cli(&env);
-	ft_free_vector(*(env.global));
+	sh = ft_init_sh(envp);
+	if (!sh)
+		return (1);
+	ft_cli(sh);
+	//ft_free_sh
+	// ft_free_vector(env->global);
+	// ft_free_vector(env->local);
 	return (0);
 }

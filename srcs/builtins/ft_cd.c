@@ -78,7 +78,8 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 
 	if (argc > 2)
 	{
-		printf("%s: cd: too many arguments\n", PROG_NAME); //ft_error_handler();
+		ft_stderror(FALSE, "cd: too many arguments"); //ft_error_handler();
+		ft_exit_status(1, TRUE, FALSE);
 		return ;
 	}
 	cur_pwd = getcwd(s, 100); //this function will get the pwd from my_envp or from system's envp?
@@ -87,8 +88,7 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 		home = ft_getenv("HOME=", my_envp); // not sure if this function is necessary //home = getenv("HOME"); essa funcao vai pegar o pwd do my_envp ou do envp?
 		if (!home)
 		{
-			printf("%s: cd: HOME not set \n", PROG_NAME); //ft_error_handler();
-			return (free(home));
+			return (ft_stderror(FALSE, "cd: HOME not set"), ft_exit_status(1, TRUE, FALSE), free(home));
 		}
 		chdir(home);
 		ft_update_my_envp(my_envp, cur_pwd);
@@ -97,12 +97,15 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	//from subject: cd with only a relative or absolute path
 	if (!((ft_isalpha(new_dir[0])) || new_dir[0] == '/' || new_dir[0] == '.')) //If I input &, chdir() works // need to test more inside our on minishell
 	{
-		printf("%s: cd: %s: invalid option\n", PROG_NAME, new_dir); //ft_error_handler();
+		ft_stderror(FALSE, "cd: %s: invalid option", new_dir); //ft_error_handler();
+		ft_exit_status(1, TRUE, FALSE);
 		return ;
 	}
 	if (chdir(new_dir) == -1)
 	{
-		printf("%s: cd: %s: no such file or directory\n", PROG_NAME, new_dir); //ft_error_handler();
+		//printf("%s: cd: %s: no such file or directory\n", PROG_NAME, new_dir); //ft_error_handler();
+		ft_stderror(TRUE, "%s: ", new_dir);
+		ft_exit_status(1, TRUE, FALSE);
 		return ;
 	}
 	ft_update_my_envp(my_envp, cur_pwd);
