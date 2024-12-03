@@ -1,5 +1,20 @@
 #include "../includes/minishell.h"
 
+static char	*ctoa(int c)
+{
+	char	*str;
+
+	if (c == 0)
+	{
+		ft_putchar_fd(c, 1);
+		return (NULL);
+	}
+	str = (char *) malloc(2 * sizeof(char));
+	str[0] = (char) c;
+	str[1] = '\0';
+	return (str);
+}
+
 /**
  * @brief Formats a single argument based on the specified format character.
  *
@@ -26,6 +41,8 @@ static char	*ft_format(va_list args, const char fmt)
 	}
 	else if (fmt == 'd' || fmt == 'i')
 		specifier = ft_itoa(va_arg(args, int));
+	else if (fmt == 'c')
+		specifier = ctoa(va_arg(args, int));
 	return (specifier);
 }
 
