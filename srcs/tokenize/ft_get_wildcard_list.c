@@ -1,6 +1,44 @@
 #include "../../includes/minishell.h"
 
 /**
+ * @brief Validates if a directory entry matches a wildcard pattern.
+ * 
+ * This function checks if the given `entry_name` starts with the prefix,
+ * has a predetermined middle and ends with the suffix extracted from the
+ * wildcard pattern `s`. It uses helper functions to extract the prefix and
+ * suffix and performs comparisons to validate the match.
+ * 
+ * @param s The wildcard pattern containing `*` for matching.
+ * @param entry_name The directory entry name to validate.
+ * @return `true` if the `entry_name` matches the wildcard pattern, otherwise
+ *         `false`.
+ */
+static bool	ft_validate_entry(char *s, char *entry_name)
+{
+	char	*prefix;
+	char	*sufix;
+	char	*middle;
+	char	*substring;
+	bool	result;
+
+	result = false;
+	prefix = ft_get_prefix(s);
+	sufix = ft_get_sufix(s);
+	middle = ft_get_middle(s);
+	substring = ft_substr(entry_name, ft_strlen(entry_name) - ft_strlen(sufix),
+		ft_strlen(sufix));
+	if (ft_strncmp(entry_name, prefix, ft_strlen(prefix)) == 0
+		&& ft_strncmp_(substring, sufix, ft_strlen(sufix)) == 0
+		&& ft_strnstr_(entry_name, middle, ft_strlen(entry_name)) != NULL)
+		result = true;
+	free(substring);
+	free(prefix);
+	free(sufix);
+	free(middle);
+	return (result);
+}
+
+/**
  * @brief Replaces a token in the token list with a list of wildcard-expanded
  *        tokens.
  * 

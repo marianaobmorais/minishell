@@ -114,7 +114,11 @@ t_list	**ft_get_wildcard_list(char *s);
 void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
 		t_list **w_list);
 //ft_get_wildcard_list_utils.c
-bool	ft_validate_entry(char *s, char *entry_name);
+char	*ft_get_prefix(char *s);
+char	*ft_get_sufix(char *s);
+char	*ft_get_middle(char *s);
+int	ft_strncmp_(const char *str1, const char *str2, size_t len);
+char	*ft_strnstr_(const char *big, const char *little, size_t len);
 //ft_build_root.c
 void	*ft_build_root(t_list **list, t_type type);
 void	ft_skip_export_tokens(t_list **list);

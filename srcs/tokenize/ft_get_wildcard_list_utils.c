@@ -11,7 +11,7 @@
  * @return A dynamically allocated string containing the prefix. Returns 
  *         `NULL` if memory allocation fails or `s` does not contain `*`.
  */
-static char	*ft_get_prefix(char *s)
+char	*ft_get_prefix(char *s)
 {
 	char	*prefix;
 	int		i;
@@ -36,7 +36,7 @@ static char	*ft_get_prefix(char *s)
  * @return A dynamically allocated string containing the suffix. Returns 
  *         `NULL` if memory allocation fails or `s` does not contain `*`.
  */
-static char *ft_get_sufix(char *s)
+char	*ft_get_sufix(char *s)
 {
 	char	*sufix;
 	char	*tmp;
@@ -51,6 +51,28 @@ static char *ft_get_sufix(char *s)
 		i++;
 	}
 	return (sufix);
+}
+
+char	*ft_get_middle(char *s)
+{
+	char	*middle;
+	int		i;
+
+	i = 0;
+	middle = NULL;
+	while (s[i] == '*')
+		i++;
+	if (s[i] != '\0')
+	{
+		while (s[i] && s[i] != '*')
+		{
+			middle = ft_charjoin(middle, s[i]);
+			i++;
+		}
+		if (s[i] != '*')
+			return (NULL);
+	}
+	return (middle);
 }
 
 /**
@@ -69,7 +91,7 @@ static char *ft_get_sufix(char *s)
  *         found to be less than, equal to, or greater than `str2`,
  *         respectively. Returns `0` if either `str1` or `str2` is `NULL`.
  */
-static int	ft_strncmp_(const char *str1, const char *str2, size_t len)
+int	ft_strncmp_(const char *str1, const char *str2, size_t len)
 {
 	unsigned char	*s1;
 	unsigned char	*s2;
@@ -90,36 +112,37 @@ static int	ft_strncmp_(const char *str1, const char *str2, size_t len)
 }
 
 /**
- * @brief Validates if a directory entry matches a wildcard pattern.
+ * @brief Searches for a string in another string.
  * 
- * This function checks if the given `entry_name` starts with the prefix and 
- * ends with the suffix extracted from the wildcard pattern `s`. It uses 
- * helper functions to extract the prefix and suffix and performs comparisons 
- * to validate the match.
+ * This function seachers the first `len` characters of `big` for `little` 
+ * while ensuring that both strings are non-NULL. The comparison is case-
+ * sensitive and follows the behavior of the standard `strnstr` function.
  * 
- * @param s The wildcard pattern containing `*` for matching.
- * @param entry_name The directory entry name to validate.
+ * @param big The string to be searched.
+ * @param little The string to be found in `big`.
+ * @param len The maximum number of characters to search.
  * 
- * @return `true` if the `entry_name` matches the wildcard pattern, otherwise
- *         `false`.
+ * @return If `little` is found, it returns pointer to `big` where `little`
+ *         starts, else, it returns `NULL` if `little` is `NULL` or `little`
+ *         is not found.
  */
-bool	ft_validate_entry(char *s, char *entry_name)
+char	*ft_strnstr_(const char *big, const char *little, size_t len)
 {
-	char	*prefix;
-	char	*sufix;
-	char	*substring;
-	bool	result;
+	char	*b;
+	size_t	l_len;
 
-	result = false;
-	prefix = ft_get_prefix(s);
-	sufix = ft_get_sufix(s);
-	substring = ft_substr(entry_name, ft_strlen(entry_name) - ft_strlen(sufix),
-		ft_strlen(sufix));
-	if (ft_strncmp(entry_name, prefix, ft_strlen(prefix)) == 0
-		&& ft_strncmp_(substring, sufix, ft_strlen(sufix)) == 0)
-		result = true;
-	free(substring);
-	free(prefix);
-	free(sufix);
-	return (result);
+	b = (char *)big;
+	if (!little || !*little)
+		return (b);
+	l_len = ft_strlen(little);
+	while (*b != '\0' && len > 0)
+	{
+		if (ft_strncmp(b, little, l_len) == 0 && l_len <= len)
+			return (b);
+		++b;
+		--len;
+	}
+	return (NULL);
 }
+
+
