@@ -1,5 +1,47 @@
 #include "../includes/minishell.h"
 
+void	ft_restore_cli(t_shell *sh, void **tree)
+{
+	(void)tree;
+	//free
+
+	sh->fds_saved = 0;
+	sh->run = TRUE;
+	sh->prev = NULL;
+	free(sh->heredoc_list);
+	sh->heredoc_list = (t_list **) malloc(sizeof(t_list **));
+	if (!sh->heredoc_list)
+		ft_stderror(TRUE, "");
+	*(sh->heredoc_list) = NULL;
+	//ft_free_tree(tree);
+}
+
+t_shell	*ft_init_sh(char **envp)
+{
+	t_shell	*sh;
+	char	**my_envp;
+
+	sh = (t_shell *) malloc(sizeof(t_shell));
+	if (!sh)
+		return (ft_stderror(TRUE, ""), NULL);
+	my_envp = ft_get_my_envp(envp);
+	if (!my_envp)
+		return (ft_stderror(TRUE, ""), NULL);
+	sh->global = my_envp;
+	sh->local = NULL;
+	sh->fds_saved = 0;
+	sh->run = TRUE;
+	sh->prev = NULL;
+	sh->heredoc_list = (t_list **) malloc(sizeof(t_list **));
+	if (!sh->heredoc_list)
+	{
+		free(sh);
+		return (ft_stderror(TRUE, ""), NULL);
+	}
+	*(sh->heredoc_list) = NULL;
+	return (sh);
+}
+
 /**
  * @brief Adds a command to the history if it contains non-whitespace characters.
  *
@@ -29,7 +71,7 @@ int	ft_history(char *input)
 		add_history(input);
 		return (1);
 	}
-	return (0);	
+	return (0);
 }
 
 /**
@@ -43,14 +85,13 @@ int	ft_history(char *input)
  * @param my_envp A pointer to the array of environment variables, passed to functions 
  *                that execute commands with the current environment.
  */
-void	ft_cli(t_env *env)
+void	ft_cli(t_shell *sh)
 {
-	(void)env; //delete later
 	char	*input;
-	void	*bonsai;
+	void	**tree;
 
 	input = NULL;
-	bonsai = NULL;
+	tree = NULL;
 	while (1)
 	{
 		ft_signal(PARENT_);
@@ -64,18 +105,22 @@ void	ft_cli(t_env *env)
 		{
 			free(input);
 			ft_putstr_fd("exit\n", 2);
-			break;
+			break ;
 		}
 		if (ft_history(input))
 		{
-			bonsai = ft_process_input(input, *env->global);
-			// if (bonsai)
-			// {
-			// 	if (!ft_single_command(bonsai, env))
-			// 		ft_launcher(bonsai, NULL, env, NULL);
-			// }
-			ft_free_tree(bonsai);
+			tree = ft_process_input(input, sh->global); //ft_merge_env
+			if (tree)
+			{
+				ft_search_heredoc(tree, sh);
+				if (sh->run == TRUE && !ft_single_command(tree, sh))
+				{
+					ft_signal(DEFAULT_);
+					ft_launcher(tree, ((t_pipe *)tree)->right, NULL, sh);
+				}
+			}
+			ft_restore_cli(sh, tree);
 		}
 	}
-	//rl_clear_history();
+	rl_clear_history();
 }

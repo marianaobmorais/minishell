@@ -13,9 +13,9 @@
  */
 int	ft_pwd(void)
 {
-	char	current_path[1024];
+	char	current_path[OPENFD_MAX];
 
-	if (getcwd(current_path, 1024) != NULL)
+	if (getcwd(current_path, OPENFD_MAX) != NULL)
 		printf("%s\n", current_path);
 	else
 		return (ft_exit_status(1, TRUE, FALSE));

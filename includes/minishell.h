@@ -28,6 +28,7 @@
 # include "execution.h"
 # include "colors.h"
 
+
 //program name
 # define PROMPT "bashinho [pwd] $ "
 # define PROG_NAME "bashinho"
@@ -39,8 +40,13 @@
 # define TRUE 1
 # define FALSE 0
 
+typedef enum e_env
+{
+	GLOBAL,
+	LOCAL
+}	t_env;
+
 int		ft_error_handler(void);
-char	**ft_get_my_envp(char **envp);
 
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
@@ -52,7 +58,11 @@ void	ft_stderror(int perror_, const char *str, ...);
 
 //talvez enviar para execution
 void	ft_signal(int type);
-void	ft_cli(t_env *env);
+void	ft_cli(t_shell *sh);
+t_shell	*ft_init_sh(char **envp);
+//t_env	*ft_init_env(char **envp);
+char	**ft_get_my_envp(char **envp);
+char	**ft_merge_env(t_shell *sh);
 
 #endif //MINISHELL_H
 

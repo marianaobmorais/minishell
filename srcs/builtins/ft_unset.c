@@ -62,7 +62,7 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	j = 0;
 	new_envp = (char **) malloc(size_env * sizeof(char *));
 	if (!new_envp)
-		return (-1); //error handler
+		return (ft_exit_status(1, TRUE, FALSE), -1); //error handler
 	while (i < size_env)
 	{
 		if (ft_strncmp(str, (*my_envp)[i], size) == 0

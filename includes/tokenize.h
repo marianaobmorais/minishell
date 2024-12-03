@@ -61,7 +61,7 @@ typedef struct s_node
 typedef struct s_redir
 {
 	int		type;
-	t_list	**target;
+	t_list	**target; //antes era char *
 	int		mode;
 	void	*next; // aponta para o node de exec ou um redir, nunca pipe
 }	t_redir;
@@ -70,7 +70,7 @@ typedef struct s_exec
 {
 	int		type;
 	char	*pathname;//useful for debug when printing
-	t_list	**args;
+	t_list	**args; //antes era char **
 }	t_exec;
 
 //ft_find_next_quote.c

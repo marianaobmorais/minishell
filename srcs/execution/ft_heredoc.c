@@ -1,68 +1,21 @@
 #include "../../includes/minishell.h"
 
-static void	ft_handle_quotes(char **new_value, char *value, int *i, char **my_envp)
+static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 {
-	*new_value = ft_charjoin(*new_value, value[(*i)++]);
-	while (value[(*i)] && value[(*i)] != DQUOTE && value[(*i)] != SQUOTE)
-	{
-		if (value[(*i)] == '$' && ((ft_isalnum(value[(*i) + 1]) || value[(*i) + 1] == '?' || value[(*i) + 1] == '_')))
-			ft_handle_expansion(new_value, value, i, my_envp);
-		else
-			*new_value = ft_charjoin(*new_value, value[(*i)++]);
-	}
-	if (value[(*i)] == DQUOTE || value[(*i)] == SQUOTE)
-		*new_value = ft_charjoin(*new_value, value[(*i)++]);
-}
-
-static char	*ft_expand_input(char *input, char **my_envp)
-{
-	char	*new_input;
-	int		i;
-
-	new_input = NULL;
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == DQUOTE || input[i] == SQUOTE)
-			ft_handle_quotes(&new_input, input, &i, my_envp);
-		else if (input[i] == '$' && (ft_isalnum(input[i + 1]) || input[i + 1] == '?' || input[i + 1] == '_'))
-			ft_handle_expansion(&new_input, input, &i, my_envp);//
-		else if (input[i] && input[i] != DQUOTE && input[i] != SQUOTE)
-			new_input = ft_charjoin(new_input, input[i++]);
-	}
-	free(input);
-	return (new_input);
-}
-
-static int	count_line(int mode) //nao funcionando dentro do child
-{
-	static int	line;
-
-	if (line == 0)
-		line = 1;
-	if (mode == 1)
-		line++;
-	return (line);
-}
-
-static int	read_heredoc(char *limiter, int state, char **my_envp)
-{
-	int		fd_write;
 	char	*input;
 
-	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = NULL;
+	ft_signal(HEREDOC_);
 	while (1)
 	{
-		ft_signal(HEREDOC_);
 		if (input)
 			free(input);
 		input = readline("> ");
-		if ((ft_strlen(input) != 0
-			&& !ft_strncmp(limiter, input, ft_strlen(input))) || !input)
+		if (!input || !ft_strcmp(eof, input))
 		{
 			if (!input)
-				ft_stderror(FALSE, "warning: here-document at line %d delimited by end-of-file (wanted `%s')", count_line(0), limiter);
+				ft_stderror(FALSE, "warning: here-document at line %d"\
+				" delimited by end-of-file (wanted `%s')", count_line(0), eof);
 			free(input);
 			break ;
 		}
@@ -72,19 +25,101 @@ static int	read_heredoc(char *limiter, int state, char **my_envp)
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
 	}
-	close(fd_write);
-	return (open("/tmp/.heredoc_tmp", O_RDONLY));
 }
 
-int	heredoc_fd(char *limiter, char **my_envp, int state)
+static void	save_heredoc(char *pathname, int fd, t_shell *sh)
 {
-	int	fd;
+	int		fd_save;
+	int		rd;
+	char	*buffer;
 
-	unlink("/tmp/.heredoc_tmp");
-	fd = read_heredoc(limiter, state, my_envp);
-	ft_signal(DEFAULT_);
-	dup2(fd, STDIN_FILENO);
+	fd_save = open(pathname, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd_save == -1)
+	{
+		ft_stderror(TRUE, "");
+		ft_exit_status(1, TRUE, FALSE);
+		return ;
+	}
+	buffer = malloc(BUFFER_SIZE * sizeof(BUFFER_SIZE));
+	rd = 1;
+	while (rd != 0)
+	{
+		rd = read(fd, buffer, BUFFER_SIZE);
+		if (rd <= 0)
+			break ;
+		write(fd_save, buffer, ft_strlen(buffer));
+		free(buffer);
+	}
 	close(fd);
-	unlink("/tmp/.heredoc_tmp");
-	return (ft_exit_status(0, TRUE, FALSE));
+	close(fd_save);
+	ft_lstadd_back(sh->heredoc_list, ft_lstnew(ft_strdup(pathname)));
+	free(pathname);
+}
+
+static void	wait_heredoc(pid_t pid)
+{
+	int	status;
+
+	if (waitpid(pid, &status, 0) != -1)
+	{
+		if (WIFEXITED(status))
+			ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
+		else if (WIFSIGNALED(status))
+			ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
+	}
+}
+
+static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
+{
+	int		fd[2];
+	pid_t	pid;
+
+	if (pipe(fd) == -1)
+		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), FALSE);
+	pid = fork();
+	if (pid == -1)
+		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), FALSE);
+	if (pid == 0)
+	{
+		close(fd[0]);
+		read_heredoc(eof, state, my_envp, fd[1]);
+		close(fd[0]);
+		ft_exit_status(0, TRUE, TRUE);
+	}
+	close(fd[1]);
+	wait_heredoc(pid);
+	if (ft_exit_status(0, FALSE, FALSE) != 0)
+		return (FALSE);
+	save_heredoc(ft_create_pathname(), fd[0], sh);
+	close(fd[0]);
+	return (TRUE);
+}
+
+void	ft_search_heredoc(void *node, t_shell *sh)
+{
+	t_redir	*rnode;
+	t_token	*tnode;
+	t_state	state;
+
+	if (!node)
+		return ;
+	else if (((t_pipe *)node)->type == PIPE)
+	{
+		ft_search_heredoc(((t_pipe *)node)->left, sh);
+		ft_search_heredoc(((t_pipe *)node)->right, sh);
+		return ;
+	}
+	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
+	{
+		rnode = (t_redir *)node;
+		ft_process_token_list(rnode->target, sh->global); //ft_merge_env
+		tnode = (t_token *)(*rnode->target)->content;
+		state = tnode->state;
+		sh->run = heredoc_fd(tnode->value, sh->global, state, sh); //ft_merge_env
+	}
+	else if (((t_redir *)node)->type == EXEC
+		|| ((t_redir *)node)->type == EXPORT
+		|| ((t_redir *)node)->type == EXPORT_AP)
+		return ;
+	ft_search_heredoc(((t_redir *)node)->next, sh);
 }
