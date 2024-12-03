@@ -120,13 +120,13 @@ bool	ft_find_next_redir(t_list **list)
  */
 void	ft_assign_redir_mode(t_redir **redir)
 {
-	if ((*redir)->type == OUTFILE) 
+	if ((*redir)->type == OUTFILE)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;
 	else if ((*redir)->type == INFILE)
 		(*redir)->mode = O_RDONLY;
 	else if ((*redir)->type == APPEND)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
-	else if ((*redir)->type == HEREDOC)
+	else
 		(*redir)->mode = -1;
 }
 /**

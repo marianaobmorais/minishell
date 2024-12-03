@@ -122,6 +122,7 @@ char	*ft_strnstr_(const char *big, const char *little, size_t len);
 //ft_build_root.c
 void	*ft_build_root(t_list **list, t_type type);
 void	ft_skip_export_tokens(t_list **list);
+bool	ft_validate_skip(t_list **list);
 //ft_build_tree.c
 void	*ft_build_tree(t_list **token_list, t_node **parent_node);
 //ft_build_branch.c

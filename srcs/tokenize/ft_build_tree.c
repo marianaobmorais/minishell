@@ -48,7 +48,8 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 {
 	t_node	*node;
 
-	ft_skip_export_tokens(list);
+	if (ft_validate_skip(list))
+		ft_skip_export_tokens(list);
 	node = (t_node *)malloc(sizeof(t_node));
 	if (!node)
 		return (NULL); //ft_error_hanlder(); 1// malloc failed

@@ -1,5 +1,26 @@
 #include "../../includes/minishell.h"
 
+bool	ft_validate_skip(t_list **list)
+{
+	t_token	*token;
+	t_list	*tmp;
+
+	tmp = *list;
+	token = tmp->content;
+	while (tmp && (token->type == EXPORT || token->type == EXPORT_AP))
+	{
+		tmp = tmp->next;
+		if(tmp)
+			token = tmp->content;
+	}
+	if (!tmp)
+		return (false);
+	if (ft_is_token_type(((t_token *)tmp->content), NODE)
+		|| !ft_is_token_type(((t_token *)tmp->content), EXEC))
+		return (false);
+	return (true);
+}
+
 /**
  * @brief skips consecutive `EXPORT` tokens in the list.
  * 
@@ -76,7 +97,8 @@ void	*ft_build_root(t_list **list, t_type type)
 {
 	t_node	*root;
 
-	ft_skip_export_tokens(list);
+	if (ft_validate_skip(list))
+		ft_skip_export_tokens(list);
 	root = (t_node *)malloc(sizeof(t_node));
 	if (!root)
 		return (NULL); //ft_error_hanlder(); 1 // malloc failed
