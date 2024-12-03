@@ -69,7 +69,7 @@ static void	wait_heredoc(pid_t pid)
 	}
 }
 
-static int	heredoc_fd(char *eof, char **my_envp, int state, t_shell *sh)
+static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -95,18 +95,18 @@ static int	heredoc_fd(char *eof, char **my_envp, int state, t_shell *sh)
 	return (TRUE);
 }
 
-void	ft_search_heredoc(void *node, t_env *env, t_shell *sh)
+void	ft_search_heredoc(void *node, t_shell *sh)
 {
 	t_redir	*rnode;
 	t_token	*tnode;
-	int		state;
+	t_state	state;
 
 	if (!node)
 		return ;
 	else if (((t_pipe *)node)->type == PIPE)
 	{
-		ft_search_heredoc(((t_pipe *)node)->left, env, sh);
-		ft_search_heredoc(((t_pipe *)node)->right, env, sh);
+		ft_search_heredoc(((t_pipe *)node)->left, sh);
+		ft_search_heredoc(((t_pipe *)node)->right, sh);
 		return ;
 	}
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
@@ -114,11 +114,11 @@ void	ft_search_heredoc(void *node, t_env *env, t_shell *sh)
 		rnode = (t_redir *)node;
 		tnode = (t_token *)(*rnode->target)->content;
 		state = ((t_token *)rnode->target)->state;
-		sh->run = heredoc_fd(tnode->value, env->global, state, sh);
+		sh->run = heredoc_fd(tnode->value, sh->global, state, sh); //ft_merge_env
 	}
 	else if (((t_redir *)node)->type == EXEC
 		|| ((t_redir *)node)->type == EXPORT
 		|| ((t_redir *)node)->type == EXPORT_AP)
 		return ;
-	ft_search_heredoc(((t_redir *)node)->next, env, sh);
+	ft_search_heredoc(((t_redir *)node)->next, sh);
 }

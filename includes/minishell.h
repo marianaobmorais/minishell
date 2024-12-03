@@ -36,7 +36,6 @@
 # define FALSE 0
 
 int		ft_error_handler(void);
-char	**ft_get_my_envp(char **envp);
 
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
@@ -48,6 +47,9 @@ void	ft_stderror(int perror_, const char *str, ...);
 
 //talvez enviar para execution
 void	ft_signal(int type);
-void	ft_cli(t_env *env);
+void	ft_cli(t_shell *sh);
+t_shell	*ft_init_sh(char **envp);
+//t_env	*ft_init_env(char **envp);
+char	**ft_get_my_envp(char **envp);
 
 #endif //MINISHELL_H

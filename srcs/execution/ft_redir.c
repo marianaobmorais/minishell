@@ -60,14 +60,14 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 	unlink(pathname);
 }
 
-int	ft_redir(t_redir *node, char **my_envp, t_shell *sh)
+int	ft_redir(t_redir *node, t_shell *sh)
 {
 	int		fd;
 	t_token	*tnode;
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
-		ft_process_token_list(node->target, my_envp);
+		ft_process_token_list(node->target, sh->global); //ft_merge_env
 		tnode = (t_token *)(*node->target)->content;
 		fd = ft_open(node->type, tnode->value, node->mode);
 		if (fd == -1)

@@ -1,7 +1,7 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-typedef struct s_env	t_env;
+typedef struct s_shell	t_shell;
 
 //ft_env.c
 void	ft_env(char **my_envp);
@@ -20,9 +20,9 @@ void	ft_print_export(char **envp);
 
 //manage
 bool	ft_isbuiltin(char **args);
-void	ft_exec_builtin(char **args, t_env *env);
+void	ft_exec_builtin(char **args, t_shell *sh);
 int		ft_argslen(char **args);
-int		ft_isjustbuiltin(void *node, t_env *env);
+int		ft_isjustbuiltin(void *node, t_shell *sh);
 int		ft_isheredoc(void *node);
 
 #endif //BUILTINS_H

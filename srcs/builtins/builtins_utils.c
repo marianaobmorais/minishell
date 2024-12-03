@@ -26,25 +26,25 @@ bool	ft_isbuiltin(char **args)
 	return (FALSE);
 }
 
-void	ft_exec_builtin(char **args, t_env *env)
+void	ft_exec_builtin(char **args, t_shell *sh)
 {
 	if (ft_strncmp("cd", args[0], ft_strlen(args[0])) == 0)
-		ft_cd(ft_argslen(args), args[1], env->global);
+		ft_cd(ft_argslen(args), args[1], sh->global);
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
 		ft_pwd();
 	else if (ft_strncmp("export", args[0], ft_strlen(args[0])) == 0)
-		ft_export(ft_argslen(args), args, &env->global);
+		ft_export(ft_argslen(args), args, &sh->global); //modificar receber global e local
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
-		ft_unset(ft_argslen(args), args, &env->global);
+		ft_unset(ft_argslen(args), args, &sh->global); //receber global e local
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)
 		ft_exit(args);
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
-		ft_env(env->global);
+		ft_env(sh->global);
 }
 
-int	ft_isjustbuiltin(void *node, t_env *env)
+int	ft_isjustbuiltin(void *node, t_shell *sh)
 {
 	void	*curr_node;
 	char	**new_args;
@@ -68,13 +68,10 @@ int	ft_isjustbuiltin(void *node, t_env *env)
 		{
 			if (((t_exec *)curr_node)->type == EXEC)
 			{
-				ft_process_token_list(((t_exec *)curr_node)->args, env->global);
+				ft_process_token_list(((t_exec *)curr_node)->args, sh->global);//ft_merge_env
 				new_args = tokentostring(((t_exec *)curr_node)->args);
 				if (ft_isbuiltin(new_args))
-				{
-					ft_free_vector(new_args);
-					return (TRUE);
-				}
+					return (ft_free_vector(new_args), TRUE);
 			}
 		}
 	}

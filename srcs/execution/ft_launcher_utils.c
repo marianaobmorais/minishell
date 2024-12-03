@@ -25,25 +25,28 @@ void	ft_restore_original_fds(t_shell *sh)
 	close(sh->stdout_);
 }
 
-int	ft_single_command(void *node, t_env *env, t_shell *sh)
+int	ft_single_command(void *node, t_shell *sh)
 {
 	void	*curr_node;
 	char	**new_args;
 
-	if (ft_isjustbuiltin(node, env))
+	if (ft_isjustbuiltin(node, sh))
 	{
 		if (!sh->fds_saved) {
 			ft_save_original_fds(sh);
 			sh->fds_saved = 1;
 		}
 		curr_node = ((t_pipe *)node)->left;
-		while (ft_redir(((t_redir *)curr_node), env->global, sh))
+		while (ft_redir(((t_redir *)curr_node), sh))
 			curr_node = ((t_redir *)curr_node)->next;
+		
+		// else if (((t_exec *)curr_node)->type == EXEC)
+		
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
 			new_args = tokentostring(((t_exec *)curr_node)->args);
 			if (ft_isbuiltin(new_args))
-				ft_exec_builtin(new_args, env);
+				ft_exec_builtin(new_args, sh);
 			ft_free_vector(new_args);
 		}
 		ft_restore_original_fds(sh);
