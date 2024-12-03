@@ -112,8 +112,9 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
 		rnode = (t_redir *)node;
+		ft_process_token_list(rnode->target, sh->global); //ft_merge_env
 		tnode = (t_token *)(*rnode->target)->content;
-		state = ((t_token *)rnode->target)->state;
+		state = tnode->state;
 		sh->run = heredoc_fd(tnode->value, sh->global, state, sh); //ft_merge_env
 	}
 	else if (((t_redir *)node)->type == EXEC
