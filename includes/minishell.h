@@ -35,6 +35,12 @@
 # define TRUE 1
 # define FALSE 0
 
+typedef enum e_env
+{
+	GLOBAL,
+	LOCAL
+}	t_env;
+
 int		ft_error_handler(void);
 
 //ft_free_utils.c

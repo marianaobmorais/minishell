@@ -33,7 +33,7 @@ void	ft_exec_builtin(char **args, t_shell *sh)
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
 		ft_pwd();
 	else if (ft_strncmp("export", args[0], ft_strlen(args[0])) == 0)
-		ft_export(ft_argslen(args), args, &sh->global); //modificar receber global e local
+		ft_export(ft_argslen(args), args, sh, GLOBAL); //modificar receber global e local
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
 		ft_unset(ft_argslen(args), args, &sh->global); //receber global e local
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)

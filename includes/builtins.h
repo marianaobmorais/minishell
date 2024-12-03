@@ -15,7 +15,7 @@ void	ft_echo(char **args);
 int		ft_pwd(void);
 void	ft_exit(char **args);
 int		ft_unset(int argc, char **argv, char ***my_envp);
-int		ft_export(int argc, char **argv, char ***my_envp);
+int		ft_export(int argc, char **argv, t_shell *sh, int mode);
 void	ft_print_export(char **envp);
 
 //manage

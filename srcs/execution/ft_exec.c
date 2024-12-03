@@ -76,19 +76,19 @@ void	ft_exec(t_list **args, t_shell *sh)
 	char	**new_args;
 
 	pathname = NULL;
-	ft_process_token_list(args, sh->global); //ft_merge_env
+	ft_process_token_list(args,/* sh->global */ ft_merge_env(sh)); //ft_merge_env
 	new_args = ft_split_argv(tokentostring(args));
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else
 	{
-		pathname = ft_findpath(sh->global, new_args); //verificar se precisa de ft_merge_env
+		pathname = ft_findpath(sh->global, new_args); //ft_merge_env // o bash usa apenas o global ?
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
 			ft_exit_status(127, TRUE, TRUE);
 		}
-		if (execve(pathname, new_args, sh->global) == -1) //ft_merge_env
+		if (execve(pathname, new_args, sh->global) == -1) //ft_merge_env // o bash usa apenas o global ?
 		{
 			ft_stderror(TRUE, "%s:", new_args[0]);
 			ft_exit_status(1, TRUE, TRUE);
