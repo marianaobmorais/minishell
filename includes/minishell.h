@@ -51,5 +51,6 @@ void	ft_cli(t_shell *sh);
 t_shell	*ft_init_sh(char **envp);
 //t_env	*ft_init_env(char **envp);
 char	**ft_get_my_envp(char **envp);
+char	**ft_merge_env(t_shell *sh);
 
 #endif //MINISHELL_H
