@@ -1,26 +1,31 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Handles metacharacter tokens, adding them to the token list.
+ * @brief Handles metacharacters and adds them as tokens to the token list.
  * 
- * This function appends the metacharacter at the current position to `value`. If it
- * detects a double metacharacter (like `>>` or `<<`), it appends the second character
- * as well and increments the index. The constructed metacharacter token is then added 
- * to the token list.
+ * Processes metacharacters found in the input string `s` by:
+ * - Finalizing and adding any existing token value (`*value`) to the token
+ *   list.
+ * - Creating a new token for the current metacharacter(s).
+ * - Detecting and handling compound metacharacters such as `>>`, `<<`, `>|`.
+ * - Adding the newly formed token to the token list.
  * 
- * @param value Pointer to the string being built for the current token.
- * @param s Pointer to the input string at the current parsing position.
- * @param i The current index in the input string.
- * @param token_list Pointer to the list of tokens.
- * @return Updated index after processing the metacharacter.
+ * The function updates the token list and advances the index `i` if necessary
+ * for compound metacharacters.
+ * 
+ * @param value Pointer to the current token value being processed. Reset after
+ *              adding to the token list.
+ * @param s Pointer to the current position in the input string.
+ * @param i Current index in the input string.
+ * @param list Pointer to the list where tokens will be added.
+ * @return The updated index `i` after processing the metacharacter(s).
  */
-static int	ft_handle_metachar(char **value, char *s, int i, t_list **token_list)
+static int	ft_handle_metachar(char **value, char *s, int i, t_list **list)
 {
-	//update brief
 	if (value)
-		ft_add_to_token_list(value, token_list);
+		ft_add_to_token_list(value, list);
 	*value = ft_charjoin(*value, s[0]);
-	if (s[0] == '>' && s[1] == '|') // review this later
+	if (s[0] == '>' && s[1] == '|')
 	{
 		*value = ft_charjoin(*value, s[1]);
 		i++;
@@ -30,16 +35,16 @@ static int	ft_handle_metachar(char **value, char *s, int i, t_list **token_list)
 		*value = ft_charjoin(*value, s[1]);
 		i++;
 	}
-	ft_add_to_token_list(value, token_list);
+	ft_add_to_token_list(value, list);
 	return (i);
 }
 
 /**
- * @brief Handles quoted sections in the input, adding them to the token string.
+ * @brief Handles quoted sections in the input, adding them to the token string
  * 
- * This function appends characters within a quoted section to `value`, including
- * the opening and closing quotes. It returns the updated index after the closing
- * quote.
+ * This function appends characters within a quoted section to `value`,
+ * including the opening and closing quotes. It returns the updated index after
+ * the closing quote.
  * 
  * @param value Pointer to the string being built for the current token.
  * @param s Pointer to the input string.
@@ -61,14 +66,22 @@ static int	ft_handle_quotes(char **value, char *s, int i, char quote)
 }
 
 /**
- * @brief Processes the input string and creates tokens based on metacharacters and unquoted spaces.
+ * @brief Tokenizes the input string and populates the token list.
  * 
- * This function iterates through the input string, identifying tokens separated by
- * unquoted spaces or metacharacters. It adds each constructed token to the token
- * list, handling quoted and metacharacter sequences appropriately.
+ * Processes the input string `s` by iterating through its characters and
+ * identifying tokens based on metacharacters, quotes, and whitespace.
+ * The function:
+ * - Detects and handles metacharacters and parentheses by delegating to
+ *   `ft_handle_metachar`.
+ * - Manages quoted substrings using `ft_handle_quotes`.
+ * - Stops processing if a comment character (`#`) is encountered after
+ *   whitespace.
+ * - Concatenates unprocessed characters into a token value using `ft_charjoin`.
+ * - Adds completed tokens to the token list when whitespace or a metacharacter
+ *   is encountered.
  * 
- * @param s The input string to tokenize.
- * @param token_list Pointer to the list of tokens.
+ * @param s The input string to process and tokenize.
+ * @param token_list A pointer to the list where tokens will be added.
  */
 static void	ft_process_tokens(char *s, t_list **token_list)
 {
@@ -81,11 +94,11 @@ static void	ft_process_tokens(char *s, t_list **token_list)
 	{
 		if (!ft_isspace(s[i]))
 		{
-			if (ft_strchr(METACHARS, s[i]))
+			if (ft_strchr(METACHARS, s[i]) || ft_strchr(PRTHESESCHARS, s[i]))
 				i = ft_handle_metachar(&value, &s[i], i, token_list); 
 			else if (s[i] == SQUOTE || s[i] == DQUOTE)
 				i = ft_handle_quotes(&value, s, i, s[i]);
-			else if (s[i] == '#' && ft_isspace(s[i - 1])) //update brief
+			else if (s[i] == '#' && ft_isspace(s[i - 1]))
 				break ;
 			else
 				value = ft_charjoin(value, s[i]);
@@ -98,15 +111,21 @@ static void	ft_process_tokens(char *s, t_list **token_list)
 }
 
 /**
- * @brief Validates and updates export tokens in a list based on position and context.
+ * @brief Validates and adjusts the types of tokens related to `EXPORT` and
+ *        `EXPORT_AP`.
  * 
- * Scans the token list, identifying tokens marked as `EXPORT` or `EXPORT_AP` that
- * are not at the beginning or are following a non-pipe command. These tokens have their type
- * changed to `EXEC` to ensure proper command handling during execution.
+ * Iterates through the token list to ensure that `EXPORT` and `EXPORT_AP`
+ * tokens are properly contextualized based on their position and the preceding
+ * token.
+ * - If an `EXPORT` or `EXPORT_AP` token appears after the first position and
+ *   does not follow a valid token type (`NODE`, another `EXPORT`, `EXPORT_AP`,
+ *   or parentheses), its type is changed to `EXEC`.
+ * - This ensures proper token classification and avoids misinterpretation
+ *   during execution.
  * 
- * @param list Double pointer to the head of the list of tokens.
+ * @param list A pointer to the head of the token list to validate and adjust.
  */
-void	ft_validate_export_tokens(t_list **list)
+static void	ft_validate_export_tokens(t_list **list)
 {
 	t_list	*current;
 	t_token	*token;
@@ -120,7 +139,10 @@ void	ft_validate_export_tokens(t_list **list)
 	{
 		token = (t_token *)current->content;
 		if ((token->type == EXPORT || token->type == EXPORT_AP) && pos > 0
-				&& !(((t_token *)prev->content)->type == PIPE))
+				&& !(ft_is_token_type(((t_token *)prev->content), NODE)
+				|| ((t_token *)prev->content)->type == EXPORT
+				|| ((t_token *)prev->content)->type == EXPORT_AP
+				|| ((t_token *)prev->content)->type == PRTHESES))
 			token->type = EXEC;
 		pos++;
 		prev = current;
@@ -129,24 +151,78 @@ void	ft_validate_export_tokens(t_list **list)
 }
 
 /**
- * @brief Creates and processes token list from the input string.
+ * @brief Validates execution tokens to ensure proper placement and syntax.
  * 
- * This function allocates memory for a token list, processes the input string to 
- * identify tokens, populates the list and applies necessary processing steps such as
- * handling `EXPORT` tokens. It frees the input string after processing.
+ * Checks the token list for invalid scenarios involving execution tokens
+ * (e.g., commands, subshells). Specifically, the function:
+ * - Tracks context (`right`) to identify whether an EXEC token follows invalid
+ *   tokens (e.g., `)`).
+ * - Ensures execution tokens do not appear directly after certain invalid
+ *   sequences.
+ * - Skips over redirection tokens as they do not affect EXEC token validation.
+ * 
+ * Errors are reported using `ft_stderror` with appropriate messages, and the
+ * function sets an error status before returning `false` when invalid syntax
+ * is detected.
+ * 
+ * @param list Pointer to the token list to be validated.
+ * @return `true` if the tokens are valid, `false` otherwise.
+ */
+static bool	ft_validate_exec_tokens(t_list **list)
+{
+	t_list	*current;
+	t_token	*token;
+	bool	right;
+
+	current = *list;
+	right = false;
+	while (current)
+	{
+		token = (t_token *)current->content;
+		if (token->value[0] == '(' || ft_is_token_type(token, NODE))
+			right = false;
+		else if (token->value[0] == ')')
+			right = true;
+		else if (ft_is_token_type(token, REDIR))
+			current = current->next; 
+		else if (right == true && ft_is_token_type(token, EXEC))
+		{
+			ft_stderror(FALSE, UNEXPECTED_TOKEN_S, token->value);
+			ft_exit_status(2, TRUE, FALSE);
+			return (false);
+		}
+		current = current->next;
+	}
+	return (true);
+}
+
+/**
+ * @brief Creates a linked list of tokens from the input string.
+ * 
+ * Allocates memory for a list and processes the input string to tokenize it.
+ * - Splits the input string into individual tokens based on predefined
+ *   delimiters.
+ * - Processes the tokens and adds them to the list.
+ * - Validates export tokens to ensure syntax compliance.
+ * - Validates executable tokens for correctness.
+ * 
+ * If any validation or memory allocation fails, the function returns `NULL`.
  * 
  * @param s The input string to tokenize.
- * @return A pointer to the list of tokens, or NULL if allocation fails.
+ * @return A pointer to the head of the token list, or `NULL` on failure.
  */
+
 t_list	**ft_create_token_list(char *s)
 {
 	t_list	**token_list;
 
-	token_list = (t_list **)malloc(sizeof(t_list **));
+	token_list = (t_list **)malloc(sizeof(t_list *));
 	if (!token_list)
-		return (NULL); // ft_error_handler();
+		return (NULL); // error_handler //malloc failed
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
-	return (free(s), token_list);
+	if (!ft_validate_exec_tokens(token_list))
+		return (NULL); // error_handler //malloc failed
+	return (token_list);
 }
