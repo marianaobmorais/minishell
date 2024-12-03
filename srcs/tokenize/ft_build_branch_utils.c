@@ -47,8 +47,9 @@ t_list	**ft_get_args(t_list **list)
 /**
  * @brief Creates an execution node based on the current token.
  * 
- * Allocates memory for an execution node, assigns its type, pathname, and arguments, 
- * and processes subsequent tokens in the list until a pipe, redirection, or NULL is encountered.
+ * Allocates memory for an execution node, assigns its type, pathname, and
+ * arguments, and processes subsequent tokens in the list until a pipe,
+ * redirection, or NULL is encountered.
  * 
  * @param token The current token representing the execution command.
  * @param list Pointer to the token list, updated as nodes are processed.
@@ -143,7 +144,6 @@ void	ft_assign_redir_mode(t_redir **redir)
  * @return A pointer to the initialized `t_redir` structure, or `NULL` if
  *         memory allocation fails.
  */
-
 t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
 	t_redir	*redir;

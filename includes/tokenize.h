@@ -75,36 +75,28 @@ typedef struct s_exec
 
 //ft_find_next_quote.c
 int		ft_find_next_quote(char *s, int i, char c);
-
 //ft_charjoin.c
 char	*ft_charjoin(char *str, char c);
-
 //ft_isspace.c
 int		ft_isspace(int c);
-
 //ft_validate_syntax.c
 bool	ft_validate_syntax(char *s);
 void	ft_error_syntax(char *message, char c);
 //ft_validate_syntax_utils.c
 bool	ft_validate_logic_operator(char *s, int i);
 bool	ft_is_comment(char c, int *i);
-
 //ft_ft_validate_parentheses.c
 bool	ft_validate_parentheses(char *s);
 bool	ft_count_parentheses(char *s);
-//ft_ft_validate_parentheses_utils.c
-bool	ft_handle_paretheses(char c, char *last, bool *left, bool *right);
-bool	ft_validate_left_context(char *s, int i, bool *left);
-bool	ft_handle_chars(char *s, int *i, bool *left, bool *right);
-
 //ft_create_token_list.c
 t_list	**ft_create_token_list(char *s);
 //ft_create_token_list_utils.c
 void	ft_add_to_token_list(char **value, t_list **token_list);
-
+//ft_create_token_list_utils2.c
+bool	ft_is_heredoc_target(t_list **list);
+bool	ft_is_wildcard(char *s);
 //ft_process_input.c
 void	*ft_process_input(char *input, char **my_envp); //delete my_envp parameter later
-
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, \
 		char **my_envp);
@@ -117,19 +109,17 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, \
 		char **my_envp);
 char	*ft_get_exit_code(int *i);
 char	*ft_expand_env(char *s, int *i, char **my_envp);
-
-//ft_expand_wildcard.c
+//ft_get_wildcard_list.c
 t_list	**ft_get_wildcard_list(char *s);
 void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
 		t_list **w_list);
-
+//ft_get_wildcard_list_utils.c
+bool	ft_validate_entry(char *s, char *entry_name);
 //ft_build_root.c
 void	*ft_build_root(t_list **list, t_type type);
 void	ft_skip_export_tokens(t_list **list);
-
 //ft_build_tree.c
 void	*ft_build_tree(t_list **token_list, t_node **parent_node);
-
 //ft_build_branch.c
 void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root);
 //ft_built_branch_utils.c
@@ -141,16 +131,10 @@ t_redir	*ft_init_redir(t_token *token, t_list **list);
 //ft_built_branch_utils2.c
 t_list	**ft_create_sub_list(t_list **list);
 t_node	*ft_create_subroot_node(t_list **list);
-
 //ft_free_tree.c
 void	ft_free_tree(void *root);
-void	ft_free_node(void *node);
-void	ft_free_redir(t_redir *redir);
-void	ft_free_exec(t_exec *exec);
-
 //ft_is_token_type.c
 bool	ft_is_token_type(t_token *token, t_type type);
-
 //delete later
 void	ft_print_list(t_list **token_list);
 

@@ -63,26 +63,26 @@ char	*ft_get_exit_code(int *i)
 	return (status_str);
 }
 
-char	*ft_skip_wildcard(int *i)
-{
-	(*i)++; // skip *
-	return (ft_strdup("\0"));
-}
-
 /**
- * @brief Handles environment variable expansion in a string.
+ * @brief Handles variable and wildcard expansion in a string during token
+ *        parsing.
  * 
- * This function manages the expansion of `$`-prefixed variables in the string.
- * If the `$` is followed by a `?`, it expands to the exit code. Otherwise, it
- * expands to the environment variable value if available, updating `new_value`
- * with the expanded result.
+ * This function processes environment variables, exit codes, and wildcard
+ * expansions within a given token. It identifies the type of expansion based
+ * on the character following a `$` symbol and appends the expanded value to
+ * the `new_value` string. For the positional parameter (`*`) expansion,
+ * preceeded by `$`,it expands to NULL, as wildcard handling is done elsewhere.
  * 
- * @param new_value Pointer to the string being built with expansions.
- * @param value Original input string.
- * @param i Pointer to the index, updated to skip past the expansion.
- * @param my_envp Array of environment variables.
+ * @param new_value A pointer to the current expanded string being constructed. 
+ *        This will be updated with the appended expanded value.
+ * @param value The original string containing the variable or wildcard to
+ *        expand.
+ * @param i A pointer to the current position index within `value`. This index
+ *        will be updated to point past the processed expansion.
+ * @param my_envp The environment variables array used for expanding variable
+ *        names.
  */
-void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
+void	ft_handle_expansion(char **new_value, char *value, int *i, char **envp)
 {
 	char	*expansion;
 	char	*tmp;
@@ -91,9 +91,12 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **my_envp)
 	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);
 	else if (value[*i] == '*')
-		expansion = ft_skip_wildcard(i);
+	{
+		(*i)++;
+		expansion = ft_strdup("\0");
+	}
 	else
-		expansion = ft_expand_env(&value[*i], i, my_envp);
+		expansion = ft_expand_env(&value[*i], i, envp);
 	tmp = ft_strjoin(*new_value, expansion);
 	free(*new_value);
 	free(expansion);

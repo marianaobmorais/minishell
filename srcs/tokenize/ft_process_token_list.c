@@ -97,6 +97,39 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 }
 
 /**
+ * @brief Processes a wildcard token and replaces it with expanded matches.
+ * 
+ * This function handles the expansion of wildcard patterns in a token list. If
+ * a wildcard pattern in the current token matches multiple file paths or
+ * items, the function replaces the current token with a list of tokens
+ * representing the matches. If no matches are found, the token remains
+ * unchanged.
+ * 
+ * @param current A double pointer to the current position in the token list.
+ *        This pointer may be updated to point to the new list of tokens if a
+ *        wildcard is expanded.
+ * @param prev A pointer to the previous node in the token list, used for
+ *        relinking after replacement.
+ * @param head A double pointer to the head of the token list. This is updated
+ *        if the head is replaced.
+ */
+static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+{
+	t_list	**wild_list;
+	t_token	*token;
+
+	token = (t_token *)(*current)->content;
+	wild_list = ft_get_wildcard_list(token->value);
+	if (wild_list && *wild_list)
+	{
+		ft_update_token_list(*current, prev, head, wild_list);
+		*current = *wild_list;
+	}
+	if (wild_list)
+		free(wild_list);
+}
+
+/**
  * @brief Processes the token list for expansion and quote removal.
  * 
  * Iterates over a list of tokens, applying transformations to each token:
@@ -116,7 +149,6 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 	t_list	*current; //need to receive both global and local envp //update brief
 	t_list	*prev;
 	t_token	*token;
-	t_list	**wild_list;
 
 	current = *list;
 	prev = NULL;
@@ -128,16 +160,7 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
 		if (token->wildcard)
-		{
-			wild_list = ft_get_wildcard_list(token->value); //allocated memory for wild_list
-			if (*wild_list)
-			{
-				ft_update_token_list(current, prev, list, wild_list);
-				current = *wild_list;
-			}
-			if (wild_list) //should I break it here in case !wild_list?
-				free(wild_list);
-		}
+			ft_handle_wildcard(&current, prev, list);
 		prev = current;
 		current = current->next;
 	}

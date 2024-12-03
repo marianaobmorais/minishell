@@ -10,7 +10,7 @@
  *
  * @param exec_node A pointer to the EXEC node whose arguments should be freed.
  */
-void	ft_free_exec(t_exec *exec_node)
+static void	ft_free_exec(t_exec *exec_node)
 {
 	if (exec_node->args)
 		ft_free_list(exec_node->args);
@@ -28,7 +28,7 @@ void	ft_free_exec(t_exec *exec_node)
  * @param redir_node A pointer to the redirection node whose target should be
  *        freed.
  */
-void	ft_free_redir(t_redir *redir_node)
+static void	ft_free_redir(t_redir *redir_node)
 {
 	if (redir_node->target)
 		ft_free_list(redir_node->target);
@@ -57,7 +57,7 @@ void	ft_free_redir(t_redir *redir_node)
  *        tree, including root nodes, logical operators, pipe nodes, or
  *        subtrees.
  */
-void ft_free_node(void *root)
+static void ft_free_node(void *root)
 {
 	t_node	*node;
 
