@@ -18,9 +18,9 @@ static long	arg_convert(char *arg)
 		}
 		i++;
 	}
-	num = atoll(arg); //rever isso
+	num = ft_atol(arg); //rever isso
 	//printf("num %lld\nmax %ld\n long long max %lld", num, LONG_MAX, LLONG_MAX);
-	if (num > 5555 || num < -5555)
+	if (num > INT32_MAX || num < INT32_MIN)
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 		ft_exit_status(2, TRUE, FALSE);
@@ -63,7 +63,7 @@ void	ft_exit(char **args)
 		exit_status = (unsigned char) arg_convert(args[i]);
 		i++;
 	}
-	if (isatty(STDIN_FILENO)) //resolver pois se for o ultimo cmd imprime na mesma
+	if (isatty(STDIN_FILENO))
 		ft_putendl_fd("exit", 2);
 	ft_exit_status(exit_status, TRUE, TRUE);
 }
