@@ -9,7 +9,7 @@ LIBFT_DIR = ./libft
 
 SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_error_handler.c \
-		$(SRCS_DIR)/ft_get_my_envp.c \
+		$(SRCS_DIR)/ft_env_manager.c \
 		$(SRCS_DIR)/ft_free_utils.c \
 		$(SRCS_DIR)/ft_cli.c \
 		$(SRCS_DIR)/ft_exit_status.c \
