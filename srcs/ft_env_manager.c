@@ -19,6 +19,30 @@
 // 	return (env);
 // }
 
+char	**ft_merge_env(t_shell *sh)
+{
+	int		global_size;
+	int		local_size;
+	int		i;
+	char	**envp;
+
+	global_size = ft_argslen(sh->global);
+	local_size = ft_argslen(sh->local);
+	i = 0;
+	envp = (char **) malloc((global_size + local_size + 1) * sizeof(char *));
+	if (!envp)
+	{
+		ft_stderror(TRUE, "envp");
+		ft_exit_status(1, TRUE, FALSE);
+	}
+	while((*sh->global))
+		envp[i++] = ft_strdup((*sh->global)++);
+	while((*sh->local))
+		envp[i++] = ft_strdup((*sh->local)++);
+	envp[i] = NULL;
+	return (envp);
+}
+
 char	**ft_get_my_envp(char **envp)
 {
 	char	**my_envp;
