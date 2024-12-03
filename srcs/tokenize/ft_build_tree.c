@@ -1,5 +1,27 @@
 #include "../../includes/minishell.h"
 
+static bool	ft_validate_skip(t_list **list)
+{
+	//write brief
+	t_token	*token;
+	t_list	*tmp;
+
+	tmp = *list;
+	token = tmp->content;
+	while (tmp && (token->type == EXPORT || token->type == EXPORT_AP))
+	{
+		tmp = tmp->next;
+		if(tmp)
+			token = tmp->content;
+	}
+	if (!tmp)
+		return (false);
+	if (ft_is_token_type(((t_token *)tmp->content), PIPE)
+		|| !ft_is_token_type(((t_token *)tmp->content), EXEC))
+		return (false);
+	return (true);
+}
+
 /**
  * @brief Searches for the next pipe token in the list and advances the pointer
  * 
@@ -76,7 +98,8 @@ void	*ft_build_tree(t_list **list)
 {
 	t_pipe	*pipe;
 
-	ft_skip_export_tokens(list);
+	if (ft_validate_skip(list))
+		ft_skip_export_tokens(list);
 	pipe = (t_pipe *)malloc(sizeof(t_pipe));
 	if (!pipe)
 		return (NULL); //ft_error_hanlder(); 1// malloc failed
