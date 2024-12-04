@@ -58,24 +58,23 @@ static void	save_heredoc(char *pathname, int fd, t_shell *sh)
 
 	fd_save = open(pathname, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd_save == -1)
-	{
-		ft_stderror(TRUE, "");
-		ft_exit_status(1, TRUE, FALSE);
-		return ;
-	}
-	buffer = malloc(BUFFER_SIZE * sizeof(BUFFER_SIZE));
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
+	buffer = malloc(BUFFER_SIZE * sizeof(char *) + 1);
+	if (!buffer)
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
 	rd = 1;
 	while (rd != 0)
 	{
 		rd = read(fd, buffer, BUFFER_SIZE);
+		buffer[rd] = '\0';
 		if (rd <= 0)
 			break ;
 		write(fd_save, buffer, ft_strlen(buffer));
-		free(buffer);
 	}
+	free(buffer);
 	close(fd);
 	close(fd_save);
-	ft_lstadd_back(sh->heredoc_list, ft_lstnew(ft_strdup(pathname)));
+	ft_lstadd_back(sh->heredoc_list, ft_lstnew((ft_strdup(pathname))));
 	free(pathname);
 }
 
@@ -135,10 +134,10 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 	close(fd[1]);
 	wait_heredoc(pid);
 	if (ft_exit_status(0, FALSE, FALSE) != 0)
-		return (FALSE);
+		return (ft_free_vector(my_envp), FALSE);
 	save_heredoc(ft_create_pathname(), fd[0], sh);
 	close(fd[0]);
-	return (TRUE);
+	return (ft_free_vector(my_envp), TRUE);
 }
 
 /**

@@ -61,6 +61,7 @@ void	ft_stderror(int perror_, const char *str, ...);
 void	ft_signal(int type);
 void	ft_cli(t_shell *sh);
 t_shell	*ft_init_sh(char **envp);
+void	ft_free_sh(t_shell *sh);
 //t_env	*ft_init_env(char **envp);
 char	**ft_get_my_envp(char **envp);
 char	**ft_merge_env(t_shell *sh);

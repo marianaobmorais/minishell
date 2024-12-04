@@ -16,6 +16,17 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 	//ft_free_tree(tree);
 }
 
+void	ft_free_sh(t_shell *sh)
+{
+	if (sh->global)
+		ft_free_vector(sh->global);
+	if (sh->local)
+		ft_free_vector(sh->local);
+	if (sh->heredoc_list)
+		free(sh->heredoc_list);
+	free(sh);
+}
+
 t_shell	*ft_init_sh(char **envp)
 {
 	t_shell	*sh;

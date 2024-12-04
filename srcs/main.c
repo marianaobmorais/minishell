@@ -13,6 +13,6 @@ int	main(int argc, char **argv, char **envp)
 	if (!sh)
 		return (1);
 	ft_cli(sh);
-	//ft_free_sh
+	ft_free_sh(sh);
 	return (0);
 }

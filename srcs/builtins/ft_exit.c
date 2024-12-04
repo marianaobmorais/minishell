@@ -39,28 +39,31 @@ static long	arg_convert(char *arg)
  *              If `FALSE`, it only updates the exit status without terminating.
  * @param exit_status Terminate the program with the current exit status.
  */
-void	ft_exit(char **args)
+void	ft_exit(int argc, char **args)
 {
 	unsigned char	exit_status;
 	int				i;
 
 	i = 1;
 	exit_status = 0;
-	while (args[i])
+	if (argc > 1)
 	{
-		if (i == 2)
+		while (args[i])
 		{
-			ft_stderror(FALSE, "exit: too many arguments");
-			ft_exit_status(1, TRUE, FALSE);
+			if (i == 2)
+			{
+				ft_stderror(FALSE, "exit: too many arguments");
+				ft_exit_status(1, TRUE, FALSE);
+			}
+			if (args[i][0] == '\0' || ((args[i][0] == '-'
+				|| args[i][0] == '+') && !ft_isdigit(args[i][1])))
+			{
+				ft_stderror(FALSE, "exit: %s: numeric argument required", args[i]);
+				ft_exit_status(2, TRUE, FALSE);
+			}
+			exit_status = (unsigned char) arg_convert(args[i]);
+			i++;
 		}
-		if (args[i][0] == '\0' || ((args[i][0] == '-'
-			|| args[i][0] == '+') && !ft_isdigit(args[i][1])))
-		{
-			ft_stderror(FALSE, "exit: %s: numeric argument required", args[i]);
-			ft_exit_status(2, TRUE, FALSE);
-		}
-		exit_status = (unsigned char) arg_convert(args[i]);
-		i++;
 	}
 	if (isatty(STDIN_FILENO))
 		ft_putendl_fd("exit", 2);

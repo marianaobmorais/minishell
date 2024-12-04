@@ -73,6 +73,7 @@ static int	ft_count_words(char **args, char c)
 		size += count;
 		args++;
 	}
+	ft_stderror(FALSE, "size ->%d", size);
 	return (size);
 }
 
@@ -86,7 +87,7 @@ char	**ft_split_argv(char **args)
 
 	i = 0;
 	y = 0;
-	new_args = (char **) malloc(ft_count_words(args, ' ') * sizeof(char *) + 1);
+	new_args = (char **) malloc((ft_count_words(args, ' ') * sizeof(char *)) + 1);
 	if (!new_args)
 		return (NULL); //ft malloc
 	while (args[i])
@@ -94,11 +95,15 @@ char	**ft_split_argv(char **args)
 		temp = ft_split(args[i], ' ');
 		z = 0;
 		while (temp[z])
+		{
 			new_args[y++] = ft_strdup(temp[z++]);
+
+		}
+		ft_stderror(FALSE, "tem-> %s", temp[z - 1]);
 		ft_free_vector(temp);
 		i++;
 	}
-	new_args[y] = NULL;
-	ft_free_vector(args);
-	return (new_args);
+	ft_stderror(FALSE, "y-> %d", y);
+	//new_args[y] = NULL;
+	return (ft_free_vector(args), new_args);
 }

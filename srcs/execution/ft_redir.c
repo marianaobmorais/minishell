@@ -89,10 +89,10 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 		fd = open(pathname, O_RDONLY);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
+		unlink(pathname);
 	}
 	ft_lstdelone((*sh->heredoc_list), free);
 	*sh->heredoc_list = tmp;
-	unlink(pathname);
 }
 
 /**

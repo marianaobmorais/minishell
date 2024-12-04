@@ -17,6 +17,8 @@ int	ft_argslen(char **args)
 	i = 0;
 	if (!args)
 		return (i);
+	if (!(*args))
+		return (i);
 	while (args[i])
 		i++;
 	return (i);
@@ -77,11 +79,12 @@ void	ft_exec_builtin(char **args, t_shell *sh)
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
 		ft_unset(ft_argslen(args), args, sh);
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)
-		ft_exit(args);
+		ft_exit(ft_argslen(args), args);
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
 		ft_env(sh->global);
+	ft_free_vector(args);
 }
 
 /**
@@ -120,6 +123,7 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 				|| ((t_exec *)curr)->type == EXPORT
 				|| ((t_exec *)curr)->type == EXPORT_AP)
 				return (ft_free_vector(new_args), TRUE);
+			ft_free_vector(new_args);
 		}
 	}
 	return (FALSE);
