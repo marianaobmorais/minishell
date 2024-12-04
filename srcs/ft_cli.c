@@ -13,7 +13,7 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
-	//ft_free_tree(tree);
+	ft_free_tree(tree);
 }
 
 t_shell	*ft_init_sh(char **envp)

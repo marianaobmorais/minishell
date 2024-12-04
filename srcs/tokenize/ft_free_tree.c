@@ -63,7 +63,7 @@ static void	ft_free_node(void *root)
 
 	if (!root)
 		return ;
-	//printf("Freeing node of type: %d\n", ((t_node *)root)->type); // Debug	
+	printf("Freeing node of type: %d\n", ((t_node *)root)->type); // Debug	
 	node = (t_node *)root;
 	if (node->type == ROOT || node->type == AND || node->type == OR
 		|| node->type == PIPE || node->type == SUB_ROOT)
@@ -83,7 +83,8 @@ static void	ft_free_node(void *root)
 	else if (node->type == EXEC || node->type == EXPORT
 		|| node->type == EXPORT_AP)
 		ft_free_exec((t_exec *)root);
-	free(node);
+	if (node)
+		free(node);
 }
 
 /**
