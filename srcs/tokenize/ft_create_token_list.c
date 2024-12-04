@@ -218,11 +218,11 @@ t_list	**ft_create_token_list(char *s)
 
 	token_list = (t_list **)malloc(sizeof(t_list *));
 	if (!token_list)
-		return (NULL); // error_handler //malloc failed
+		return (ft_error_malloc("token_list"), NULL);
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
 	if (!ft_validate_exec_tokens(token_list))
-		return (NULL); // error_handler //malloc failed
+		return (NULL);
 	return (token_list);
 }

@@ -154,7 +154,7 @@ t_list	**ft_get_wildcard_list(char *s)
 	if (!wild_list)
 	{
 		closedir(dir);
-		return (perror("malloc"), NULL); //error_handler; 1 //malloc failed
+		return (ft_error_malloc("wild_list"), NULL);
 	}
 	*wild_list = NULL;
 	entry = readdir(dir);

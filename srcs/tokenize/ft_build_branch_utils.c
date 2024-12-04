@@ -24,7 +24,7 @@ t_list	**ft_get_args(t_list **list)
 
 	args = (t_list **)malloc(sizeof(t_list *));
 	if (!args)
-		return (NULL); // ft_error_handler(); 1 // malloc error
+		return (ft_error_malloc("args"), NULL);
 	*args = NULL;
 	curr = *list;
 	while (curr)
@@ -61,12 +61,12 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 
 	exec = (t_exec *)malloc(sizeof(t_exec));
 	if (!exec)
-		return (NULL); //ft_error_hanlder(); 1 //malloc failed
+		return (ft_error_malloc("exec"), NULL);
 	exec->type = token->type;
 	exec->pathname = token->value;
 	exec->args = ft_get_args(list);
 	if (!exec->args)
-		return (NULL); //ft_error_hanlder(); 1 //malloc failed
+		return (ft_error_malloc("exec->args"), NULL);
 	token = (*list)->content;
 	while (*list && (ft_is_token_type(token, EXEC)))
 	{
@@ -151,10 +151,10 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
-		return (NULL); //ft_error_hanlder(); 1 // malloc failed
+		return (ft_error_malloc("redir"), NULL);
 	target = (t_list **)malloc(sizeof(t_list *));
 	if (!target)
-		return (NULL); // ft_error_handler(); 1 // malloc failed
+		return (ft_error_malloc("target"), NULL);
 	*target = NULL;
 	redir->target = NULL;
 	redir->next = NULL;

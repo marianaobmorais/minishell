@@ -64,7 +64,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
 
 	redir = ft_init_redir(token, list);
 	if (!redir)
-		return (NULL); //ft_error_hanlder(); 1 //malloc failed
+		return (NULL);
 	if (!(*list)->next
 		|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
 	{

@@ -52,9 +52,9 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 		ft_skip_export_tokens(list);
 	node = (t_node *)malloc(sizeof(t_node));
 	if (!node)
-		return (NULL); //ft_error_hanlder(); 1// malloc failed
+		return (ft_error_malloc("node"), NULL);
 	node->type = PIPE;
-	node->right = NULL; //already here
+	node->right = NULL;
 	node->left = NULL;
 	if (parent_node)
 		node->parent_node = *parent_node;
@@ -67,7 +67,5 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 		return ((void *)node);
 	if (ft_find_next_pipe(list))
 		node->right = ft_build_tree(list, parent_node);
-	else
-		node->right = NULL; //redundat?
 	return ((void *)node);
 }

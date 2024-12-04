@@ -1,5 +1,15 @@
 #include "../../includes/minishell.h"
 
+static void	ft_error_cd(int perror_, char *message, const char *new_dir)
+{
+	//write brief
+	if (new_dir)
+		ft_stderror(perror_, message, new_dir);
+	else
+		ft_stderror(perror_, message);
+	ft_exit_status(1, TRUE, FALSE);
+}
+
 /**
  * @brief Updates the PWD and OLDPWD variables in the environment.
  *
@@ -8,7 +18,7 @@
  * environment variables with the new values. It frees the old values before 
  * assigning new ones.
  *
- * @param my_envp A pointer to the array of environment variables to be updated.
+ * @param my_envp A pointer to the array of environment variables to be updated
  * @param cur_pwd The current working directory to set as the new `OLDPWD`.
  */
 static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
@@ -22,7 +32,7 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
 		if (ft_strncmp(my_envp[i], "PWD=", 4) == 0)
 		{
 			free(my_envp[i]);
-			my_envp[i] = ft_strjoin("PWD=", getcwd(s, 1024)); //this function will get the pwd from my_envp or from system's envp?
+			my_envp[i] = ft_strjoin("PWD=", getcwd(s, 1024));
 		}
 		if (ft_strncmp(my_envp[i], "OLDPWD=", 7) == 0)
 		{
@@ -37,8 +47,8 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
  * @brief Retrieves the value of an environment variable.
  *
  * This function searches the `my_envp` array for a variable that starts with 
- * the provided `env` string and returns its value (the part after the `=` sign).
- * If the variable is not found, `NULL` is returned.
+ * the provided `env` string and returns its value (the part after the `=`
+ * sign). If the variable is not found, `NULL` is returned.
  *
  * @param env The name of the environment variable to search for.
  * @param my_envp A pointer to the array of environment variables.
@@ -63,8 +73,9 @@ char	*ft_getenv(char *env, char **my_envp)
  *
  * This function implements the `cd` command, changing the current working 
  * directory based on the provided path. If no path is given, it changes to 
- * the user's home directory. It also updates the `PWD` and `OLDPWD` environment 
- * variables after the directory change. If the path is invalid, an error is printed.
+ * the user's home directory.It also updates the `PWD` and `OLDPWD` environment
+ * variables after the directory change. If the path is invalid, an error is
+ * printed.
  *
  * @param argc The number of arguments passed to the `cd` command.
  * @param new_dir The directory path to change to.
@@ -77,38 +88,23 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	char	s[1024];
 
 	if (argc > 2)
-	{
-		ft_stderror(FALSE, "cd: too many arguments"); //ft_error_handler();
-		ft_exit_status(1, TRUE, FALSE);
-		return ;
-	}
-	cur_pwd = getcwd(s, 100); //this function will get the pwd from my_envp or from system's envp?
+		return (ft_error_cd(FALSE, "cd: too many arguments", NULL));
+	cur_pwd = getcwd(s, 100);
 	if (argc == 1)
 	{
-		home = ft_getenv("HOME=", my_envp); // not sure if this function is necessary //home = getenv("HOME"); essa funcao vai pegar o pwd do my_envp ou do envp?
+		home = ft_getenv("HOME=", my_envp);
 		if (!home)
-		{
-			return (ft_stderror(FALSE, "cd: HOME not set"), ft_exit_status(1, TRUE, FALSE), free(home));
-		}
+			return (ft_error_cd(FALSE, "cd: HOME not set", NULL));
 		chdir(home);
 		ft_update_my_envp(my_envp, cur_pwd);
 		return (free(home));
 	}
-	//from subject: cd with only a relative or absolute path
-	if (!((ft_isalpha(new_dir[0])) || new_dir[0] == '/' || new_dir[0] == '.')) //If I input &, chdir() works // need to test more inside our on minishell
-	{
-		ft_stderror(FALSE, "cd: %s: invalid option", new_dir); //ft_error_handler();
-		ft_exit_status(1, TRUE, FALSE);
-		return ;
-	}
+	if (!((ft_isalpha(new_dir[0])) || new_dir[0] == '/' || new_dir[0] == '.'))
+		return (ft_error_cd(FALSE, "cd: %s: invalid option", new_dir));
 	if (chdir(new_dir) == -1)
-	{
-		//printf("%s: cd: %s: no such file or directory\n", PROG_NAME, new_dir); //ft_error_handler();
-		ft_stderror(TRUE, "%s: ", new_dir);
-		ft_exit_status(1, TRUE, FALSE);
-		return ;
-	}
+		return (ft_error_cd(TRUE, "%s: ", new_dir));
 	ft_update_my_envp(my_envp, cur_pwd);
+	ft_exit_status(0, TRUE, FALSE);
 }
 
 /* int	main(int argc, char **argv, char **envp)
