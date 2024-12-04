@@ -1,5 +1,12 @@
 #include "../includes/minishell.h"
 
+void	ft_error_malloc(char *message)
+{
+	//write brief
+	ft_stderror(TRUE, message);
+	ft_exit_status(1, TRUE, FALSE);
+}
+
 static char	*ctoa(int c)
 {
 	char	*str;
