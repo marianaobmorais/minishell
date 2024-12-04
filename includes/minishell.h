@@ -43,7 +43,8 @@
 typedef enum e_env
 {
 	GLOBAL,
-	LOCAL
+	LOCAL,
+	DEFAULT
 }	t_env;
 
 int		ft_error_handler(void);

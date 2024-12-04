@@ -6,7 +6,6 @@ static long	arg_convert(char *arg)
 	long long	num;
 
 	i = 0;
-	
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;
 	while (arg[i])
@@ -19,7 +18,6 @@ static long	arg_convert(char *arg)
 		i++;
 	}
 	num = ft_atol(arg); //rever isso
-	//printf("num %lld\nmax %ld\n long long max %lld", num, LONG_MAX, LLONG_MAX);
 	if (num > INT32_MAX || num < INT32_MIN)
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
@@ -27,6 +25,7 @@ static long	arg_convert(char *arg)
 	}
 	return ((long) num);
 }
+
 /**
  * @brief Exits the program with a specified exit status and displays an exit
  * message.
