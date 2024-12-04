@@ -24,7 +24,7 @@ bool	ft_validate_skip(t_list **list)
 	while (tmp && (token->type == EXPORT || token->type == EXPORT_AP))
 	{
 		tmp = tmp->next;
-		if(tmp)
+		if (tmp)
 			token = tmp->content;
 	}
 	if (!tmp)
@@ -55,7 +55,7 @@ void	ft_skip_export_tokens(t_list **list)
 	while (*list && (token->type == EXPORT || token->type == EXPORT_AP))
 	{
 		if (!((*list)->next)
-				|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
+			|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
 			break ;
 		else
 		{
@@ -64,6 +64,7 @@ void	ft_skip_export_tokens(t_list **list)
 		}
 	}
 }
+
 /**
  * @brief Searches for the next logical operator (AND/OR) in the token list.
  * 
@@ -77,7 +78,7 @@ void	ft_skip_export_tokens(t_list **list)
  *        iterates through it.
  * @return `true` if an AND or OR operator is found, `false` otherwise.
  */
-static bool ft_find_next_root(t_list **list) 
+static bool	ft_find_next_root(t_list **list)
 {
 	t_token	*token;
 

@@ -25,13 +25,13 @@ bool	ft_is_token_type(t_token *token, t_type type)
 	if (type == REDIR)
 	{
 		if (token->type == OUTFILE || token->type == INFILE
-				|| token->type == APPEND || token->type == HEREDOC)
+			|| token->type == APPEND || token->type == HEREDOC)
 			return (true);
 	}
 	if (type == EXEC)
 	{
 		if (token->type == EXEC || token->type == EXPORT
-				|| token->type == EXPORT_AP)
+			|| token->type == EXPORT_AP)
 			return (true);
 	}
 	if (type == NODE)

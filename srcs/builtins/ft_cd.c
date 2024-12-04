@@ -1,8 +1,23 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Handles error reporting and status setting for the `cd` command.
+ * 
+ * This function manages errors that occur during the execution of the 
+ * `cd` (change directory) command. It logs the error message to standard 
+ * error using `ft_stderror`, optionally including the target directory in 
+ * the message. It also sets the shell's exit status to `1`.
+ * 
+ * @param perror_ An integer indicating whether `perror` or a custom error 
+ *        message should be used for error reporting.
+ *        - If non-zero, invokes `perror` for error logging.
+ * @param message The custom error message to log. This should describe the 
+ *        error context or reason.
+ * @param new_dir The target directory that caused the error, if applicable. 
+ *        If `NULL`, the error message will not include directory information.
+ */
 static void	ft_error_cd(int perror_, char *message, const char *new_dir)
 {
-	//write brief
 	if (new_dir)
 		ft_stderror(perror_, message, new_dir);
 	else
@@ -24,7 +39,7 @@ static void	ft_error_cd(int perror_, char *message, const char *new_dir)
 static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
 {
 	char	s[1024];
-	int	i;
+	int		i;
 
 	i = 0;
 	while (my_envp[i])

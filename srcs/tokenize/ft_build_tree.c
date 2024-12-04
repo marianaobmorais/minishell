@@ -1,21 +1,26 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Searches for the next pipe token in the list and advances the pointer
+ * @brief Locates the next pipe token in the token list.
  * 
- * Iterates through the token list to find the next pipe ('|') token. If a pipe
- * is found, the list pointer is updated to the token immediately after the
- * pipe and returns true. Otherwise, the pointer reaches the end of the list
- * and returns false.
+ * This function searches through a linked list of tokens, starting from the 
+ * given node, for the next token of type `PIPE`. If a `PIPE` token is found, 
+ * the list pointer is updated to the node following the `PIPE`, and the 
+ * function returns `true`. If a logical operator token (`AND` or `OR`) is 
+ * encountered before finding a `PIPE`, the search stops, and the function 
+ * returns `false`. If no `PIPE` is found and the list is exhausted, 
+ * `false` is returned.
  * 
- * @param list A double pointer to the token list, updated to the position
- *        after the pipe if found.
- * @return true if a pipe token is found, otherwise false.
+ * @param list Pointer to a pointer to the current node in the token list. 
+ *        The function modifies this pointer as it iterates through the list.
+ * @return `true` if a `PIPE` token is found; otherwise, `false`.
  */
 static bool	ft_find_next_pipe(t_list **list)
 {
-	t_token	*token; //update brief
+	t_token	*token;
 
+	if (!list || !*list)
+		return (false);
 	while (*list)
 	{
 		token = (t_token *)(*list)->content;

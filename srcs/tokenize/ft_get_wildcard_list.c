@@ -26,7 +26,7 @@ static bool	ft_validate_entry(char *s, char *entry_name)
 	sufix = ft_get_sufix(s);
 	middle = ft_get_middle(s);
 	substring = ft_substr(entry_name, ft_strlen(entry_name) - ft_strlen(sufix),
-		ft_strlen(sufix));
+			ft_strlen(sufix));
 	if (ft_strncmp(entry_name, prefix, ft_strlen(prefix)) == 0
 		&& ft_strncmp_(substring, sufix, ft_strlen(sufix)) == 0
 		&& ft_strnstr_(entry_name, middle, ft_strlen(entry_name)) != NULL)
@@ -93,7 +93,8 @@ static DIR	*ft_open_directory(char *dir_path)
 {
 	if (!getcwd(dir_path, 1024))
 	{
-		perror("getcwd"); //error_handler;
+		ft_stderror(TRUE, "getcwd");
+		ft_exit_status(1, TRUE, FALSE);
 		return (NULL);
 	}
 	return (opendir(dir_path));
@@ -122,7 +123,8 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 	entry_name = ft_strdup(entry->d_name);
 	if (!entry_name)
 	{
-		perror("ft_strdup"); //error_handler;
+		ft_stderror(TRUE, "ft_strdup");
+		ft_exit_status(1, TRUE, FALSE);
 		return ;
 	}
 	ft_add_to_token_list(&entry_name, wild_list);
@@ -149,13 +151,10 @@ t_list	**ft_get_wildcard_list(char *s)
 
 	dir = ft_open_directory(dir_path);
 	if (!dir)
-		return (perror("opendir"), NULL); //error_handler;
+		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), NULL);
 	wild_list = (t_list **)malloc(sizeof(t_list *));
 	if (!wild_list)
-	{
-		closedir(dir);
-		return (ft_error_malloc("wild_list"), NULL);
-	}
+		return (closedir(dir), ft_error_malloc("wild_list"), NULL);
 	*wild_list = NULL;
 	entry = readdir(dir);
 	while (entry)
@@ -164,6 +163,9 @@ t_list	**ft_get_wildcard_list(char *s)
 		entry = readdir(dir);
 	}
 	if (closedir(dir) == -1)
-		perror("closedir"); //error_handler;
+	{
+		ft_stderror(TRUE, "closedir");
+		ft_exit_status(1, TRUE, FALSE);
+	}
 	return (wild_list);
 }

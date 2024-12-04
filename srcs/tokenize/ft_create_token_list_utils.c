@@ -145,17 +145,6 @@ static bool	ft_has_expandable_var(char *s)
  *              token's value. The function frees the value after creating 
  *              the token node.
  * @param token_list The token list to which the new token will be added.
- * 
- * @details
- * - Determines if the token contains a wildcard using `ft_is_wildcard()`.
- * - Checks if the token is part of a heredoc target using `ft_is_heredoc_target()`.
- * - If not a heredoc target, evaluates whether the token contains expandable 
- *   variables with `ft_has_expandable_var()`.
- * - Adds the new token node to the end of the token list using `ft_lstadd_back()`.
- * 
- * @note
- * The function assumes `value` is non-NULL. If `*value` is NULL, it exits early.
- * The caller is responsible for ensuring `token_list` is properly initialized.
  */
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
