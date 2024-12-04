@@ -164,12 +164,12 @@ void print_root(void *root, int indent) // Updated function
  * @return A pointer to the root of the syntax tree (AST) if successful, or
  *         NULL on failure.
  */
-void	*ft_process_input(char *input, char **my_envp)
-{	//delete my_envp parameter later
-	(void)my_envp; //dele later
+void	*ft_process_input(char *input)
+{
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
+	t_list	*head;
 
 	trimmed = ft_strtrim(input, ISSPACE);
 	if (!trimmed)
@@ -179,17 +179,16 @@ void	*ft_process_input(char *input, char **my_envp)
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL);
-	//ft_print_list(token_list); // debug
-	//ft_process_token_list(token_list, my_envp); //delete later
-	//printf("\nAfter expansion:\n"); //debug
-	//ft_print_list(token_list); // debug
 	root = NULL;
+	head = *token_list;
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list, NULL); //ft_build_root(token_list, ROOT);
 		print_root(root, 60); //debug
 	}
 	free(trimmed);
-	ft_free_list(token_list);
+	ft_free_list(&head);
+	if (token_list)
+		free(token_list);
 	return (root);
 }

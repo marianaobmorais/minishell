@@ -164,4 +164,5 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		prev = current;
 		current = current->next;
 	}
+	ft_free_vector(my_envp);
 }

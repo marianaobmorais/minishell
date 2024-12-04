@@ -44,7 +44,6 @@ void	ft_free_content(t_list *node)
 		{
 			if (token->value)
 				free(token->value);
-			free(token);
 		}
 		free(node);
 	}
@@ -62,7 +61,7 @@ void	ft_free_content(t_list *node)
  */
 void	ft_free_list(t_list **list)
 {
-	t_list	*current; //update brief
+	t_list	*current;
 	t_list	*node;
 
 	if (!list || !*list)
@@ -74,7 +73,6 @@ void	ft_free_list(t_list **list)
 		ft_free_content(node);
 		node = NULL;
 		*list = current;
-	}	
-	free(list);
-	list = NULL;
+	}
+	free(*list);
 }

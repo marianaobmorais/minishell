@@ -114,7 +114,7 @@ void	ft_cli(t_shell *sh)
 		}
 		if (ft_history(input))
 		{
-			tree = ft_process_input(input, ft_merge_env(sh));
+			tree = ft_process_input(input/* , ft_merge_env(sh) */);
 			if (tree)
 			{
 				ft_search_heredoc(tree, sh);

@@ -97,7 +97,7 @@ bool	ft_is_heredoc_target(t_list **list);
 bool	ft_is_wildcard(char *s);
 void	ft_validate_export_tokens(t_list **list);
 //ft_process_input.c
-void	*ft_process_input(char *input, char **my_envp); //delete my_envp parameter later
+void	*ft_process_input(char *input);
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, \
 		char **my_envp);
