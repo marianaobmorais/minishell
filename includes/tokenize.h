@@ -140,6 +140,7 @@ t_node	*ft_create_subroot_node(t_list **list);
 void	ft_free_tree(void *root);
 //ft_is_token_type.c
 bool	ft_is_token_type(t_token *token, t_type type);
+bool	ft_is_node_type(t_node *node, t_type type);
 //delete later
 void	ft_print_list(t_list **token_list);
 
