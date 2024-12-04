@@ -60,7 +60,7 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 		|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO); // restaurar
 	if (node)
-		ft_launcher(node, ((t_pipe *)node)->right, NULL, sh);
+		ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
 void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, t_shell *sh)
@@ -71,10 +71,10 @@ void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, t_shell *sh)
 	ft_save_original_fds(sh);
 	if (!curr_node)
 		return;
-	else if (((t_pipe *)curr_node)->type == PIPE)
+	else if (((t_node *)curr_node)->type == PIPE)
 	{
 		sh->prev = curr_node;
-		ft_launcher(((t_pipe *)curr_node)->left, ((t_pipe *)curr_node)->right, fds, sh);
+		ft_launcher(((t_node *)curr_node)->left, ((t_node *)curr_node)->right, fds, sh);
 	}
 	else if (ft_redir(((t_redir *)curr_node), sh))
 	{

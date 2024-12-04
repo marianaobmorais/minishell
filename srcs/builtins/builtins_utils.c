@@ -51,9 +51,9 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 	int		flag;
 
 	flag = 0;
-	if (!((t_pipe *)node)->right)
+	if (!((t_node *)node)->right)
 	{
-		curr_node = ((t_pipe *)node)->left;
+		curr_node = ((t_node *)node)->left;
 		while (!flag && curr_node)
 		{
 			if (((t_redir *)curr_node)->type == OUTFILE 
@@ -66,11 +66,11 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 		}
 		if (curr_node)
 		{
-			if (((t_exec *)curr_node)->type == EXEC)
+			if (((t_exec *)curr_node)->type == EXEC || ((t_exec *)curr_node)->type == EXPORT || ((t_exec *)curr_node)->type == EXPORT_AP)
 			{
-				ft_process_token_list(((t_exec *)curr_node)->args, sh->global);//ft_merge_env
+				ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));//ft_merge_env
 				new_args = tokentostring(((t_exec *)curr_node)->args);
-				if (ft_isbuiltin(new_args))
+				if (ft_isbuiltin(new_args) || ((t_exec *)curr_node)->type == EXPORT || ((t_exec *)curr_node)->type == EXPORT_AP)
 					return (ft_free_vector(new_args), TRUE);
 			}
 		}

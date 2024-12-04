@@ -71,7 +71,7 @@ char	**ft_get_my_envp(char **envp)
 	i = 0;
 	while (envp[i])
 		i++;
-	my_envp = (char **)malloc(sizeof(char **) * (i + 1));
+	my_envp = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!my_envp)
 		return (NULL);
 	i = 0;

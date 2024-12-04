@@ -154,12 +154,13 @@ int	ft_export(int argc, char **argv, t_shell *sh, int mode)
 {
 	size_t s_key;
 
-	if (argc == 1)
+	if (argc == 1 && mode == GLOBAL)
 	{
 		ft_print_export(sh->global);
 		return (ft_exit_status(0, TRUE, FALSE));
 	}
-	argv++;
+	if (GLOBAL)
+		argv++;
 	if (check_key(argv) != 0)
 		return (ft_exit_status(2, TRUE, FALSE));
 	while (*argv)
@@ -170,17 +171,17 @@ int	ft_export(int argc, char **argv, t_shell *sh, int mode)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
 		{
-			if (mode == 0)
-				concatenate_var(*argv, &sh->global);
+			if (mode == GLOBAL)
+				concatenate_var(*argv, &(sh->global));
 			else
-				concatenate_var(*argv, &sh->local);
+				concatenate_var(*argv, &(sh->local));
 		}
 		else
 		{
-			if (mode == 0)
-				replace_var(*argv, s_key, &sh->global);
+			if (mode == GLOBAL)
+				replace_var(*argv, s_key, &(sh->global));
 			else
-				replace_var(*argv, s_key, &sh->local);
+				replace_var(*argv, s_key, &(sh->local));
 		}
 		argv++;
 	}
