@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-void	ft_print_list(t_list **token_list) //delete later
+void	ft_print_list(t_list **token_list)
 {
 	t_list	*current;
 	t_token	*token;
@@ -28,7 +28,7 @@ void	ft_print_list(t_list **token_list) //delete later
 	printf("-------------------------------------------------------------------\n");
 }
 
-void print_root(void *root, int indent) // delete later
+void print_root(void *root, int indent) // Updated function
 {
 	t_list  *current;
 	t_token *token;
@@ -165,7 +165,8 @@ void print_root(void *root, int indent) // delete later
  *         NULL on failure.
  */
 void	*ft_process_input(char *input, char **my_envp)
-{
+{	//delete my_envp parameter later
+	(void)my_envp; //dele later
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
@@ -178,6 +179,9 @@ void	*ft_process_input(char *input, char **my_envp)
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL);
+	ft_print_list(token_list); // debug
+	ft_process_token_list(token_list, my_envp); //delete later
+	printf("\nAfter expansion:\n"); //debug
 	ft_print_list(token_list); // debug
 	root = NULL;
 	if (token_list && *token_list)
