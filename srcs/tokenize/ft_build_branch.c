@@ -122,8 +122,8 @@ static void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
  *        created subroot node is stored.
  * @param token A double pointer to the current token being processed. The 
  *        function updates this pointer to the next token in the list.
- * @return A pointer to the created subroot node, or `NULL` if further processing 
- *         of the token list is required.
+ * @return A pointer to the created subroot node, or `NULL` if further
+ *         processing of the token list is required.
  */
 void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
 {
@@ -141,7 +141,7 @@ void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
  * 
  * This function processes the current token in the token list and determines 
  * the appropriate branch to build for the syntax tree. It handles different 
- * token types, including executable commands (`EXEC`), parentheses (`PRTHESES`), 
+ * token types,including executable commands (`EXEC`),parentheses (`PRTHESES`),
  * and redirections (`REDIR`). The function updates the corresponding structures 
  * (execution nodes, subroot nodes, or redirection nodes) and advances the list 
  * pointer as needed.
@@ -153,8 +153,8 @@ void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
  * @param sub_root A pointer to a `t_node` structure representing a subroot 
  *        (subtree for parenthesized expressions). It is updated if a subroot 
  *        node is created.
- * @return A pointer to the created branch node (`t_exec`, `t_node`, or `t_redir`) 
- *         or `NULL` if no branch could be built.
+ * @return A pointer to the created branch node (`t_exec`, `t_node`, or
+ *         `t_redir`) or `NULL` if no branch could be built.
  */
 void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root)
 {

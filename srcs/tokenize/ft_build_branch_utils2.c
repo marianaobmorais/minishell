@@ -41,7 +41,7 @@ t_list	**ft_create_sub_list(t_list **list)
 		if (count == 0)
 		{
 			*list = (*list)->next;
-			break;
+			break ;
 		}
 		ft_lstadd_back(sub, ft_lstnew(token));
 		*list = (*list)->next;

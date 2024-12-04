@@ -119,7 +119,7 @@ static bool	ft_has_expandable_var(char *s)
 			i++;
 			while (s[i] && s[i] != DQUOTE)
 			{
-				if (s[i] == '$' && ft_is_expandable(&s[i + 1])) 
+				if (s[i] == '$' && ft_is_expandable(&s[i + 1]))
 					return (true);
 				i++;
 			}
@@ -133,14 +133,29 @@ static bool	ft_has_expandable_var(char *s)
 }
 
 /**
- * @brief Adds a new token to the token list after initializing it.
+ * @brief Adds a new token to the token list.
  * 
- * This function creates a new token from `*value`, determining its type,
- * state, and whether it contains expandable variables. It then creates a new
- * list node for this token and adds it to the end of `token_list`.
+ * This function creates a new token structure based on the provided value, 
+ * assigns its properties (e.g., type, state, wildcard status, expansion 
+ * status), and appends it as a new node to the given token list. If memory 
+ * allocation fails at any point, the function frees any partially allocated 
+ * resources and invokes an error handler.
  * 
- * @param value Pointer to the current token string being built.
- * @param token_list Pointer to the list of tokens.
+ * @param value Pointer to a dynamically allocated string representing the 
+ *              token's value. The function frees the value after creating 
+ *              the token node.
+ * @param token_list The token list to which the new token will be added.
+ * 
+ * @details
+ * - Determines if the token contains a wildcard using `ft_is_wildcard()`.
+ * - Checks if the token is part of a heredoc target using `ft_is_heredoc_target()`.
+ * - If not a heredoc target, evaluates whether the token contains expandable 
+ *   variables with `ft_has_expandable_var()`.
+ * - Adds the new token node to the end of the token list using `ft_lstadd_back()`.
+ * 
+ * @note
+ * The function assumes `value` is non-NULL. If `*value` is NULL, it exits early.
+ * The caller is responsible for ensuring `token_list` is properly initialized.
  */
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
@@ -157,7 +172,7 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 		return (free(new_token), ft_error_malloc("new_token->value"));
 	new_token->type = ft_get_token_type(*value);
 	new_token->state = ft_get_token_state(*value);
-	new_token->wildcard = ft_is_wildcard(*value); //update brief
+	new_token->wildcard = ft_is_wildcard(*value);
 	if (!ft_is_heredoc_target(token_list))
 		new_token->expand = ft_has_expandable_var(*value);
 	else

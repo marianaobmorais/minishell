@@ -57,12 +57,12 @@ static void	ft_free_redir(t_redir *redir_node)
  *        tree, including root nodes, logical operators, pipe nodes, or
  *        subtrees.
  */
-static void ft_free_node(void *root)
+static void	ft_free_node(void *root)
 {
 	t_node	*node;
 
 	if (!root)
-		return;
+		return ;
 	//printf("Freeing node of type: %d\n", ((t_node *)root)->type); // Debug	
 	node = (t_node *)root;
 	if (node->type == ROOT || node->type == AND || node->type == OR

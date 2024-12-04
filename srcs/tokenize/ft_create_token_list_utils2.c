@@ -46,7 +46,7 @@ static int	ft_skip_quotes(char *s, int i)
 		i++;
 		while (s[i] && s[i] != SQUOTE)
 		{
-			if (s[i] == '*') 
+			if (s[i] == '*')
 				return (-1);
 			i++;
 		}
@@ -57,7 +57,7 @@ static int	ft_skip_quotes(char *s, int i)
 		i++;
 		while (s[i] && s[i] != DQUOTE)
 		{
-			 if (s[i] == '*' && s[i - 1] != '$') 
+			if (s[i] == '*' && s[i - 1] != '$') 
 				return (-1);
 			i++;
 		}

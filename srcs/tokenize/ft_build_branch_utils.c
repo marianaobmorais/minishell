@@ -129,6 +129,7 @@ void	ft_assign_redir_mode(t_redir **redir)
 	else
 		(*redir)->mode = -1;
 }
+
 /**
  * @brief Initializes a redirection structure based on the given token.
  * 
@@ -164,7 +165,7 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next;
-		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content)); 
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content));
 		redir->target = target;
 	}
 	return (redir);

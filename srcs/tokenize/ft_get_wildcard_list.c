@@ -149,7 +149,7 @@ t_list	**ft_get_wildcard_list(char *s)
 
 	dir = ft_open_directory(dir_path);
 	if (!dir)
-		return (perror("opendir"), NULL);  //error_handler;
+		return (perror("opendir"), NULL); //error_handler;
 	wild_list = (t_list **)malloc(sizeof(t_list *));
 	if (!wild_list)
 	{

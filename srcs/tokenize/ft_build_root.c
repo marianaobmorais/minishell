@@ -1,5 +1,19 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Validates whether the token list can skip export tokens or not.
+ * 
+ * This function checks if the given token list contains tokens to process for
+ * execution, skipping over consecutive `EXPORT` or `EXPORT_AP` tokens. If 
+ * `EXPORT` or `EXPORT_AP` tokens are followed by an `EXEC` token, the
+ * validation to skip proceedes. If the list ends or if the first non-export
+ * token is not an executable (`EXEC`) or if it is a node (`NODE`), it does not
+ * skips the `EXPORT` and `EXPORT_AP` tokens.
+ * 
+ * @param list A double pointer to the token list to validate.
+ * @return `true` if the list should skip until with a valid executable token,
+ *         otherwise `false`.
+ */
 bool	ft_validate_skip(t_list **list)
 {
 	t_token	*token;
@@ -116,7 +130,7 @@ void	*ft_build_root(t_list **list, t_type type)
 	if (ft_find_next_root(list))
 	{
 		type = ((t_token *)(*list)->content)->type;
-		root->right = ft_build_root(list, type); //colocar parent_node?
+		root->right = ft_build_root(list, type);
 	}
 	return ((void *)root);
 }
