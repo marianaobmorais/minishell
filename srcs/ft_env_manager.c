@@ -1,32 +1,5 @@
 #include "../includes/minishell.h"
 
-// void	ft_local_variable()
-// {
-
-// }
-
-// t_env	*ft_init_env(char **envp)
-// {
-// 	t_env	*env;
-// 	char	**my_envp;
-
-// 	env = (t_env *) malloc(sizeof(t_env));
-// 	my_envp = ft_get_my_envp(envp);
-// 	if (!my_envp)
-// 		return (ft_stderror(TRUE, ""), NULL);
-// 	env->global = my_envp;
-// 	env->local = NULL;
-// 	return (env);
-// }
-/* 
-void	ft_export_local(void *node)
-{
-	t_exec	*execnode;
-
-	if ()
-
-} */
-
 char	**ft_merge_env(t_shell *sh)
 {
 	int		global_size;

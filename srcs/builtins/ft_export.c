@@ -107,6 +107,19 @@ static int	concatenate_var(char *str, char ***my_envp, t_env mode)
 	return (add_var(str, i, my_envp));
 }
 
+/**
+ * @brief Exports local shell variables.
+ *
+ * Processes and exports local shell variables. It checks if the keys are valid
+ * and contain '='.If the variable contains '+', it concatenates; otherwise, it
+ * replaces the variable. It updates either the global or local shell variables
+ * based on the provided arguments.
+ *
+ * @param argv An array of strings representing the arguments.
+ * @param sh The shell structure containing the global and local environments.
+ *
+ * @return 0 on success, or an exit status code for various error conditions.
+ */
 static int	ft_export_local(char **argv, t_shell *sh)
 {
 	size_t	s_key;
@@ -117,9 +130,6 @@ static int	ft_export_local(char **argv, t_shell *sh)
 	{
 		if (!ft_strchr(*argv, '='))
 			return (ft_exit_status(0, TRUE, FALSE));
-		// nao fazer nada e guardar junto com as variaveis que foram exportadas
-		// var sem '=' pode ser exportada e atribuida depois
-		// ou var pode ser repasssado ao export se ja estiver na local
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
 		{
@@ -137,18 +147,19 @@ static int	ft_export_local(char **argv, t_shell *sh)
 }
 
 /**
- * @brief Handles the exportation of environment variables.
+ * @brief Manages the exportation of environment variables.
  *
- * This function manages the exportation of environment variables. If no
- * arguments are passed,  * it prints the current environment variables. 
- * If arguments are passed, it checks for valid keys, and either concatenates
- * or replaces the environment variable based on the input.
+ * Handles environment variable exportation. If no arguments are provided,
+ * it prints the current environment variables. If arguments are passed, it
+ * validates the keys and either concatenates or replaces the variables in
+ * the global environment. Supports local exportation mode if specified.
  *
  * @param argc The number of arguments passed to the function.
  * @param argv An array of strings representing the arguments.
- * @param my_envp A pointer to the array of environment variables to be updated
- * @return Returns 0 on success, or the exit status code for various error
- *  conditions. ATUALIZAR
+ * @param sh The shell structure containing the global and local environments.
+ * @param mode The export mode, either LOCAL or GLOBAL.
+ *
+ * @return 0 on success, or an exit status code for various error conditions.
  */
 int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 {
