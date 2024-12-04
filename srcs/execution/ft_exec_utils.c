@@ -46,27 +46,34 @@ char	**tokentostring(t_list **args)
  *
  * @return The number of words found in the string.
  */
-static int	ft_count_words(char *s, char c)
+static int	ft_count_words(char **args, char c)
 {
 	bool	in_word;
 	int		count;
 	int		i;
+	int		size;
 
-	in_word = false;
-	count = 0;
-	i = 0;
-	while (s[i] != '\0')
+	size = 0;
+	while (*args)
 	{
-		if (s[i] != c && in_word == false)
+		in_word = false;
+		count = 0;
+		i = 0;
+		while ((*args)[i] != '\0')
 		{
-			in_word = true;
-			count++;
+			if ((*args)[i] != c && in_word == false)
+			{
+				in_word = true;
+				count++;
+			}
+			if ((*args)[i] == c)
+				in_word = false;
+			i++;
 		}
-		if (s[i] == c)
-			in_word = false;
-		i++;
+		size += count;
+		args++;
 	}
-	return (count);
+	return (size);
 }
 
 char	**ft_split_argv(char **args)
@@ -74,32 +81,20 @@ char	**ft_split_argv(char **args)
 	int		i;
 	int		z;
 	int		y;
-	int		size;
 	char	**new_args;
 	char	**temp;
 
 	i = 0;
 	y = 0;
-	size = 0;
-	while(args[i])
-	{
-		size += ft_count_words(args[i], ' ');
-		i++;
-	}
-	new_args = (char **) malloc((size + 1) * sizeof(char *));
+	new_args = (char **) malloc(ft_count_words(args, ' ') * sizeof(char *) + 1);
 	if (!new_args)
 		return (NULL); //ft malloc
-	i = 0;
-	while(args[i])
+	while (args[i])
 	{
 		temp = ft_split(args[i], ' ');
 		z = 0;
 		while (temp[z])
-		{
-			new_args[y] = ft_strdup(temp[z]);
-			z++;
-			y++;
-		}
+			new_args[y++] = ft_strdup(temp[z++]);
 		ft_free_vector(temp);
 		i++;
 	}

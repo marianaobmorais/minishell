@@ -64,13 +64,10 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
 	}
-	if (curr_fds)
-	{
-		close(curr_fds[1]);
-		if (node)
-			dup2(curr_fds[0], STDIN_FILENO);
-		close(curr_fds[0]);
-	}
+	close(curr_fds[1]);
+	if (node)
+		dup2(curr_fds[0], STDIN_FILENO);
+	close(curr_fds[0]);
 	if (!node)
 		return (ft_restore_original_fds(sh));
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE

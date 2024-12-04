@@ -19,30 +19,23 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 t_shell	*ft_init_sh(char **envp)
 {
 	t_shell	*sh;
-	char	**global_envp;
-	char	**local_envp;
 
 	sh = (t_shell *) malloc(sizeof(t_shell));
 	if (!sh)
 		return (ft_stderror(TRUE, ""), NULL);
-	global_envp = ft_get_my_envp(envp);
-	if (!global_envp)
-		return (ft_stderror(TRUE, ""), NULL);
-	local_envp = (char **)malloc(sizeof(char *));
-	if (!local_envp)
-		return (ft_stderror(TRUE, ""), NULL);
-	*local_envp = NULL;
-	sh->global = global_envp;
-	sh->local = local_envp;
+	sh->global = ft_get_my_envp(envp);
+	if (!sh->global)
+		return (free(sh), ft_stderror(TRUE, ""), NULL);
+	sh->local = (char **) malloc(sizeof(char *));
+	if (!sh->local)
+		return (free(sh), ft_stderror(TRUE, ""), NULL);
+	(*sh->local) = NULL;
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
 	sh->heredoc_list = (t_list **) malloc(sizeof(t_list **));
 	if (!sh->heredoc_list)
-	{
-		free(sh);
-		return (ft_stderror(TRUE, ""), NULL);
-	}
+		return (free(sh), ft_stderror(TRUE, ""), NULL);
 	*(sh->heredoc_list) = NULL;
 	return (sh);
 }

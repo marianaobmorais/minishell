@@ -2,22 +2,17 @@
 
 char	**ft_merge_env(t_shell *sh)
 {
-	int		global_size;
-	int		local_size;
+	int		size;
 	int		i;
 	int		z;
 	char	**envp;
 
-	global_size = ft_argslen(sh->global);
-	local_size = ft_argslen(sh->local);
 	z = 0;
 	i = 0;
-	envp = (char **) malloc((global_size + local_size + 1) * sizeof(char *));
+	size = ft_argslen(sh->local) + ft_argslen(sh->global);
+	envp = (char **) malloc((size + 1) * sizeof(char *));
 	if (!envp)
-	{
-		ft_stderror(TRUE, "envp");
-		ft_exit_status(1, TRUE, FALSE);
-	}
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""), NULL);
 	while((sh->global)[i])
 	{
 		envp[i] = ft_strdup((sh->global)[i]);
