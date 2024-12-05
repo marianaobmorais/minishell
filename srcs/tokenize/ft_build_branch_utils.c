@@ -164,7 +164,7 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next;
-		ft_add_to_token_list(&token->value, target);
+		ft_add_to_token_list(&((t_token *)(*list)->content)->value/* &token->value */, target);
 		redir->target = target;
 	}
 	return (redir);

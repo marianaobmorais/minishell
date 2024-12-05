@@ -104,7 +104,7 @@ void	ft_exit(int argc, char **args)
 		else
 		{
 			exit_status = (unsigned char) arg_convert(args[i]);
-			if (ft_exit_status(0, FALSE, FALSE))
+			if (ft_exit_status(0, FALSE, FALSE) || (exit_status && args[i + 1]))
 				ft_exit_status(exit_status, TRUE, TRUE);
 		}
 		i++;

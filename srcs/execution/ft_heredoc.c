@@ -167,7 +167,7 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
 		rnode = (t_redir *)node;
-		ft_process_token_list(rnode->target, ft_merge_env(sh));
+		//ft_process_token_list(rnode->target, ft_merge_env(sh));
 		tnode = (t_token *)(*rnode->target)->content;
 		state = tnode->state;
 		sh->run = heredoc_fd(tnode->value, ft_merge_env(sh), state, sh);

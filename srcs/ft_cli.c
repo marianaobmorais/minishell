@@ -133,6 +133,7 @@ int	ft_history(char *input)
 void	ft_cli(t_shell *sh)
 {
 	char	*input;
+	void	*root;//
 
 	input = NULL;
 	while (1)
@@ -151,7 +152,10 @@ void	ft_cli(t_shell *sh)
 			break ;
 		}
 		if (ft_history(input))
-			ft_launcher_manager(ft_process_input(input), sh);
+		{
+			root = ft_process_input(input);
+			ft_launcher_manager(root /* ft_process_input(input) */, sh);
+		}
 	}
 	rl_clear_history();
 }
