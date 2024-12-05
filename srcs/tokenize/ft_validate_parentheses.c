@@ -97,7 +97,7 @@ static bool	ft_handle_chars(char *s, int *i, bool *right, bool *left)
 	if (s[*i] == DQUOTE || s[*i] == SQUOTE)
 		*i = ft_find_next_quote(s, *i, s[*i]);
 	else if (*right && s[*i] != '|' && s[*i] != '&'
-		&& s[*i] != '>' &&  s[*i] != '<')
+		&& s[*i] != '>' && s[*i] != '<')
 	{
 		ft_stderror(FALSE, UNEXPECTED_TOKEN, ')');
 		ft_exit_status(2, TRUE, FALSE);

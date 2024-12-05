@@ -31,28 +31,28 @@ bool	ft_is_expandable(char *s)
  * 
  * @param token Pointer to the token structure containing the value to process.
  */
-static void	ft_remove_quotes(t_token *token)
+static void	ft_remove_quotes(t_token *tkn)
 {
 	char	quote;
 	int		i;
 
 	i = 0;
-	while (token->value[i])
+	while (tkn->value[i])
 	{
-		if (token->value[i] == '$' &&
-			(token->value[i + 1] == SQUOTE || token->value[i + 1] == DQUOTE))
-			ft_memmove(&token->value[i], &token->value[i + 1],
-				ft_strlen(&token->value[i + 1]) + 1);
-		if (token->value[i] == SQUOTE || token->value[i] == DQUOTE)
+		if (tkn->value[i] == '$'
+			&& (tkn->value[i + 1] == SQUOTE || tkn->value[i + 1] == DQUOTE))
+			ft_memmove(&tkn->value[i], &tkn->value[i + 1],
+				ft_strlen(&tkn->value[i + 1]) + 1);
+		if (tkn->value[i] == SQUOTE || tkn->value[i] == DQUOTE)
 		{
-			quote = token->value[i];
-			ft_memmove(&token->value[i], &token->value[i + 1],
-				ft_strlen(&token->value[i + 1]) + 1);
-			while (token->value[i] && token->value[i] != quote)
+			quote = tkn->value[i];
+			ft_memmove(&tkn->value[i], &tkn->value[i + 1],
+				ft_strlen(&tkn->value[i + 1]) + 1);
+			while (tkn->value[i] && tkn->value[i] != quote)
 				i++;
-			if (token->value[i] == quote)
-				ft_memmove(&token->value[i], &token->value[i + 1],
-					ft_strlen(&token->value[i + 1]) + 1);
+			if (tkn->value[i] == quote)
+				ft_memmove(&tkn->value[i], &tkn->value[i + 1],
+					ft_strlen(&tkn->value[i + 1]) + 1);
 		}
 		else
 			i++;
@@ -89,7 +89,7 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 			&& ft_is_expandable(&token->value[i + 1]))
 			ft_handle_expansion(&new_value, token->value, &i, my_envp);
 		else if (token->value[i] && token->value[i] != DQUOTE
-				&& token->value[i] != SQUOTE)
+			&& token->value[i] != SQUOTE)
 			new_value = ft_charjoin(new_value, token->value[i++]);
 	}
 	free(token->value);
@@ -146,7 +146,7 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
  */
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
-	t_list	*current; //need to receive both global and local envp //update brief
+	t_list	*current;
 	t_list	*prev;
 	t_token	*token;
 
@@ -164,4 +164,5 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		prev = current;
 		current = current->next;
 	}
+	ft_free_vector(my_envp);
 }

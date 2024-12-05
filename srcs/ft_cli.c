@@ -13,7 +13,7 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
-	//ft_free_tree(tree);
+	ft_free_tree(tree);
 }
 
 t_shell	*ft_init_sh(char **envp)
@@ -114,15 +114,16 @@ void	ft_cli(t_shell *sh)
 		}
 		if (ft_history(input))
 		{
-			tree = ft_process_input(input, ft_merge_env(sh));
+			tree = ft_process_input(input);
 			if (tree)
 			{
-				ft_search_heredoc(tree, sh);
-				if (sh->run == TRUE && !ft_single_command(tree, sh))
-				{
-					ft_signal(DEFAULT_);
-					ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
-				}
+				;
+				// ft_search_heredoc(tree, sh);
+				// if (sh->run == TRUE && !ft_single_command(tree, sh))
+				// {
+				// 	ft_signal(DEFAULT_);
+				// 	ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
+				// }
 			}
 			ft_restore_cli(sh, tree);
 		}

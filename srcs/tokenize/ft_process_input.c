@@ -124,7 +124,9 @@ void print_root(void *root, int indent) // Updated function
 			 ((t_exec *)root)->type == EXPORT_AP)
 	{
 		t_exec *exec_node = (t_exec *)root;
-		printf("%*sEXEC: %s\n", indent - 10, "", exec_node->pathname ? exec_node->pathname : "(no pathname)");
+		printf("%*s %s:\n", indent - 10, "", 
+			   (exec_node->type == EXEC) ? "EXEC" :
+			   (exec_node->type == EXPORT) ? "EXPORT" : "EXPORT_AP");
 		if (exec_node->args)
 		{
 			printf("%*sArguments:\n", indent - 10, "");
@@ -164,32 +166,30 @@ void print_root(void *root, int indent) // Updated function
  * @return A pointer to the root of the syntax tree (AST) if successful, or
  *         NULL on failure.
  */
-void	*ft_process_input(char *input, char **my_envp)
-{	//delete my_envp parameter later
-	(void)my_envp; //dele later
+void	*ft_process_input(char *input)
+{
 	t_list	**token_list;
 	char	*trimmed;
 	void	*root;
+	t_list	*head;
 
-	trimmed = ft_strtrim(input, ISSPACE); 
+	trimmed = ft_strtrim(input, ISSPACE);
 	if (!trimmed)
-		return (NULL); //ft_error_handler; 1 // malloc failed 
+		return (ft_error_malloc("ft_strtrim"), NULL);
 	if (!ft_validate_syntax(trimmed))
 		return (free(trimmed), NULL);
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL);
-	ft_print_list(token_list); // debug
-	//ft_process_token_list(token_list, my_envp); //delete later
-	//printf("\nAfter expansion:\n"); //debug
-	//ft_print_list(token_list); // debug
 	root = NULL;
+	head = *token_list;
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list, NULL); //ft_build_root(token_list, ROOT);
 		print_root(root, 60); //debug
 	}
 	free(trimmed);
-	ft_free_list(token_list);
+	ft_free_list(head);
+	free(token_list);
 	return (root);
 }

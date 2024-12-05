@@ -144,5 +144,3 @@ char	*ft_strnstr_(const char *big, const char *little, size_t len)
 	}
 	return (NULL);
 }
-
-

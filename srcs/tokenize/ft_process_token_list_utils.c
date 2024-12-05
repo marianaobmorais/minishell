@@ -146,4 +146,3 @@ void	ft_handle_dquotes(char **new_value, char *value, int *i, char **my_envp)
 	if (value[*i] == DQUOTE)
 		*new_value = ft_charjoin(*new_value, value[(*i)++]);
 }
-
