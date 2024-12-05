@@ -43,7 +43,8 @@
 typedef enum e_env
 {
 	GLOBAL,
-	LOCAL
+	LOCAL,
+	DEFAULT
 }	t_env;
 
 int		ft_error_handler(void);
@@ -64,6 +65,8 @@ void	ft_error_malloc(char *message);
 void	ft_signal(int type);
 void	ft_cli(t_shell *sh);
 t_shell	*ft_init_sh(char **envp);
+void	ft_restore_cli(t_shell *sh, void **tree);
+void	ft_free_sh(t_shell *sh);
 //t_env	*ft_init_env(char **envp);
 char	**ft_get_my_envp(char **envp);
 char	**ft_merge_env(t_shell *sh);

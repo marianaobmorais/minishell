@@ -1,17 +1,21 @@
 #include "../includes/minishell.h"
 
 /**
- * @brief Manages and retrieves the current exit status, with optional update and exit behavior.
+ * @brief Manages and retrieves the current exit status with optional update
+ *        and program termination.
  *
- * This function stores and retrieves a static exit status variable. If `write_` 
- * is set to `TRUE`, the function updates `current_status` to the provided `exit_status`. 
- * If `exit_` is `TRUE`, the function will terminate the program using the stored `current_status` 
- * as the exit code. Otherwise, it simply returns the current status.
+ * This function maintains a static variable `current_status` to track the
+ * exit status. If `write_` is `TRUE`, the function updates `current_status`
+ * with the provided `exit_status`. If `exit_` is `TRUE`, the program
+ * terminates using the value of `current_status` as the exit code. If
+ * neither flag is set, the function simply returns the current status.
  *
  * @param exit_status The new exit status to set if `write_` is `TRUE`.
- * @param write_ A flag indicating if `exit_status` should be written to `current_status`.
- * @param exit_ A flag indicating if the program should exit with `current_status`.
- * @return The current exit status stored in `current_status`.
+ * @param write_ A flag to determine if `exit_status` should update
+ *               `current_status`.
+ * @param exit_ A flag to indicate if the program should terminate with
+ *              `current_status` as the exit code.
+ * @return The current value of `current_status`.
  */
 int	ft_exit_status(int exit_status, int write_, int exit_)
 {

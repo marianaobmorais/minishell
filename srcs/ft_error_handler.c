@@ -2,11 +2,22 @@
 
 void	ft_error_malloc(char *message)
 {
-	//write brief
 	ft_stderror(TRUE, message);
 	ft_exit_status(1, TRUE, FALSE);
 }
 
+/**
+ * @brief Converts an integer character to a string.
+ *
+ * This function takes an integer character and converts it to a string. If the
+ * character is 0, it prints the character to the standard output and returns 
+ * NULL. Otherwise, it allocates memory for a 2-character string, assigns the 
+ * character to the first position, and null-terminates the string.
+ *
+ * @param c The integer character to be converted.
+ * @return char* Pointer to the newly allocated string, or NULL if the 
+ *         character is 0.
+ */
 static char	*ctoa(int c)
 {
 	char	*str;

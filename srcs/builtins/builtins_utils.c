@@ -1,5 +1,15 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Counts the number of arguments in an array of strings.
+ *
+ * This function calculates the length of a null-terminated array of strings.
+ * If the array is NULL, the function returns 0.
+ *
+ * @param args The array of strings to evaluate.
+ *
+ * @return The number of arguments in the array.
+ */
 int	ft_argslen(char **args)
 {
 	int	i;
@@ -7,16 +17,38 @@ int	ft_argslen(char **args)
 	i = 0;
 	if (!args)
 		return (i);
+	if (!(*args))
+		return (i);
 	while (args[i])
 		i++;
 	return (i);
 }
 
+/**
+ * @brief Checks if the given command is a built-in command.
+ *
+ * This function compares the provided command (args[0]) against a predefined
+ * list of built-in commands (e.g., cd, pwd, export, unset, exit, echo, env).
+ * Returns TRUE if the command matches a built-in, otherwise FALSE.
+ *
+ * @param args The array of arguments, where args[0] is the command name.
+ *
+ * @return TRUE if args[0] is a built-in command, FALSE otherwise.
+ */
 bool	ft_isbuiltin(char **args)
 {
-	char	*bcmd[8] = {"cd", "pwd", "export", "unset", "exit", "echo", "env", NULL};
-	int	i = 0;
+	const char	*bcmd[8];
+	int			i;
 
+	i = 0;
+	bcmd[0] = "cd";
+	bcmd[1] = "pwd";
+	bcmd[2] = "export";
+	bcmd[3] = "unset";
+	bcmd[4] = "exit";
+	bcmd[5] = "echo";
+	bcmd[6] = "env";
+	bcmd[7] = NULL;
 	while (bcmd[i])
 	{
 		if (ft_strncmp(bcmd[i], args[0], ft_strlen(args[0])) == 0)
@@ -26,53 +58,74 @@ bool	ft_isbuiltin(char **args)
 	return (FALSE);
 }
 
+/**
+ * @brief Executes a built-in command based on the given arguments.
+ *
+ * This function identifies and executes a supported built-in command 
+ * (e.g., cd, pwd, export, unset, exit, echo, env) using the provided
+ * arguments and shell context.
+ *
+ * @param args The array of arguments, where args[0] is the command name.
+ * @param sh The shell structure containing the global and local environments.
+ */
 void	ft_exec_builtin(char **args, t_shell *sh)
 {
+	int	argc;
+
+	argc = ft_argslen(args);
 	if (ft_strncmp("cd", args[0], ft_strlen(args[0])) == 0)
-		ft_cd(ft_argslen(args), args[1], sh->global);
+		ft_cd(argc, args[1], sh->global);
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
 		ft_pwd();
 	else if (ft_strncmp("export", args[0], ft_strlen(args[0])) == 0)
-		ft_export(ft_argslen(args), args, sh, GLOBAL); //modificar receber global e local
+		ft_export(argc, args, sh, GLOBAL);
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
-		ft_unset(ft_argslen(args), args, &sh->global); //receber global e local
+		ft_unset(argc, args, sh);
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)
-		ft_exit(args);
+		ft_exit(argc, args);
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
 		ft_env(sh->global);
 }
 
+/**
+ * @brief Checks if the node contains only a built-in command.
+ *
+ * This function evaluates a syntax tree node to determine if it represents
+ * a built-in command without external commands or pipes. If the node is an
+ * executable type and its arguments match a built-in command, the function
+ * returns true.
+ *
+ * @param node The current syntax tree node to check.
+ * @param sh The shell structure with environment and execution context.
+ *
+ * @return TRUE if the node is a standalone built-in command; FALSE otherwise.
+ */
 int	ft_isjustbuiltin(void *node, t_shell *sh)
 {
-	void	*curr_node;
+	t_node	*curr;
 	char	**new_args;
-	int		flag;
 
-	flag = 0;
 	if (!((t_node *)node)->right)
 	{
-		curr_node = ((t_node *)node)->left;
-		while (!flag && curr_node)
+		curr = ((t_node *)node)->left;
+		while (curr)
 		{
-			if (((t_redir *)curr_node)->type == OUTFILE 
-				|| ((t_redir *)curr_node)->type == INFILE
-				|| ((t_redir *)curr_node)->type == APPEND
-				|| ((t_redir *)curr_node)->type == HEREDOC)
-				curr_node = ((t_redir *)curr_node)->next;
+			if (ft_is_node_type(curr, REDIR))
+				curr = ((t_redir *)curr)->next;
 			else
-				flag++;
+				break ;
 		}
-		if (curr_node)
+		if (curr && ft_is_node_type(curr, EXEC))
 		{
-			if (((t_exec *)curr_node)->type == EXEC || ((t_exec *)curr_node)->type == EXPORT || ((t_exec *)curr_node)->type == EXPORT_AP)
-			{
-				ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));//ft_merge_env
-				new_args = tokentostring(((t_exec *)curr_node)->args);
-				if (ft_isbuiltin(new_args) || ((t_exec *)curr_node)->type == EXPORT || ((t_exec *)curr_node)->type == EXPORT_AP)
-					return (ft_free_vector(new_args), TRUE);
-			}
+			ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
+			new_args = tokentostring(((t_exec *)curr)->args);
+			if (ft_isbuiltin(new_args)
+				|| ((t_exec *)curr)->type == EXPORT
+				|| ((t_exec *)curr)->type == EXPORT_AP)
+				return (ft_free_vector(new_args), TRUE);
+			ft_free_vector(new_args);
 		}
 	}
 	return (FALSE);

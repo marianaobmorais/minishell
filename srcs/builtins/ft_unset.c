@@ -4,8 +4,9 @@
  * @brief Checks if a variable exists in the environment.
  *
  * This function iterates through the `my_envp` environment array to check if 
- * a variable with the name `str` exists. It compares `str` with each environment 
- * variable up to the length of `str` and ensures an exact match followed by an '='.
+ * a variable with the name `str` exists. It compares `str` with each env
+ * variable up to the length of `str` and ensures an exact match followed
+ * by an '='.
  * If the variable is found, it returns the index of the environment variable.
  * Otherwise, it returns 0.
  *
@@ -39,10 +40,12 @@ static size_t	is_var(char *str, char **my_envp)
 /**
  * @brief Deletes a variable from the environment.
  *
- * This function removes a variable with the name `str` from the `my_envp` environment array.
- * It compares `str` with each environment variable up to the length of `str` and ensures an exact match
- * followed by an '='. If a match is found, the variable is removed and the memory is freed.
- * A new environment array is created without the removed variable and the old environment array is freed.
+ * This function removes a variable with the name `str` from the `my_envp` 
+ * environment array. It compares `str` with each environment variable up to 
+ * the length of `str` and ensures an exact match followed by an '='.
+ * If a match is found, the variable is removed and the memory is freed.
+ * A new environment array is created without the removed variable and the
+ * old environment array is freed.
  *
  * @param str The name of the variable to be deleted.
  * @param my_envp A pointer to the environment variable array.
@@ -62,7 +65,7 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	j = 0;
 	new_envp = (char **) malloc(size_env * sizeof(char *));
 	if (!new_envp)
-		return (ft_exit_status(1, TRUE, FALSE), -1); //error handler
+		return (ft_exit_status(1, TRUE, FALSE), -1); //utilizar funcao malloc
 	while (i < size_env)
 	{
 		if (ft_strncmp(str, (*my_envp)[i], size) == 0
@@ -82,18 +85,18 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 /**
  * @brief Unsets (removes) specified environment variables.
  *
- * This function removes one or more variables from the environment array `my_envp`.
- * It iterates through each argument in `argv`, checking if each variable exists in
- * `my_envp` using the `is_var` function. If the variable exists, `delete_var` is called to remove it.
- * If `argc` is 1 (no variables specified), the function returns without making changes.
+ * This function removes variables from the `my_envp` array. It iterates
+ * through `argv` and checks each variable using the `is_var` function. If
+ * the variable exists, it is removed using `delete_var`. If `argc` is 1, no
+ * variables are specified, and the function returns without changes.
  *
- * @param argc The count of arguments, where `argc > 1` means variables are specified to unset.
- * @param argv The list of arguments; each one is a variable name to unset.
- * @param my_envp A pointer to the array of environment variables.
+ * @param argc The count of arguments. If `argc > 1`, variables are specified.
+ * @param argv The list of arguments; each is a variable name to unset.
+ * @param sh The shell structure containing `global` and `local` environments.
  *
- * @return The exit status, with 0 indicating successful execution.
+ * @return Exit status: 0 indicates successful execution.
  */
-int	ft_unset(int argc, char **argv, char ***my_envp)
+int	ft_unset(int argc, char **argv, t_shell *sh)
 {
 	size_t	size_env;
 
@@ -102,10 +105,21 @@ int	ft_unset(int argc, char **argv, char ***my_envp)
 	++argv;
 	while (*argv)
 	{
-		size_env = is_var(*argv, *my_envp);
-		if (size_env > 0)
-			delete_var(*argv, my_envp, size_env); //missing delete VAR without '='
+		if ((*sh->global))
+		{
+			size_env = is_var(*argv, sh->global);
+			if (size_env > 0)
+				delete_var(*argv, &(sh->global), size_env);
+		}
+		if ((*sh->local))
+		{
+			size_env = is_var(*argv, sh->local);
+			if (size_env > 0)
+				delete_var(*argv, &(sh->local), size_env);
+		}
 		argv++;
 	}
 	return (ft_exit_status(0, TRUE, FALSE));
 }
+
+//missing delete VAR without '='

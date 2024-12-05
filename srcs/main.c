@@ -2,11 +2,10 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argv;
 	t_shell	*sh;
 	char	*error_msg;
 
-	//verificar necessidade de manipular SHLVL
+	(void) argv;
 	error_msg = "arguments are not accepted when initializing the program";
 	if (argc != 1)
 		return (ft_stderror(FALSE, error_msg), 1);
@@ -14,8 +13,6 @@ int	main(int argc, char **argv, char **envp)
 	if (!sh)
 		return (1);
 	ft_cli(sh);
-	//ft_free_sh
-	// ft_free_vector(env->global);
-	// ft_free_vector(env->local);
-	return (0);
+	ft_free_sh(sh);
+	return (ft_exit_status(0, FALSE, FALSE));
 }

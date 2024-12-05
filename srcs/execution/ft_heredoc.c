@@ -1,5 +1,17 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Reads input for a here-document until the end-of-file delimiter.
+ *
+ * Continuously reads user input, processes it, and writes it to a file
+ * descriptor until the specified end-of-file string is encountered. Handles
+ * signal interruptions and expands env variables if in the general state.
+ *
+ * @param eof The end-of-file delimiter string.
+ * @param state The state indicating if env variable expansion is needed.
+ * @param my_envp Array of environment variables for expansion.
+ * @param fd_write The file descriptor to write the input to.
+ */
 static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 {
 	char	*input;
@@ -27,6 +39,17 @@ static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 	}
 }
 
+/**
+ * @brief Saves the contents of a file descriptor to a file.
+ *
+ * Opens the specified pathname for writing, reads from the provided file
+ * descriptor, and writes the data to the file. Handles errors, manages memory,
+ * and updates the shell's here-document list.
+ *
+ * @param pathname The path to the file to save the contents.
+ * @param fd The file descriptor to read from.
+ * @param sh The shell structure containing the here-document list.
+ */
 static void	save_heredoc(char *pathname, int fd, t_shell *sh)
 {
 	int		fd_save;
@@ -35,27 +58,35 @@ static void	save_heredoc(char *pathname, int fd, t_shell *sh)
 
 	fd_save = open(pathname, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd_save == -1)
-	{
-		ft_stderror(TRUE, "");
-		ft_exit_status(1, TRUE, FALSE);
-		return ;
-	}
-	buffer = malloc(BUFFER_SIZE * sizeof(BUFFER_SIZE));
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
+	buffer = malloc(BUFFER_SIZE * sizeof(char *) + 1);
+	if (!buffer)
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
 	rd = 1;
 	while (rd != 0)
 	{
 		rd = read(fd, buffer, BUFFER_SIZE);
+		buffer[rd] = '\0';
 		if (rd <= 0)
 			break ;
 		write(fd_save, buffer, ft_strlen(buffer));
-		free(buffer);
 	}
+	free(buffer);
 	close(fd);
 	close(fd_save);
-	ft_lstadd_back(sh->heredoc_list, ft_lstnew(ft_strdup(pathname)));
+	ft_lstadd_back(sh->heredoc_list, ft_lstnew((ft_strdup(pathname))));
 	free(pathname);
 }
 
+/**
+ * @brief Waits for a here-document process to finish and updates exit status.
+ *
+ * Waits for the specified process ID to finish. If the process exits normally,
+ * sets the exit status. If the process is terminated by a signal, sets the
+ * exit status to the signal number plus 128.
+ *
+ * @param pid The process ID of the here-document process to wait for.
+ */
 static void	wait_heredoc(pid_t pid)
 {
 	int	status;
@@ -69,6 +100,20 @@ static void	wait_heredoc(pid_t pid)
 	}
 }
 
+/**
+ * @brief Creates a pipe for here-document input and manages the process.
+ *
+ * Sets up a pipe, forks a process to read the here-document input, and waits
+ * for the child process to finish. If the child process succeeds, saves the
+ * here-document content to a file and updates the shell state.
+ *
+ * @param eof The end-of-file delimiter string.
+ * @param my_envp Array of environment variables for expansion.
+ * @param state The state indicating if env variable expansion is needed.
+ * @param sh The shell structure containing the here-document list.
+ *
+ * @return TRUE if the here-doc was successfully processed, FALSE otherwise.
+ */
 static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 {
 	int		fd[2];
@@ -89,12 +134,22 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 	close(fd[1]);
 	wait_heredoc(pid);
 	if (ft_exit_status(0, FALSE, FALSE) != 0)
-		return (FALSE);
+		return (ft_free_vector(my_envp), FALSE);
 	save_heredoc(ft_create_pathname(), fd[0], sh);
 	close(fd[0]);
-	return (TRUE);
+	return (ft_free_vector(my_envp), TRUE);
 }
 
+/**
+ * @brief Searches and processes here-documents in a command tree.
+ *
+ * Traverses a command tree or list of redirections, processing
+ * here-documents when found. Handles different node types and
+ * updates the shell state accordingly.
+ *
+ * @param node The current node in the command tree or redirection list.
+ * @param sh The shell structure containing the execution state and environment
+ */
 void	ft_search_heredoc(void *node, t_shell *sh)
 {
 	t_redir	*rnode;
@@ -112,10 +167,10 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
 		rnode = (t_redir *)node;
-		ft_process_token_list(rnode->target, ft_merge_env(sh)); //ft_merge_env
+		ft_process_token_list(rnode->target, ft_merge_env(sh));
 		tnode = (t_token *)(*rnode->target)->content;
 		state = tnode->state;
-		sh->run = heredoc_fd(tnode->value, ft_merge_env(sh), state, sh); //ft_merge_env
+		sh->run = heredoc_fd(tnode->value, ft_merge_env(sh), state, sh);
 	}
 	else if (((t_redir *)node)->type == EXEC
 		|| ((t_redir *)node)->type == EXPORT
