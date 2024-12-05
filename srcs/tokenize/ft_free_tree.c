@@ -25,8 +25,8 @@ static void	ft_free_exec(t_exec *exec_node)
 		token = (t_token *)(*list)->content;
 		if (token)
 		{
-			// if (token->value)
-			// 	free(token->value);
+			if (token->value)
+				free(token->value);
 			free(token);
 		}
 		free(*list);
@@ -61,8 +61,8 @@ static void	ft_free_redir(t_redir *redir_node)
 		token = (t_token *)(*list)->content;
 		if (token)
 		{
-			// if (token->value)
-			// 	free(token->value);
+			if (token->value)
+				free(token->value);
 			free(token);
 		}
 		free(*list);

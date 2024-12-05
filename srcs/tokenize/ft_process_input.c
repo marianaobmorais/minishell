@@ -186,7 +186,7 @@ void	*ft_process_input(char *input)
 	if (token_list && *token_list)
 	{
 		root = ft_build_tree(token_list, NULL); //ft_build_root(token_list, ROOT);
-		print_root(root, 60); //debug
+		//print_root(root, 60); //debug
 	}
 	free(trimmed);
 	ft_free_list(head);
