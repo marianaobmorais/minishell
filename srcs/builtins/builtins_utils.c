@@ -70,16 +70,19 @@ bool	ft_isbuiltin(char **args)
  */
 void	ft_exec_builtin(char **args, t_shell *sh)
 {
+	int	argc;
+
+	argc = ft_argslen(args);
 	if (ft_strncmp("cd", args[0], ft_strlen(args[0])) == 0)
-		ft_cd(ft_argslen(args), args[1], sh->global);
+		ft_cd(argc, args[1], sh->global);
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
 		ft_pwd();
 	else if (ft_strncmp("export", args[0], ft_strlen(args[0])) == 0)
-		ft_export(ft_argslen(args), args, sh, GLOBAL);
+		ft_export(argc, args, sh, GLOBAL);
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
-		ft_unset(ft_argslen(args), args, sh);
+		ft_unset(argc, args, sh);
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)
-		ft_exit(ft_argslen(args), args);
+		ft_exit(argc, args);
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
