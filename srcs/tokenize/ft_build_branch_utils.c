@@ -31,7 +31,7 @@ t_list	**ft_get_args(t_list **list)
 	{
 		token = (t_token *)curr->content;
 		if (ft_is_token_type(token, EXEC))
-			ft_lstadd_back(args, ft_lstnew((t_token *)curr->content));
+			ft_add_to_token_list(&token->value, args);
 		else if (ft_is_token_type(token, REDIR))
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
@@ -164,7 +164,7 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next;
-		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content));//
+		ft_add_to_token_list(&token->value, target);
 		redir->target = target;
 	}
 	return (redir);

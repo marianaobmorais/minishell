@@ -146,6 +146,32 @@ static bool	ft_has_expandable_var(char *s)
  *              the token node.
  * @param token_list The token list to which the new token will be added.
  */
+// void	ft_add_to_token_list(char **value, t_list **token_list)
+// {
+// 	t_token	*new_token; //working on it
+// 	t_list	*new_node;
+
+// 	if (!*value)
+// 		return ;
+// 	new_token = NULL;
+// 	new_node = ft_lstnew((t_token *)new_token);
+// 	if (!new_node)
+// 		return (ft_error_malloc("new_node"));
+// 	((t_token *)new_node)->value = ft_strdup(*value);
+// 	if (!(t_token *)new_node)
+// 		return (free(new_node), ft_error_malloc("(t_token *)new_node"));
+// 	((t_token *)new_node)->type = ft_get_token_type(*value);
+// 	((t_token *)new_node)->state = ft_get_token_state(*value);
+// 	((t_token *)new_node)->wildcard = ft_is_wildcard(*value);
+// 	if (token_list && !ft_is_heredoc_target(token_list))
+// 		new_token->expand = ft_has_expandable_var(*value);
+// 	else
+// 		new_token->expand = false;
+// 	ft_lstadd_back(token_list, new_node);
+// 	free(*value);
+// 	*value = NULL;
+// }
+
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
 	t_token	*new_token;
@@ -174,32 +200,3 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 	free(*value);
 	*value = NULL;
 }
-
-// void	ft_add_to_token_list(char **value, t_list **token_list)
-// {
-// 	t_token	*new_token;
-// 	t_list	*new_node;
-
-// 	if (!*value)
-// 		return ;
-// 	new_token = (t_token *)malloc(sizeof(t_token));
-// 	if (!new_token)
-// 		return (ft_error_malloc("new_token"));
-// 	new_token->value = ft_strdup(*value);
-// 	if (!new_token->value)
-// 		return (free(new_token), ft_error_malloc("new_token->value"));
-// 	new_token->type = ft_get_token_type(*value);
-// 	new_token->state = ft_get_token_state(*value);
-// 	new_token->wildcard = ft_is_wildcard(*value);
-// 	if (token_list && !ft_is_heredoc_target(token_list))
-// 		new_token->expand = ft_has_expandable_var(*value);
-// 	else
-// 		new_token->expand = false;
-// 	new_node = ft_lstnew((t_token *)new_token);
-// 	if (!new_node)
-// 		return (free(new_token->value), free(new_token),
-// 			ft_error_malloc("new_node"));
-// 	ft_lstadd_back(token_list, new_node);
-// 	free(*value);
-// 	*value = NULL;
-// }
