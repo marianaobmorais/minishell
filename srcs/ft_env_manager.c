@@ -26,14 +26,14 @@ char	**ft_merge_env(t_shell *sh)
 	envp = (char **) malloc((size + 1) * sizeof(char *));
 	if (!envp)
 		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""), NULL);
-	while((sh->global)[i])
+	while ((sh->global)[i])
 	{
 		envp[i] = ft_strdup((sh->global)[i]);
 		i++;
 	}
 	if (sh->local)
 	{
-		while((sh->local)[z])
+		while ((sh->local)[z])
 		{
 			envp[i++] = ft_strdup((sh->local)[z++]);
 		}

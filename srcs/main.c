@@ -2,10 +2,10 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argv;
 	t_shell	*sh;
 	char	*error_msg;
 
+	(void) argv;
 	error_msg = "arguments are not accepted when initializing the program";
 	if (argc != 1)
 		return (ft_stderror(FALSE, error_msg), 1);
