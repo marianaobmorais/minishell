@@ -133,10 +133,8 @@ int	ft_history(char *input)
 void	ft_cli(t_shell *sh)
 {
 	char	*input;
-	void	**tree;
 
 	input = NULL;
-	tree = NULL;
 	while (1)
 	{
 		ft_signal(PARENT_);
@@ -153,19 +151,7 @@ void	ft_cli(t_shell *sh)
 			break ;
 		}
 		if (ft_history(input))
-		{
-			tree = ft_process_input(input, ft_merge_env(sh));
-			if (tree)
-			{
-				ft_search_heredoc(tree, sh);
-				if (sh->run == TRUE && !ft_single_command(tree, sh))
-				{
-					ft_signal(DEFAULT_);
-					ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
-				}
-			}
-			ft_restore_cli(sh, tree);
-		}
+			ft_launcher_manager(ft_process_input(input, ft_merge_env(sh)), sh);
 	}
 	rl_clear_history();
 }

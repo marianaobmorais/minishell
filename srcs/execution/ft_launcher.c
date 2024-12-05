@@ -115,3 +115,28 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 		ft_parent_process(curr_fds, sh, next_node, pid);
 	}
 }
+
+/**
+ * @brief Manages the execution of commands in the syntax tree.
+ *
+ * This function orchestrates the execution of commands by handling heredoc
+ * processing, checking if the command is a single built-in, and launching
+ * the appropriate execution flow. It also restores the command-line interface
+ * state after execution.
+ *
+ * @param tree The syntax tree representing the parsed commands.
+ * @param sh The shell structure containing execution context and state.
+ */
+void	ft_launcher_manager(void *tree, t_shell *sh)
+{
+	if (tree)
+	{
+		ft_search_heredoc(tree, sh);
+		if (sh->run == TRUE && !ft_single_command(tree, sh))
+		{
+			ft_signal(DEFAULT_);
+			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
+		}
+	}
+	ft_restore_cli(sh, tree);
+}
