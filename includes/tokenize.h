@@ -61,16 +61,15 @@ typedef struct s_node
 typedef struct s_redir
 {
 	int		type;
-	t_list	**target; //antes era char *
+	t_list	**target;
 	int		mode;
-	void	*next; // aponta para o node de exec ou um redir, nunca pipe
+	void	*next;
 }	t_redir;
 
 typedef struct s_exec
 {
 	int		type;
-	char	*pathname;//useful for debug when printing
-	t_list	**args; //antes era char **
+	t_list	**args;
 }	t_exec;
 
 //ft_find_next_quote.c
@@ -95,8 +94,9 @@ void	ft_add_to_token_list(char **value, t_list **token_list);
 //ft_create_token_list_utils2.c
 bool	ft_is_heredoc_target(t_list **list);
 bool	ft_is_wildcard(char *s);
+void	ft_validate_export_tokens(t_list **list);
 //ft_process_input.c
-void	*ft_process_input(char *input, char **my_envp); //delete my_envp parameter later
+void	*ft_process_input(char *input);
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, \
 		char **my_envp);
@@ -120,7 +120,7 @@ char	*ft_get_middle(char *s);
 int	ft_strncmp_(const char *str1, const char *str2, size_t len);
 char	*ft_strnstr_(const char *big, const char *little, size_t len);
 //ft_build_root.c
-void	*ft_build_root(t_list **list, t_type type);
+void	*ft_build_root(t_list **list, t_type node_type);
 void	ft_skip_export_tokens(t_list **list);
 bool	ft_validate_skip(t_list **list);
 //ft_build_tree.c

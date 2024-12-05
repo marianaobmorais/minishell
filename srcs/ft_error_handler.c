@@ -1,5 +1,11 @@
 #include "../includes/minishell.h"
 
+void	ft_error_malloc(char *message)
+{
+	ft_stderror(TRUE, message);
+	ft_exit_status(1, TRUE, FALSE);
+}
+
 /**
  * @brief Converts an integer character to a string.
  *

@@ -51,11 +51,15 @@ int		ft_error_handler(void);
 
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
-void	ft_free_list(t_list **list);
+void	ft_free_list(t_list *list);
 void	ft_free_content(t_list *node);
 
+//ft_exit_status.c
 int		ft_exit_status(int exit_status, int write_, int exit_);
+
+//ft_error_handler.c
 void	ft_stderror(int perror_, const char *str, ...);
+void	ft_error_malloc(char *message);
 
 //talvez enviar para execution
 void	ft_signal(int type);

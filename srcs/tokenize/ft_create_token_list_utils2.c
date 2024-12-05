@@ -46,7 +46,7 @@ static int	ft_skip_quotes(char *s, int i)
 		i++;
 		while (s[i] && s[i] != SQUOTE)
 		{
-			if (s[i] == '*') 
+			if (s[i] == '*')
 				return (-1);
 			i++;
 		}
@@ -57,7 +57,7 @@ static int	ft_skip_quotes(char *s, int i)
 		i++;
 		while (s[i] && s[i] != DQUOTE)
 		{
-			 if (s[i] == '*' && s[i - 1] != '$') 
+			if (s[i] == '*' && s[i - 1] != '$') 
 				return (-1);
 			i++;
 		}
@@ -108,4 +108,44 @@ bool	ft_is_wildcard(char *s)
 			i++;
 	}
 	return (wildcard);
+}
+
+/**
+ * @brief Validates and adjusts the types of tokens related to `EXPORT` and
+ *        `EXPORT_AP`.
+ * 
+ * Iterates through the token list to ensure that `EXPORT` and `EXPORT_AP`
+ * tokens are properly contextualized based on their position and the preceding
+ * token.
+ * - If an `EXPORT` or `EXPORT_AP` token appears after the first position and
+ *   does not follow a valid token type (`NODE`, another `EXPORT`, `EXPORT_AP`,
+ *   or parentheses), its type is changed to `EXEC`.
+ * - This ensures proper token classification and avoids misinterpretation
+ *   during execution.
+ * 
+ * @param list A pointer to the head of the token list to validate and adjust.
+ */
+void	ft_validate_export_tokens(t_list **list)
+{
+	t_list	*current;
+	t_token	*token;
+	t_list	*prev;
+	int		pos;
+
+	pos = 0;
+	current = *list;
+	prev = NULL;
+	while (current)
+	{
+		token = (t_token *)current->content;
+		if ((token->type == EXPORT || token->type == EXPORT_AP) && pos > 0
+			&& !(ft_is_token_type(((t_token *)prev->content), NODE)
+				|| ((t_token *)prev->content)->type == EXPORT
+				|| ((t_token *)prev->content)->type == EXPORT_AP
+				|| ((t_token *)prev->content)->type == PRTHESES))
+			token->type = EXEC;
+		pos++;
+		prev = current;
+		current = current->next;
+	}
 }

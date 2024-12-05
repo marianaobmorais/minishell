@@ -23,7 +23,7 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
-	//ft_free_tree(tree);
+	ft_free_tree(tree);
 }
 
 /**
@@ -151,7 +151,7 @@ void	ft_cli(t_shell *sh)
 			break ;
 		}
 		if (ft_history(input))
-			ft_launcher_manager(ft_process_input(input, ft_merge_env(sh)), sh);
+			ft_launcher_manager(ft_process_input(input), sh);
 	}
 	rl_clear_history();
 }

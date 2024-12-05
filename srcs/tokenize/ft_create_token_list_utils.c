@@ -119,7 +119,7 @@ static bool	ft_has_expandable_var(char *s)
 			i++;
 			while (s[i] && s[i] != DQUOTE)
 			{
-				if (s[i] == '$' && ft_is_expandable(&s[i + 1])) 
+				if (s[i] == '$' && ft_is_expandable(&s[i + 1]))
 					return (true);
 				i++;
 			}
@@ -133,40 +133,73 @@ static bool	ft_has_expandable_var(char *s)
 }
 
 /**
- * @brief Adds a new token to the token list after initializing it.
+ * @brief Adds a new token to the token list.
  * 
- * This function creates a new token from `*value`, determining its type,
- * state, and whether it contains expandable variables. It then creates a new
- * list node for this token and adds it to the end of `token_list`.
+ * This function creates a new token structure based on the provided value, 
+ * assigns its properties (e.g., type, state, wildcard status, expansion 
+ * status), and appends it as a new node to the given token list. If memory 
+ * allocation fails at any point, the function frees any partially allocated 
+ * resources and invokes an error handler.
  * 
- * @param value Pointer to the current token string being built.
- * @param token_list Pointer to the list of tokens.
+ * @param value Pointer to a dynamically allocated string representing the 
+ *              token's value. The function frees the value after creating 
+ *              the token node.
+ * @param token_list The token list to which the new token will be added.
  */
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
 	t_token	*new_token;
 	t_list	*new_node;
 
-	if (*value)
-	{
-		new_token = (t_token *)malloc(sizeof(t_token));
-		if (!new_token)
-			return ; //error_handler; 1 //malloc failed
-		new_token->value = ft_strdup(*value);
-		if (!new_token->value)
-			return (free(new_token)); //error_handler; 1 //malloc failed
-		new_token->type = ft_get_token_type(*value);
-		new_token->state = ft_get_token_state(*value);
-		new_token->wildcard = ft_is_wildcard(*value); //update brief
-		if (!ft_is_heredoc_target(token_list))
-			new_token->expand = ft_has_expandable_var(*value);
-		else
-			new_token->expand = false;
-		new_node = ft_lstnew((t_token *)new_token);
-		if (!new_node)
-			return (free(new_token->value), free(new_token)); //error_handler; 1 //malloc failed
-		ft_lstadd_back(token_list, new_node);
-		free(*value);
-		*value = NULL;
-	}
+	if (!*value)
+		return ;
+	new_token = (t_token *)malloc(sizeof(t_token));
+	if (!new_token)
+		return (ft_error_malloc("new_token"));
+	new_token->value = ft_strdup(*value);
+	if (!new_token->value)
+		return (free(new_token), ft_error_malloc("new_token->value"));
+	new_token->type = ft_get_token_type(*value);
+	new_token->state = ft_get_token_state(*value);
+	new_token->wildcard = ft_is_wildcard(*value);
+	if (token_list && !ft_is_heredoc_target(token_list))
+		new_token->expand = ft_has_expandable_var(*value);
+	else
+		new_token->expand = false;
+	new_node = ft_lstnew((t_token *)new_token);
+	if (!new_node)
+		return (free(new_token->value), free(new_token),
+			ft_error_malloc("new_node"));
+	ft_lstadd_back(token_list, new_node);
+	free(*value);
+	*value = NULL;
 }
+
+// void	ft_add_to_token_list(char **value, t_list **token_list)
+// {
+// 	t_token	*new_token;
+// 	t_list	*new_node;
+
+// 	if (!*value)
+// 		return ;
+// 	new_token = (t_token *)malloc(sizeof(t_token));
+// 	if (!new_token)
+// 		return (ft_error_malloc("new_token"));
+// 	new_token->value = ft_strdup(*value);
+// 	if (!new_token->value)
+// 		return (free(new_token), ft_error_malloc("new_token->value"));
+// 	new_token->type = ft_get_token_type(*value);
+// 	new_token->state = ft_get_token_state(*value);
+// 	new_token->wildcard = ft_is_wildcard(*value);
+// 	if (token_list && !ft_is_heredoc_target(token_list))
+// 		new_token->expand = ft_has_expandable_var(*value);
+// 	else
+// 		new_token->expand = false;
+// 	new_node = ft_lstnew((t_token *)new_token);
+// 	if (!new_node)
+// 		return (free(new_token->value), free(new_token),
+// 			ft_error_malloc("new_node"));
+// 	ft_lstadd_back(token_list, new_node);
+// 	free(*value);
+// 	*value = NULL;
+// }

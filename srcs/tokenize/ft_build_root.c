@@ -1,5 +1,19 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Validates whether the token list can skip export tokens or not.
+ * 
+ * This function checks if the given token list contains tokens to process for
+ * execution, skipping over consecutive `EXPORT` or `EXPORT_AP` tokens. If 
+ * `EXPORT` or `EXPORT_AP` tokens are followed by an `EXEC` token, the
+ * validation to skip proceedes. If the list ends or if the first non-export
+ * token is not an executable (`EXEC`) or if it is a node (`NODE`), it does not
+ * skips the `EXPORT` and `EXPORT_AP` tokens.
+ * 
+ * @param list A double pointer to the token list to validate.
+ * @return `true` if the list should skip until with a valid executable token,
+ *         otherwise `false`.
+ */
 bool	ft_validate_skip(t_list **list)
 {
 	t_token	*token;
@@ -10,7 +24,7 @@ bool	ft_validate_skip(t_list **list)
 	while (tmp && (token->type == EXPORT || token->type == EXPORT_AP))
 	{
 		tmp = tmp->next;
-		if(tmp)
+		if (tmp)
 			token = tmp->content;
 	}
 	if (!tmp)
@@ -41,7 +55,7 @@ void	ft_skip_export_tokens(t_list **list)
 	while (*list && (token->type == EXPORT || token->type == EXPORT_AP))
 	{
 		if (!((*list)->next)
-				|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
+			|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
 			break ;
 		else
 		{
@@ -50,6 +64,7 @@ void	ft_skip_export_tokens(t_list **list)
 		}
 	}
 }
+
 /**
  * @brief Searches for the next logical operator (AND/OR) in the token list.
  * 
@@ -63,7 +78,7 @@ void	ft_skip_export_tokens(t_list **list)
  *        iterates through it.
  * @return `true` if an AND or OR operator is found, `false` otherwise.
  */
-static bool ft_find_next_root(t_list **list) 
+static bool	ft_find_next_root(t_list **list)
 {
 	t_token	*token;
 
@@ -93,7 +108,7 @@ static bool ft_find_next_root(t_list **list)
  * @return A pointer to the newly created root node, or NULL in case of
  *         allocation failure.
  */
-void	*ft_build_root(t_list **list, t_type type)
+void	*ft_build_root(t_list **list, t_type node_type)
 {
 	t_node	*root;
 
@@ -101,12 +116,12 @@ void	*ft_build_root(t_list **list, t_type type)
 		ft_skip_export_tokens(list);
 	root = (t_node *)malloc(sizeof(t_node));
 	if (!root)
-		return (NULL); //ft_error_hanlder(); 1 // malloc failed
+		return (ft_error_malloc("root"), NULL);
 	root->left = NULL;
 	root->right = NULL;
 	root->parent_node = NULL;
-	root->type = type;
-	if (type == AND || type == OR)
+	root->type = node_type;
+	if (node_type == AND || node_type == OR)
 		*list = (*list)->next;
 	root->left = ft_build_tree(list, &root);
 	if (!root->left)
@@ -115,8 +130,8 @@ void	*ft_build_root(t_list **list, t_type type)
 		return ((void *)root);
 	if (ft_find_next_root(list))
 	{
-		type = ((t_token *)(*list)->content)->type;
-		root->right = ft_build_root(list, type); //colocar parent_node?
+		node_type = ((t_token *)(*list)->content)->type;
+		root->right = ft_build_root(list, node_type);
 	}
 	return ((void *)root);
 }
