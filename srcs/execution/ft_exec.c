@@ -149,10 +149,10 @@ void	ft_exec(t_list **args, t_shell *sh)
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
 			ft_stderror(TRUE, "%s:", new_args[0]);
+			ft_free_vector(new_args);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
-		ft_free_vector(new_args);
 	}
-	ft_exit_status(0, TRUE, TRUE);
+	return (ft_exit_status(0, TRUE, TRUE), ft_free_vector(new_args));
 }
