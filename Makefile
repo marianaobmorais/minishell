@@ -61,7 +61,9 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --supressions=external_func_leaks.supp
+#VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=external_func_leaks.supp
+
+VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline -q
 
 
 $(NAME): $(LIBFT) $(OBJS)

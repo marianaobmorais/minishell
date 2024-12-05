@@ -4,34 +4,63 @@
  * @brief Frees the resources associated with an EXEC node.
  *
  * This function frees the memory allocated for the arguments of an EXEC node. 
- * It checks if the `args` list is non-NULL and, if so, calls `ft_free_list` 
- * to deallocate the list of arguments associated with the EXEC node. 
- * The EXEC node itself is not freed here, as it's handled elsewhere.
+ * It checks if the `args` list is non-NULL and, if so, it deallocates the list
+ * of arguments associated with the EXEC node. The EXEC node itself is not
+ * freed here, as it's handled elsewhere.
  *
  * @param exec_node A pointer to the EXEC node whose arguments should be freed.
  */
 static void	ft_free_exec(t_exec *exec_node)
 {
-	if (exec_node->args)
-		ft_free_list(exec_node->args);
+	t_list	**list;
+	t_list	*current;
+	t_token	*token;
+
+	if (!exec_node->args || !*exec_node->args)
+		return ;
+	list = (t_list **)exec_node->args;
+	while (*list)
+	{
+		current = (*list)->next;
+		token = (t_token *)(*list)->content;
+		if (token)
+			free(token);
+		free(*list);
+		*list = current;
+	}
+	free(list);
 }
 
 /**
  * @brief Frees the resources associated with a redirection node.
  *
  * This function frees the memory allocated for the target of a redirection
- * node. It checks if the `target` list is non-NULL and, if so, calls
- * `ft_free_list` to deallocate the list of target tokens associated with the
- * redirection node. The redirection node itself is not freed here, as it's
- * handled elsewhere.
+ * node. It checks if the `target` list is non-NULL and, if so, deallocates the
+ * list of one target token associated with the redirection node. The
+ * redirection node itself is not freed here, as it's handled elsewhere.
  *
  * @param redir_node A pointer to the redirection node whose target should be
  *        freed.
  */
 static void	ft_free_redir(t_redir *redir_node)
 {
-	if (redir_node->target)
-		ft_free_list(redir_node->target);
+	t_list	**list;
+	t_list	*current;
+	t_token	*token;
+
+	if (!redir_node->target || !*redir_node->target)
+		return ;
+	list = (t_list **)redir_node->target;
+	while (*list)
+	{
+		current = (*list)->next;
+		token = (t_token *)(*list)->content;
+		if (token)
+			free(token);
+		free(*list);
+		*list = current;
+	}
+	free(list);
 }
 
 /**
@@ -63,7 +92,6 @@ static void	ft_free_node(void *root)
 
 	if (!root)
 		return ;
-	printf("Freeing node of type: %d\n", ((t_node *)root)->type); // Debug	
 	node = (t_node *)root;
 	if (node->type == ROOT || node->type == AND || node->type == OR
 		|| node->type == PIPE || node->type == SUB_ROOT)
@@ -83,8 +111,7 @@ static void	ft_free_node(void *root)
 	else if (node->type == EXEC || node->type == EXPORT
 		|| node->type == EXPORT_AP)
 		ft_free_exec((t_exec *)root);
-	if (node)
-		free(node);
+	free(node);
 }
 
 /**

@@ -31,7 +31,7 @@ t_list	**ft_get_args(t_list **list)
 	{
 		token = (t_token *)curr->content;
 		if (ft_is_token_type(token, EXEC))
-			ft_lstadd_back(args, ft_lstnew(curr->content));
+			ft_lstadd_back(args, ft_lstnew((t_token *)curr->content));
 		else if (ft_is_token_type(token, REDIR))
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
@@ -63,7 +63,6 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 	if (!exec)
 		return (ft_error_malloc("exec"), NULL);
 	exec->type = token->type;
-	exec->pathname = token->value;
 	exec->args = ft_get_args(list);
 	if (!exec->args)
 		return (ft_error_malloc("exec->args"), NULL);
@@ -165,7 +164,7 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next;
-		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content));
+		ft_lstadd_back(target, ft_lstnew((t_token *)(*list)->content));//
 		redir->target = target;
 	}
 	return (redir);

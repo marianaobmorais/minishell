@@ -108,7 +108,7 @@ static bool	ft_find_next_root(t_list **list)
  * @return A pointer to the newly created root node, or NULL in case of
  *         allocation failure.
  */
-void	*ft_build_root(t_list **list, t_type type)
+void	*ft_build_root(t_list **list, t_type node_type)
 {
 	t_node	*root;
 
@@ -120,8 +120,8 @@ void	*ft_build_root(t_list **list, t_type type)
 	root->left = NULL;
 	root->right = NULL;
 	root->parent_node = NULL;
-	root->type = type;
-	if (type == AND || type == OR)
+	root->type = node_type;
+	if (node_type == AND || node_type == OR)
 		*list = (*list)->next;
 	root->left = ft_build_tree(list, &root);
 	if (!root->left)
@@ -130,8 +130,8 @@ void	*ft_build_root(t_list **list, t_type type)
 		return ((void *)root);
 	if (ft_find_next_root(list))
 	{
-		type = ((t_token *)(*list)->content)->type;
-		root->right = ft_build_root(list, type);
+		node_type = ((t_token *)(*list)->content)->type;
+		root->right = ft_build_root(list, node_type);
 	}
 	return ((void *)root);
 }

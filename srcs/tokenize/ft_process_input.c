@@ -124,7 +124,9 @@ void print_root(void *root, int indent) // Updated function
 			 ((t_exec *)root)->type == EXPORT_AP)
 	{
 		t_exec *exec_node = (t_exec *)root;
-		printf("%*sEXEC: %s\n", indent - 10, "", exec_node->pathname ? exec_node->pathname : "(no pathname)");
+		printf("%*s %s:\n", indent - 10, "", 
+			   (exec_node->type == EXEC) ? "EXEC" :
+			   (exec_node->type == EXPORT) ? "EXPORT" : "EXPORT_AP");
 		if (exec_node->args)
 		{
 			printf("%*sArguments:\n", indent - 10, "");
@@ -187,8 +189,7 @@ void	*ft_process_input(char *input)
 		print_root(root, 60); //debug
 	}
 	free(trimmed);
-	ft_free_list(&head);
-	if (token_list)
-		free(token_list);
+	ft_free_list(head);
+	free(token_list);
 	return (root);
 }

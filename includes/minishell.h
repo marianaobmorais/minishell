@@ -50,7 +50,7 @@ int		ft_error_handler(void);
 
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
-void	ft_free_list(t_list **list);
+void	ft_free_list(t_list *list);
 void	ft_free_content(t_list *node);
 
 //ft_exit_status.c
