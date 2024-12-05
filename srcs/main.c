@@ -14,5 +14,5 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	ft_cli(sh);
 	ft_free_sh(sh);
-	return (0);
+	return (ft_exit_status(0, FALSE, FALSE));
 }
