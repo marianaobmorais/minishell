@@ -66,7 +66,7 @@ int	ft_single_command(void *node, t_shell *sh)
 		curr_node = ((t_node *)node)->left;
 		while (ft_redir(((t_redir *)curr_node), sh))
 			curr_node = ((t_redir *)curr_node)->next;
-		ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
+		//ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
 		new_args = tokentostring(((t_exec *)curr_node)->args);
 		if (((t_exec *)curr_node)->type == EXPORT
 			|| ((t_exec *)curr_node)->type == EXPORT_AP)

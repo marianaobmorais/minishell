@@ -174,7 +174,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 	}
 	argv++;
 	if (check_key(argv) != 0)
-		return (ft_exit_status(2, TRUE, FALSE));
+		return (ft_exit_status(1, TRUE, FALSE));
 	while (*argv)
 	{
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));

@@ -49,7 +49,7 @@ bool	ft_isbuiltin(char **args)
 	bcmd[5] = "echo";
 	bcmd[6] = "env";
 	bcmd[7] = NULL;
-	while (bcmd[i])
+	while (bcmd[i] && *args[i])
 	{
 		if (ft_strncmp(bcmd[i], args[0], ft_strlen(args[0])) == 0)
 			return (TRUE);
@@ -107,9 +107,10 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 	t_node	*curr;
 	char	**new_args;
 
+	curr = ((t_node *)node)->left;
+	ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
 	if (!((t_node *)node)->right)
 	{
-		curr = ((t_node *)node)->left;
 		while (curr)
 		{
 			if (ft_is_node_type(curr, REDIR))
@@ -119,7 +120,6 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 		}
 		if (curr && ft_is_node_type(curr, EXEC))
 		{
-			ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
 			new_args = tokentostring(((t_exec *)curr)->args);
 			if (ft_isbuiltin(new_args)
 				|| ((t_exec *)curr)->type == EXPORT
