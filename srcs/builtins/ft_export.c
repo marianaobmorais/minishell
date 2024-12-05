@@ -10,7 +10,7 @@
  * @param size The current number of environment variables in `my_envp`.
  * @param my_envp Pointer to the environment variable array to be updated.
  */
-static int	add_var(char *str, size_t size, char ***my_envp)
+int	add_var(char *str, size_t size, char ***my_envp)
 {
 	int		i;
 	char	**new_envp;
@@ -177,10 +177,10 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		return (ft_exit_status(2, TRUE, FALSE));
 	while (*argv)
 	{
-		if (!ft_strchr(*argv, '='))
-			return (ft_exit_status(0, TRUE, FALSE));
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
-		if ((*argv)[s_key - 1] == '+')
+		if (!ft_strchr(*argv, '='))
+			ft_local_import(sh, *argv);
+		else if ((*argv)[s_key - 1] == '+')
 			concatenate_var(*argv, &(sh->global), DEFAULT);
 		else
 			replace_var(*argv, s_key, &(sh->global), DEFAULT);
@@ -188,8 +188,3 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 	}
 	return (ft_exit_status(0, TRUE, FALSE));
 }
-
-// var sem '=' nao fazer nada e guardar junto com as variaveis que foram
-// exportadas
-// var sem '=' pode ser exportada e atribuida depois
-// ou var pode ser repasssado ao export se ja estiver na local

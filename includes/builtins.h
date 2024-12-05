@@ -21,6 +21,8 @@ int		ft_unset(int argc, char **argv, t_shell *sh);
 int		ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 int		check_key(char **argv);
 void	ft_print_export(char **envp);
+int		add_var(char *str, size_t size, char ***my_envp);
+void	ft_local_import(t_shell *sh, char *arg);
 
 //manage
 bool	ft_isbuiltin(char **args);

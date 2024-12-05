@@ -38,7 +38,7 @@ void	ft_sort_str_tab(char **str, int n)
  * @brief Prints a str with double quotes around its value after the '=' symbol
  *
  * This function prints the given string `str` in the format `declare -x <str>`
- * where the portion after the '=' symbol is enclosed in double quotes. This is 
+ * where the portion after the '=' symbol is enclosed in double quotes. This is
  * useful for simulating env variable declarations in a shell-like format.
  *
  * @param str The string to be printed with quoted value after '='.
@@ -98,7 +98,7 @@ void	ft_print_export(char **envp)
 }
 
 /**
- * @brief Validates if each argument is a valid environment variable identifier.
+ * @brief Validates if each argument is a valid environment variable identifier
  *
  * Checks each string in `argv` to ensure it follows the rules for environment 
  * variable names.
@@ -122,7 +122,7 @@ int	check_key(char **argv)
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
 			return (ft_stderror(FALSE, error_msg, (*argv)), 2);
-		while ((*argv)[i] != '=')
+		while ((*argv)[i] != '=' && (*argv)[i])
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
 			{
@@ -136,4 +136,37 @@ int	check_key(char **argv)
 		argv++;
 	}
 	return (0);
+}
+
+/**
+ * @brief Imports a local environment variable into the global environment.
+ *
+ * This function searches for a variable in the local environment that matches
+ * the provided argument. If a match is found and the variable has a valid 
+ * format (with an '=' separator), it adds the variable to the global envp.
+ *
+ * @param sh The shell structure containing local and global environments.
+ * @param arg The variable name to search for in the local environment.
+ */
+void	ft_local_import(t_shell *sh, char *arg)
+{
+	int		i;
+	int		size;
+	char	*var;
+
+	i = 0;
+	size = ft_strlen(arg);
+	var = NULL;
+	while ((sh->local)[i])
+	{
+		if (ft_strncmp(arg, (sh->local)[i], size) == 0
+			&& (sh->local)[i][size] == '=')
+		{
+			var = (sh->local)[i];
+			break ;
+		}
+		i++;
+	}
+	if (var)
+		add_var(var, ft_argslen(sh->global), &(sh->global));
 }
