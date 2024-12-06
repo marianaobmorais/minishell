@@ -116,7 +116,7 @@ int	check_key(char **argv)
 	size_t	i;
 	char	*error_msg;
 
-	error_msg = "export: '%s' not a valid identifier";
+	error_msg = "export: `%s': not a valid identifier";
 	while (*argv)
 	{
 		i = 0;
