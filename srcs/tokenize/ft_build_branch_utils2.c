@@ -43,7 +43,8 @@ t_list	**ft_create_sub_list(t_list **list)
 			*list = (*list)->next;
 			break ;
 		}
-		ft_lstadd_back(sub, ft_lstnew(token));
+		//ft_lstadd_back(sub, ft_lstnew(token));//deve dar invalid read
+		ft_add_to_token_list(&token->value, sub);
 		*list = (*list)->next;
 	}
 	return (sub);

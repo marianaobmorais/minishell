@@ -46,8 +46,8 @@ void	ft_free_content(t_list *node)
 		{
 			if (token->value)
 				free(token->value);
+			free(token);
 		}
-		free(token);
 		free(node);
 	}
 }

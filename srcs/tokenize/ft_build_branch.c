@@ -92,7 +92,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
  *        created `EXEC` node is stored.
  * @param token A double pointer to the current token being processed. The 
  *        function updates this pointer to the next token in the list.
- * @return A pointer to the created `EXEC` node, or `NULL` if further processing 
+ * @return A pointer to the created `EXEC` node, or `NULL` if further processing
  *         of the token list is required.
  */
 static void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
@@ -142,7 +142,7 @@ void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
  * This function processes the current token in the token list and determines 
  * the appropriate branch to build for the syntax tree. It handles different 
  * token types,including executable commands (`EXEC`),parentheses (`PRTHESES`),
- * and redirections (`REDIR`). The function updates the corresponding structures 
+ * and redirections (`REDIR`). The function updates the corresponding structures
  * (execution nodes, subroot nodes, or redirection nodes) and advances the list 
  * pointer as needed.
  * 

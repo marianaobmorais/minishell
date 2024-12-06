@@ -49,7 +49,7 @@ bool	ft_isbuiltin(char **args)
 	bcmd[5] = "echo";
 	bcmd[6] = "env";
 	bcmd[7] = NULL;
-	while (bcmd[i] && *args[i])
+	while (bcmd[i] /* && *args[i] */) //dá seg fault no meu pc
 	{
 		if (ft_strncmp(bcmd[i], args[0], ft_strlen(args[0])) == 0)
 			return (TRUE);
