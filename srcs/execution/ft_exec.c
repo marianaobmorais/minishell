@@ -18,14 +18,51 @@ int	isvalid(char *pathname, char **args)
 
 	if (stat(pathname, &file) == -1)
 	{
-		ft_stderror(TRUE, "%s: ", args[0]);
+		ft_stderror(TRUE, "stat: %s: ", args[0]);
+		ft_exit_status(127, TRUE, TRUE);
+		return (-1);
+	}
+	else if (S_ISDIR(file.st_mode) != 0)
+	{
+		ft_stderror(FALSE, "%s: Is a directory", args[0]);
+		ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	// else if (access(pathname, R_OK) == -1)
+	// {
+	// 	ft_stderror(FALSE, "access: %s: ", args[0]);
+	// 	ft_exit_status(126, TRUE, TRUE);
+	// 	return (-1);
+	// }
+	else if (access(pathname, X_OK) == -1)
+	{
+		ft_stderror(TRUE, "access: %s: ", args[0]);
+		ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	return (0);
+}
+
+int	isvalid_(char *pathname, char **args)
+{
+	struct stat	file;
+
+	if (stat(pathname, &file) == -1)
+	{
+		ft_stderror(TRUE, "stat: %s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (S_ISDIR(file.st_mode) != 0)
 	{
-		ft_stderror(FALSE, "%s: Is a directory", args[0]);
-		ft_exit_status(126, TRUE, TRUE);
+		// ft_stderror(FALSE, "%s: Is a directory", args[0]);
+		// ft_exit_status(126, TRUE, TRUE);
+		return (-1);
+	}
+	if (access(pathname, R_OK) == -1)
+	{
+		// ft_stderror(TRUE, "access: %s: ", args[0]);
+		// ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (access(pathname, X_OK) == -1)
@@ -97,7 +134,9 @@ static char	*ft_findpath(char **envp, char **cmds)
 
 	i = 0;
 	paths = NULL;
-	if (access(cmds[0], F_OK) == 0 && isvalid(cmds[0], cmds) == 0)
+	if (ft_strchr(cmds[0], '/') && isvalid(cmds[0], cmds) == 0)
+		return (ft_strdup(cmds[0]));
+	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -109,6 +148,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 	while (paths[i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
+		//if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
 		if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
@@ -143,7 +183,10 @@ void	ft_exec(t_list **args, t_shell *sh)
 		ft_exec_builtin(new_args, sh);
 	else
 	{
+		if (!*new_args)
+			ft_exit_status(0, TRUE, TRUE);
 		pathname = ft_findpath(sh->global, new_args);
+		//pathname = new_args[0];
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
@@ -151,7 +194,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 		}
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
-			ft_stderror(TRUE, "%s:", new_args[0]);
+			ft_stderror(TRUE, "execve: %s:", new_args[0]);
 			ft_free_vector(new_args);
 			ft_exit_status(1, TRUE, TRUE);
 		}
