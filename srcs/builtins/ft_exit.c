@@ -45,13 +45,13 @@ static int	isnumeric(char *arg)
  * @return The converted numeric value on success or triggers an error with 
  *         an exit status of 2 if validation fails.
  */
-static long	arg_convert(char *arg)
+static unsigned char	arg_convert(char *arg)
 {
 	int			i;
 	long long	num;
 
 	i = 0;
-	ft_exit_status(0, TRUE, FALSE);
+	//ft_exit_status(0, TRUE, FALSE);
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;
 	while (arg[i])
@@ -69,7 +69,8 @@ static long	arg_convert(char *arg)
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 		return (ft_exit_status(2, TRUE, FALSE));
 	}
-	return ((long) num);
+	ft_exit_status((unsigned char) num, TRUE, FALSE);
+	return ((unsigned char) num);
 }
 
 /**
@@ -103,9 +104,11 @@ void	ft_exit(int argc, char **args)
 		}
 		else
 		{
-			exit_status = (unsigned char) arg_convert(args[i]);
+/* 			exit_status = (unsigned char) arg_convert(args[i]);
 			if (ft_exit_status(0, FALSE, FALSE) || (exit_status && args[i + 1]))
-				ft_exit_status(exit_status, TRUE, TRUE);
+				ft_exit_status(exit_status, TRUE, TRUE); */
+			if (arg_convert(args[i]) && !args[i + 1])
+				ft_exit_status(0, FALSE, TRUE);
 		}
 		i++;
 	}

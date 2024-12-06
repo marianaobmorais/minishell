@@ -22,7 +22,7 @@ int	ft_open(int type, char *pathname, int mode)
 	{
 		if (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1)
 		{
-			ft_stderror(TRUE, "%s: ", pathname);
+			ft_stderror(TRUE, "infile: %s: ", pathname);
 			ft_exit_status(1, TRUE, FALSE);
 			return (-1);
 		}
