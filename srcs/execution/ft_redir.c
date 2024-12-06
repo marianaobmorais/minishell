@@ -108,7 +108,7 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
  *
  * @return TRUE on success, or FALSE on failure.
  */
-int	ft_redir(t_redir *node, t_shell *sh)
+int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 {
 	int		fd;
 	t_token	*tnode;
@@ -119,7 +119,17 @@ int	ft_redir(t_redir *node, t_shell *sh)
 		tnode = (t_token *)(*node->target)->content;
 		fd = ft_open(node->type, tnode->value, node->mode);
 		if (fd == -1)
-			return (FALSE);
+		{
+			if (!next_node)
+				return (FALSE);
+			sh->curr_fd = -1;
+			return (TRUE);
+		}
+		// if (fd == -1)
+		// {
+		// 	fd = open("/dev/null", O_RDONLY);
+		// 	return (TRUE);
+		// }
 		if (node->type == OUTFILE || node->type == APPEND)
 			dup2(fd, STDOUT_FILENO);
 		else

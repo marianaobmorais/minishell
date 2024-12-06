@@ -53,6 +53,11 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
 
+	if (sh->curr_fd == -1)//added
+	{
+		sh->curr_fd = 0;
+		kill(pid, SIGPIPE);
+	} 
 	if (!node)
 	{
 		ft_signal(CHILD_);
@@ -101,14 +106,16 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	{
 		sh->prev = node;
 		ft_launcher(((t_node *)node)->left, ((t_node *)node)->right, fds, sh);
+		//ft_launcher(((t_node *)node)->right, ((t_node *)node)->right, fds, sh);
 	}
-	else if (ft_redir(((t_redir *)node), sh))
+	else if (ft_redir(((t_redir *)node), next_node, sh))
 	{
 		sh->prev = node;
 		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
 	}
 	else if (((t_exec *)node)->type == EXEC)
 	{
+		// close(STDIN_FILENO);
 		if (pipe(curr_fds) == -1)
 			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
 		pid = ft_child_process(curr_fds, sh, node, next_node);
@@ -132,7 +139,7 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	if (tree)
 	{
 		ft_search_heredoc(tree, sh);
-		if (sh->run == TRUE && !ft_single_command(tree, sh))
+		if (sh->run == TRUE && !ft_single_command(tree, ((t_node *) tree)->right ,sh))
 		{
 			ft_signal(DEFAULT_);
 			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
