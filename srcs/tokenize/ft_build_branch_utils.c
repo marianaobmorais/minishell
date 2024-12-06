@@ -80,13 +80,11 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 /**
  * @brief Searches for the next redirection token in the token list.
  * 
- * This function iterates through a token list, starting from the 
- * current position, to locate the next token of type `REDIR`. The search 
- * stops at tokens of type `NODE` or at the end of the list.
- * 
- * If a redirection token is found, the function returns `true`, and the 
- * pointer to the list is updated to the position of the found token. 
- * Otherwise, it returns `false`.
+ * This function iterates through a token list, starting from the current
+ * position, to locate the next token of type `REDIR`. The search stops at
+ * tokens of type `NODE` or at the end of the list. If a redirection token is
+ * found, the function returns `true`, and the pointer to the list is updated to
+ * the position of the found token. Otherwise, it returns `false`.
  * 
  * @param list A double pointer to the current position in the token list. 
  *        If a redirection token is found, the pointer will point to it.
@@ -132,10 +130,10 @@ void	ft_assign_redir_mode(t_redir **redir)
 /**
  * @brief Initializes a redirection structure based on the given token.
  * 
- * This function creates and initializes a `t_redir` structure,which represents
+ * This function creates and initializes a `t_redir` structure, which represents
  * a redirection in the shell. It also sets up a linked list (`t_list **`) to 
  * store the target of the redirection. The type of redirection (e.g., input, 
- * output, append, etc.) is determined from the token, and the appropriate
+ * output, append, heredoc) is determined from the token, and the appropriate
  * redirection mode is assigned. If the next token is an executable, it is
  * considered the target of the redirection, and added to the target list.
  * 
@@ -164,8 +162,10 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		&& ((t_token *)(*list)->next->content)->type == EXEC)
 	{
 		*list = (*list)->next;
-		ft_add_to_token_list(&((t_token *)(*list)->content)->value/* &token->value */, target);
+		ft_add_to_token_list(&((t_token *)(*list)->content)->value, target);
 		redir->target = target;
+		if (redir->type == HEREDOC)
+			((t_token *)((*redir->target)->content))->expand = false;
 	}
 	return (redir);
 }

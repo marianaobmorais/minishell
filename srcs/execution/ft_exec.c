@@ -135,7 +135,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 
 	pathname = NULL;
 	//ft_print_list(args);
-	//ft_process_token_list(args, ft_merge_env(sh));
+	ft_process_token_list(args, ft_merge_env(sh));
 	//ft_print_list(args);
 	//new_args = ft_split_argv(tokentostring(args));
 	new_args = tokentostring(args);
