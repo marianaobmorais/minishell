@@ -15,7 +15,7 @@ static void	ft_free_exec(t_exec *exec_node)
 	if (exec_node->args)
 	{
 		ft_free_list(*exec_node->args);
-		free(exec_node->args);
+		free(exec_node->args); //leaks here
 	}
 	// t_list	**list;
 	// t_list	*current;
