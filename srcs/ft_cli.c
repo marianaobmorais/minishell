@@ -24,7 +24,7 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
 	sh->curr_fd = 0;
-	ft_free_tree(tree);
+	//ft_free_tree(tree);
 	ft_free_tree(sh->root);
 	tree = NULL;
 }
@@ -47,8 +47,6 @@ void	ft_free_sh(t_shell *sh)
 		ft_free_vector(sh->local);
 	if (sh->heredoc_list)
 		free(sh->heredoc_list);
-	if (sh->root)
-		ft_free_tree(sh->root);
 	free(sh);
 }
 
