@@ -14,11 +14,11 @@
  *
  * @return The file descriptor on success, or -1 on error.
  */
-int	ft_open(int type, char *pathname, int mode)
+int	ft_open(t_redir *node, char *pathname, int mode)
 {
 	int	fd;
 
-	if (type == INFILE)
+	if (node->type == INFILE)
 	{
 		if (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1)
 		{
@@ -30,7 +30,7 @@ int	ft_open(int type, char *pathname, int mode)
 	fd = open(pathname, mode, 0644);
 	if (fd == -1)
 	{
-		ft_stderror(TRUE, "%s: ", pathname);
+		ft_stderror(TRUE, "outfile: %s: ", pathname);
 		ft_exit_status(1, TRUE, FALSE);
 	}
 	return (fd);
@@ -95,6 +95,27 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 	*sh->heredoc_list = tmp;
 }
 
+// static int	ft_check_fds(t_redir *node, t_shell * sh)
+// {
+// 	t_redir	*curr_node;
+// 	t_token	*tnode;
+// 	int		fd;
+
+// 	curr_node = node;
+// 	while ( curr_node && (curr_node->type == OUTFILE
+// 		|| curr_node->type == INFILE || curr_node->type == APPEND))
+// 	{
+// 		ft_process_token_list(curr_node->target, ft_merge_env(sh));
+// 		tnode = (t_token *)(*curr_node->target)->content;
+// 		fd = ft_open(curr_node, tnode->value, curr_node->mode);
+// 		if (fd == -1)
+// 			return (FALSE);
+// 		close(fd);
+// 		curr_node = node->next;
+// 	}
+// 	return (TRUE);
+// }
+
 /**
  * @brief Handles file redirections for the shell.
  *
@@ -115,9 +136,16 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
+		// if (sh->curr_fd == -1 || !ft_check_fds(node, sh))
+		// {
+		// 	sh->curr_fd = -1;
+		// 	if (!next_node)
+		// 		return (FALSE);
+		// 	return (TRUE);
+		// }
 		ft_process_token_list(node->target, ft_merge_env(sh));
 		tnode = (t_token *)(*node->target)->content;
-		fd = ft_open(node->type, tnode->value, node->mode);
+		fd = ft_open(node, tnode->value, node->mode);
 		if (fd == -1)
 		{
 			if (!next_node)
@@ -144,3 +172,4 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 	}
 	return (FALSE);
 }
+

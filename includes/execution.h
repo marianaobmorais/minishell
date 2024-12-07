@@ -41,7 +41,7 @@ void	ft_search_heredoc(void *curr_node, t_shell *sh);
 /* Redir */
 
 int		ft_redir(t_redir *node, void *next_node, t_shell *sh);
-int		ft_open(int type, char *pathname, int mode);
+//int		ft_open(int type, char *pathname, int mode, t_shell *sh);
 
 /* Launcher */
 
