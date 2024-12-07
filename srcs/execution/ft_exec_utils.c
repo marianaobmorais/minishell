@@ -21,7 +21,7 @@ char	**tokentostring(t_list **args)
 	curr_list = *args;
 	size = ft_lstsize(curr_list);
 	i = 0;
-	new_args = (char **) malloc((size + 1) * sizeof(char *));
+	new_args = (char **)malloc((size + 1) * sizeof(char *));
 	if (!new_args)
 		ft_error_handler(); //ft malloc
 	while (curr_list)

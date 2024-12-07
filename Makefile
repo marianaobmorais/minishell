@@ -40,6 +40,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch_utils.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch_utils2.c \
+		$(SRCS_DIR)/tokenize/ft_add_to_list.c \
 		$(SRCS_DIR)/tokenize/ft_free_tree.c \
 		$(SRCS_DIR)/tokenize/ft_is_token_type.c \
 		$(SRCS_DIR)/builtins/ft_env.c \
@@ -61,9 +62,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-#VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=external_func_leaks.supp
-
-VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline -q
+VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --trace-children=yes --suppressions=.ignore_readline -q
 
 
 $(NAME): $(LIBFT) $(OBJS)
