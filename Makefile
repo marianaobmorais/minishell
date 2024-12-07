@@ -63,8 +63,7 @@ RM = rm -f
 
 #VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=external_func_leaks.supp
 
-VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline -q
-
+VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --trace-children=yes --suppressions=.ignore_readline
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
