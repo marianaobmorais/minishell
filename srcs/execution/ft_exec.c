@@ -190,12 +190,19 @@ void	ft_exec(t_list **args, t_shell *sh)
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
+			if (sh)
+				ft_free_sh(sh); //added
+			if (new_args)
+				ft_free_vector(new_args);
 			ft_exit_status(127, TRUE, TRUE);
 		}
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
-			ft_stderror(TRUE, "execve: %s:", new_args[0]);
-			ft_free_vector(new_args);
+			ft_stderror(TRUE, "%s:", new_args[0]);
+			if (sh)
+				ft_free_sh(sh); //added
+			if (new_args)
+				ft_free_vector(new_args);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);

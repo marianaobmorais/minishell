@@ -124,7 +124,7 @@ void print_root(void *root, int indent) // Updated function
 			 ((t_exec *)root)->type == EXPORT_AP)
 	{
 		t_exec *exec_node = (t_exec *)root;
-		printf("%*s %s:\n", indent - 10, "", 
+		printf("%*s %s\n", indent - 10, "", 
 			   (exec_node->type == EXEC) ? "EXEC" :
 			   (exec_node->type == EXPORT) ? "EXPORT" : "EXPORT_AP");
 		if (exec_node->args)

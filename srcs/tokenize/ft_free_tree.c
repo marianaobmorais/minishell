@@ -17,27 +17,6 @@ static void	ft_free_exec(t_exec *exec_node)
 		ft_free_list(*exec_node->args);
 		free(exec_node->args);
 	}
-	// t_list	**list;
-	// t_list	*current;
-	// t_token	*token;
-
-	// if (!exec_node->args || !*exec_node->args)
-	// 	return ;
-	// list = (t_list **)exec_node->args;
-	// while (*list)
-	// {
-	// 	current = (*list)->next;
-	// 	token = (t_token *)(*list)->content;
-	// 	if (token)
-	// 	{
-	// 		if (token->value)
-	// 			free(token->value);
-	// 		free(token);
-	// 	}
-	// 	free(*list);
-	// 	*list = current;
-	// }
-	// free(list);
 }
 
 /**
@@ -58,27 +37,7 @@ static void	ft_free_redir(t_redir *redir_node)
 		ft_free_list(*redir_node->target);
 		free(redir_node->target);
 	}
-	// t_list	**list;
-	// t_list	*current;
-	// t_token	*token;
 
-	// if (!redir_node->target || !*redir_node->target)
-	// 	return ;
-	// list = (t_list **)redir_node->target;
-	// while (*list)
-	// {
-	// 	current = (*list)->next;
-	// 	token = (t_token *)(*list)->content;
-	// 	if (token)
-	// 	{
-	// 		if (token->value)
-	// 			free(token->value);
-	// 		free(token);
-	// 	}
-	// 	free(*list);
-	// 	*list = current;
-	// }
-	// free(list);
 }
 
 /**

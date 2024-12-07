@@ -13,6 +13,8 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
+
+	(void)tree; //check later
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -23,6 +25,8 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	*(sh->heredoc_list) = NULL;
 	sh->curr_fd = 0;
 	ft_free_tree(tree);
+	ft_free_tree(sh->root);
+	tree = NULL;
 }
 
 /**
@@ -43,6 +47,8 @@ void	ft_free_sh(t_shell *sh)
 		ft_free_vector(sh->local);
 	if (sh->heredoc_list)
 		free(sh->heredoc_list);
+	if (sh->root)
+		ft_free_tree(sh->root);
 	free(sh);
 }
 
@@ -133,7 +139,7 @@ int	ft_history(char *input)
 void	ft_cli(t_shell *sh)
 {
 	char	*input;
-	void	*root;//
+	void	*tree;//
 
 	input = NULL;
 	while (1)
@@ -147,14 +153,17 @@ void	ft_cli(t_shell *sh)
 		input = readline(PROMPT);
 		if (!input)
 		{
+			//if (sh->root)
+			//	ft_free_tree(sh->root);
 			free(input);
 			ft_putstr_fd("exit\n", 1);
 			break ;
 		}
 		if (ft_history(input))
 		{
-			root = ft_process_input(input);
-			ft_launcher_manager(root /* ft_process_input(input) */, sh);
+			tree = ft_process_input(input);
+			sh->root = tree;
+			ft_launcher_manager(tree, sh);
 		}
 	}
 	rl_clear_history();

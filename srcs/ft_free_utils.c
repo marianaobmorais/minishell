@@ -65,15 +65,13 @@ void	ft_free_content(t_list *node)
 void	ft_free_list(t_list *list)
 {
 	t_list	*current;
-	t_list	*node;
 
 	if (!list)
 		return ;
 	while (list)
 	{
 		current = list->next;
-		node = list;
-		ft_free_content(node);
+		ft_free_content(list);
 		list = current;
 	}
 	free(list);
