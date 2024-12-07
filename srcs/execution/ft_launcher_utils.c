@@ -55,7 +55,7 @@ void	ft_restore_original_fds(t_shell *sh)
  *
  * @return TRUE if the command was executed, FALSE otherwise.
  */
-int	ft_single_command(void *node, t_shell *sh)
+int	ft_single_command(void *node, void *next_node, t_shell *sh)
 {
 	void	*curr_node;
 	char	**new_args;
@@ -65,7 +65,7 @@ int	ft_single_command(void *node, t_shell *sh)
 	{
 		ft_save_original_fds(sh);
 		curr_node = ((t_node *)node)->left;
-		while (ft_redir(((t_redir *)curr_node), sh))
+		while (ft_redir(((t_redir *)curr_node), next_node, sh))
 			curr_node = ((t_redir *)curr_node)->next;
 		ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
 		new_args = tokentostring(((t_exec *)curr_node)->args);

@@ -27,6 +27,7 @@ typedef struct s_shell
 	char	**global;
 	char	**local;
 	int		run;
+	int		curr_fd;
 	void	*root; //not sure
 }	t_shell;
 
@@ -40,13 +41,13 @@ void	ft_search_heredoc(void *curr_node, t_shell *sh);
 
 /* Redir */
 
-int		ft_redir(t_redir *node, t_shell *sh);
-int		ft_open(int type, char *pathname, int mode);
+int		ft_redir(t_redir *node, void *next_node, t_shell *sh);
+//int		ft_open(int type, char *pathname, int mode, t_shell *sh);
 
 /* Launcher */
 
 void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, t_shell *sh);
-int		ft_single_command(void *node, t_shell *sh);
+int		ft_single_command(void *node, void *next_node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
 void	ft_launcher_manager(void *tree, t_shell *sh);

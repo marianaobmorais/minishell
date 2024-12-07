@@ -13,6 +13,7 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
+
 	(void)tree; //check later
 	sh->fds_saved = 0;
 	sh->run = TRUE;
@@ -22,6 +23,8 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
+	sh->curr_fd = 0;
+	ft_free_tree(tree);
 	ft_free_tree(sh->root);
 	tree = NULL;
 }
@@ -84,6 +87,7 @@ t_shell	*ft_init_sh(char **envp)
 	}
 	sh->heredoc_list[0] = NULL;
 	sh->fds_saved = 0;
+	sh->curr_fd = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
 	return (sh);
@@ -152,7 +156,7 @@ void	ft_cli(t_shell *sh)
 			//if (sh->root)
 			//	ft_free_tree(sh->root);
 			free(input);
-			ft_putstr_fd("exit\n", 2);
+			ft_putstr_fd("exit\n", 1);
 			break ;
 		}
 		if (ft_history(input))
