@@ -53,7 +53,7 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
 
-	if (sh->curr_fd == -1)//added
+	if (node && sh->curr_fd == -1)//added
 	{
 		sh->curr_fd = 0;
 		kill(pid, SIGPIPE);

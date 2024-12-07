@@ -17,6 +17,7 @@
 int	ft_open(t_redir *node, char *pathname, int mode)
 {
 	int	fd;
+	// (void)node;
 
 	if (node->type == INFILE)
 	{
@@ -98,19 +99,29 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 // static int	ft_check_fds(t_redir *node, t_shell * sh)
 // {
 // 	t_redir	*curr_node;
-// 	t_token	*tnode;
-// 	int		fd;
+// 	char	*pathname;
 
 // 	curr_node = node;
-// 	while ( curr_node && (curr_node->type == OUTFILE
-// 		|| curr_node->type == INFILE || curr_node->type == APPEND))
+// 	while (ft_is_node_type((t_node *) node, REDIR) && (curr_node->type != HEREDOC))
 // 	{
 // 		ft_process_token_list(curr_node->target, ft_merge_env(sh));
-// 		tnode = (t_token *)(*curr_node->target)->content;
-// 		fd = ft_open(curr_node, tnode->value, curr_node->mode);
-// 		if (fd == -1)
+// 		pathname = ((t_token *)(*curr_node->target)->content)->value;
+// 		if (curr_node->type == INFILE
+// 			&& (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1))
+// 		{
+// 			ft_stderror(TRUE, "infile: %s: ", pathname);
+// 			ft_exit_status(1, TRUE, FALSE);
+// 			sh->curr_fd = -1;
 // 			return (FALSE);
-// 		close(fd);
+// 		}
+// 		if ((curr_node->type == OUTFILE || curr_node->type == APPEND)
+// 			&& (access(pathname, F_OK) == 0 && access(pathname, R_OK) == -1))
+// 		{
+// 			ft_stderror(TRUE, "outfile: %s: ", pathname);
+// 			ft_exit_status(1, TRUE, FALSE);
+// 			sh->curr_fd = -1;
+// 			return (FALSE);
+// 		}
 // 		curr_node = node->next;
 // 	}
 // 	return (TRUE);
@@ -133,6 +144,7 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 {
 	int		fd;
 	t_token	*tnode;
+	(void)next_node;
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
@@ -143,23 +155,31 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 		// 		return (FALSE);
 		// 	return (TRUE);
 		// }
+		if (sh->curr_fd == 0)
+			ft_check_fds(node, sh);
 		ft_process_token_list(node->target, ft_merge_env(sh));
 		tnode = (t_token *)(*node->target)->content;
 		fd = ft_open(node, tnode->value, node->mode);
-		if (fd == -1)
-		{
-			if (!next_node)
-				return (FALSE);
-			sh->curr_fd = -1;
-			return (TRUE);
-		}
-		// if (fd == -1)
+		//if (sh->curr_fd == 0)
+		// if (sh->curr_fd == -1)
 		// {
-		// 	fd = open("/dev/null", O_RDONLY);
+		// 	if (!next_node)
+		// 		return (FALSE);
+		// 	sh->curr_fd = -1;
 		// 	return (TRUE);
 		// }
+		
+		if (sh->curr_fd == -1)
+		{
+			//fd = open("/dev/null", O_RDONLY);
+			close(fd);
+			return (TRUE);
+		}
 		if (node->type == OUTFILE || node->type == APPEND)
+		{
+
 			dup2(fd, STDOUT_FILENO);
+		}
 		else
 			dup2(fd, STDIN_FILENO);
 		close(fd);
