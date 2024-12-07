@@ -27,11 +27,12 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 	{
 		close(fds[0]);
 		if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type
-				!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
+			!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
 		close(fds[1]);
+		//if (sh->curr_fd == 0)
 		ft_exec(((t_exec *)node)->args, sh);
 	}
 	return (pid);
@@ -68,18 +69,28 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
-	}
-	close(curr_fds[1]);
-	if (node)
-		dup2(curr_fds[0], STDIN_FILENO);
-	close(curr_fds[0]);
-	if (!node)
+		if (curr_fds)
+		{
+			close(curr_fds[1]);
+			close(curr_fds[0]);
+		}
 		return (ft_restore_original_fds(sh));
+	}
+	if (curr_fds)
+	{
+		close(curr_fds[1]);
+		if (node)
+			dup2(curr_fds[0], STDIN_FILENO);
+		close(curr_fds[0]);
+	}
+	// if (node)
+	// if (!node)
+	// 	return (ft_restore_original_fds(sh));
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	if (node)
-		ft_launcher(node, ((t_node *)node)->right, NULL, sh);
+	// if (node)
+	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
 /**
@@ -115,10 +126,13 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	}
 	else if (((t_exec *)node)->type == EXEC)
 	{
-		// close(STDIN_FILENO);
-		if (pipe(curr_fds) == -1)
-			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
-		pid = ft_child_process(curr_fds, sh, node, next_node);
+		if (sh->curr_fd == 0)
+		{
+			if (pipe(curr_fds) == -1)
+				return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
+			pid = ft_child_process(curr_fds, sh, node, next_node);
+
+		}
 		ft_parent_process(curr_fds, sh, next_node, pid);
 	}
 }

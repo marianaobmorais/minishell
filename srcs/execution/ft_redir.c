@@ -14,25 +14,33 @@
  *
  * @return The file descriptor on success, or -1 on error.
  */
-int	ft_open(t_redir *node, char *pathname, int mode)
+int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 {
 	int	fd;
 	// (void)node;
 
+	fd = -1;
 	if (node->type == INFILE)
 	{
 		if (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1)
 		{
-			ft_stderror(TRUE, "infile: %s: ", pathname);
+			if (sh->curr_fd == 0)
+				ft_stderror(TRUE, "infile: %s: ", pathname);
+			sh->curr_fd = -1;
 			ft_exit_status(1, TRUE, FALSE);
-			return (-1);
+			return (open("/dev/null", O_RDONLY));
 		}
 	}
-	fd = open(pathname, mode, 0644);
+	if (sh->curr_fd == 0)
+		fd = open(pathname, mode, 0644);
 	if (fd == -1)
 	{
-		ft_stderror(TRUE, "outfile: %s: ", pathname);
+		if (sh->curr_fd == 0)
+			ft_stderror(TRUE, "outfile: %s: ", pathname);
+		sh->curr_fd = -1;
 		ft_exit_status(1, TRUE, FALSE);
+		//return (open("/dev/null", O_RDONLY));
+		return (-1);
 	}
 	return (fd);
 }
@@ -155,29 +163,26 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 		// 		return (FALSE);
 		// 	return (TRUE);
 		// }
-		if (sh->curr_fd == 0)
-			ft_check_fds(node, sh);
+		// if (sh->curr_fd == 0)
+		// 	ft_check_fds(node, sh);
 		ft_process_token_list(node->target, ft_merge_env(sh));
 		tnode = (t_token *)(*node->target)->content;
-		fd = ft_open(node, tnode->value, node->mode);
+		fd = ft_open(node, tnode->value, node->mode, sh);
 		//if (sh->curr_fd == 0)
 		// if (sh->curr_fd == -1)
 		// {
-		// 	if (!next_node)
-		// 		return (FALSE);
-		// 	sh->curr_fd = -1;
+		// 	//fd = open("/dev/null", O_RDONLY);
+		// if (sh->curr_fd == -1)
+		// {
+		// 	// if (!next_node)
+		// 	// 	return (FALSE);
+		// 	return (TRUE);
+		// }		
+		// 	close(fd);
 		// 	return (TRUE);
 		// }
-		
-		if (sh->curr_fd == -1)
-		{
-			//fd = open("/dev/null", O_RDONLY);
-			close(fd);
-			return (TRUE);
-		}
 		if (node->type == OUTFILE || node->type == APPEND)
 		{
-
 			dup2(fd, STDOUT_FILENO);
 		}
 		else
