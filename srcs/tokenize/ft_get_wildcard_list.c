@@ -115,6 +115,7 @@ static DIR	*ft_open_directory(char *dir_path)
 static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 {
 	char	*entry_name;
+	t_list	*new_node;
 
 	if (entry->d_name[0] == '.')
 		return ;
@@ -128,7 +129,9 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 		return ;
 	}
 	ft_add_to_token_list(&entry_name, wild_list);
-	free(entry_name);
+	new_node = ft_lstlast(*wild_list);
+	if (ft_is_wildcard(((t_token *)new_node->content)->value))
+		((t_token *)new_node->content)->wildcard = false; //update brief
 }
 
 /**
