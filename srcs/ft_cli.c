@@ -11,10 +11,8 @@
  * @param sh Pointer to the t_shell structure.
  * @param tree Unused parameter, reserved for future use.
  */
-void	ft_restore_cli(t_shell *sh, void **tree)
+void	ft_restore_cli(t_shell *sh, void *tree)
 {
-	(void)tree;
-
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -23,6 +21,7 @@ void	ft_restore_cli(t_shell *sh, void **tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
+	sh->curr_fd = 0;
 	ft_free_tree(tree);
 }
 
@@ -82,6 +81,7 @@ t_shell	*ft_init_sh(char **envp)
 	}
 	sh->heredoc_list[0] = NULL;
 	sh->fds_saved = 0;
+	sh->curr_fd = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
 	return (sh);
