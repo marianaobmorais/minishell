@@ -1,5 +1,19 @@
 #include "../../includes/minishell.h"
 
+void	close_fds(int *fds)
+{
+	if (fds[0] != -1)
+	{
+		close(fds[0]);
+		fds[0] = -1;
+	}
+	if (fds[1] != -1)
+	{
+		close(fds[1]);
+		fds[1] = -1;
+	}
+}
+
 /**
  * @brief Saves the original file descriptors for stdin and stdout.
  *
@@ -34,13 +48,16 @@ void	ft_save_original_fds(t_shell *sh)
  */
 void	ft_restore_original_fds(t_shell *sh)
 {
-	if (dup2(sh->stdin_, STDIN_FILENO) == -1
-		|| dup2(sh->stdout_, STDOUT_FILENO) == -1)
+	if (sh->fds_saved == 1)
 	{
-		ft_stderror(TRUE, "Error restoring original FDs");
+		if (dup2(sh->stdin_, STDIN_FILENO) == -1)
+			ft_stderror(TRUE, "Error restoring original FDs");
+		if (dup2(sh->stdout_, STDOUT_FILENO) == -1)
+			ft_stderror(TRUE, "Error restoring original FDs");
+		close(sh->stdin_);
+		close(sh->stdout_);
 	}
-	close(sh->stdin_);
-	close(sh->stdout_);
+	sh->fds_saved = 0;
 }
 
 /**
@@ -82,3 +99,4 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 	}
 	return (FALSE);
 }
+

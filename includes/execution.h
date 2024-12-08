@@ -57,5 +57,6 @@ void	ft_launcher_manager(void *tree, t_shell *sh);
 char	**tokentostring(t_list **args);
 char	**ft_split_argv(char **args);
 void	ft_exec(t_list **args, t_shell *sh);
+void	close_fds(int *fds);
 
 #endif //EXECUTION_H
