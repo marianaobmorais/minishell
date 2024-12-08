@@ -26,11 +26,11 @@ char	**tokentostring(t_list **args)
 		ft_error_handler(); //ft malloc
 	while (curr_list)
 	{
-		if ((((t_token *)(curr_list)->content)->value)[0] != '\0')
-		{
+		//if ((((t_token *)(curr_list)->content)->value)[0] != '\0') //tirei isso para ele conseguir fazer cat "" (e outros) corretamente
+		//{
 			new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
 			i++;
-		}
+		//}
 		curr_list = (curr_list)->next;
 		
 	}

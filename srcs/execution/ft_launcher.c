@@ -110,6 +110,7 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	pid_t	pid;
 	int		fds[2];
 
+	pid = -1; //initialized pid pq meu compiler tava reclamando
 	ft_save_original_fds(sh);
 	if (!node)
 		return ;
