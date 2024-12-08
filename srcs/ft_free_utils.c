@@ -76,3 +76,18 @@ void	ft_free_list(t_list *list)
 	}
 	free(list);
 }
+
+void	ft_child_cleaner(t_shell *sh, char **args, int cmd)
+{
+	if (args)
+		ft_free_vector(args);
+	if (cmd == 1)
+	{
+		if (sh->stdin_ != -1)
+			close(sh->stdin_);
+		if (sh->stdout_ != -1)
+			close(sh->stdout_);
+	}
+	if (sh)
+		ft_free_sh(sh);
+}

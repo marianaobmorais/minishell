@@ -81,11 +81,11 @@ void	ft_exec_builtin(char **args, t_shell *sh)
 	else if (ft_strncmp("pwd", args[0], ft_strlen(args[0])) == 0)
 		ft_pwd();
 	else if (ft_strncmp("export", args[0], ft_strlen(args[0])) == 0)
-		ft_export(argc, args, sh, GLOBAL);
+		ft_export(argc, args, sh, GLOBAL); // verificar para inserir split
 	else if (ft_strncmp("unset", args[0], ft_strlen(args[0])) == 0)
 		ft_unset(argc, args, sh);
 	else if (ft_strncmp("exit", args[0], ft_strlen(args[0])) == 0)
-		ft_exit(argc, args);
+		ft_exit(argc, args, sh);
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
