@@ -28,7 +28,8 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 				ft_stderror(TRUE, "infile: %s: ", pathname);
 			sh->curr_fd = -1;
 			ft_exit_status(1, TRUE, FALSE);
-			return (open("/dev/null", O_RDONLY));
+			//return (open("/dev/null", O_RDONLY));
+			return (fd);
 		}
 	}
 	if (sh->curr_fd == 0)
@@ -40,7 +41,7 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 		sh->curr_fd = -1;
 		ft_exit_status(1, TRUE, FALSE);
 		//return (open("/dev/null", O_RDONLY));
-		return (-1);
+		return (fd);
 	}
 	return (fd);
 }
@@ -104,37 +105,6 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 	*sh->heredoc_list = tmp;
 }
 
-// static int	ft_check_fds(t_redir *node, t_shell * sh)
-// {
-// 	t_redir	*curr_node;
-// 	char	*pathname;
-
-// 	curr_node = node;
-// 	while (ft_is_node_type((t_node *) node, REDIR) && (curr_node->type != HEREDOC))
-// 	{
-// 		ft_process_token_list(curr_node->target, ft_merge_env(sh));
-// 		pathname = ((t_token *)(*curr_node->target)->content)->value;
-// 		if (curr_node->type == INFILE
-// 			&& (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1))
-// 		{
-// 			ft_stderror(TRUE, "infile: %s: ", pathname);
-// 			ft_exit_status(1, TRUE, FALSE);
-// 			sh->curr_fd = -1;
-// 			return (FALSE);
-// 		}
-// 		if ((curr_node->type == OUTFILE || curr_node->type == APPEND)
-// 			&& (access(pathname, F_OK) == 0 && access(pathname, R_OK) == -1))
-// 		{
-// 			ft_stderror(TRUE, "outfile: %s: ", pathname);
-// 			ft_exit_status(1, TRUE, FALSE);
-// 			sh->curr_fd = -1;
-// 			return (FALSE);
-// 		}
-// 		curr_node = node->next;
-// 	}
-// 	return (TRUE);
-// }
-
 /**
  * @brief Handles file redirections for the shell.
  *
@@ -156,22 +126,6 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
-		// if (sh->curr_fd == -1 || !ft_check_fds(node, sh))
-		// {
-		// 	sh->curr_fd = -1;
-		// 	if (!next_node)
-		// 		return (FALSE);
-		// 	return (TRUE);
-		// }
-		// if (sh->curr_fd == 0)
-		// 	ft_check_fds(node, sh);
-
-		// ANTIGO
-		// ft_process_token_list(node->target, ft_merge_env(sh));
-		// tnode = (t_token *)(*node->target)->content;
-		// fd = ft_open(node, tnode->value, node->mode, sh);
-
-		//NOVO mariaoli esteve aqui
 		ft_process_token_list(node->target, ft_merge_env(sh));
 		if (!*node->target) //checking twice so I won't access invalid memory after processing token
 		{
@@ -179,32 +133,16 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 			ft_exit_status(1, TRUE, FALSE);
 			return (FALSE);
 		}
-		else
+		tnode = (t_token *)(*node->target)->content;
+		fd = ft_open(node, tnode->value, node->mode, sh);
+		if (fd != -1)
 		{
-			tnode = (t_token *)(*node->target)->content;
-			fd = ft_open(node, tnode->value, node->mode, sh);
+			if (node->type == OUTFILE || node->type == APPEND)
+				dup2(fd, STDOUT_FILENO);
+			else
+				dup2(fd, STDIN_FILENO);
+			close(fd);
 		}
-
-		//if (sh->curr_fd == 0)
-		// if (sh->curr_fd == -1)
-		// {
-		// 	//fd = open("/dev/null", O_RDONLY);
-		// if (sh->curr_fd == -1)
-		// {
-		// 	// if (!next_node)
-		// 	// 	return (FALSE);
-		// 	return (TRUE);
-		// }		
-		// 	close(fd);
-		// 	return (TRUE);
-		// }
-		if (node->type == OUTFILE || node->type == APPEND)
-		{
-			dup2(fd, STDOUT_FILENO);
-		}
-		else
-			dup2(fd, STDIN_FILENO);
-		close(fd);
 		return (TRUE);
 	}
 	else if (node->type == HEREDOC)
