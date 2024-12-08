@@ -165,33 +165,25 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 		// }
 		// if (sh->curr_fd == 0)
 		// 	ft_check_fds(node, sh);
+
+		// ANTIGO
+		// ft_process_token_list(node->target, ft_merge_env(sh));
+		// tnode = (t_token *)(*node->target)->content;
+		// fd = ft_open(node, tnode->value, node->mode, sh);
+
+		//NOVO mariaoli esteve aqui
 		ft_process_token_list(node->target, ft_merge_env(sh));
-		tnode = (t_token *)(*node->target)->content;
-		fd = ft_open(node, tnode->value, node->mode, sh);
-
-		//mariaoli esteve aqui
-		// if (node->target)
-		// {
-		// 	ft_process_token_list(node->target, ft_merge_env(sh));
-		// 	if (node->target) //checking twice so I won't access invalid memory after processing token
-		// 	{
-		// 		tnode = (t_token *)(*node->target)->content;
-		// 		fd = ft_open(node, tnode->value, node->mode, sh);
-		// 	}
-		// 	else
-		// 	{
-		// 		ft_stderror(FALSE, "ambiguous redirect");
-		// 		ft_exit_status(1, TRUE, FALSE);
-		// 		return (FALSE);
-		// 	}
-		// }
-		// else
-		// {
-		// 	ft_stderror(FALSE, "ambiguous redirect");
-		// 	ft_exit_status(1, TRUE, FALSE);
-		// 	return (FALSE);
-		// }
-
+		if (!*node->target) //checking twice so I won't access invalid memory after processing token
+		{
+			ft_stderror(FALSE, "ambiguous redirect");
+			ft_exit_status(1, TRUE, FALSE);
+			return (FALSE);
+		}
+		else
+		{
+			tnode = (t_token *)(*node->target)->content;
+			fd = ft_open(node, tnode->value, node->mode, sh);
+		}
 
 		//if (sh->curr_fd == 0)
 		// if (sh->curr_fd == -1)
