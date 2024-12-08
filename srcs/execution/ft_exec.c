@@ -12,57 +12,51 @@
  *
  * @return 0 if valid, or -1 if invalid.
  */
-int	isvalid(char *pathname, char **args)
+int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 {
 	struct stat	file;
 
 	if (stat(pathname, &file) == -1) // não sei se preciso fazer o check de *args[0] aqui também
 	{
 		ft_stderror(TRUE, "stat: %s: ", args[0]);
+		ft_child_cleaner(sh, args);
 		ft_exit_status(127, TRUE, TRUE);
 		return (-1);
 	}
 	else if (S_ISDIR(file.st_mode) != 0 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(FALSE, "%s: Is a directory", args[0]);
+		ft_child_cleaner(sh, args);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
-	// else if (access(pathname, R_OK) == -1)
-	// {
-	// 	ft_stderror(FALSE, "access: %s: ", args[0]);
-	// 	ft_exit_status(126, TRUE, TRUE);
-	// 	return (-1);
-	// }
 	else if (access(pathname, X_OK) == -1 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(TRUE, "access: %s: ", args[0]);
+		ft_child_cleaner(sh, args);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	return (0);
 }
 
-int	isvalid_(char *pathname, char **args)
+int	isvalid_(char *pathname, char **args, t_shell *sh)
 {
 	struct stat	file;
 
 	if (stat(pathname, &file) == -1)
 	{
 		ft_stderror(TRUE, "stat: %s: ", args[0]);
+		ft_child_cleaner(sh, args);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (S_ISDIR(file.st_mode) != 0)
 	{
-		// ft_stderror(FALSE, "%s: Is a directory", args[0]);
-		// ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (access(pathname, R_OK) == -1)
 	{
-		// ft_stderror(TRUE, "access: %s: ", args[0]);
-		// ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	if (access(pathname, X_OK) == -1)
@@ -126,7 +120,7 @@ static int	ft_free_paths(char **paths, int i)
  * @return A newly allocated string containing the full path of the command, 
  *         or NULL if the command is not found.
  */
-static char	*ft_findpath(char **envp, char **cmds)
+static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 {
 	char	**paths;
 	char	*pathname;
@@ -136,9 +130,9 @@ static char	*ft_findpath(char **envp, char **cmds)
 	paths = NULL;
 	if (!*cmds[0]) //mariaoli esteve aqui
 		return (NULL); //mariaoli esteve aqui
-	if (ft_strchr(cmds[0], '/') && isvalid(cmds[0], cmds) == 0)
+	if (ft_strchr(cmds[0], '/') && isvalid_dir(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
-	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0)
+	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
@@ -151,7 +145,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
 		//if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
-		if (access(pathname, F_OK) == 0 && isvalid(pathname, cmds) == 0)
+		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 		i++;
@@ -186,27 +180,25 @@ void	ft_exec(t_list **args, t_shell *sh)
 	else
 	{
 		if (!*new_args)
+		{
+			ft_child_cleaner(sh, new_args);
 			ft_exit_status(0, TRUE, TRUE);
-		pathname = ft_findpath(sh->global, new_args);
+		}
+		pathname = ft_findpath(sh->global, new_args, sh);
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
-			if (sh)
-				ft_free_sh(sh); //added
-			if (new_args)
-				ft_free_vector(new_args);
+			ft_child_cleaner(sh, new_args);
 			ft_exit_status(127, TRUE, TRUE);
 		}
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
 			ft_stderror(TRUE, "%s: ", new_args[0]);
-			if (sh)
-				ft_free_sh(sh); //added
-			if (new_args)
-				ft_free_vector(new_args);
+			ft_child_cleaner(sh, new_args);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
 	}
-	return (ft_exit_status(0, TRUE, TRUE), ft_free_vector(new_args));
+	ft_child_cleaner(sh, new_args);
+	ft_exit_status(0, FALSE, TRUE);
 }
