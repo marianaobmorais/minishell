@@ -135,7 +135,7 @@ static char	*ft_findpath(char **envp, char **cmds)
 	i = 0;
 	paths = NULL;
 	if (!*cmds[0]) //mariaoli esteve aqui
-		return (ft_strdup(cmds[0])); //mariaoli esteve aqui
+		return (NULL); //mariaoli esteve aqui
 	if (ft_strchr(cmds[0], '/') && isvalid(cmds[0], cmds) == 0)
 		return (ft_strdup(cmds[0]));
 	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0)
