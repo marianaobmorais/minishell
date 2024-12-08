@@ -16,13 +16,13 @@ int	isvalid(char *pathname, char **args)
 {
 	struct stat	file;
 
-	if (stat(pathname, &file) == -1)
+	if (stat(pathname, &file) == -1) // não sei se preciso fazer o check de *args[0] aqui também
 	{
 		ft_stderror(TRUE, "stat: %s: ", args[0]);
 		ft_exit_status(127, TRUE, TRUE);
 		return (-1);
 	}
-	else if (S_ISDIR(file.st_mode) != 0)
+	else if (S_ISDIR(file.st_mode) != 0 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(FALSE, "%s: Is a directory", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
@@ -34,7 +34,7 @@ int	isvalid(char *pathname, char **args)
 	// 	ft_exit_status(126, TRUE, TRUE);
 	// 	return (-1);
 	// }
-	else if (access(pathname, X_OK) == -1)
+	else if (access(pathname, X_OK) == -1 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(TRUE, "access: %s: ", args[0]);
 		ft_exit_status(126, TRUE, TRUE);
@@ -134,6 +134,8 @@ static char	*ft_findpath(char **envp, char **cmds)
 
 	i = 0;
 	paths = NULL;
+	if (!*cmds[0]) //mariaoli esteve aqui
+		return (ft_strdup(cmds[0])); //mariaoli esteve aqui
 	if (ft_strchr(cmds[0], '/') && isvalid(cmds[0], cmds) == 0)
 		return (ft_strdup(cmds[0]));
 	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds) == 0)
@@ -174,11 +176,11 @@ void	ft_exec(t_list **args, t_shell *sh)
 	char	**new_args;
 
 	pathname = NULL;
-	//ft_print_list(args);
+	//ft_print_list(args); //debug
 	ft_process_token_list(args, ft_merge_env(sh));
-	//ft_print_list(args);
-	//new_args = ft_split_argv(tokentostring(args));
+	//ft_print_list(args);//debug
 	new_args = tokentostring(args);
+	//printf("%s     %p\n", new_args[0], new_args[0]);//debug
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else
@@ -186,7 +188,6 @@ void	ft_exec(t_list **args, t_shell *sh)
 		if (!*new_args)
 			ft_exit_status(0, TRUE, TRUE);
 		pathname = ft_findpath(sh->global, new_args);
-		//pathname = new_args[0];
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
@@ -198,7 +199,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 		}
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
-			ft_stderror(TRUE, "%s:", new_args[0]);
+			ft_stderror(TRUE, "%s: ", new_args[0]);
 			if (sh)
 				ft_free_sh(sh); //added
 			if (new_args)

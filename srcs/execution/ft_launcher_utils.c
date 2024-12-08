@@ -60,7 +60,6 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 	void	*curr_node;
 	char	**new_args;
 
-
 	if (ft_isjustbuiltin(node, sh))
 	{
 		ft_save_original_fds(sh);
