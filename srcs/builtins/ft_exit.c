@@ -83,7 +83,7 @@ static unsigned char	arg_convert(char *arg)
  * @param argc The number of arguments passed to the exit command.
  * @param args The array of arguments, where args[0] is the command name.
  */
-void	ft_exit(int argc, char **args)
+void	ft_exit(int argc, char **args, t_shell *sh)
 {
 	unsigned char	exit_status;
 	int				i;
@@ -92,11 +92,17 @@ void	ft_exit(int argc, char **args)
 	exit_status = 0;
 	print_exit();
 	if (argc == 1)
+	{
+		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(exit_status, TRUE, TRUE);
+	}
 	while (args[i])
 	{
 		if (isnumeric(args[i]))
+		{
+			ft_child_cleaner(sh, args, 1);
 			ft_exit_status(2, TRUE, TRUE);
+		}
 		else if (i == 2)
 		{
 			ft_stderror(FALSE, "exit: too many arguments");
@@ -104,11 +110,11 @@ void	ft_exit(int argc, char **args)
 		}
 		else
 		{
-/* 			exit_status = (unsigned char) arg_convert(args[i]);
-			if (ft_exit_status(0, FALSE, FALSE) || (exit_status && args[i + 1]))
-				ft_exit_status(exit_status, TRUE, TRUE); */
 			if (arg_convert(args[i]) && !args[i + 1])
+			{
+				ft_child_cleaner(sh, args, 1);
 				ft_exit_status(0, FALSE, TRUE);
+			}
 		}
 		i++;
 	}

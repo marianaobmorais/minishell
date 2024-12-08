@@ -19,21 +19,21 @@ int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 	if (stat(pathname, &file) == -1) // não sei se preciso fazer o check de *args[0] aqui também
 	{
 		ft_stderror(TRUE, "stat: %s: ", args[0]);
-		ft_child_cleaner(sh, args);
+		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(127, TRUE, TRUE);
 		return (-1);
 	}
 	else if (S_ISDIR(file.st_mode) != 0 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(FALSE, "%s: Is a directory", args[0]);
-		ft_child_cleaner(sh, args);
+		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
 	else if (access(pathname, X_OK) == -1 && *args[0])//mariaoli esteve aqui
 	{
 		ft_stderror(TRUE, "access: %s: ", args[0]);
-		ft_child_cleaner(sh, args);
+		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
@@ -47,7 +47,7 @@ int	isvalid_(char *pathname, char **args, t_shell *sh)
 	if (stat(pathname, &file) == -1)
 	{
 		ft_stderror(TRUE, "stat: %s: ", args[0]);
-		ft_child_cleaner(sh, args);
+		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
@@ -181,24 +181,24 @@ void	ft_exec(t_list **args, t_shell *sh)
 	{
 		if (!*new_args)
 		{
-			ft_child_cleaner(sh, new_args);
+			ft_child_cleaner(sh, new_args, 0);
 			ft_exit_status(0, TRUE, TRUE);
 		}
 		pathname = ft_findpath(sh->global, new_args, sh);
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
-			ft_child_cleaner(sh, new_args);
+			ft_child_cleaner(sh, new_args, 0);
 			ft_exit_status(127, TRUE, TRUE);
 		}
 		if (execve(pathname, new_args, sh->global) == -1)
 		{
 			ft_stderror(TRUE, "%s: ", new_args[0]);
-			ft_child_cleaner(sh, new_args);
+			ft_child_cleaner(sh, new_args, 0);
 			ft_exit_status(1, TRUE, TRUE);
 		}
 		free(pathname);
 	}
-	ft_child_cleaner(sh, new_args);
+	ft_child_cleaner(sh, new_args, 0);
 	ft_exit_status(0, FALSE, TRUE);
 }

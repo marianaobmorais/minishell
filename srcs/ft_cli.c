@@ -96,6 +96,8 @@ t_shell	*ft_init_sh(char **envp)
 	sh->fds_saved = 0;
 	sh->curr_fd = 0;
 	sh->run = TRUE;
+	sh->stdin_ = -1;
+	sh->stdout_ = -1;
 	sh->prev = NULL;
 	return (sh);
 }
