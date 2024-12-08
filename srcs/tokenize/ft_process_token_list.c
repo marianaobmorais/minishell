@@ -130,6 +130,42 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
 }
 
 /**
+ * @brief Removes a specified node from a linked list.
+ * 
+ * Detaches the `current` node from the linked list, adjusting the pointers
+ * of the previous node (`prev`) or the head of the list if `current` is the
+ * first node. Frees the memory allocated to the `current` node using
+ * `ft_free_node`.
+ * 
+ * @param list Double pointer to the head of the list.
+ * @param prev Pointer to the previous node, or NULL if `current` is the head.
+ * @param current Pointer to the node to be removed.
+ */
+void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
+{
+	t_list	*next;
+	t_token	*token;
+
+	next = NULL;
+	next = current->next;
+	if (prev)
+		prev->next = next;
+	else
+		*list = next;
+	if (current)
+	{
+		token = (t_token *)current->content;
+		if (token)
+		{
+			// if (token->value)
+			// 	free(token->value); //need to check valgrind. originally from ft_free_content
+			free(token);
+		}
+		free(current);
+	}
+}
+
+/**
  * @brief Processes the token list for expansion and quote removal.
  * 
  * Iterates over a list of tokens, applying transformations to each token:
@@ -146,29 +182,35 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
  */
 void	ft_process_token_list(t_list **list, char **my_envp)
 {
-	t_list	*current;
+	t_list	*current; //update brief
 	t_list	*prev;
+	t_list	*next;
 	t_token	*token;
 
 	current = *list;
 	prev = NULL;
 	while (current)
 	{
+		next = current->next;
 		token = (t_token *)current->content;
 		if (token->expand)
-		{
 			ft_expand_tokens(token, my_envp);
-			token->expand = false;
-		}
 		if (token->state == IN_QUOTE)
-		{
 			ft_remove_quotes(token);
-			token->state = GENERAL;
+		if (!*token->value && token->expand && !token->state)
+		{
+			ft_remove_current_node(list, prev, current);
+			current = next;
 		}
-		if (token->wildcard)
-			ft_handle_wildcard(&current, prev, list);
-		prev = current;
-		current = current->next;
+		else
+		{
+			token->expand = false;
+			token->state = GENERAL;
+			if (token->wildcard)
+				ft_handle_wildcard(&current, prev, list);
+			prev = current;
+			current = next;
+		}
 	}
 	ft_free_vector(my_envp);
 }
