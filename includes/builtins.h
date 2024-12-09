@@ -1,6 +1,9 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
+//message
+# define ERROR_IDENTIFIER "export: `%s': not a valid identifier"
+
 typedef struct s_shell	t_shell;
 typedef enum e_env		t_env;
 
