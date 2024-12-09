@@ -54,8 +54,10 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
+	static int i;
 
 	sh->curr_fd = 0;
+	ft_stderror(FALSE, "%d PID -> %d", i, pid);
 	if (!node)
 	{
 		ft_signal(CHILD_);
@@ -65,16 +67,20 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
+			ft_stderror(FALSE, "Esperando ... %d PID -> %d", i, pid); //debug
 		}
 		close_fds(curr_fds);
 		return (ft_restore_original_fds(sh));
 	}
+	close(curr_fds[1]);
 	if (node)
 		dup2(curr_fds[0], STDIN_FILENO);
-	close_fds(curr_fds);
+	close(curr_fds[0]);
+	//close_fds(curr_fds);
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
+	i++;
 	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
@@ -107,6 +113,8 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	else if (ft_redir(((t_redir *)node), next_node, sh))
 	{
 		sh->prev = node;
+		if (!((t_redir *)node)->next)
+			ft_parent_process(curr_fds, sh, next_node, -1);
 		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
 	}
 	else if (((t_exec *)node)->type == EXEC)
