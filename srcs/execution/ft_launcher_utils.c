@@ -83,13 +83,17 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 		curr_node = ((t_node *)node)->left;
 		while (ft_redir(((t_redir *)curr_node), next_node, sh))
 			curr_node = ((t_redir *)curr_node)->next;
-		ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
-		new_args = tokentostring(((t_exec *)curr_node)->args);
 		if (((t_exec *)curr_node)->type == EXPORT
 			|| ((t_exec *)curr_node)->type == EXPORT_AP)
+		{
+			ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
+			new_args = tokentostring(((t_exec *)curr_node)->args);
 			ft_export(ft_argslen(new_args), new_args, sh, LOCAL);
+		}
 		if (((t_exec *)curr_node)->type == EXEC)
 		{
+			ft_process_token_list(((t_exec *)curr_node)->args, ft_merge_env(sh));
+			new_args = tokentostring(((t_exec *)curr_node)->args);
 			if (ft_isbuiltin(new_args))
 				ft_exec_builtin(new_args, sh);
 		}

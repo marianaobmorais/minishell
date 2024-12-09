@@ -128,8 +128,8 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 
 	i = 0;
 	paths = NULL;
-	if (!*cmds[0]) //mariaoli esteve aqui
-		return (NULL); //mariaoli esteve aqui
+	if (!*cmds[0])
+		return (NULL);
 	if (ft_strchr(cmds[0], '/') && isvalid_dir(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
 	if (access(cmds[0], F_OK) == 0 && isvalid_(cmds[0], cmds, sh) == 0)
@@ -170,11 +170,8 @@ void	ft_exec(t_list **args, t_shell *sh)
 	char	**new_args;
 
 	pathname = NULL;
-	//ft_print_list(args); //debug
 	ft_process_token_list(args, ft_merge_env(sh));
-	//ft_print_list(args);//debug
 	new_args = tokentostring(args);
-	//printf("%s     %p\n", new_args[0], new_args[0]);//debug
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else
