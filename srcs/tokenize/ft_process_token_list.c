@@ -144,7 +144,6 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
 void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 {
 	t_list	*next;
-	t_token	*token;
 
 	next = NULL;
 	next = current->next;
@@ -152,17 +151,7 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 		prev->next = next;
 	else
 		*list = next;
-	if (current)
-	{
-		token = (t_token *)current->content;
-		if (token)
-		{
-			// if (token->value)
-			// 	free(token->value); //need to check valgrind. originally from ft_free_content
-			free(token);
-		}
-		free(current);
-	}
+	ft_free_content(current);
 }
 
 /**
