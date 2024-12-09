@@ -128,7 +128,8 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 	{
 		close(fd[0]);
 		read_heredoc(eof, state, my_envp, fd[1]);
-		close(fd[0]);
+		close(fd[1]);
+		ft_child_cleaner(sh, my_envp, 0);
 		ft_exit_status(0, TRUE, TRUE);
 	}
 	close(fd[1]);
