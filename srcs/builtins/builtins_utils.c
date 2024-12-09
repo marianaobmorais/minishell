@@ -89,7 +89,7 @@ void	ft_exec_builtin(char **args, t_shell *sh)
 	else if (ft_strncmp("echo", args[0], ft_strlen(args[0])) == 0)
 		ft_echo(args);
 	else if (ft_strncmp("env", args[0], ft_strlen(args[0])) == 0)
-		ft_env(sh->global);
+		ft_env(argc, args, sh->global);
 }
 
 /**
