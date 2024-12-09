@@ -28,8 +28,8 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 				ft_stderror(TRUE, "infile: %s: ", pathname);
 			sh->curr_fd = -1;
 			ft_exit_status(1, TRUE, FALSE);
-			//return (open("/dev/null", O_RDONLY));
-			return (fd);
+			return (open("/dev/null", O_RDONLY));
+			//return (fd);
 		}
 	}
 	if (sh->curr_fd == 0)
