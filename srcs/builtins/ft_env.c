@@ -10,17 +10,21 @@
  *
  * @param my_envp The array of environment variables to print.
  */
-void ft_env(char **my_envp)
+void ft_env(int argc, char **args, char **my_envp)
 {
 	int	i;
 
 	i = 0;
 	if (!my_envp)
 	{
-		//ft_stderror(TRUE, "envp");
-		//ft_exit_status(1, TRUE, FALSE);
-		//ft_error_handler(); //no array of enviroment variables
-		return ; //print nothing
+		ft_exit_status(0, TRUE, FALSE);
+		return ;
+	}
+	if (argc > 1)
+	{
+		ft_stderror(FALSE, "env: `%s`: No such file or directory", args[1]);
+		ft_exit_status(127, TRUE, FALSE);
+		return ;
 	}
 	while (my_envp[i])
 	{
