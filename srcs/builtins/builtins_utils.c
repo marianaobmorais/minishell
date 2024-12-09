@@ -111,7 +111,6 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 	char	**new_args;
 
 	curr = ((t_node *)node)->left;
-	ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
 	if (!((t_node *)node)->right)
 	{
 		while (curr)
@@ -123,6 +122,7 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 		}
 		if (curr && ft_is_node_type(curr, EXEC))
 		{
+			ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
 			new_args = tokentostring(((t_exec *)curr)->args);
 			if (ft_isbuiltin(new_args)
 				|| ((t_exec *)curr)->type == EXPORT

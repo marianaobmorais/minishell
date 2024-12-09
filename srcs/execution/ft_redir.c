@@ -120,17 +120,20 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
  */
 int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 {
+	char	*target_tmp;
 	int		fd;
 	t_token	*tnode;
 	(void)next_node;
 
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
+		target_tmp = ft_strdup(((t_token *)(*node->target)->content)->value);
 		ft_process_token_list(node->target, ft_merge_env(sh));
-		if (!*node->target) //checking twice so I won't access invalid memory after processing token
+		if (!*node->target)
 		{
-			ft_stderror(FALSE, "ambiguous redirect");
+			ft_stderror(FALSE, "%s: ambiguous redirect", target_tmp);
 			ft_exit_status(1, TRUE, FALSE);
+			free(target_tmp);
 			return (FALSE);
 		}
 		tnode = (t_token *)(*node->target)->content;
@@ -143,6 +146,7 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 				dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
+		free(target_tmp);
 		return (TRUE);
 	}
 	else if (node->type == HEREDOC)
