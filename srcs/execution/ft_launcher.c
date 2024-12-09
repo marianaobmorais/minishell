@@ -54,33 +54,41 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
-	static int i;
+	//static int i;//debug
 
 	sh->curr_fd = 0;
-	ft_stderror(FALSE, "%d PID -> %d", i, pid);
 	if (!node)
 	{
 		ft_signal(CHILD_);
+		close_fds(curr_fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
 			if (WIFEXITED(status))
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
-			ft_stderror(FALSE, "Esperando ... %d PID -> %d", i, pid); //debug
+			//ft_stderror(FALSE, "Esperando ... %d PID -> %d", i, pid); //debug
 		}
-		close_fds(curr_fds);
 		return (ft_restore_original_fds(sh));
 	}
-	close(curr_fds[1]);
+	//ft_stderror(FALSE, "%d PID -> %d", i, pid);//debug
+	if (curr_fds[1] != -1)
+	{
+		close(curr_fds[1]);
+		curr_fds[1] = -1;
+	}
 	if (node)
 		dup2(curr_fds[0], STDIN_FILENO);
-	close(curr_fds[0]);
 	//close_fds(curr_fds);
+	if (curr_fds[0] != -1)
+	{
+		close(curr_fds[0]);
+		curr_fds[0] = -1;
+	}
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	i++;
+	//i++;//debug
 	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 

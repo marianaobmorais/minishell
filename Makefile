@@ -92,6 +92,7 @@ re: fclean
 	$(MAKE) all
 
 test: $(NAME)
+	$(MAKE) clean
 	$(VALGRIND) ./$(NAME)
 
 .PHONY: all clean fclean re #bonus
