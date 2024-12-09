@@ -56,6 +56,16 @@ void	ft_free_sh(t_shell *sh)
 		ft_free_tree(sh->root);
 		sh->root = NULL;
 	}
+	if (sh->stdin_ != -1)
+	{
+		close(sh->stdin_);
+		sh->stdin_ = -1;
+	}
+	if (sh->stdout_ != -1)
+	{
+		close(sh->stdout_);
+		sh->stdout_ = -1;
+	}
 	free(sh);
 }
 
