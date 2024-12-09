@@ -50,12 +50,16 @@ void	ft_restore_original_fds(t_shell *sh)
 {
 	if (sh->fds_saved == 1)
 	{
+		while (waitpid(-1, 0, 0) > 0)
+			;
 		if (dup2(sh->stdin_, STDIN_FILENO) == -1)
 			ft_stderror(TRUE, "Error restoring original FDs");
+		ft_stderror(FALSE, "Fechando .. %d", sh->stdin_); //debug
+		close(sh->stdin_);
 		if (dup2(sh->stdout_, STDOUT_FILENO) == -1)
 			ft_stderror(TRUE, "Error restoring original FDs");
-		close(sh->stdin_);
 		close(sh->stdout_);
+		ft_stderror(FALSE, "Fechando .. %d", sh->stdout_); //debug
 	}
 	sh->fds_saved = 0;
 }
