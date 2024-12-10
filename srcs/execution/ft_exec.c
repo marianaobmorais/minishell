@@ -155,9 +155,6 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 	return (NULL);
 }
 
-
-///
-
 /**
  * @brief Adds a new string to a dynamically allocated string vector.
  * 
@@ -198,38 +195,6 @@ char	**ft_add_to_vector(char **old_vector, char *new_str)
 	return (new_vector);
 }
 
-static char	**tokentostring_(t_list **args)
-{
-	char	**new_args; 	//write brief
-	char	**new_args_cp;
-	t_list	*curr;
-	int		i;
-
-	new_args = (char **)malloc(sizeof(char *));
-	if (!new_args)
-		ft_error_malloc("new_args");
-	*new_args = NULL;
-	curr = *args;
-	while (curr)
-	{
-		if (((t_token *)(curr)->content)->expand)
-		{
-			new_args_cp = ft_split(((t_token *)(curr)->content)->value, ' ');
-			i = -1;
-			while (new_args_cp[++i])
-				new_args = ft_add_to_vector(new_args, new_args_cp[i]);
-			ft_free_vector(new_args_cp);
-		}
-		else
-			new_args = ft_add_to_vector(new_args,
-				((t_token *)(curr)->content)->value);
-		curr = (curr)->next;	
-	}
-	return (new_args);
-}
-
-///
-
 /**
  * @brief Executes a command in the shell.
  *
@@ -247,7 +212,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 
 	pathname = NULL;
 	ft_process_token_list(args, ft_merge_env(sh));
-	new_args = tokentostring_(args);
+	new_args = tokentostring(args);
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else
@@ -261,7 +226,6 @@ void	ft_exec(t_list **args, t_shell *sh)
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
-			//fprintf(stderr, "%s: command not found\n", new_args[0]);
 			ft_child_cleaner(sh, new_args, 0);
 			ft_exit_status(127, TRUE, TRUE);
 		}
