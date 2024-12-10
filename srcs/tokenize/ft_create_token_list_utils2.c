@@ -97,7 +97,8 @@ bool	ft_is_wildcard(char *s)
 			if (i == -1)
 				return (false);
 		}
-		else if (s[i] == '*' && s[i - 1] != '$')
+		else if ((i == 0 && s[i] == '*')
+			|| (i > 0 && s[i] == '*' && s[i - 1] != '$'))
 		{
 			wildcard = true;
 			i++;

@@ -17,13 +17,15 @@
  */
 static size_t	is_var(char *str, char **my_envp)
 {
-	size_t	index_envp;
+	size_t	index_envp; //update bruef
 	size_t	flag;
 	size_t	size_var;
 
 	flag = 0;
 	index_envp = 0;
 	size_var = ft_strlen(str);
+	if (!my_envp || !*my_envp)
+		return (0);
 	while ((my_envp)[index_envp])
 	{
 		if (ft_strncmp(str, (my_envp)[index_envp], size_var) == 0
@@ -63,9 +65,9 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	size = ft_strlen(str);
 	i = 0;
 	j = 0;
-	new_envp = (char **) malloc(size_env * sizeof(char *));
+	new_envp = (char **) malloc((size_env + 1) * sizeof(char *));
 	if (!new_envp)
-		return (ft_exit_status(1, TRUE, FALSE), -1); //utilizar funcao malloc
+		return (ft_error_malloc("new_envp"), -1);
 	while (i < size_env)
 	{
 		if (ft_strncmp(str, (*my_envp)[i], size) == 0
@@ -77,7 +79,7 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 		new_envp[j++] = (*my_envp)[i++];
 	}
 	new_envp[j] = NULL;
-	free((*my_envp));
+	free(*my_envp);
 	*my_envp = new_envp;
 	return (0);
 }

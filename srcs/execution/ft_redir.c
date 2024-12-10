@@ -17,7 +17,6 @@
 int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 {
 	int	fd;
-	// (void)node;
 
 	fd = -1;
 	if (node->type == INFILE)
@@ -25,11 +24,10 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 		if (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1)
 		{
 			if (sh->curr_fd == 0)
-				ft_stderror(TRUE, "infile: %s: ", pathname);
+				ft_stderror(TRUE, "%s: ", pathname);
 			sh->curr_fd = -1;
 			ft_exit_status(1, TRUE, FALSE);
 			return (open("/dev/null", O_RDONLY));
-			//return (fd);
 		}
 	}
 	if (sh->curr_fd == 0)
@@ -37,10 +35,9 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 	if (fd == -1)
 	{
 		if (sh->curr_fd == 0)
-			ft_stderror(TRUE, "outfile: %s: ", pathname);
+			ft_stderror(TRUE, "%s: ", pathname);
 		sh->curr_fd = -1;
 		ft_exit_status(1, TRUE, FALSE);
-		//return (open("/dev/null", O_RDONLY));
 		return (fd);
 	}
 	return (fd);

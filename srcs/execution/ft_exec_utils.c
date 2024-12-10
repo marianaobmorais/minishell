@@ -13,24 +13,31 @@
  */
 char	**tokentostring(t_list **args)
 {
-	char	**new_args;
-	t_list	*curr_list;
-	int		size;
+	char	**new_args; 	//update brief brief
+	char	**new_args_cp;
+	t_list	*curr;
 	int		i;
 
-	curr_list = *args;
-	size = ft_lstsize(curr_list);
-	i = 0;
-	new_args = (char **)malloc((size + 1) * sizeof(char *));
+	new_args = (char **)malloc(sizeof(char *));
 	if (!new_args)
 		ft_error_malloc("new_args");
-	while (curr_list)
+	*new_args = NULL;
+	curr = *args;
+	while (curr)
 	{
-		new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
-		i++;
-		curr_list = (curr_list)->next;	
+		if (((t_token *)(curr)->content)->expand && !((t_token *)(curr)->content)->state)
+		{
+			new_args_cp = ft_split(((t_token *)(curr)->content)->value, ' ');
+			i = -1;
+			while (new_args_cp[++i])
+				new_args = ft_add_to_vector(new_args, new_args_cp[i]);
+			ft_free_vector(new_args_cp);
+		}
+		else
+			new_args = ft_add_to_vector(new_args,
+				((t_token *)(curr)->content)->value);
+		curr = (curr)->next;	
 	}
-	new_args[i] = NULL;
 	return (new_args);
 }
 
@@ -91,7 +98,7 @@ static int	ft_count_words(char **args, char c)
  */
 static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
 {
-	//need to double check function
+	//need to double check function. I am not using it
 	char	**temp;
 	int		z;
 
@@ -125,7 +132,7 @@ static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
  */
 char	**ft_split_argv(char **args)
 {
-	//need to double check function
+	//need to double check function. I am not using it
 	int		i;
 	int		y;
 	char	**new_args;

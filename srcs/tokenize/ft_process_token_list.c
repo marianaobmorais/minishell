@@ -190,14 +190,17 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		{
 			ft_remove_current_node(list, prev, current);
 			current = next;
+			continue ;
+		}
+		if (token->wildcard)
+		{
+			ft_handle_wildcard(&current, prev, list);
+			prev = NULL;
+			next = current->next;
 		}
 		else
-		{
-			if (token->wildcard)
-				ft_handle_wildcard(&current, prev, list);
 			prev = current;
-			current = next;
-		}
+		current = next;
 	}
 	ft_free_vector(my_envp);
 }
