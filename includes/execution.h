@@ -9,25 +9,18 @@ typedef enum e_signal
 	DEFAULT_
 }	t_signal;
 
-// typedef struct s_env
-// {
-// 	char	**global;
-// 	char	**local;
-// }	t_env;
-
 typedef struct s_shell
 {
 	int		stdin_;
 	int		stdout_;
 	int		fds_saved;
-	void	*curr;
-	void	*next;
+	int		error_fd;
 	void	*prev;
 	t_list	**heredoc_list;
 	char	**global;
 	char	**local;
+	char	**limbo;
 	int		run;
-	int		curr_fd;
 	void	*root;
 }	t_shell;
 

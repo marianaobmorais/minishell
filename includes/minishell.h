@@ -44,6 +44,7 @@ typedef enum e_env
 {
 	GLOBAL,
 	LOCAL,
+	LIMBO,
 	DEFAULT
 }	t_env;
 
@@ -69,7 +70,7 @@ void	ft_restore_cli(t_shell *sh, void *tree); //por que void **tree?
 void	ft_free_sh(t_shell *sh);
 //t_env	*ft_init_env(char **envp);
 char	**ft_get_my_envp(char **envp);
-char	**ft_merge_env(t_shell *sh);
+char	**ft_merge_env(char **env1, char **env2);
 void	ft_child_cleaner(t_shell *sh, char **args, int mode);
 //ft_copy_list.c
 t_list	**ft_copy_list(t_list **old);

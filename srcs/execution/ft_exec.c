@@ -246,7 +246,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 	char	**new_args;
 
 	pathname = NULL;
-	ft_process_token_list(args, ft_merge_env(sh));
+	ft_process_token_list(args, ft_merge_env(sh->global, sh->local));
 	new_args = tokentostring_(args);
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);

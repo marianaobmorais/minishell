@@ -125,7 +125,7 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 		if (curr && ft_is_node_type(curr, EXEC))
 		{
 			args_cp = ft_copy_list(((t_exec *)curr)->args);
-			ft_process_token_list(args_cp, ft_merge_env(sh));
+			ft_process_token_list(args_cp, ft_merge_env(sh->global, sh->local));
 			new_args = tokentostring(args_cp);
 			if (ft_isbuiltin(new_args)
 				|| ((t_exec *)curr)->type == EXPORT

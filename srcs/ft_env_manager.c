@@ -13,7 +13,7 @@
  * @return A new array containing all environment variables, or NULL if
  *         a memory allocation error occurs.
  */
-char	**ft_merge_env(t_shell *sh)
+char	**ft_merge_env(char **env1, char **env2)
 {
 	int		size;
 	int		i;
@@ -22,20 +22,20 @@ char	**ft_merge_env(t_shell *sh)
 
 	z = 0;
 	i = 0;
-	size = ft_argslen(sh->local) + ft_argslen(sh->global);
+	size = ft_argslen(env1) + ft_argslen(env2);
 	envp = (char **) malloc((size + 1) * sizeof(char *));
 	if (!envp)
-		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""), NULL);
-	while ((sh->global)[i])
+		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""), NULL); //ft malloc
+	while (env2[i])
 	{
-		envp[i] = ft_strdup((sh->global)[i]);
+		envp[i] = ft_strdup(env2[i]);
 		i++;
 	}
-	if (sh->local)
+	if (env1)
 	{
-		while ((sh->local)[z])
+		while (env1[z])
 		{
-			envp[i++] = ft_strdup((sh->local)[z++]);
+			envp[i++] = ft_strdup(env1[z++]);
 		}
 	}
 	envp[i] = NULL;

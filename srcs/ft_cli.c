@@ -23,7 +23,7 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
-	sh->curr_fd = 0;
+	sh->error_fd = 0;
 	//ft_free_tree(tree);
 	if (sh->root)
 	{
@@ -49,6 +49,8 @@ void	ft_free_sh(t_shell *sh)
 		ft_free_vector(sh->global);
 	if (sh->local)
 		ft_free_vector(sh->local);
+	if (sh->limbo)
+		ft_free_vector(sh->limbo);
 	if (sh->heredoc_list)
 		free(sh->heredoc_list);
 	if (sh->root)
@@ -94,7 +96,11 @@ t_shell	*ft_init_sh(char **envp)
 	sh->local = (char **) malloc(sizeof(char *));
 	if (!sh->local)
 		return (ft_free_vector(sh->global), free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
+	sh->limbo = (char **) malloc(sizeof(char *));
+	if (!sh->limbo)
+		return (ft_free_vector(sh->global), ft_free_vector(sh->local), free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
 	sh->local[0] = NULL;
+	sh->limbo[0] = NULL;
 	sh->heredoc_list = (t_list **)malloc(sizeof(t_list *));
 	if (!sh->heredoc_list)
 	{
@@ -104,7 +110,7 @@ t_shell	*ft_init_sh(char **envp)
 	}
 	sh->heredoc_list[0] = NULL;
 	sh->fds_saved = 0;
-	sh->curr_fd = 0;
+	sh->error_fd = 0;
 	sh->run = TRUE;
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
