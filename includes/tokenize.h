@@ -135,8 +135,6 @@ t_redir	*ft_init_redir(t_token *token, t_list **list);
 //ft_built_branch_utils2.c
 t_list	**ft_create_sub_list(t_list **list);
 t_node	*ft_create_subroot_node(t_list **list);
-//ft_add_to_list.c
-void	ft_add_to_list(char *value, t_list **list);
 //ft_free_tree.c
 void	ft_free_tree(void *root);
 //ft_is_token_type.c

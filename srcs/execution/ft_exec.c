@@ -170,9 +170,9 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
  */
 char	**ft_add_to_vector(char **old_vector, char *new_str)
 {
-	//review brief
-	char	**new_vector;
+	char	**new_vector; 	//review brief
 	int		i;
+
 	i = 0;
 	if (old_vector)
 		while (old_vector[i])
@@ -180,6 +180,7 @@ char	**ft_add_to_vector(char **old_vector, char *new_str)
 	new_vector = (char **)malloc(sizeof(char *) * (i + 2));
 	if (!new_vector)
 		return (ft_error_malloc("new_vector"), NULL);
+	*new_vector = NULL;
 	i = 0;
 	if (!old_vector)
 		new_vector[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
@@ -197,47 +198,37 @@ char	**ft_add_to_vector(char **old_vector, char *new_str)
 	return (new_vector);
 }
 
-
-
-char	**tokentostring_(t_list **args)
+static char	**tokentostring_(t_list **args)
 {
-	//write brief
-	char	**new_args;
+	char	**new_args; 	//write brief
 	char	**new_args_cp;
-	t_list	*curr_list;
-	t_token	*token;
+	t_list	*curr;
 	int		i;
 
-	ft_print_list(args); //debug
 	new_args = (char **)malloc(sizeof(char *));
 	if (!new_args)
 		ft_error_malloc("new_args");
-	curr_list = *args;
-	token = ((t_token *)(curr_list)->content);
-	while (curr_list)
+	*new_args = NULL;
+	curr = *args;
+	while (curr)
 	{
-		if (token->expand)
+		if (((t_token *)(curr)->content)->expand)
 		{
-			new_args_cp = ft_split(token->value, ' ');
-			//bashinho [pwd] $ export var="ls -l" var2="-a -w"
-			//bashinho [pwd] $ $var $var2 //not working properly
-			i = 0;
-			while (new_args_cp[i])
-			{
+			new_args_cp = ft_split(((t_token *)(curr)->content)->value, ' ');
+			i = -1;
+			while (new_args_cp[++i])
 				new_args = ft_add_to_vector(new_args, new_args_cp[i]);
-				i++;
-			}
 			ft_free_vector(new_args_cp);
 		}
 		else
-			new_args = ft_add_to_vector(new_args, token->value);
-		curr_list = (curr_list)->next;	
+			new_args = ft_add_to_vector(new_args,
+				((t_token *)(curr)->content)->value);
+		curr = (curr)->next;	
 	}
 	return (new_args);
 }
 
 ///
-
 
 /**
  * @brief Executes a command in the shell.
@@ -257,8 +248,6 @@ void	ft_exec(t_list **args, t_shell *sh)
 	pathname = NULL;
 	ft_process_token_list(args, ft_merge_env(sh));
 	new_args = tokentostring_(args);
-	for (int i = 0; new_args[i]; i++) //debug
-		fprintf(stderr, "new_args = %s\n", new_args[i]); //debug
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else
