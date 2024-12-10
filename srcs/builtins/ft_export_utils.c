@@ -95,6 +95,7 @@ void	ft_print_export(char **envp)
 		i++;
 	}
 	free(sorted_envp);
+	ft_free_vector(envp);
 }
 
 /**
@@ -167,4 +168,6 @@ void	ft_local_import(t_shell *sh, char *arg)
 	}
 	if (var)
 		add_var(var, ft_argslen(sh->global), &(sh->global));
+	else
+		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
 }

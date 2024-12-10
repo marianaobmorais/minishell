@@ -56,7 +56,7 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 	int	status;
 	//static int i;//debug
 
-	sh->curr_fd = 0;
+	sh->error_fd = 0;
 	if (!node)
 	{
 		ft_signal(CHILD_);
@@ -127,7 +127,7 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	}
 	else if (((t_exec *)node)->type == EXEC)
 	{
-		if (sh->curr_fd == 0)
+		if (sh->error_fd == 0)
 		{
 			if (pipe(curr_fds) == -1)
 				return (ft_exit_status(1, TRUE, FALSE),

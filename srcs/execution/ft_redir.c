@@ -23,20 +23,20 @@ int	ft_open(t_redir *node, char *pathname, int mode, t_shell *sh)
 	{
 		if (access(pathname, F_OK) == -1 || access(pathname, R_OK) == -1)
 		{
-			if (sh->curr_fd == 0)
+			if (sh->error_fd == 0)
 				ft_stderror(TRUE, "%s: ", pathname);
-			sh->curr_fd = -1;
+			sh->error_fd = -1;
 			ft_exit_status(1, TRUE, FALSE);
 			return (open("/dev/null", O_RDONLY));
 		}
 	}
-	if (sh->curr_fd == 0)
+	if (sh->error_fd == 0)
 		fd = open(pathname, mode, 0644);
 	if (fd == -1)
 	{
-		if (sh->curr_fd == 0)
+		if (sh->error_fd == 0)
 			ft_stderror(TRUE, "%s: ", pathname);
-		sh->curr_fd = -1;
+		sh->error_fd = -1;
 		ft_exit_status(1, TRUE, FALSE);
 		return (fd);
 	}
@@ -125,7 +125,7 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 	if (node->type == OUTFILE || node->type == INFILE || node->type == APPEND)
 	{
 		target_tmp = ft_strdup(((t_token *)(*node->target)->content)->value);
-		ft_process_token_list(node->target, ft_merge_env(sh));
+		ft_process_token_list(node->target, ft_merge_env(sh->global, sh->local));
 		if (!*node->target)
 		{
 			ft_stderror(FALSE, "%s: ambiguous redirect", target_tmp);

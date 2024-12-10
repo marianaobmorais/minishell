@@ -82,6 +82,7 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 {
 	void	*curr;
 	char	**new_args;
+	int		argc;
 
 	if (ft_isjustbuiltin(node, sh))
 	{
@@ -89,11 +90,15 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 		curr = ((t_node *)node)->left;
 		while (ft_redir(((t_redir *)curr), next_node, sh))
 			curr = ((t_redir *)curr)->next;
-		ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
+		ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh->global, sh->local));
 		new_args = tokentostring(((t_exec *)curr)->args);
+		ft_print_list(((t_exec *)curr)->args);
 		if (((t_exec *)curr)->type == EXPORT
 			|| ((t_exec *)curr)->type == EXPORT_AP)
-			ft_export(ft_argslen(new_args), new_args, sh, LOCAL);
+		{
+			argc = ft_argslen(new_args);
+			ft_export(argc, new_args, sh, LOCAL);
+		}
 		if (((t_exec *)curr)->type == EXEC)
 			if (ft_isbuiltin(new_args))
 				ft_exec_builtin(new_args, sh);
@@ -103,4 +108,3 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 	}
 	return (FALSE);
 }
-

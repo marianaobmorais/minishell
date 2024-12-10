@@ -84,6 +84,18 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 	return (0);
 }
 
+void	ft_delete(char *argv, char ***my_envp)
+{
+	size_t	size_env;
+
+	if ((*my_envp))
+	{
+		size_env = is_var(argv, *my_envp);
+		if (size_env > 0)
+			delete_var(argv, my_envp, size_env);
+	}
+}
+
 /**
  * @brief Unsets (removes) specified environment variables.
  *
@@ -100,28 +112,15 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
  */
 int	ft_unset(int argc, char **argv, t_shell *sh)
 {
-	size_t	size_env;
-
 	if (argc == 1)
 		return (ft_exit_status(0, TRUE, FALSE));
 	++argv;
 	while (*argv)
 	{
-		if ((*sh->global))
-		{
-			size_env = is_var(*argv, sh->global);
-			if (size_env > 0)
-				delete_var(*argv, &(sh->global), size_env);
-		}
-		if ((*sh->local))
-		{
-			size_env = is_var(*argv, sh->local);
-			if (size_env > 0)
-				delete_var(*argv, &(sh->local), size_env);
-		}
+		ft_delete(*argv, &(sh->global));
+		ft_delete(*argv, &(sh->local));
+		ft_delete(*argv, &(sh->limbo));
 		argv++;
 	}
 	return (ft_exit_status(0, TRUE, FALSE));
 }
-
-//missing delete VAR without '='

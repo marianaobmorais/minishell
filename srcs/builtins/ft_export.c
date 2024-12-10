@@ -133,12 +133,14 @@ static int	ft_export_local(char **argv, t_shell *sh)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
 		{
-			if (concatenate_var(*argv, &(sh->global), LOCAL) == -1)
+			if (concatenate_var(*argv, &(sh->global), LOCAL) == -1
+				&& ft_limbo_import(sh, *argv) == -1)
 				concatenate_var(*argv, &(sh->local), DEFAULT);
 		}
 		else
 		{
-			if (replace_var(*argv, s_key, &(sh->global), LOCAL) == -1)
+			if (replace_var(*argv, s_key, &(sh->global), LOCAL) == -1
+				&& ft_limbo_import(sh, *argv) == -1)
 				replace_var(*argv, s_key, &(sh->local), DEFAULT);
 		}
 		argv++;
@@ -170,7 +172,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		return (ft_export_local(argv, sh));
 	if (argc == 1)
 	{
-		ft_print_export(sh->global);
+		ft_print_export(ft_merge_env(sh->global, sh->limbo));
 		return (ft_exit_status(0, TRUE, FALSE));
 	}
 	argv++;
@@ -180,7 +182,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if (!ft_strchr(*argv, '='))
 			ft_local_import(sh, *argv);
-		else if ((*argv)[s_key - 1] == '+')
+		else if (s_key > 0 && (*argv)[s_key - 1] == '+')
 			concatenate_var(*argv, &(sh->global), DEFAULT);
 		else
 			replace_var(*argv, s_key, &(sh->global), DEFAULT);
