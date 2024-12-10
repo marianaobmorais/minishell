@@ -18,7 +18,7 @@ int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 
 	if (stat(pathname, &file) == -1) // não sei se preciso fazer o check de *args[0] aqui também
 	{
-		ft_stderror(TRUE, "stat: %s: ", args[0]);
+		ft_stderror(TRUE, "%s: ", args[0]);
 		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(127, TRUE, TRUE);
 		return (-1);
@@ -32,7 +32,7 @@ int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 	}
 	else if (access(pathname, X_OK) == -1 && *args[0])
 	{
-		ft_stderror(TRUE, "access: %s: ", args[0]);
+		ft_stderror(TRUE, "%s: ", args[0]);
 		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
@@ -47,7 +47,7 @@ int	isvalid_(char *pathname, char **args, t_shell *sh)
 
 	if (stat(pathname, &file) == -1)
 	{
-		ft_stderror(TRUE, "stat: %s: ", args[0]);
+		ft_stderror(TRUE, "%s: ", args[0]);
 		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
@@ -261,6 +261,7 @@ void	ft_exec(t_list **args, t_shell *sh)
 		if (!pathname)
 		{
 			ft_stderror(FALSE, "%s: command not found", new_args[0]);
+			//fprintf(stderr, "%s: command not found\n", new_args[0]);
 			ft_child_cleaner(sh, new_args, 0);
 			ft_exit_status(127, TRUE, TRUE);
 		}

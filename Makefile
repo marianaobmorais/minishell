@@ -62,7 +62,8 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --trace-children=yes --suppressions=.ignore_readline
+VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline
+# --trace-children=yes
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline

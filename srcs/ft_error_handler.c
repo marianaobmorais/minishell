@@ -2,6 +2,7 @@
 
 void	ft_error_malloc(char *message)
 {
+	//write brief
 	ft_stderror(TRUE, message);
 	ft_exit_status(1, TRUE, FALSE);
 }
@@ -64,6 +65,14 @@ static char	*ft_format(va_list args, const char fmt)
 	return (specifier);
 }
 
+void	ft_putstr_fd_len(char *s, int fd, int len)
+{
+	//write brief
+	if (s == NULL)
+		return (ft_putstr_fd_len("(null)", fd, 6));
+	write(fd, s, len);
+}
+
 /**
  * @brief Prints an error message to stderr with formatted arguments and
  * returns an exit status.
@@ -81,7 +90,7 @@ static char	*ft_format(va_list args, const char fmt)
  */
 void	ft_stderror(int perror_, const char *str, ...)
 {
-	va_list	args;
+	va_list	args; //printando tudo junto
 	char	*fmt_specifier;
 
 	va_start(args, str);
