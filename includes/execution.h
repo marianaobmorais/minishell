@@ -28,7 +28,7 @@ typedef struct s_shell
 	char	**local;
 	int		run;
 	int		curr_fd;
-	void	*root; //not sure
+	void	*root;
 }	t_shell;
 
 /* Heredoc */

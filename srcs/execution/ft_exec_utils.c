@@ -23,16 +23,12 @@ char	**tokentostring(t_list **args)
 	i = 0;
 	new_args = (char **)malloc((size + 1) * sizeof(char *));
 	if (!new_args)
-		ft_error_handler(); //ft malloc
+		ft_error_malloc("new_args");
 	while (curr_list)
 	{
-		//if ((((t_token *)(curr_list)->content)->value)[0] != '\0') //tirei isso para ele conseguir fazer cat "" (e outros) corretamente
-		//{
-			new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
-			i++;
-		//}
-		curr_list = (curr_list)->next;
-		
+		new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
+		i++;
+		curr_list = (curr_list)->next;	
 	}
 	new_args[i] = NULL;
 	return (new_args);

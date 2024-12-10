@@ -95,7 +95,7 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	pid_t	pid;
 	int		fds[2] = {-1, -1};
 
-	pid = -1; //initialized pid pq meu compiler tava reclamando
+	pid = -1;
 	ft_save_original_fds(sh);
 	if (!node)
 		return ;
@@ -114,7 +114,8 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 		if (sh->curr_fd == 0)
 		{
 			if (pipe(curr_fds) == -1)
-				return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, "PIPE ERROR: "));
+				return (ft_exit_status(1, TRUE, FALSE),
+					ft_stderror(TRUE, "PIPE ERROR: "));
 			pid = ft_child_process(curr_fds, sh, node, next_node);
 		}
 		ft_parent_process(curr_fds, sh, next_node, pid);
@@ -137,7 +138,8 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	if (tree)
 	{
 		ft_search_heredoc(tree, sh);
-		if (sh->run == TRUE && !ft_single_command(tree, ((t_node *) tree)->right ,sh))
+		if (sh->run == TRUE
+			&& !ft_single_command(tree, ((t_node *) tree)->right, sh))
 		{
 			ft_signal(DEFAULT_);
 			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);

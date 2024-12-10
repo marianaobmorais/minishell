@@ -114,7 +114,7 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 		ft_update_my_envp(my_envp, cur_pwd);
 		return (free(home));
 	}
-	if (*new_dir)
+	if (*new_dir)//talvez não precise desse check
 	{
 		if (chdir(new_dir) == -1)
 			return (ft_error_cd(TRUE, "cd: %s: ", new_dir));
