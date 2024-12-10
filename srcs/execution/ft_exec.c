@@ -172,6 +172,7 @@ char	**ft_add_to_vector(char **old_vector, char *new_str)
 {
 	char	**new_vector; 	//review brief
 	int		i;
+
 	i = 0;
 	if (old_vector)
 		while (old_vector[i])
@@ -179,6 +180,7 @@ char	**ft_add_to_vector(char **old_vector, char *new_str)
 	new_vector = (char **)malloc(sizeof(char *) * (i + 2));
 	if (!new_vector)
 		return (ft_error_malloc("new_vector"), NULL);
+	*new_vector = NULL;
 	i = 0;
 	if (!old_vector)
 		new_vector[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
@@ -206,6 +208,7 @@ static char	**tokentostring_(t_list **args)
 	new_args = (char **)malloc(sizeof(char *));
 	if (!new_args)
 		ft_error_malloc("new_args");
+	*new_args = NULL;
 	curr = *args;
 	while (curr)
 	{
@@ -226,7 +229,6 @@ static char	**tokentostring_(t_list **args)
 }
 
 ///
-
 
 /**
  * @brief Executes a command in the shell.

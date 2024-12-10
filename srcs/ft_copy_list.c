@@ -34,9 +34,10 @@ t_list	**ft_copy_list(t_list **old)
 	t_list	*new_node;
 	t_token	*new_token;
 
-	new = (t_list **)malloc(sizeof(t_list *)); //maybe I can malloc in ft_isjustbuiltin
+	new = (t_list **)malloc(sizeof(t_list *));
 	if (!new)
 		ft_error_malloc("new");
+	*new = NULL;
 	tmp = *old;
 	while (tmp)
 	{
