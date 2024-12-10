@@ -112,6 +112,7 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 			return (ft_error_cd(FALSE, "cd: HOME not set", NULL));
 		chdir(home);
 		ft_update_my_envp(my_envp, cur_pwd);
+		ft_exit_status(0, TRUE, FALSE);
 		return (free(home));
 	}
 	if (*new_dir)//talvez não precise desse check
