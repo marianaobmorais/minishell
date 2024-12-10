@@ -92,7 +92,6 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 			curr = ((t_redir *)curr)->next;
 		ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh->global, sh->local));
 		new_args = tokentostring(((t_exec *)curr)->args);
-		ft_print_list(((t_exec *)curr)->args);
 		if (((t_exec *)curr)->type == EXPORT
 			|| ((t_exec *)curr)->type == EXPORT_AP)
 		{
