@@ -23,14 +23,14 @@ int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 		ft_exit_status(127, TRUE, TRUE);
 		return (-1);
 	}
-	else if (S_ISDIR(file.st_mode) != 0 && *args[0])//mariaoli esteve aqui
+	else if (S_ISDIR(file.st_mode) != 0 && *args[0])
 	{
 		ft_stderror(FALSE, "%s: Is a directory", args[0]);
 		ft_child_cleaner(sh, args, 0);
 		ft_exit_status(126, TRUE, TRUE);
 		return (-1);
 	}
-	else if (access(pathname, X_OK) == -1 && *args[0])//mariaoli esteve aqui
+	else if (access(pathname, X_OK) == -1 && *args[0])
 	{
 		ft_stderror(TRUE, "access: %s: ", args[0]);
 		ft_child_cleaner(sh, args, 0);
@@ -154,6 +154,45 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 	return (NULL);
 }
 
+
+static void	ft_process_token_list_(t_list **list, char **my_envp, bool *split)
+{
+	t_list	*current; //update brief
+	t_list	*prev;
+	t_list	*next;
+	t_token	*token;
+
+	current = *list;
+	prev = NULL;
+	while (current)
+	{
+		next = current->next;
+		token = (t_token *)current->content;
+		if (token->expand)
+		{
+			ft_expand_tokens(token, my_envp);
+			*split = true;
+		}
+		if (token->state == IN_QUOTE)
+			ft_remove_quotes(token);
+		if (!*token->value && token->expand && !token->state)
+		{
+			ft_remove_current_node(list, prev, current);
+			current = next;
+		}
+		else
+		{
+			token->expand = false;
+			token->state = GENERAL;
+			if (token->wildcard)
+				ft_handle_wildcard(&current, prev, list);
+			prev = current;
+			current = next;
+		}
+	}
+	ft_free_vector(my_envp);
+}
+
 /**
  * @brief Executes a command in the shell.
  *
@@ -168,10 +207,15 @@ void	ft_exec(t_list **args, t_shell *sh)
 {
 	char	*pathname;
 	char	**new_args;
+	bool	split;
 
 	pathname = NULL;
-	ft_process_token_list(args, ft_merge_env(sh));
-	new_args = tokentostring(args);
+	split = false;
+	ft_process_token_list_(args, ft_merge_env(sh), &split);
+	if (args[0] && split) //while (args[i])
+		new_args = ft_split(((t_token *)(*args)->content)->value, ' '); // ainda não tá completo, ver os outros tokens. split after new_args is created?
+	else
+		new_args = tokentostring(args);
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else

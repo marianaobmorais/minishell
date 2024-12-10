@@ -31,7 +31,7 @@ bool	ft_is_expandable(char *s)
  * 
  * @param token Pointer to the token structure containing the value to process.
  */
-static void	ft_remove_quotes(t_token *tkn)
+void	ft_remove_quotes(t_token *tkn)
 {
 	char	quote;
 	int		i;
@@ -72,7 +72,7 @@ static void	ft_remove_quotes(t_token *tkn)
  * @param token Pointer to the token to be expanded.
  * @param my_envp Environment variable array used for expansion.
  */
-static void	ft_expand_tokens(t_token *token, char **my_envp)
+void	ft_expand_tokens(t_token *token, char **my_envp)
 {
 	char	*new_value;
 	int		i;
@@ -113,7 +113,7 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
  * @param head A double pointer to the head of the token list. This is updated
  *        if the head is replaced.
  */
-static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
 {
 	t_list	**wild_list;
 	t_token	*token;
