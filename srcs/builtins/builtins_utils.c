@@ -51,9 +51,10 @@ bool	ft_isbuiltin(char **args)
 	bcmd[7] = NULL;
 	if (*args)
 	{
-		while (bcmd[i] /* && *args[i] */) //dá seg fault no meu pc
+		while (bcmd[i])
 		{
-			if (ft_strncmp(bcmd[i], args[0], ft_strlen(args[0])) == 0 && *args[0]) //aqui funciona!
+			if (ft_strncmp(bcmd[i], args[0], ft_strlen(args[0])) == 0
+				&& *args[0])
 				return (TRUE);
 			i++;
 		}
@@ -105,9 +106,44 @@ void	ft_exec_builtin(char **args, t_shell *sh)
  *
  * @return TRUE if the node is a standalone built-in command; FALSE otherwise.
  */
+// int	ft_isjustbuiltin(void *node, t_shell *sh)
+// {
+// 	t_node	*curr;
+// 	//t_list	**args_cp;
+// 	char	**new_args;
+
+// 	curr = ((t_node *)node)->left;
+// 	if (!((t_node *)node)->right)
+// 	{
+// 		while (curr)
+// 		{
+// 			if (ft_is_node_type(curr, REDIR))
+// 				curr = ((t_redir *)curr)->next;
+// 			else
+// 				break ;
+// 		}
+// 		if (curr && ft_is_node_type(curr, EXEC))
+// 		{
+// 			//args_cp = ft_copy_list(((t_exec *)curr)->args); //and pass to process_token_list
+// 			ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
+// 			new_args = tokentostring(((t_exec *)curr)->args);
+// 			if (ft_isbuiltin(new_args)
+// 				|| ((t_exec *)curr)->type == EXPORT
+// 				|| ((t_exec *)curr)->type == EXPORT_AP)
+// 				return (ft_free_vector(new_args), TRUE);
+// 			//ft_free_list(args_cp);
+// 			//free(args_cp)
+// 			ft_free_vector(new_args);
+// 		}
+// 	}
+// 	return (FALSE);
+// }
+
+
 int	ft_isjustbuiltin(void *node, t_shell *sh)
 {
-	t_node	*curr;
+	t_node	*curr; //update brief
+	t_list	**args_cp;
 	char	**new_args;
 
 	curr = ((t_node *)node)->left;
@@ -122,12 +158,15 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 		}
 		if (curr && ft_is_node_type(curr, EXEC))
 		{
-			ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh));
-			new_args = tokentostring(((t_exec *)curr)->args);
+			args_cp = ft_copy_list(((t_exec *)curr)->args); //olhar leaks
+			ft_process_token_list(args_cp, ft_merge_env(sh));
+			new_args = tokentostring(args_cp);
 			if (ft_isbuiltin(new_args)
 				|| ((t_exec *)curr)->type == EXPORT
 				|| ((t_exec *)curr)->type == EXPORT_AP)
 				return (ft_free_vector(new_args), TRUE);
+			ft_free_list(*args_cp);//olhar leaks
+			free(args_cp);//olhar leaks
 			ft_free_vector(new_args);
 		}
 	}
