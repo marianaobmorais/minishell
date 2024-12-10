@@ -19,13 +19,15 @@ void	ft_echo(char **args);
 int		ft_pwd(void);
 void	ft_exit(int argc, char **args, t_shell *sh);
 int		ft_unset(int argc, char **argv, t_shell *sh);
+void	ft_delete(char *argv, char ***my_envp);
 
 //ft_export
-int		ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 int		check_key(char **argv);
-void	ft_print_export(char **envp);
 int		add_var(char *str, size_t size, char ***my_envp);
+int		ft_export(int argc, char **argv, t_shell *sh, t_env mode);
+void	ft_print_export(char **envp);
 void	ft_local_import(t_shell *sh, char *arg);
+int		ft_limbo_import(t_shell *sh, char *arg);
 
 //manage
 bool	ft_isbuiltin(char **args);
