@@ -99,10 +99,6 @@ void	ft_validate_export_tokens(t_list **list);
 void	*ft_process_input(char *input);
 //ft_process_token_list.c
 void	ft_process_token_list(t_list **token_list, char **my_envp);
-void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current);
-void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head);
-void	ft_expand_tokens(t_token *token, char **my_envp);
-void	ft_remove_quotes(t_token *token);
 bool	ft_is_expandable(char *s);
 //ft_process_token_list_utils.c
 void	ft_handle_dquotes(char **new_value, char *value, int *i, \

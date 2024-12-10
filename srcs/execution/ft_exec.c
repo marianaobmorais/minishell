@@ -42,6 +42,7 @@ int	isvalid_dir(char *pathname, char **args, t_shell *sh)
 
 int	isvalid_(char *pathname, char **args, t_shell *sh)
 {
+	//write brief
 	struct stat	file;
 
 	if (stat(pathname, &file) == -1)
@@ -155,43 +156,88 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 }
 
 
-static void	ft_process_token_list_(t_list **list, char **my_envp, bool *split)
-{
-	t_list	*current; //update brief
-	t_list	*prev;
-	t_list	*next;
-	t_token	*token;
+///
 
-	current = *list;
-	prev = NULL;
-	while (current)
+/**
+ * @brief Adds a new string to a dynamically allocated string vector.
+ * 
+ * Creates a new vector by appending a given string to an existing vector of strings.
+ * Frees the original vector and duplicates its contents into the new one.
+ * 
+ * @param old_vector Pointer to the original string vector, or NULL if creating a new vector.
+ * @param new_str String to add to the vector.
+ * @return A pointer to the new vector with the appended string, or NULL if allocation fails.
+ */
+char	**ft_add_to_vector(char **old_vector, char *new_str)
+{
+	//review brief
+	char	**new_vector;
+	int		i;
+	i = 0;
+	if (old_vector)
+		while (old_vector[i])
+			i++;
+	new_vector = (char **)malloc(sizeof(char *) * (i + 2));
+	if (!new_vector)
+		return (ft_error_malloc("new_vector"), NULL);
+	i = 0;
+	if (!old_vector)
+		new_vector[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
+	else
 	{
-		next = current->next;
-		token = (t_token *)current->content;
+		while (old_vector[i])
+		{
+			new_vector[i] = ft_strdup(old_vector[i]); //malloc check? free allocated mem?
+			i++;
+		}
+		new_vector[i++] = ft_strdup(new_str); //malloc check? free allocated mem?
+		ft_free_vector(old_vector);
+	}
+	new_vector[i] = NULL;
+	return (new_vector);
+}
+
+
+
+char	**tokentostring_(t_list **args)
+{
+	//write brief
+	char	**new_args;
+	char	**new_args_cp;
+	t_list	*curr_list;
+	t_token	*token;
+	int		i;
+
+	ft_print_list(args); //debug
+	new_args = (char **)malloc(sizeof(char *));
+	if (!new_args)
+		ft_error_malloc("new_args");
+	curr_list = *args;
+	token = ((t_token *)(curr_list)->content);
+	while (curr_list)
+	{
 		if (token->expand)
 		{
-			ft_expand_tokens(token, my_envp);
-			*split = true;
-		}
-		if (token->state == IN_QUOTE)
-			ft_remove_quotes(token);
-		if (!*token->value && token->expand && !token->state)
-		{
-			ft_remove_current_node(list, prev, current);
-			current = next;
+			new_args_cp = ft_split(token->value, ' ');
+			//bashinho [pwd] $ export var="ls -l" var2="-a -w"
+			//bashinho [pwd] $ $var $var2 //not working properly
+			i = 0;
+			while (new_args_cp[i])
+			{
+				new_args = ft_add_to_vector(new_args, new_args_cp[i]);
+				i++;
+			}
+			ft_free_vector(new_args_cp);
 		}
 		else
-		{
-			token->expand = false;
-			token->state = GENERAL;
-			if (token->wildcard)
-				ft_handle_wildcard(&current, prev, list);
-			prev = current;
-			current = next;
-		}
+			new_args = ft_add_to_vector(new_args, token->value);
+		curr_list = (curr_list)->next;	
 	}
-	ft_free_vector(my_envp);
+	return (new_args);
 }
+
+///
+
 
 /**
  * @brief Executes a command in the shell.
@@ -207,15 +253,12 @@ void	ft_exec(t_list **args, t_shell *sh)
 {
 	char	*pathname;
 	char	**new_args;
-	bool	split;
 
 	pathname = NULL;
-	split = false;
-	ft_process_token_list_(args, ft_merge_env(sh), &split);
-	if (args[0] && split) //while (args[i])
-		new_args = ft_split(((t_token *)(*args)->content)->value, ' '); // ainda não tá completo, ver os outros tokens. split after new_args is created?
-	else
-		new_args = tokentostring(args);
+	ft_process_token_list(args, ft_merge_env(sh));
+	new_args = tokentostring_(args);
+	for (int i = 0; new_args[i]; i++) //debug
+		fprintf(stderr, "new_args = %s\n", new_args[i]); //debug
 	if (ft_isbuiltin(new_args))
 		ft_exec_builtin(new_args, sh);
 	else

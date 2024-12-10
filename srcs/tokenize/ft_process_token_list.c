@@ -31,7 +31,7 @@ bool	ft_is_expandable(char *s)
  * 
  * @param token Pointer to the token structure containing the value to process.
  */
-void	ft_remove_quotes(t_token *tkn)
+static void	ft_remove_quotes(t_token *tkn)
 {
 	char	quote;
 	int		i;
@@ -72,7 +72,7 @@ void	ft_remove_quotes(t_token *tkn)
  * @param token Pointer to the token to be expanded.
  * @param my_envp Environment variable array used for expansion.
  */
-void	ft_expand_tokens(t_token *token, char **my_envp)
+static void	ft_expand_tokens(t_token *token, char **my_envp)
 {
 	char	*new_value;
 	int		i;
@@ -113,7 +113,7 @@ void	ft_expand_tokens(t_token *token, char **my_envp)
  * @param head A double pointer to the head of the token list. This is updated
  *        if the head is replaced.
  */
-void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
 {
 	t_list	**wild_list;
 	t_token	*token;
@@ -141,7 +141,7 @@ void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
  * @param prev Pointer to the previous node, or NULL if `current` is the head.
  * @param current Pointer to the node to be removed.
  */
-void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
+static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 {
 	t_list	*next;
 
@@ -193,8 +193,6 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		}
 		else
 		{
-			token->expand = false;
-			token->state = GENERAL;
 			if (token->wildcard)
 				ft_handle_wildcard(&current, prev, list);
 			prev = current;

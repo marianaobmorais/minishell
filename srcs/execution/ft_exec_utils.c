@@ -91,12 +91,13 @@ static int	ft_count_words(char **args, char c)
  */
 static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
 {
+	//need to double check function
 	char	**temp;
 	int		z;
 
 	temp = ft_split(arg, ' ');
 	if (!temp)
-		return (NULL); //ft malloc
+		return (ft_error_malloc("temp"), NULL);
 	z = 0;
 	while (temp[z])
 	{
@@ -124,15 +125,16 @@ static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
  */
 char	**ft_split_argv(char **args)
 {
+	//need to double check function
 	int		i;
 	int		y;
 	char	**new_args;
 
 	i = 0;
 	y = 0;
-	new_args = malloc((ft_count_words(args, ' ') + 1) * sizeof(char *));
+	new_args = (char **)malloc((ft_count_words(args, ' ') + 1) * sizeof(char *));
 	if (!new_args)
-		return (NULL); //ft malloc
+		return (ft_error_malloc("new_args"), NULL);
 	while (args[i])
 	{
 		if (!ft_split_and_copy(args[i], new_args, &y))
