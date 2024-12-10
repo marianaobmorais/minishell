@@ -71,6 +71,8 @@ void	ft_free_sh(t_shell *sh);
 char	**ft_get_my_envp(char **envp);
 char	**ft_merge_env(t_shell *sh);
 void	ft_child_cleaner(t_shell *sh, char **args, int mode);
+//ft_copy_list.c
+t_list	**ft_copy_list(t_list **old);
 
 #endif //MINISHELL_H
 

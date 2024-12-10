@@ -141,10 +141,9 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
  * @param prev Pointer to the previous node, or NULL if `current` is the head.
  * @param current Pointer to the node to be removed.
  */
-void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
+static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 {
 	t_list	*next;
-	t_token	*token;
 
 	next = NULL;
 	next = current->next;
@@ -152,17 +151,7 @@ void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
 		prev->next = next;
 	else
 		*list = next;
-	if (current)
-	{
-		token = (t_token *)current->content;
-		if (token)
-		{
-			// if (token->value)
-			// 	free(token->value); //need to check valgrind. originally from ft_free_content
-			free(token);
-		}
-		free(current);
-	}
+	ft_free_content(current);
 }
 
 /**
@@ -204,8 +193,6 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		}
 		else
 		{
-			token->expand = false;
-			token->state = GENERAL;
 			if (token->wildcard)
 				ft_handle_wildcard(&current, prev, list);
 			prev = current;

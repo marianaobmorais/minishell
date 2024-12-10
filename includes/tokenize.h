@@ -98,8 +98,7 @@ void	ft_validate_export_tokens(t_list **list);
 //ft_process_input.c
 void	*ft_process_input(char *input);
 //ft_process_token_list.c
-void	ft_process_token_list(t_list **token_list, \
-		char **my_envp);
+void	ft_process_token_list(t_list **token_list, char **my_envp);
 bool	ft_is_expandable(char *s);
 //ft_process_token_list_utils.c
 void	ft_handle_dquotes(char **new_value, char *value, int *i, \
@@ -117,7 +116,7 @@ void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
 char	*ft_get_prefix(char *s);
 char	*ft_get_sufix(char *s);
 char	*ft_get_middle(char *s);
-int	ft_strncmp_(const char *str1, const char *str2, size_t len);
+int		ft_strncmp_(const char *str1, const char *str2, size_t len);
 char	*ft_strnstr_(const char *big, const char *little, size_t len);
 //ft_build_root.c
 void	*ft_build_root(t_list **list, t_type node_type);

@@ -87,6 +87,7 @@ void	ft_handle_expansion(char **new_value, char *value, int *i, char **envp)
 	char	*expansion;
 	char	*tmp;
 
+	tmp = NULL;
 	(*i)++;
 	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);

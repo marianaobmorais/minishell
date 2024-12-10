@@ -23,16 +23,12 @@ char	**tokentostring(t_list **args)
 	i = 0;
 	new_args = (char **)malloc((size + 1) * sizeof(char *));
 	if (!new_args)
-		ft_error_handler(); //ft malloc
+		ft_error_malloc("new_args");
 	while (curr_list)
 	{
-		//if ((((t_token *)(curr_list)->content)->value)[0] != '\0') //tirei isso para ele conseguir fazer cat "" (e outros) corretamente
-		//{
-			new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
-			i++;
-		//}
-		curr_list = (curr_list)->next;
-		
+		new_args[i] = ft_strdup(((t_token *)(curr_list)->content)->value);
+		i++;
+		curr_list = (curr_list)->next;	
 	}
 	new_args[i] = NULL;
 	return (new_args);
@@ -95,12 +91,13 @@ static int	ft_count_words(char **args, char c)
  */
 static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
 {
+	//need to double check function
 	char	**temp;
 	int		z;
 
 	temp = ft_split(arg, ' ');
 	if (!temp)
-		return (NULL); //ft malloc
+		return (ft_error_malloc("temp"), NULL);
 	z = 0;
 	while (temp[z])
 	{
@@ -128,15 +125,16 @@ static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
  */
 char	**ft_split_argv(char **args)
 {
+	//need to double check function
 	int		i;
 	int		y;
 	char	**new_args;
 
 	i = 0;
 	y = 0;
-	new_args = malloc((ft_count_words(args, ' ') + 1) * sizeof(char *));
+	new_args = (char **)malloc((ft_count_words(args, ' ') + 1) * sizeof(char *));
 	if (!new_args)
-		return (NULL); //ft malloc
+		return (ft_error_malloc("new_args"), NULL);
 	while (args[i])
 	{
 		if (!ft_split_and_copy(args[i], new_args, &y))

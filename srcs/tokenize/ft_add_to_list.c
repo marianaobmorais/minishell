@@ -148,7 +148,7 @@ static bool	ft_has_expandable_var(char *s)
  */
 void	ft_add_to_list(char *value, t_list **list)
 {
-	t_token	*new_token;
+	t_token	*new_token; //probaly will delete this function
 	t_list	*new_node;
 
 	if (!value)

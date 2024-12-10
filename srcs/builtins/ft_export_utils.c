@@ -114,22 +114,20 @@ void	ft_print_export(char **envp)
 int	check_key(char **argv)
 {
 	size_t	i;
-	char	*error_msg;
 
-	error_msg = "export: `%s': not a valid identifier";
 	while (*argv)
 	{
 		i = 0;
 		if (!ft_isalpha((*argv)[i]) && (*argv)[i] != '_')
-			return (ft_stderror(FALSE, error_msg, (*argv)), 2);
+			return (ft_stderror(FALSE, ERROR_IDENTIFIER, (*argv)), 1);
 		while ((*argv)[i] != '=' && (*argv)[i])
 		{
 			if (!ft_isalnum((*argv)[i]) && (*argv)[i] != '_')
 			{
 				if ((*argv)[i] != '+')
-					return (ft_stderror(FALSE, error_msg, (*argv)), 2);
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, (*argv)), 1);
 				else if ((*argv)[i] == '+' && (*argv)[i + 1] != '=')
-					return (ft_stderror(FALSE, error_msg, (*argv)), 2);
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, (*argv)), 1);
 			}
 			i++;
 		}

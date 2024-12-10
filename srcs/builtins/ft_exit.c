@@ -24,6 +24,20 @@ static void	print_exit(void)
  */
 static int	isnumeric(char *arg)
 {
+	int	i;
+
+	i = 0;
+	if (arg[i] == '-' || arg[i] == '+')
+		i++;
+	while (arg[i])
+	{
+		if (ft_isdigit(arg[i]) == 0)
+		{
+			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
+			return (ft_exit_status(2, TRUE, FALSE));
+		}
+		i++;
+	}
 	if (arg[0] == '\0' || ((arg[0] == '-' || arg[0] == '+')
 			&& !ft_isdigit(arg[1])))
 	{
@@ -47,22 +61,22 @@ static int	isnumeric(char *arg)
  */
 static unsigned char	arg_convert(char *arg)
 {
-	int			i;
+	//int			i;
 	long long	num;
 
-	i = 0;
-	//ft_exit_status(0, TRUE, FALSE);
-	if (arg[i] == '-' || arg[i] == '+')
-		i++;
-	while (arg[i])
-	{
-		if (ft_isdigit(arg[i]) == 0)
-		{
-			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-			return (ft_exit_status(2, TRUE, FALSE));
-		}
-		i++;
-	}
+	// i = 0;
+	// //ft_exit_status(0, TRUE, FALSE);
+	// if (arg[i] == '-' || arg[i] == '+')
+	// 	i++;
+	// while (arg[i])
+	// {
+	// 	if (ft_isdigit(arg[i]) == 0)
+	// 	{
+	// 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
+	// 		return (ft_exit_status(2, TRUE, FALSE));
+	// 	}
+	// 	i++;
+	// }
 	num = ft_atol(arg); //rever isso
 	if (num > INT32_MAX || num < INT32_MIN)
 	{
@@ -96,26 +110,22 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(exit_status, TRUE, TRUE);
 	}
-	while (args[i])
+	if (isnumeric(args[1]))
 	{
-		if (isnumeric(args[i]))
+		ft_child_cleaner(sh, args, 1);
+		ft_exit_status(2, TRUE, TRUE);
+	}
+	else if (args[2])
+	{
+		ft_stderror(FALSE, "exit: too many arguments");
+		ft_exit_status(1, TRUE, FALSE);
+	}
+	else
+	{
+		if (arg_convert(args[i]) && !args[i + 1])
 		{
 			ft_child_cleaner(sh, args, 1);
-			ft_exit_status(2, TRUE, TRUE);
+			ft_exit_status(0, FALSE, TRUE);
 		}
-		else if (i == 2)
-		{
-			ft_stderror(FALSE, "exit: too many arguments");
-			ft_exit_status(1, TRUE, FALSE);
-		}
-		else
-		{
-			if (arg_convert(args[i]) && !args[i + 1])
-			{
-				ft_child_cleaner(sh, args, 1);
-				ft_exit_status(0, FALSE, TRUE);
-			}
-		}
-		i++;
 	}
 }

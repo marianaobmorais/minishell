@@ -31,7 +31,7 @@ t_list	**ft_get_args(t_list **list)
 	{
 		token = (t_token *)curr->content;
 		if (ft_is_token_type(token, EXEC))
-			ft_add_to_list(token->value, args);
+			ft_add_to_list(token->value, args); //try to change back to add_to_token_list and delete this one
 		else if (ft_is_token_type(token, REDIR))
 		{
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)

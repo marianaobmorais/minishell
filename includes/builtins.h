@@ -1,11 +1,14 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
+//message
+# define ERROR_IDENTIFIER "export: `%s': not a valid identifier"
+
 typedef struct s_shell	t_shell;
 typedef enum e_env		t_env;
 
 //ft_env.c
-void	ft_env(char **my_envp);
+void ft_env(int argc, char **args, char **my_envp);
 
 //ft_cd.c
 void	ft_cd(int argc, const char *new_dir, char **my_envp);
