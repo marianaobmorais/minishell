@@ -31,10 +31,14 @@ static bool	ft_validate_entry(char *s, char *entry_name)
 		&& ft_strncmp_(substring, sufix, ft_strlen(sufix)) == 0
 		&& ft_strnstr_(entry_name, middle, ft_strlen(entry_name)) != NULL)
 		result = true;
-	free(substring);
-	free(prefix);
-	free(sufix);
-	free(middle);
+	if (substring)
+		free(substring);
+	if (prefix)
+		free(prefix);
+	if (sufix)
+		free(sufix);
+	if (middle)
+		free(middle);
 	return (result);
 }
 
@@ -124,8 +128,7 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 	entry_name = ft_strdup(entry->d_name);
 	if (!entry_name)
 	{
-		ft_stderror(TRUE, "ft_strdup");
-		ft_exit_status(1, TRUE, FALSE);
+		ft_error_malloc("entry_name");
 		return ;
 	}
 	ft_add_to_token_list(&entry_name, wild_list);

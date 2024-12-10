@@ -55,14 +55,14 @@ char	*ft_get_sufix(char *s)
 
 char	*ft_get_middle(char *s)
 {
-	char	*middle;
+	char	*middle; //write brief
 	int		i;
 
 	i = 0;
 	middle = NULL;
 	while (s[i] == '*')
 		i++;
-	if (s[i] != '\0')
+	if (s[i])
 	{
 		while (s[i] && s[i] != '*')
 		{
@@ -70,7 +70,11 @@ char	*ft_get_middle(char *s)
 			i++;
 		}
 		if (s[i] != '*')
+		{
+			if (middle)
+				free(middle);
 			return (NULL);
+		}
 	}
 	return (middle);
 }
