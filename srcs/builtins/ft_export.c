@@ -182,7 +182,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if (!ft_strchr(*argv, '='))
 			ft_local_import(sh, *argv);
-		else if ((*argv)[s_key - 1] == '+')
+		else if (s_key > 0 && (*argv)[s_key - 1] == '+')
 			concatenate_var(*argv, &(sh->global), DEFAULT);
 		else
 			replace_var(*argv, s_key, &(sh->global), DEFAULT);
