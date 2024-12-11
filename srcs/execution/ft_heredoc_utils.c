@@ -98,7 +98,7 @@ char	*ft_create_pathname(void)
 	char		*temp;
 	static int	i;
 
-	base = "/tmp/.heredoc_";
+	base = "/tmp/.heredoc_"; //fazer depois um while para check se existe arquivo
 	temp = ft_itoa(i);
 	pathname = ft_strjoin(base, temp);
 	free(temp);

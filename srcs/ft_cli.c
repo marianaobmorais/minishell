@@ -18,13 +18,16 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
-	free(sh->heredoc_list);
+	if (sh->heredoc_list)
+	{
+		ft_lstclear(sh->heredoc_list, free);
+		free(sh->heredoc_list);
+	}
 	sh->heredoc_list = (t_list **) malloc(sizeof(t_list **));
 	if (!sh->heredoc_list)
 		ft_stderror(TRUE, "");
 	*(sh->heredoc_list) = NULL;
 	sh->error_fd = 0;
-	//ft_free_tree(tree);
 	if (sh->root)
 	{
 		ft_free_tree(sh->root);
@@ -32,6 +35,7 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	}
 	tree = NULL;
 }
+
 
 /**
  * @brief Frees the memory allocated for a shell structure.
@@ -52,22 +56,16 @@ void	ft_free_sh(t_shell *sh)
 	if (sh->limbo)
 		ft_free_vector(sh->limbo);
 	if (sh->heredoc_list)
+	{
+		ft_lstclear(sh->heredoc_list, free);
 		free(sh->heredoc_list);
+	}
 	if (sh->root)
 	{
 		ft_free_tree(sh->root);
 		sh->root = NULL;
 	}
-	if (sh->stdin_ != -1)
-	{
-		close(sh->stdin_);
-		sh->stdin_ = -1;
-	}
-	if (sh->stdout_ != -1)
-	{
-		close(sh->stdout_);
-		sh->stdout_ = -1;
-	}
+	close_original_fds(sh);
 	free(sh);
 }
 
@@ -114,6 +112,7 @@ t_shell	*ft_init_sh(char **envp)
 	sh->run = TRUE;
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
+	sh->stderr_ = -1;
 	sh->prev = NULL;
 	return (sh);
 }

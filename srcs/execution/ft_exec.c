@@ -79,7 +79,7 @@ int	isvalid_(char *pathname, char **args, t_shell *sh)
  *
  * @return A newly allocated string containing the merged result.
  */
-static char	*merge(char *s1, char *s2)
+char	*merge(char *s1, char *s2)
 {
 	char	*merge;
 

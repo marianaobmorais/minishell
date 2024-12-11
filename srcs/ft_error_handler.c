@@ -92,26 +92,34 @@ void	ft_stderror(int perror_, const char *str, ...)
 {
 	va_list	args; //printando tudo junto
 	char	*fmt_specifier;
+	char	*all;
 
 	va_start(args, str);
-	ft_putstr_fd(PROG_NAME_ERROR, 2);
+	all = merge(ft_strdup(""), PROG_NAME_ERROR);
 	while (*str)
 	{
 		if (*str == '%')
 		{
 			str++;
 			fmt_specifier = ft_format(args, *str);
-			ft_putstr_fd(fmt_specifier, 2);
+			all = merge(all, fmt_specifier);
 			free(fmt_specifier);
 		}
 		else
-			ft_putchar_fd(*str, 2);
+			all = ft_charjoin(all, *str);
 		str++;
 	}
 	if (perror_ == TRUE)
+	{
+		ft_putstr_fd_len(all, 2, ft_strlen(all));
 		perror("");
+	}
 	else
-		ft_putchar_fd('\n', 2);
+	{
+		all = merge(all, "\n");
+		ft_putstr_fd_len(all, 2, ft_strlen(all));
+	}
+	free(all);
 	va_end(args);
 }
 

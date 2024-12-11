@@ -54,5 +54,6 @@ char	**ft_add_to_vector(char **old_vector, char *new_str);
 char	**ft_split_argv(char **args);
 void	ft_exec(t_list **args, t_shell *sh);
 void	close_fds(int *fds);
+char	*merge(char *s1, char *s2);
 
 #endif //EXECUTION_H

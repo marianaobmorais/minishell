@@ -91,6 +91,7 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 
 	pathname = (char *)(*sh->heredoc_list)->content;
 	tmp = (*sh->heredoc_list)->next;
+	//fprintf(stderr, "pathname: %s\n", pathname);//debug
 	if (ft_search_exec(node) == TRUE)
 	{
 		fd = open(pathname, O_RDONLY);
@@ -103,7 +104,9 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 		close(fd);
 		unlink(pathname);
 	}
-	ft_lstdelone(*(sh->heredoc_list), free);
+	//ft_lstdelone(*(sh->heredoc_list), free);
+	free((*sh->heredoc_list)->content);
+	free((*sh->heredoc_list));
 	*sh->heredoc_list = tmp;
 }
 
@@ -158,4 +161,3 @@ int	ft_redir(t_redir *node, void *next_node, t_shell *sh)
 	}
 	return (FALSE);
 }
-
