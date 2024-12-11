@@ -13,6 +13,7 @@ typedef struct s_shell
 {
 	int		stdin_;
 	int		stdout_;
+	int		stderr_;
 	int		fds_saved;
 	int		error_fd;
 	void	*prev;
@@ -43,6 +44,7 @@ void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, t_shell *sh);
 int		ft_single_command(void *node, void *next_node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
+void	close_original_fds(t_shell *sh);
 void	ft_launcher_manager(void *tree, t_shell *sh);
 
 /* Exec */
