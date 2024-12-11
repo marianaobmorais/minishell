@@ -83,16 +83,7 @@ void	ft_child_cleaner(t_shell *sh, char **args, int cmd)
 		ft_free_vector(args);
 	if (cmd == 1)
 	{
-		if (sh->stdin_ != -1)
-		{
-			close(sh->stdin_);
-			sh->stdin_ = -1;
-		}
-		if (sh->stdout_ != -1)
-		{
-			close(sh->stdout_);
-			sh->stdout_ = -1;
-		}
+		close_original_fds(sh);
 	}
 	if (sh)
 		ft_free_sh(sh);
