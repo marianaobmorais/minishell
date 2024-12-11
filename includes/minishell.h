@@ -28,7 +28,6 @@
 # include "execution.h"
 # include "colors.h"
 
-
 //program name
 # define PROMPT "bashinho [pwd] $ "
 # define PROG_NAME "bashinho"
@@ -49,12 +48,12 @@ typedef enum e_env
 	DEFAULT
 }	t_env;
 
-int		ft_error_handler(void);
-
 //ft_free_utils.c
 void	ft_free_vector(char **vector);
 void	ft_free_list(t_list *list);
 void	ft_free_content(t_list *node);
+void	ft_free_sh(t_shell *sh);
+void	ft_child_cleaner(t_shell *sh, char **args, int mode);
 
 //ft_exit_status.c
 int		ft_exit_status(int exit_status, int write_, int exit_);
@@ -62,17 +61,19 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 //ft_error_handler.c
 void	ft_stderror(int perror_, const char *str, ...);
 void	ft_error_malloc(char *message);
-
-//talvez enviar para execution
+//ft_signal.c
 void	ft_signal(int type);
+
+//ft_cli.c
 void	ft_cli(t_shell *sh);
 t_shell	*ft_init_sh(char **envp);
-void	ft_restore_cli(t_shell *sh, void *tree); //por que void **tree?
-void	ft_free_sh(t_shell *sh);
+void	ft_restore_cli(t_shell *sh, void *tree);
 //t_env	*ft_init_env(char **envp);
+
+//ft_env_manager.c
 char	**ft_get_my_envp(char **envp);
 char	**ft_merge_env(char **env1, char **env2);
-void	ft_child_cleaner(t_shell *sh, char **args, int mode);
+
 //ft_copy_list.c
 t_list	**ft_copy_list(t_list **old);
 

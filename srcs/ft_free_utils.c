@@ -79,7 +79,8 @@ void	ft_free_list(t_list *list)
 
 void	ft_child_cleaner(t_shell *sh, char **args, int cmd)
 {
-	if (args) //add brief
+	//write brief
+	if (args)
 		ft_free_vector(args);
 	if (cmd == 1)
 	{

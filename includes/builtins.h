@@ -8,7 +8,7 @@ typedef struct s_shell	t_shell;
 typedef enum e_env		t_env;
 
 //ft_env.c
-void ft_env(int argc, char **args, char **envp);
+void	ft_env(int argc, char **args, char **envp);
 
 //ft_cd.c
 void	ft_cd(int argc, const char *new_dir, char **envp);
@@ -28,7 +28,7 @@ void	ft_print_export(char **envp);
 void	ft_local_import(t_shell *sh, char *arg);
 int		ft_limbo_import(t_shell *sh, char *arg);
 
-//manage
+//builtins_utils.c
 bool	ft_isbuiltin(char **args);
 void	ft_exec_builtin(char **args, t_shell *sh);
 int		ft_argslen(char **args);

@@ -67,7 +67,6 @@ static char	*ft_format(va_list args, const char fmt)
 
 void	ft_putstr_fd_len(char *s, int fd, int len)
 {
-	//delete later?
 	//write brief
 	if (s == NULL)
 		return (ft_putstr_fd_len("(null)", fd, 6));
@@ -91,7 +90,8 @@ void	ft_putstr_fd_len(char *s, int fd, int len)
  */
 void	ft_stderror(int perror_, const char *str, ...)
 {
-	va_list	args; //printando tudo junto
+	//printando tudo junto?
+	va_list	args;
 	char	*fmt_specifier;
 	char	*all;
 
@@ -122,11 +122,4 @@ void	ft_stderror(int perror_, const char *str, ...)
 	}
 	free(all);
 	va_end(args);
-}
-
-//to be printed on STDERR //delete later
-int	ft_error_handler(void)
-{
-	printf("error to be printed on STDERR\n");
-	return (-1);
 }
