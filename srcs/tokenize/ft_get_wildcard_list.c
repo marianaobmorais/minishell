@@ -106,15 +106,16 @@ static DIR	*ft_open_directory(char *dir_path)
 
 /**
  * @brief Processes a directory entry and adds it to the wildcard list if valid
- * 
- * This function checks if a directory entry matches the wildcard pattern `s` 
- * and is not a hidden file or directory (entries starting with '.'). Valid 
- * entries are duplicated and added to the wildcard list.
- * 
- * @param s The wildcard pattern to validate entries against.
- * @param entry A pointer to the `struct dirent` representing the directory
- *        entry.
- * @param wild_list A pointer to the linked list where valid entries are added.
+ *
+ * This function evaluates a directory entry against a wildcard pattern and, if
+ * valid, creates a new node and appends it to the wildcard list. Skips hidden 
+ * files and directories (entries starting with a dot `.`). It also marks the
+ * `wildcard` attribute of the node as `false` if the node contains a wildcard,
+ * preventing recursive wildcard expansion.
+ *
+ * @param s The wildcard pattern to validate against.
+ * @param entry The directory entry (`struct dirent`) to process.
+ * @param wild_list A pointer to the wildcard list to which new nodes are added
  */
 static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 {
@@ -127,14 +128,11 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 		return ;
 	entry_name = ft_strdup(entry->d_name);
 	if (!entry_name)
-	{
-		ft_error_malloc("entry_name");
-		return ;
-	}
+		return ft_error_malloc("entry_name");
 	ft_add_to_token_list(&entry_name, wild_list);
 	new_node = ft_lstlast(*wild_list);
 	if (ft_is_wildcard(((t_token *)new_node->content)->value))
-		((t_token *)new_node->content)->wildcard = false; //update brief
+		((t_token *)new_node->content)->wildcard = false;
 }
 
 /**

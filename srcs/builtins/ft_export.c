@@ -4,13 +4,13 @@
  * @brief Adds a new environment variable to the environment array.
  *
  * Allocates space for a new env array with one additional slot for `str`,
- * copying existing variables from `my_envp` and appending the new variable.
+ * copying existing variables from `envp` and appending the new variable.
  *
  * @param str The new environment variable string to add.
- * @param size The current number of environment variables in `my_envp`.
- * @param my_envp Pointer to the environment variable array to be updated.
+ * @param size The current number of environment variables in `envp`.
+ * @param envp Pointer to the environment variable array to be updated.
  */
-int	add_var(char *str, size_t size, char ***my_envp)
+int	add_var(char *str, size_t size, char ***envp)
 {
 	int		i;
 	char	**new_envp;
@@ -20,67 +20,67 @@ int	add_var(char *str, size_t size, char ***my_envp)
 	if (!new_envp)
 		return (ft_stderror(TRUE, ""), ft_exit_status(1, TRUE, FALSE), -1);
 	i = 0;
-	while ((*my_envp)[i])
+	while ((*envp)[i])
 	{
-		new_envp[i] = (*my_envp)[i];
+		new_envp[i] = (*envp)[i];
 		i++;
 	}
 	new_envp[i] = ft_strdup(str);
 	new_envp[i + 1] = NULL;
-	free((*my_envp));
-	*my_envp = new_envp;
+	free((*envp));
+	*envp = new_envp;
 	return (0);
 }
 
 /**
  * @brief Replaces an existing env variable or adds a new one if not found.
  *
- * Searches for a variable in `my_envp` matching `str` up to the equal sign `=`
+ * Searches for a variable in `envp` matching `str` up to the equal sign `=`
  * If found, frees the old entry and replaces it with `str`. If not found, 
  * calls `add_var` to add `str` as a new environment variable.
  *
  * @param str The environment variable string to replace or add.
  * @param size The length of the variable name in `str` (up to `=`).
- * @param my_envp Pointer to the array of environment variables to be updated.
+ * @param envp Pointer to the array of environment variables to be updated.
  * @return Returns 0 if the variable is replaced or added new, if LOCAL mode
  *         Returns -1 if not replaced.
  */
-static int	replace_var(char *str, size_t size, char ***my_envp, t_env mode)
+static int	replace_var(char *str, size_t size, char ***envp, t_env mode)
 {
 	int	i;
 
 	i = 0;
-	while ((*my_envp)[i])
+	while ((*envp)[i])
 	{
-		if (ft_strncmp(str, (*my_envp)[i], size) == 0
-			&& (*my_envp)[i][size] == '=')
+		if (ft_strncmp(str, (*envp)[i], size) == 0
+			&& (*envp)[i][size] == '=')
 		{
-			free((*my_envp)[i]);
-			(*my_envp)[i] = ft_strdup(str);
+			free((*envp)[i]);
+			(*envp)[i] = ft_strdup(str);
 			return (0);
 		}
 		i++;
 	}
 	if (mode == LOCAL)
 		return (-1);
-	return (add_var(str, i, my_envp));
+	return (add_var(str, i, envp));
 }
 
 /**
  * @brief Concatenates a value to an existing environment variable or 
  *        adds it as a new variable.
  *
- * Searches for an environment variable in `my_envp` that matches the prefix of
+ * Searches for an environment variable in `envp` that matches the prefix of
  * `str` (before `+=`). If found, concatenates the new value from
  * `str` (after `+=`) to the existing variable value.
  * If not found, calls `add_var` to add `str` as a new environment variable.
  *
  * @param str The environment variable string with the format "VAR+=VALUE".
- * @param my_envp Pointer to the array of environment variables to be updated.
+ * @param envp Pointer to the array of environment variables to be updated.
  * @return Returns 0 if the var is concatenated or added new, if LOCAL mode
  *         Returns -1 if not concatenated.
  */
-static int	concatenate_var(char *str, char ***my_envp, t_env mode)
+static int	concatenate_var(char *str, char ***envp, t_env mode)
 {
 	int		i;
 	int		size;
@@ -88,23 +88,23 @@ static int	concatenate_var(char *str, char ***my_envp, t_env mode)
 	char	*value;
 
 	i = 0;
-	while ((*my_envp)[i])
+	while ((*envp)[i])
 	{
 		value = ft_strchr(str, '+') + 2;
 		size = (ft_strlen(str) - ft_strlen(value)) - 2;
-		if (ft_strncmp(str, (*my_envp)[i], size) == 0
-			&& (*my_envp)[i][size] == '=')
+		if (ft_strncmp(str, (*envp)[i], size) == 0
+			&& (*envp)[i][size] == '=')
 		{
-			temp_str = ft_strjoin((*my_envp)[i], value);
-			free((*my_envp)[i]);
-			(*my_envp)[i] = temp_str;
+			temp_str = ft_strjoin((*envp)[i], value);
+			free((*envp)[i]);
+			(*envp)[i] = temp_str;
 			return (0);
 		}
 		i++;
 	}
 	if (mode == LOCAL)
 		return (-1);
-	return (add_var(str, i, my_envp));
+	return (add_var(str, i, envp));
 }
 
 /**

@@ -163,8 +163,8 @@ void print_root(void *root, int indent) // Updated function
  * fails, the function cleans up allocated memory and returns NULL.
  * 
  * @param input The raw input string to process.
- * @return A pointer to the root of the syntax tree (AST) if successful, or
- *         NULL on failure.
+ * @return A pointer to the root of the syntax tree if successful, or NULL on
+ *         failure.
  */
 void	*ft_process_input(char *input)
 {

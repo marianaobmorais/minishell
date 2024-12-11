@@ -18,6 +18,8 @@ char	*ft_get_prefix(char *s)
 
 	i = 0;
 	prefix = NULL;
+	if (!s)
+		return (prefix);
 	while (s[i] != '*')
 	{
 		prefix = ft_charjoin(prefix, s[i]);
@@ -44,6 +46,8 @@ char	*ft_get_sufix(char *s)
 
 	i = 0;
 	sufix = NULL;
+	if (!s)
+		return (sufix);
 	tmp = ft_strrchr(s, '*');
 	while (tmp[i + 1])
 	{
@@ -53,13 +57,27 @@ char	*ft_get_sufix(char *s)
 	return (sufix);
 }
 
+/**
+ * @brief Extracts the middle substring from a wildcard pattern.
+ *
+ * This function parses a string containing wildcard patterns (`*`) and
+ * extracts the substring that appears between the first sequence of `*`
+ * characters (prefix) and the next sequence of `*` characters (suffix).
+ *
+ * @param s The input string containing wildcard patterns.
+ * @return A dynamically allocated string containing the middle substring, or 
+ *         `NULL` if no valid middle substring is found. If memory allocation
+ *         fails, the function also returns `NULL`.
+ */
 char	*ft_get_middle(char *s)
 {
-	char	*middle; //write brief
+	char	*middle;
 	int		i;
 
 	i = 0;
 	middle = NULL;
+	if (!s)
+		return (middle);
 	while (s[i] == '*')
 		i++;
 	if (s[i])
@@ -90,7 +108,6 @@ char	*ft_get_middle(char *s)
  * @param str1 The first string to compare.
  * @param str2 The second string to compare.
  * @param len The maximum number of characters to compare.
- * 
  * @return An integer less than, equal to, or greater than zero if `str1` is
  *         found to be less than, equal to, or greater than `str2`,
  *         respectively. Returns `0` if either `str1` or `str2` is `NULL`.

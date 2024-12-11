@@ -14,7 +14,7 @@
  * for compound metacharacters.
  * 
  * @param value Pointer to the current token value being processed. Reset after
- *              adding to the token list.
+ *        adding to the token list.
  * @param s Pointer to the current position in the input string.
  * @param i Current index in the input string.
  * @param list Pointer to the list where tokens will be added.
@@ -128,7 +128,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  * @param list Pointer to the token list to be validated.
  * @return `true` if the tokens are valid, `false` otherwise.
  */
-bool	ft_validate_exec_tokens(t_list **list)
+static bool	ft_validate_exec_tokens(t_list **list)
 {
 	t_list	*current;
 	t_token	*token;

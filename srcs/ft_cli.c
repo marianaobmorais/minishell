@@ -114,6 +114,7 @@ t_shell	*ft_init_sh(char **envp)
 	sh->stdout_ = -1;
 	sh->stderr_ = -1;
 	sh->prev = NULL;
+	sh->root = NULL; //because conditional jump
 	return (sh);
 }
 
@@ -158,10 +159,11 @@ int	ft_history(char *input)
  * to history and execute. If the input is empty (EOF), it exits the program.
  *
  * @param my_envp A pointer to the array of environment variables, passed to functions 
- *                that execute commands with the current environment.
+ *        that execute commands with the current environment.
  */
 void	ft_cli(t_shell *sh)
 {
+	//update brief
 	char	*input;
 	void	*tree;//
 

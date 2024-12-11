@@ -10,7 +10,7 @@
  * @param str The array of strings to be sorted.
  * @param n The number of strings in the array.
  */
-void	ft_sort_str_tab(char **str, int n)
+static void	ft_sort_str_tab(char **str, int n)
 {
 	int		k;
 	int		j;
@@ -43,7 +43,7 @@ void	ft_sort_str_tab(char **str, int n)
  *
  * @param str The string to be printed with quoted value after '='.
  */
-void	ft_str_dquotes(char *str)
+static void	ft_str_dquotes(char *str)
 {
 	int	i;
 	int	flag;
@@ -108,7 +108,6 @@ void	ft_print_export(char **envp)
  * (`+`) only if it is followed by an equals sign (`=`).
  *
  * @param argv Array of argument strings to validate.
- *
  * @return 0 if all identifiers are valid, or an error message and non-zero
  * 			value if any identifier is invalid.
  */

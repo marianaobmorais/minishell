@@ -48,6 +48,7 @@ void	sig_child_handler(int sig)
 
 void	sig_heredoc_handler(int sig)
 {
+	//write brief
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
