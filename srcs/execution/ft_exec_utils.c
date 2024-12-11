@@ -13,7 +13,7 @@
  */
 char	**tokentostring(t_list **args)
 {
-	char	**new_args; 	//update brief brief
+	char	**new_args; 	//update brief
 	char	**new_args_cp;
 	t_list	*curr;
 	int		i;
@@ -92,8 +92,7 @@ static int	ft_count_words(char **args, char c)
  * @param arg The string to split into words.
  * @param new_args The array where words are stored.
  * @param y A pointer to the current index in `new_args`, updated as words
- *          are added.
- *
+ *        are added.
  * @return `new_args` if successful, or NULL if an error occurs.
  */
 static char	**ft_split_and_copy(char *arg, char **new_args, int *y)
