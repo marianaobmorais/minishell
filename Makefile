@@ -33,6 +33,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list_utils.c \
+		$(SRCS_DIR)/tokenize/ft_process_token_list_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_get_wildcard_list.c \
 		$(SRCS_DIR)/tokenize/ft_get_wildcard_list_utils.c \
 		$(SRCS_DIR)/tokenize/ft_find_next_quote.c \
@@ -63,8 +64,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=.ignore_readline
-# --trace-children=yes
+VALGRIND = valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=.ignore_readline
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
