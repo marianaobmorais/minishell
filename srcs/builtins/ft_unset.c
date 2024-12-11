@@ -3,7 +3,7 @@
 /**
  * @brief Checks if a variable exists in the environment.
  *
- * This function iterates through the `my_envp` environment array to check if 
+ * This function iterates through the `envp` environment array to check if 
  * a variable with the name `str` exists. It compares `str` with each env
  * variable up to the length of `str` and ensures an exact match followed
  * by an '='.
@@ -11,11 +11,11 @@
  * Otherwise, it returns 0.
  *
  * @param str The variable name to search for.
- * @param my_envp A pointer to the array of environment variables.
+ * @param envp A pointer to the array of environment variables.
  * 
  * @return The length of the environment variable; otherwise, 0.
  */
-static size_t	is_var(char *str, char **my_envp)
+static size_t	is_var(char *str, char **envp)
 {
 	size_t	index_envp; //update bruef
 	size_t	flag;
@@ -24,12 +24,12 @@ static size_t	is_var(char *str, char **my_envp)
 	flag = 0;
 	index_envp = 0;
 	size_var = ft_strlen(str);
-	if (!my_envp || !*my_envp)
+	if (!envp || !*envp)
 		return (0);
-	while ((my_envp)[index_envp])
+	while ((envp)[index_envp])
 	{
-		if (ft_strncmp(str, (my_envp)[index_envp], size_var) == 0
-			&& (my_envp)[index_envp][size_var] == '=')
+		if (ft_strncmp(str, (envp)[index_envp], size_var) == 0
+			&& (envp)[index_envp][size_var] == '=')
 			flag++;
 		index_envp++;
 	}
@@ -42,7 +42,7 @@ static size_t	is_var(char *str, char **my_envp)
 /**
  * @brief Deletes a variable from the environment.
  *
- * This function removes a variable with the name `str` from the `my_envp` 
+ * This function removes a variable with the name `str` from the `envp` 
  * environment array. It compares `str` with each environment variable up to 
  * the length of `str` and ensures an exact match followed by an '='.
  * If a match is found, the variable is removed and the memory is freed.
@@ -50,12 +50,12 @@ static size_t	is_var(char *str, char **my_envp)
  * old environment array is freed.
  *
  * @param str The name of the variable to be deleted.
- * @param my_envp A pointer to the environment variable array.
+ * @param envp A pointer to the environment variable array.
  * @param size_env The size of the environment array.
  * 
  * @return 0 on success, or -1 if memory allocation fails.
  */
-static int	delete_var(char *str, char ***my_envp, size_t size_env)
+static int	delete_var(char *str, char ***envp, size_t size_env)
 {
 	size_t	i;
 	size_t	j;
@@ -70,37 +70,37 @@ static int	delete_var(char *str, char ***my_envp, size_t size_env)
 		return (ft_error_malloc("new_envp"), -1);
 	while (i < size_env)
 	{
-		if (ft_strncmp(str, (*my_envp)[i], size) == 0
-			&& (*my_envp)[i][size] == '=')
+		if (ft_strncmp(str, (*envp)[i], size) == 0
+			&& (*envp)[i][size] == '=')
 		{
-			free((*my_envp)[i]);
+			free((*envp)[i]);
 			i++;
 		}
-		new_envp[j++] = (*my_envp)[i++];
+		new_envp[j++] = (*envp)[i++];
 	}
 	new_envp[j] = NULL;
-	free(*my_envp);
-	*my_envp = new_envp;
+	free(*envp);
+	*envp = new_envp;
 	return (0);
 }
 
-void	ft_delete(char *argv, char ***my_envp) //essa funcao por der static
+void	ft_delete(char *argv, char ***envp) //essa funcao por der static
 {
 	//write brief
 	size_t	size_env;
 
-	if ((*my_envp))
+	if ((*envp))
 	{
-		size_env = is_var(argv, *my_envp);
+		size_env = is_var(argv, *envp);
 		if (size_env > 0)
-			delete_var(argv, my_envp, size_env);
+			delete_var(argv, envp, size_env);
 	}
 }
 
 /**
  * @brief Unsets (removes) specified environment variables.
  *
- * This function removes variables from the `my_envp` array. It iterates
+ * This function removes variables from the `envp` array. It iterates
  * through `argv` and checks each variable using the `is_var` function. If
  * the variable exists, it is removed using `delete_var`. If `argc` is 1, no
  * variables are specified, and the function returns without changes.
@@ -113,7 +113,7 @@ void	ft_delete(char *argv, char ***my_envp) //essa funcao por der static
  */
 int	ft_unset(int argc, char **argv, t_shell *sh)
 {
-	if (argc == 1)
+	if (argc == 1) //update brief
 		return (ft_exit_status(0, TRUE, FALSE));
 	++argv;
 	while (*argv)

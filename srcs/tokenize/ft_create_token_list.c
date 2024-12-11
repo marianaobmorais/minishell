@@ -128,7 +128,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  * @param list Pointer to the token list to be validated.
  * @return `true` if the tokens are valid, `false` otherwise.
  */
-bool	ft_validate_exec_tokens(t_list **list)
+static bool	ft_validate_exec_tokens(t_list **list)
 {
 	t_list	*current;
 	t_token	*token;

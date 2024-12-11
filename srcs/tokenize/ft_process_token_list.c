@@ -113,20 +113,40 @@ static void	ft_expand_tokens(t_token *token, char **envp)
  * @param head A double pointer to the head of the token list. This is updated
  *        if the head is replaced.
  */
-static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
-{
-	t_list	**wild_list;
-	t_token	*token;
+// static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+// {
+// 	t_list	**wild_list;
+// 	t_token	*token;
 
+// 	token = (t_token *)(*current)->content;
+// 	wild_list = ft_get_wildcard_list(token->value);
+// 	if (wild_list && *wild_list)
+// 	{
+// 		ft_update_token_list(*current, prev, head, wild_list);
+// 		*current = *wild_list;
+// 	}
+// 	if (wild_list)
+// 		free(wild_list);
+// }
+
+static bool ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+{
+	t_list	**wild_list; //update brief
+	t_token	*token;
+	bool	flag;
+
+	flag = false;
 	token = (t_token *)(*current)->content;
 	wild_list = ft_get_wildcard_list(token->value);
 	if (wild_list && *wild_list)
 	{
 		ft_update_token_list(*current, prev, head, wild_list);
+		flag = true;
 		*current = *wild_list;
 	}
 	if (wild_list)
 		free(wild_list);
+	return (flag);
 }
 
 /**
@@ -154,6 +174,15 @@ static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *curr)
 	ft_free_content(curr);
 }
 
+static void	ft_process_expansion_and_quotes(t_token *token, char **envp)
+{
+	//write brief
+	if (token->expand)
+		ft_expand_tokens(token, envp);
+	if (token->state == IN_QUOTE)
+		ft_remove_quotes(token);
+}
+
 /**
  * @brief Processes the token list for expansion and quote removal.
  * 
@@ -173,34 +202,63 @@ void	ft_process_token_list(t_list **list, char **envp)
 {
 	t_list	*current; //update brief and refactor
 	t_list	*prev;
-	t_list	*next;
 	t_token	*token;
 
 	current = *list;
 	prev = NULL;
 	while (current)
 	{
-		next = current->next;
 		token = (t_token *)current->content;
-		if (token->expand)
-			ft_expand_tokens(token, envp);
-		if (token->state == IN_QUOTE)
-			ft_remove_quotes(token);
+		ft_process_expansion_and_quotes(token, envp);
 		if (!*token->value && token->expand && !token->state)
 		{
 			ft_remove_current_node(list, prev, current);
-			current = next;
+			current = current->next;
 			continue ;
 		}
-		if (token->wildcard)
-		{
-			ft_handle_wildcard(&current, prev, list);
+		if (token->wildcard && ft_handle_wildcard(&current, prev, list)) //mudei para retornar bool
 			prev = NULL;
-			next = current->next;
-		}
 		else
 			prev = current;
-		current = next;
+		current = current->next;
 	}
 	ft_free_vector(envp);
 }
+
+
+// void	ft_process_token_list(t_list **list, char **envp)
+// {
+// 	t_list	*current; //update brief and refactor
+// 	t_list	*prev;
+// 	t_list	*next;
+// 	t_token	*token;
+
+// 	current = *list;
+// 	prev = NULL;
+// 	while (current)
+// 	{
+// 		next = current->next;
+// 		token = (t_token *)current->content;
+// 		if (token->expand)
+// 			ft_expand_tokens(token, envp);
+// 		if (token->state == IN_QUOTE)
+// 			ft_remove_quotes(token);
+// 		if (!*token->value && token->expand && !token->state)
+// 		{
+// 			ft_remove_current_node(list, prev, current);
+// 			current = next;
+// 			continue ;
+// 		}
+// 		if (token->wildcard)
+// 		{
+// 			ft_handle_wildcard(&current, prev, list);
+// 			prev = NULL;
+// 			next = current->next;
+// 		}
+// 		else
+// 			prev = current;
+// 		current = next;
+// 	}
+// 	ft_free_vector(envp);
+// }
+

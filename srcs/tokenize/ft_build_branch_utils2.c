@@ -18,7 +18,7 @@
  * @return A pointer to a new list (`t_list **`) containing the sub-list 
  *         of tokens, or `NULL` if memory allocation fails.
  */
-t_list	**ft_create_sub_list(t_list **list)
+static t_list	**ft_create_sub_list(t_list **list)
 {
 	t_list	**sub;
 	t_token	*token;

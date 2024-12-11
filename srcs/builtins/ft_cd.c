@@ -61,24 +61,24 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
 /**
  * @brief Retrieves the value of an environment variable.
  *
- * This function searches the `my_envp` array for a variable that starts with 
+ * This function searches the `envp` array for a variable that starts with 
  * the provided `env` string and returns its value (the part after the `=`
  * sign). If the variable is not found, `NULL` is returned.
  *
  * @param env The name of the environment variable to search for.
- * @param my_envp A pointer to the array of environment variables.
+ * @param envp A pointer to the array of environment variables.
  * @return The value of the environment variable, or `NULL` if not found.
  */
-char	*ft_getenv(char *env, char **my_envp)
+static char	*ft_getenv(char *env, char **envp)
 {
 	char	*res;
 
 	res = NULL;
-	while (*my_envp)
+	while (*envp)
 	{
-		if (ft_strncmp(*my_envp, env, ft_strlen(env)) == 0)
-			res = ft_strdup(*my_envp + ft_strlen(env));
-		my_envp++;
+		if (ft_strncmp(*envp, env, ft_strlen(env)) == 0)
+			res = ft_strdup(*envp + ft_strlen(env));
+		envp++;
 	}
 	return (res);
 }
@@ -94,9 +94,9 @@ char	*ft_getenv(char *env, char **my_envp)
  *
  * @param argc The number of arguments passed to the `cd` command.
  * @param new_dir The directory path to change to.
- * @param my_envp A pointer to the array of environment variables.
+ * @param envp A pointer to the array of environment variables.
  */
-void	ft_cd(int argc, const char *new_dir, char **my_envp)
+void	ft_cd(int argc, const char *new_dir, char **envp)
 {
 	char	*cur_pwd;
 	char	*home;
@@ -107,11 +107,11 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	cur_pwd = getcwd(s, 100);
 	if (argc == 1)
 	{
-		home = ft_getenv("HOME=", my_envp);
+		home = ft_getenv("HOME=", envp);
 		if (!home)
 			return (ft_error_cd(FALSE, "cd: HOME not set", NULL));
 		chdir(home);
-		ft_update_my_envp(my_envp, cur_pwd);
+		ft_update_my_envp(envp, cur_pwd);
 		ft_exit_status(0, TRUE, FALSE);
 		return (free(home));
 	}
@@ -119,7 +119,7 @@ void	ft_cd(int argc, const char *new_dir, char **my_envp)
 	{
 		if (chdir(new_dir) == -1)
 			return (ft_error_cd(TRUE, "cd: %s: ", new_dir));
-		ft_update_my_envp(my_envp, cur_pwd);
+		ft_update_my_envp(envp, cur_pwd);
 	}
 	ft_exit_status(0, TRUE, FALSE);
 }

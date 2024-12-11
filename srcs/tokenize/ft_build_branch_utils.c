@@ -15,7 +15,7 @@
  * @return A pointer to a new list (`t_list **`) containing the arguments, 
  *         or `NULL` if memory allocation fails.
  */
-t_list	**ft_get_args(t_list **list)
+static t_list	**ft_get_args(t_list **list)
 {
 	t_list	**args;
 	t_list	*curr;
@@ -114,7 +114,7 @@ bool	ft_find_next_redir(t_list **list)
  * 
  * @param redir Double pointer to the redirection structure to configure.
  */
-void	ft_assign_redir_mode(t_redir **redir)
+static void	ft_assign_redir_mode(t_redir **redir)
 {
 	if ((*redir)->type == OUTFILE)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;

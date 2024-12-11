@@ -11,7 +11,7 @@
  * @param s The string to check.
  * @return `true` if the string is a valid `-n` flag, `false` otherwise.
  */
-bool	ft_arg_is_flag(char *s)
+static bool	ft_arg_is_flag(char *s)
 {
 	int	i;
 

@@ -14,7 +14,7 @@
  * @param envp Array of environment variables.
  * @return The expanded environment variable value or an empty string.
  */
-char	*ft_expand_env(char *s, int *i, char **envp)
+static char	*ft_expand_env(char *s, int *i, char **envp)
 {
 	char	*expansion;
 	char	*env;
@@ -52,7 +52,7 @@ char	*ft_expand_env(char *s, int *i, char **envp)
  *        character.
  * @return Exit code value in string format.
  */
-char	*ft_get_exit_code(int *i)
+static char	*ft_get_exit_code(int *i)
 {
 	int		status_code;
 	char	*status_str;
@@ -79,7 +79,7 @@ char	*ft_get_exit_code(int *i)
  *        expand.
  * @param i A pointer to the current position index within `value`. This index
  *        will be updated to point past the processed expansion.
- * @param my_envp The environment variables array used for expanding variable
+ * @param envp The environment variables array used for expanding variable
  *        names.
  */
 void	ft_handle_expansion(char **new_value, char *value, int *i, char **envp)
