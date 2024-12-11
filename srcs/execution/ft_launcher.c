@@ -122,7 +122,14 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	{
 		sh->prev = node;
 		if (!((t_redir *)node)->next)
+		{
+			if (next_node)
+			{
+				if (pipe(curr_fds) == -1)
+					return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
+			}
 			ft_parent_process(curr_fds, sh, next_node, -1);
+		}
 		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
 	}
 	else if (((t_exec *)node)->type == EXEC)
@@ -130,8 +137,7 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 		if (sh->error_fd == 0)
 		{
 			if (pipe(curr_fds) == -1)
-				return (ft_exit_status(1, TRUE, FALSE),
-					ft_stderror(TRUE, "PIPE ERROR: "));
+				return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
 			pid = ft_child_process(curr_fds, sh, node, next_node);
 		}
 		ft_parent_process(curr_fds, sh, next_node, pid);
