@@ -114,7 +114,7 @@ t_shell	*ft_init_sh(char **envp)
 	sh->stdout_ = -1;
 	sh->stderr_ = -1;
 	sh->prev = NULL;
-	sh->root = NULL; //because conditional jump
+	sh->root = NULL;
 	return (sh);
 }
 
@@ -165,7 +165,7 @@ void	ft_cli(t_shell *sh)
 {
 	//update brief
 	char	*input;
-	void	*tree;//
+	void	*tree;
 
 	input = NULL;
 	while (1)
