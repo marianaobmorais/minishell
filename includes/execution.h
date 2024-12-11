@@ -26,18 +26,15 @@ typedef struct s_shell
 }	t_shell;
 
 //ft_heredoc_utils.c
-
 void	ft_handle_quotes_hd(char **new_value, char *value, int *i, char **envp);
 char	*ft_expand_input(char *input, char **envp);
 char	*ft_create_pathname(void);
 int		count_line(int mode);
 
 //ft_heredoc.c
-
 void	ft_search_heredoc(void *curr_node, t_shell *sh);
 
 //ft_redir.c
-
 int		ft_redir(t_redir *node, void *next_node, t_shell *sh);
 //int		ft_open(int type, char *pathname, int mode, t_shell *sh);
 
