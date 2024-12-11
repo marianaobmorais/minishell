@@ -18,11 +18,11 @@ static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 
 	input = NULL;
 	ft_signal(HEREDOC_);
-	while (1)
+	while (ft_exit_status(0, FALSE, FALSE) == 0)
 	{
-		if (input)
-			free(input);
 		input = readline("> ");
+		if (ft_exit_status(0, FALSE, FALSE) == 130)
+			return (free(input));
 		if (!input || !ft_strcmp(eof, input))
 		{
 			if (!input)
@@ -36,6 +36,8 @@ static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 			input = ft_expand_input(input, my_envp);
 		ft_putendl_fd(input, fd_write);
 		count_line(1);
+		if (input)
+			free(input);
 	}
 }
 
@@ -127,18 +129,20 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
 	if (pid == 0)
 	{
 		close(fd[0]);
+		ft_exit_status(0, TRUE, FALSE);
 		read_heredoc(eof, state, my_envp, fd[1]);
 		close(fd[1]);
 		ft_child_cleaner(sh, my_envp, 0);
+		if (ft_exit_status(0, FALSE, FALSE) != 0)
+			ft_exit_status(130, TRUE, TRUE);
 		ft_exit_status(0, TRUE, TRUE);
 	}
 	close(fd[1]);
 	wait_heredoc(pid);
 	if (ft_exit_status(0, FALSE, FALSE) != 0)
-		return (ft_free_vector(my_envp), FALSE);
+		return (close(fd[0]), ft_free_vector(my_envp), FALSE);
 	save_heredoc(ft_create_pathname(), fd[0], sh);
-	close(fd[0]);
-	return (ft_free_vector(my_envp), TRUE);
+	return (close(fd[0]), ft_free_vector(my_envp), TRUE);
 }
 
 /**

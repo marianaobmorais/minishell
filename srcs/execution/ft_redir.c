@@ -94,11 +94,16 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 	if (ft_search_exec(node) == TRUE)
 	{
 		fd = open(pathname, O_RDONLY);
+		if (fd == -1)
+		{
+			fd = open("/dev/null", O_RDONLY);
+			ft_stderror(TRUE, "%s: ", pathname);
+		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		unlink(pathname);
 	}
-	ft_lstdelone((*sh->heredoc_list), free);
+	ft_lstdelone(*(sh->heredoc_list), free);
 	*sh->heredoc_list = tmp;
 }
 
