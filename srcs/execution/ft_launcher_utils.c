@@ -1,5 +1,24 @@
 #include "../../includes/minishell.h"
 
+void	close_original_fds(t_shell *sh)
+{
+	if (sh->stdin_ != -1)
+	{
+		close(sh->stdin_);
+		sh->stdin_ = -1;
+	}
+	if (sh->stdout_ != -1)
+	{
+		close(sh->stdout_);
+		sh->stdout_ = -1;
+	}
+	if (sh->stderr_ != -1)
+	{
+		close(sh->stderr_);
+		sh->stderr_ = -1;
+	}
+}
+
 void	close_fds(int *fds)
 {
 	if (fds[0] != -1)
@@ -29,7 +48,8 @@ void	ft_save_original_fds(t_shell *sh)
 	{
 		sh->stdin_ = dup(STDIN_FILENO);
 		sh->stdout_ = dup(STDOUT_FILENO);
-		if (sh->stdin_ == -1 || sh->stdout_ == -1)
+		sh->stderr_ = dup(STDERR_FILENO);
+		if (sh->stdin_ == -1 || sh->stdout_ == -1 || sh->stderr_ == -1)
 		{
 			ft_stderror(TRUE, "Error saving original FDs");
 			ft_exit_status(1, TRUE, TRUE);
@@ -51,15 +71,17 @@ void	ft_restore_original_fds(t_shell *sh)
 	if (sh->fds_saved == 1)
 	{
 		if (dup2(sh->stdin_, STDIN_FILENO) == -1)
-			ft_stderror(TRUE, "Error restoring original FDs");
-		//ft_stderror(FALSE, "Fechando .. %d", sh->stdin_); //debug
+			ft_stderror(TRUE, "Error restoring original STDIN");
 		if (sh->stdin_ != -1)
 			close(sh->stdin_);
 		if (dup2(sh->stdout_, STDOUT_FILENO) == -1)
-			ft_stderror(TRUE, "Error restoring original FDs");
+			ft_stderror(TRUE, "Error restoring original STDOUT");
 		if (sh->stdout_ != -1)
 			close(sh->stdout_);
-		//ft_stderror(FALSE, "Fechando .. %d", sh->stdout_); //debug
+		if (dup2(sh->stderr_, STDERR_FILENO) == -1)
+			ft_stderror(TRUE, "Error restoring original STDERR");
+		if (sh->stderr_ != -1)
+			close(sh->stderr_);
 		while (waitpid(-1, NULL, 0) > 0)
 			;
 	}

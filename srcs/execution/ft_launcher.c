@@ -25,8 +25,7 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 	}
 	if (pid == 0)
 	{
-		close(sh->stdin_);
-		close(sh->stdout_);
+		close_original_fds(sh);
 		close(fds[0]);
 		if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type
 			!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
