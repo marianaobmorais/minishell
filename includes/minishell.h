@@ -36,6 +36,7 @@
 
 //messages
 # define MALLOC "memory allocation failed"
+# define ERROR_INIT "arguments are not accepted when initializing the program"
 
 # define TRUE 1
 # define FALSE 0

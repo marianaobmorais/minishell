@@ -12,9 +12,9 @@
  *
  * @param exit_status The new exit status to set if `write_` is `TRUE`.
  * @param write_ A flag to determine if `exit_status` should update
- *               `current_status`.
+ *        `current_status`.
  * @param exit_ A flag to indicate if the program should terminate with
- *              `current_status` as the exit code.
+ *        `current_status` as the exit code.
  * @return The current value of `current_status`.
  */
 int	ft_exit_status(int exit_status, int write_, int exit_)

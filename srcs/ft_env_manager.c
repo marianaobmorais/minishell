@@ -9,7 +9,6 @@
  *
  * @param sh A pointer to the shell structure containing the `global` and
  *           `local` environment variable arrays.
- *
  * @return A new array containing all environment variables, or NULL if
  *         a memory allocation error occurs.
  */
@@ -50,7 +49,6 @@ char	**ft_merge_env(char **env1, char **env2)
  * resulting array is NULL-terminated.
  *
  * @param envp The original environment variables array to be duplicated.
- *
  * @return A new array containing duplicates of all strings in `envp`, or
  *         NULL if a memory allocation error occurs.
  */
