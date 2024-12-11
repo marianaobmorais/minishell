@@ -112,26 +112,22 @@ static void	ft_free_helper(t_list **args_cp, char **new_args)
  *
  * @param node The current syntax tree node to check.
  * @param sh The shell structure with environment and execution context.
- * @return TRUE if the node is a standalone built-in command; FALSE otherwise.
+ * @return
+ * - `TRUE` if the node contains a built-in command (e.g., `cd`, `export`, etc.) 
+ *   without any connected pipes or branching.
+ * - `FALSE` otherwise.
  */
 int	ft_isjustbuiltin(void *node, t_shell *sh)
 {
-	t_node	*curr; //update brief
+	t_node	*curr;
 	t_list	**args_cp;
 	char	**new_args;
 
 	curr = ((t_node *)node)->left;
 	if (!((t_node *)node)->right)
 	{
-		while (curr && ft_is_node_type(curr, REDIR)) //test this at school
+		while (curr && ft_is_node_type(curr, REDIR))
 			curr = ((t_redir *)curr)->next;
-		// while (curr)
-		// {
-		// 	if (ft_is_node_type(curr, REDIR))
-		// 		curr = ((t_redir *)curr)->next;
-		// 	else
-		// 		break ;
-		// }
 		if (curr && ft_is_node_type(curr, EXEC))
 		{
 			args_cp = ft_copy_list(((t_exec *)curr)->args);
@@ -140,7 +136,7 @@ int	ft_isjustbuiltin(void *node, t_shell *sh)
 			if (ft_isbuiltin(new_args) || ((t_exec *)curr)->type == EXPORT
 				|| ((t_exec *)curr)->type == EXPORT_AP)
 				return (ft_free_helper(args_cp, new_args), TRUE);
-			ft_free_helper(args_cp, new_args); //test this at school
+			ft_free_helper(args_cp, new_args);
 		}
 	}
 	return (FALSE);

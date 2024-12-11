@@ -115,6 +115,7 @@ t_shell	*ft_init_sh(char **envp)
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
 	sh->prev = NULL;
+	sh->root = NULL; //because conditional jump
 	return (sh);
 }
 

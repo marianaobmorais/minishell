@@ -222,6 +222,7 @@ void	ft_process_token_list(t_list **list, char **envp)
 			prev = current;
 		current = current->next;
 	}
+	//ft_print_list(list); //debug
 	ft_free_vector(envp);
 }
 
