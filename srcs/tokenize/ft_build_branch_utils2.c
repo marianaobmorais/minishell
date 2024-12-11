@@ -7,11 +7,9 @@
  * from the current position and including all tokens up to, but not 
  * including, the closing parenthesis `)` that matches the opening 
  * parenthesis `(` before the current position.
- * 
  * The function maintains a nesting count (`count`) to handle nested 
  * parentheses correctly, ensuring that the correct closing parenthesis 
  * is matched.
- * 
  * The extracted tokens are stored in a new list (`t_list **`), which is 
  * dynamically allocated and returned to the caller.
  * 
@@ -43,7 +41,6 @@ t_list	**ft_create_sub_list(t_list **list)
 			*list = (*list)->next;
 			break ;
 		}
-		//ft_lstadd_back(sub, ft_lstnew(token));//deve dar invalid read
 		ft_add_to_token_list(&token->value, sub);
 		*list = (*list)->next;
 	}
@@ -57,7 +54,6 @@ t_list	**ft_create_sub_list(t_list **list)
  * subtree for those tokens. It skips the opening parenthesis `(` and 
  * processes the tokens up to, but not including, the matching closing 
  * parenthesis `)`.
- * 
  * The tokens within the parentheses are extracted into a sub-list using 
  * `ft_create_sub_list`, which is then passed to `ft_build_root` to build 
  * a subtree. The created subtree is encapsulated in a subroot node of 

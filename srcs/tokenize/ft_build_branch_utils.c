@@ -8,7 +8,6 @@
  * associated targets. The function halts processing if it encounters a node 
  * token (`NODE`) or a parentheses token (`PRTHESES`), as these indicate the 
  * end of the argument list.
- * 
  * The extracted arguments are stored in a new list (`t_list **`), which is 
  * dynamically allocated and returned to the caller.
  * 

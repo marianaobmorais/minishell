@@ -29,7 +29,7 @@ bool	ft_is_expandable(char *s)
  * This function iterates through a token's value string, 
  * removing both leading and trailing single or double quotes encountered.
  * 
- * @param token Pointer to the token structure containing the value to process.
+ * @param tkn Pointer to the token structure containing the value to process.
  */
 static void	ft_remove_quotes(t_token *tkn)
 {
@@ -70,9 +70,9 @@ static void	ft_remove_quotes(t_token *tkn)
  * The resulting expanded string is assigned to the token's value.
  * 
  * @param token Pointer to the token to be expanded.
- * @param my_envp Environment variable array used for expansion.
+ * @param envp Environment variable array used for expansion.
  */
-static void	ft_expand_tokens(t_token *token, char **my_envp)
+static void	ft_expand_tokens(t_token *token, char **envp)
 {
 	char	*new_value;
 	int		i;
@@ -84,10 +84,10 @@ static void	ft_expand_tokens(t_token *token, char **my_envp)
 		if (token->value[i] == SQUOTE)
 			ft_handle_squotes(&new_value, token->value, &i);
 		else if (token->value[i] == DQUOTE)
-			ft_handle_dquotes(&new_value, token->value, &i, my_envp);
+			ft_handle_dquotes(&new_value, token->value, &i, envp);
 		else if (token->value[i] == '$'
 			&& ft_is_expandable(&token->value[i + 1]))
-			ft_handle_expansion(&new_value, token->value, &i, my_envp);
+			ft_handle_expansion(&new_value, token->value, &i, envp);
 		else if (token->value[i] && token->value[i] != DQUOTE
 			&& token->value[i] != SQUOTE)
 			new_value = ft_charjoin(new_value, token->value[i++]);
@@ -139,19 +139,19 @@ static void	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
  * 
  * @param list Double pointer to the head of the list.
  * @param prev Pointer to the previous node, or NULL if `current` is the head.
- * @param current Pointer to the node to be removed.
+ * @param curr Pointer to the node to be removed.
  */
-static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
+static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *curr)
 {
 	t_list	*next;
 
 	next = NULL;
-	next = current->next;
+	next = curr->next;
 	if (prev)
 		prev->next = next;
 	else
 		*list = next;
-	ft_free_content(current);
+	ft_free_content(curr);
 }
 
 /**
@@ -167,11 +167,11 @@ static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *current)
  * function does not modify the structure of the token list itself.
  * 
  * @param list Double pointer to the head of the token list.
- * @param my_envp Array of environment variables used for token expansion.
+ * @param envp Array of environment variables used for token expansion.
  */
-void	ft_process_token_list(t_list **list, char **my_envp)
+void	ft_process_token_list(t_list **list, char **envp)
 {
-	t_list	*current; //update brief
+	t_list	*current; //update brief and refactor
 	t_list	*prev;
 	t_list	*next;
 	t_token	*token;
@@ -183,7 +183,7 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 		next = current->next;
 		token = (t_token *)current->content;
 		if (token->expand)
-			ft_expand_tokens(token, my_envp);
+			ft_expand_tokens(token, envp);
 		if (token->state == IN_QUOTE)
 			ft_remove_quotes(token);
 		if (!*token->value && token->expand && !token->state)
@@ -202,5 +202,5 @@ void	ft_process_token_list(t_list **list, char **my_envp)
 			prev = current;
 		current = next;
 	}
-	ft_free_vector(my_envp);
+	ft_free_vector(envp);
 }

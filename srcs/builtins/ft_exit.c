@@ -19,7 +19,6 @@ static void	print_exit(void)
  * '-' prefixes followed by digits. Logs an error if the argument is invalid.
  *
  * @param arg The string to validate.
- *
  * @return TRUE if the string is not numeric, FALSE otherwise.
  */
 static int	isnumeric(char *arg)
@@ -55,7 +54,6 @@ static int	isnumeric(char *arg)
  * status of 2 and logs an error. Handles optional '+' or '-' prefixes.
  *
  * @param arg The string argument to convert.
- * 
  * @return The converted numeric value on success or triggers an error with 
  *         an exit status of 2 if validation fails.
  */

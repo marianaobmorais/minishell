@@ -103,8 +103,7 @@ static bool	ft_find_next_root(t_list **list)
  * links child nodes to the root.
  * 
  * @param list A pointer to the token list that will be parsed.
- * @param type The type of the root node (logical operator or other).
- * 
+ * @param node_type The type of the root node (logical operator or other).
  * @return A pointer to the newly created root node, or NULL in case of
  *         allocation failure.
  */

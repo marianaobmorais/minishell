@@ -38,16 +38,19 @@ static bool	ft_find_next_pipe(t_list **list)
 
 /**
  * @brief Constructs a binary tree representing a pipeline structure.
- * 
- * Builds a binary tree where each node represents a pipe ('|') and its
- * children represent the commands or branches connected by that pipe. The
- * function recursively processes the token list, skipping invalid tokens and
- * linking branches. 
- * 
- * @param list A double pointer to the token list, updated as tokens are
- *        consumed during tree building.
- * @return A pointer to the root of the constructed binary tree, or NULL if an
- *         error occurs.
+ *
+ * This function recursively builds a binary tree from a list of tokens, where 
+ * each node represents a segment of a pipeline or command sequence. The tree
+ * is built by processing branches and identifying pipeline operators (`|`) to
+ * split the structure into left and right subtrees. Each node points to its
+ * parent node, enabling traversal up the tree.
+ *
+ * @param list A double pointer to the head of the token list. The list is
+ *        updated as tokens are processed.
+ * @param parent_node A pointer to the parent node for the current subtree. If 
+ *        `NULL`, the current node is the root of the tree.
+ * @return A pointer to the root of the newly constructed subtree, or `NULL` if 
+ *         memory allocation fails or if the token list is empty or invalid.
  */
 void	*ft_build_tree(t_list **list, t_node **parent_node)
 {
