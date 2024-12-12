@@ -83,13 +83,14 @@ int	count_line(int mode)
 }
 
 /**
- * @brief Creates a unique pathname in the /tmp directory.
+ * @brief Creates a unique pathname for temporary files.
  *
- * Generates a unique pathname by appending an incrementing integer to the
- * base path "/tmp/.heredoc_". Frees temporary resources and increments the
- * static counter for the next call.
+ * This function generates a unique pathname in the /tmp directory, checking if
+ * it already exists and incrementing a static counter until a unique pathname
+ * is found. The generated pathname is returned to the caller.
  *
- * @return A newly allocated string containing the unique pathname.
+ * @return A pointer to the newly created pathname string. The caller is
+ *         responsible for freeing this memory.
  */
 char	*ft_create_pathname(void)
 {
@@ -98,9 +99,17 @@ char	*ft_create_pathname(void)
 	char		*temp;
 	static int	i;
 
-	base = "/tmp/.heredoc_"; //fazer depois um while para check se existe arquivo
-	temp = ft_itoa(i);
-	pathname = ft_strjoin(base, temp);
+	base = "/tmp/.heredoc_";
+	while (1)
+	{
+		temp = ft_itoa(i);
+		pathname = ft_strjoin(base, temp);
+		if (access(pathname, F_OK) == -1)
+			break ;
+		free(temp);
+		free(pathname);
+		i++;
+	}
 	free(temp);
 	unlink(pathname);
 	i++;

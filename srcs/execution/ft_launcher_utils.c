@@ -1,5 +1,14 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Closes the original file descriptors in the shell structure.
+ *
+ * This function checks and closes the stdin, stdout, and stderr file
+ * descriptors if they are not already closed, and sets their values to -1
+ * to indicate they are closed.
+ *
+ * @param sh A pointer to the shell structure containing the file descriptors.
+ */
 void	close_original_fds(t_shell *sh)
 {
 	if (sh->stdin_ != -1)
@@ -19,6 +28,16 @@ void	close_original_fds(t_shell *sh)
 	}
 }
 
+/**
+ * @brief Closes the file descriptors in the provided array.
+ *
+ * This function checks and closes the file descriptors in the provided array
+ * if they are not already closed, and sets their values to -1 to indicate they
+ * are closed.
+ *
+ * @param fds An array of file descriptors to be closed. The array should have
+ *            at least two elements.
+ */
 void	close_fds(int *fds)
 {
 	if (fds[0] != -1)
@@ -100,7 +119,7 @@ void	ft_restore_original_fds(t_shell *sh)
  *
  * @return TRUE if the command was executed, FALSE otherwise.
  */
-int	ft_single_command(void *node, void *next_node, t_shell *sh)
+int	ft_single_command(void *node, t_shell *sh)
 {
 	void	*curr;
 	char	**new_args;
@@ -110,9 +129,10 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 	{
 		ft_save_original_fds(sh);
 		curr = ((t_node *)node)->left;
-		while (ft_redir(((t_redir *)curr), next_node, sh))
+		while (ft_redir(((t_redir *)curr), sh))
 			curr = ((t_redir *)curr)->next;
-		ft_process_token_list(((t_exec *)curr)->args, ft_merge_env(sh->global, sh->local));
+		ft_process_token_list(((t_exec *)curr)->args, \
+			ft_merge_env(sh->global, sh->local));
 		new_args = tokentostring(((t_exec *)curr)->args);
 		if (((t_exec *)curr)->type == EXPORT
 			|| ((t_exec *)curr)->type == EXPORT_AP)
@@ -123,9 +143,7 @@ int	ft_single_command(void *node, void *next_node, t_shell *sh)
 		if (((t_exec *)curr)->type == EXEC)
 			if (ft_isbuiltin(new_args))
 				ft_exec_builtin(new_args, sh);
-		ft_free_vector(new_args);
-		ft_restore_original_fds(sh);
-		return (TRUE);
+		return (ft_free_vector(new_args), ft_restore_original_fds(sh), TRUE);
 	}
 	return (FALSE);
 }
