@@ -1,4 +1,5 @@
 *.o
 *.a
 minishell
+minishell_bonus
 a.out
