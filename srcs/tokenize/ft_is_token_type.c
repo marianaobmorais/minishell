@@ -42,7 +42,6 @@ bool	ft_is_token_type(t_token *token, t_type type)
 	return (false);
 }
 
-
 /**
  * @brief Checks if a node matches a specified type.
  * 
@@ -70,18 +69,18 @@ bool	ft_is_node_type(t_node *node, t_type type)
 		if (((t_redir *)node)->type == OUTFILE
 			|| ((t_redir *)node)->type == INFILE
 			|| ((t_redir *)node)->type == APPEND
-			||((t_redir *)node)->type == HEREDOC)
+			|| ((t_redir *)node)->type == HEREDOC)
 			return (true);
 	}
 	if (type == EXEC)
 	{
 		if (((t_exec *)node)->type == EXEC || ((t_exec *)node)->type == EXPORT
-				|| ((t_exec *)node)->type == EXPORT_AP)
+			|| ((t_exec *)node)->type == EXPORT_AP)
 			return (true);
 	}
 	if (type == NODE)
 	{
-		if (node->type == PIPE || node->type  == AND || node->type == OR)
+		if (node->type == PIPE || node->type == AND || node->type == OR)
 			return (true);
 	}
 	return (false);

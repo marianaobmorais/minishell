@@ -46,6 +46,7 @@ static t_list	**ft_create_sub_list(t_list **list)
 	}
 	return (sub);
 }
+
 /**
  * @brief Creates a subroot node for a subtree from a sub-list of tokens.
  * 
@@ -69,6 +70,7 @@ static t_list	**ft_create_sub_list(t_list **list)
 t_node	*ft_create_subroot_node(t_list **list)
 {
 	t_node	*sub_root; 
+
 	t_list	**sub_list;
 	t_list	*head;
 
@@ -77,8 +79,6 @@ t_node	*ft_create_subroot_node(t_list **list)
 	sub_list = ft_create_sub_list(list);
 	if (!sub_list || !*sub_list)
 		return (NULL);
-	printf("sub list:\n"); //debug
-	ft_print_list(sub_list); //debug
 	head = *sub_list;
 	sub_root = ft_build_root(sub_list, SUB_ROOT);
 	ft_free_list(head);

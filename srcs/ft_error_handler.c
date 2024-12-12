@@ -1,8 +1,15 @@
 #include "../includes/minishell.h"
 
+/**
+ * @brief Handles errors related to memory allocation.
+ *
+ * Logs the specified error message to the standard error and sets the
+ * exit status to 1. Used for critical memory allocation failures.
+ *
+ * @param message A string describing the context of the memory allocation error.
+ */
 void	ft_error_malloc(char *message)
 {
-	//write brief
 	ft_stderror(TRUE, message);
 	ft_exit_status(1, TRUE, FALSE);
 }
@@ -65,10 +72,19 @@ static char	*ft_format(va_list args, const char fmt)
 	return (specifier);
 }
 
+/**
+ * @brief Writes a string of a specified length to a given file descriptor.
+ *
+ * If the string is NULL, it writes the string "(null)" with a length of 6.
+ * Otherwise, writes the first `len` characters of the string `s` to the file
+ * descriptor `fd`.
+ *
+ * @param s The string to be written. If NULL, writes "(null)" instead.
+ * @param fd The file descriptor where the string will be written.
+ * @param len The number of characters to write from the string.
+ */
 void	ft_putstr_fd_len(char *s, int fd, int len)
 {
-	//delete later?
-	//write brief
 	if (s == NULL)
 		return (ft_putstr_fd_len("(null)", fd, 6));
 	write(fd, s, len);
@@ -91,7 +107,7 @@ void	ft_putstr_fd_len(char *s, int fd, int len)
  */
 void	ft_stderror(int perror_, const char *str, ...)
 {
-	va_list	args; //printando tudo junto
+	va_list	args;
 	char	*fmt_specifier;
 	char	*all;
 
@@ -122,11 +138,4 @@ void	ft_stderror(int perror_, const char *str, ...)
 	}
 	free(all);
 	va_end(args);
-}
-
-//to be printed on STDERR //delete later
-int	ft_error_handler(void)
-{
-	printf("error to be printed on STDERR\n");
-	return (-1);
 }

@@ -128,7 +128,7 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 		return ;
 	entry_name = ft_strdup(entry->d_name);
 	if (!entry_name)
-		return ft_error_malloc("entry_name");
+		return (ft_error_malloc("entry_name"));
 	ft_add_to_token_list(&entry_name, wild_list);
 	new_node = ft_lstlast(*wild_list);
 	if (ft_is_wildcard(((t_token *)new_node->content)->value))

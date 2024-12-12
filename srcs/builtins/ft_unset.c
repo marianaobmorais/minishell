@@ -84,7 +84,7 @@ static int	delete_var(char *str, char ***envp, size_t size_env)
 	return (0);
 }
 
-void	ft_delete(char *argv, char ***envp) //essa funcao por der static
+static void	ft_delete(char *argv, char ***envp) //essa funcao por der static
 {
 	//write brief
 	size_t	size_env;
