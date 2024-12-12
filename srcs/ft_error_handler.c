@@ -127,15 +127,8 @@ void	ft_stderror(int perror_, const char *str, ...)
 		str++;
 	}
 	if (perror_ == TRUE)
-	{
-		ft_putstr_fd_len(all, 2, ft_strlen(all));
-		perror("");
-	}
-	else
-	{
-		all = merge(all, "\n");
-		ft_putstr_fd_len(all, 2, ft_strlen(all));
-	}
-	free(all);
-	va_end(args);
+		return (ft_putstr_fd_len(all, 2, ft_strlen(all)), perror(""), \
+			free(all), va_end(args));
+	all = merge(all, "\n");
+	return (ft_putstr_fd_len(all, 2, ft_strlen(all)), free(all), va_end(args));
 }
