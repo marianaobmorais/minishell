@@ -1,5 +1,47 @@
 #include "../../includes/minishell.h"
 
+long long	ft_check_flow(int digit, long long sign, long long res)
+{
+	if (res > LLONG_MAX / 10
+		|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10))
+	{
+		if (sign == 1)
+			return (LLONG_MAX);
+		else
+			return (LLONG_MIN);
+	}
+	return (res);
+		
+}
+
+long long	ft_atoll(const char *nptr)
+{
+	int			i;
+	long long	sign;
+	long long	res;
+
+	i = 0;
+	sign = 1;
+	res = 0;
+	while ((nptr[i] == 32) || (nptr[i] > 8 && nptr[i] < 14))
+		++i;
+	if (nptr[i] == '-' || nptr[i] == '+')
+	{
+		if (nptr[i] == '-')
+			sign = -1;
+		++i;
+	}
+	while (nptr[i] != '\0' && (nptr[i] >= '0' && nptr[i] <= '9'))
+	{
+		res = ft_check_flow(nptr[i] - '0', sign, res);
+		if (res > LLONG_MAX || res < LLONG_MIN)
+			return (res);
+		res = res * 10 + nptr[i] - '0';
+		++i;
+	}
+	return (res * sign);
+}
+
 /**
  * @brief Prints "exit" message if the shell is running in an interactive mode.
  *
@@ -30,7 +72,7 @@ static int	isnumeric(char *arg)
 		i++;
 	while (arg[i])
 	{
-		if (ft_isdigit(arg[i]) == 0)
+		if (!ft_isdigit(arg[i]))
 		{
 			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 			return (ft_exit_status(2, TRUE, FALSE));
@@ -59,30 +101,18 @@ static int	isnumeric(char *arg)
  */
 static unsigned char	arg_convert(char *arg)
 {
-	//int			i;
 	long long	num;
 
-	// i = 0;
-	// //ft_exit_status(0, TRUE, FALSE);
-	// if (arg[i] == '-' || arg[i] == '+')
-	// 	i++;
-	// while (arg[i])
-	// {
-	// 	if (ft_isdigit(arg[i]) == 0)
-	// 	{
-	// 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-	// 		return (ft_exit_status(2, TRUE, FALSE));
-	// 	}
-	// 	i++;
-	// }
-	num = ft_atol(arg); //rever isso
-	if (num > INT32_MAX || num < INT32_MIN)
+	num = ft_atoll(arg);
+	if ((num > LLONG_MAX || num < LLONG_MIN) 
+		|| (num == LLONG_MAX && ft_strcmp(arg, "9223372036854775807"))
+		|| (num == LLONG_MIN && ft_strcmp(arg, "-9223372036854775808"))) //double check this at school
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 		return (ft_exit_status(2, TRUE, FALSE));
 	}
-	ft_exit_status((unsigned char) num, TRUE, FALSE);
-	return ((unsigned char) num);
+	ft_exit_status((unsigned char)num, TRUE, FALSE);
+	return ((unsigned char)num);
 }
 
 /**
