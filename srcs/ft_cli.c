@@ -146,7 +146,6 @@ int	ft_history(char *input)
 void	ft_cli(t_shell *sh)
 {
 	char	*input;
-	//void	*tree; //debug
 
 	input = NULL;
 	while (1)
@@ -165,10 +164,7 @@ void	ft_cli(t_shell *sh)
 			break ;
 		}
 		if (ft_history(input))
-		{
-			//tree = ft_process_input(input); //debug
 			ft_launcher_manager(ft_process_input(input), sh);
-		}
 	}
 	rl_clear_history();
 }

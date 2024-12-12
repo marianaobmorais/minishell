@@ -1,8 +1,21 @@
 #include "../../includes/minishell.h"
 
+/**
+ * @brief Deletes a variable from an environment array in limbo storage.
+ *
+ * Searches for a variable in the environment array `envp` matching the string
+ * `str` up to its length. Removes the matching variable, shifts the remaining
+ * variables, and reallocates the array. Frees the old array and updates the
+ * pointer.
+ *
+ * @param str The name of the variable to delete.
+ * @param envp A pointer to the environment array.
+ * @param size_env The current size of the environment array.
+ * @return 0 on success, -1 on memory allocation failure.
+ */
 static int	delete_var_limbo(char *str, char ***envp, size_t size_env)
 {
-	size_t	i; //write brief
+	size_t	i;
 	size_t	j;
 	size_t	size;
 	char	**new_envp;
@@ -28,9 +41,21 @@ static int	delete_var_limbo(char *str, char ***envp, size_t size_env)
 	return (0);
 }
 
+/**
+ * @brief Imports a variable from limbo storage to the global environment.
+ *
+ * Searches for a variable in the shell's `limbo` storage that matches `arg`.
+ * If found, adds the variable to the global environment and deletes it from
+ * `limbo`. If no matching variable is found, returns an error.
+ *
+ * @param sh The shell structure containing the `limbo` and `global`
+ *        environments.
+ * @param arg The variable to search for in `limbo`.
+ * @return 0 on successful import, -1 if the variable is not found.
+ */
 int	ft_limbo_import(t_shell *sh, char *arg)
 {
-	int		i; //write brief
+	int		i;
 	int		size;
 	char	*var;
 

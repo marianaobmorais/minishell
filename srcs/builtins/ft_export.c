@@ -167,7 +167,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 {
 	size_t	s_key;
 	int		exit_code;
-	
+
 	if (mode == LOCAL)
 		return (ft_export_local(argv, sh));
 	if (argc == 1)
