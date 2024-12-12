@@ -22,11 +22,11 @@
 # include <limits.h>
 
 // our own libraries
-# include "../libft/libft.h"
-# include "builtins.h"
-# include "tokenize.h"
-# include "execution.h"
-# include "colors.h"
+# include "../../libft/libft.h"
+# include "builtins_bonus.h"
+# include "tokenize_bonus.h"
+# include "execution_bonus.h"
+# include "colors_bonus.h"
 
 //program name
 # define PROMPT "bashinho [pwd] $ "
