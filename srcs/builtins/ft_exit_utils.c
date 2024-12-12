@@ -1,45 +1,42 @@
 #include "../../includes/minishell.h"
 
 /**
- * @brief Checks for integer overflow or underflow during conversion.
+ * @brief Checks for overflow or underflow during numeric conversion.
  *
- * This function verifies if adding a digit to the result would cause the value
- * to exceed the range of a signed `long long` integer. If overflow or underflow
- * is detected, it returns the maximum or minimum value of `long long`
- * respectively. Ensures safe accumulation of digits during numeric conversion.
+ * Determines if adding a digit to the current result `res` would cause an
+ * overflow or underflow based on the provided sign. Returns `LLONG_MAX` or
+ * `LLONG_MIN` in such cases, otherwise returns the current result.
  *
- * @param digit The current digit to be added to the result.
- * @param sign The sign of the number being processed (`1` for positive, `-1`
- *        for negative).
- * @param res The current result before adding the digit.
- * @return The adjusted result if no overflow/underflow occurs, or
- *         `LLONG_MAX`/`LLONG_MIN` otherwise.
+ * @param digit The digit to be added to the result.
+ * @param sign The sign of the number (-1 or 1).
+ * @param res The current numeric result.
+ * @return The updated result, or `LLONG_MAX`/`LLONG_MIN` on overflow/underflow.
  */
 static long long	ft_check_flow(int digit, long long sign, long long res)
 {
-	if (res > LLONG_MAX / 10
-		|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10))
-	{
-		if (sign == 1)
+	if (sign == 1 && (res > LLONG_MAX / 10
+		|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10)))
 			return (LLONG_MAX);
-		else
+	if (sign == -1 && (res > LLONG_MAX / 10
+		|| (res == LLONG_MAX / 10 && digit > (LLONG_MAX % 10) + 1)))
 			return (LLONG_MIN);
-	}
 	return (res);
 }
 
 /**
- * @brief Converts a string to a `long long` integer.
+ * @brief Converts a string to a long long integer with overflow handling.
  *
- * This function parses a null-terminated string and converts it to a signed
- * `long long` integer. It skips leading whitespace, handles an optional sign,
- * and processes numeric digits.
+ * Parses a numeric string and returns its value as a `long long`. Handles
+ * optional '+' or '-' sign and leading whitespace. If overflow or underflow
+ * occurs, it returns `LLONG_MAX` or `LLONG_MIN` respectively. Sets a boolean
+ * flag `is_sign` to indicate whether the input string contains a sign.
  *
- * @param nptr The input string to be converted.
- * @return The converted `long long` integer, or `LLONG_MAX`/`LLONG_MIN` on
+ * @param nptr The string to convert.
+ * @param is_sign Pointer to a boolean to indicate if a sign was detected.
+ * @return The converted number, or `LLONG_MAX`/`LLONG_MIN` on
  *         overflow/underflow.
  */
-long long	ft_atoll(const char *nptr)
+long long	ft_atoll(const char *nptr, bool *is_sign)
 {
 	int			i;
 	long long	sign;
@@ -52,6 +49,7 @@ long long	ft_atoll(const char *nptr)
 		++i;
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
+		*is_sign = true;
 		if (nptr[i] == '-')
 			sign = -1;
 		++i;
@@ -59,7 +57,7 @@ long long	ft_atoll(const char *nptr)
 	while (nptr[i] != '\0' && (nptr[i] >= '0' && nptr[i] <= '9'))
 	{
 		res = ft_check_flow(nptr[i] - '0', sign, res);
-		if (res > LLONG_MAX || res < LLONG_MIN)
+		if (res == LLONG_MAX || res == LLONG_MIN)
 			return (res);
 		res = res * 10 + nptr[i] - '0';
 		++i;

@@ -13,17 +13,18 @@ static void	print_exit(void)
 }
 
 /**
- * @brief Checks if a string argument is not a valid numeric value.
+ * @brief Validates if a string represents a numeric value.
  *
- * Determines whether the given string is not numeric. Accepts optional '+' or 
- * '-' prefixes followed by digits. Logs an error if the argument is invalid.
+ * Checks whether the provided string `arg` is a valid numeric argument. A valid
+ * numeric argument may include an optional '+' or '-' sign followed by digits.
+ * If invalid, it logs an error and sets the exit status to 2.
  *
  * @param arg The string to validate.
- * @return TRUE if the string is not numeric, FALSE otherwise.
+ * @return true if the string is numeric, false otherwise.
  */
 static bool	ft_is_numeric(char *arg)
 {
-	int	i; //update brief
+	int	i;
 
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
@@ -47,78 +48,62 @@ static bool	ft_is_numeric(char *arg)
 }
 
 /**
- * @brief Converts a string argument to a numeric value with validation.
+ * @brief Converts a numeric string to an unsigned char exit status.
  *
- * Validates and converts a string argument to a long integer. If the argument 
- * is not numeric or exceeds the range of a 32-bit integer, it returns an exit 
- * status of 2 and logs an error. Handles optional '+' or '-' prefixes.
+ * Converts the numeric string `arg` to a `long long` value, checking for
+ * overflow and underflow. If the value exceeds the range of a valid exit status
+ * (0-255), logs an error and sets the exit status to 2. If the value is valid,
+ * sets the exit status accordingly and cleans up resources before exiting.
  *
- * @param arg The string argument to convert.
- * @return The converted numeric value on success or triggers an error with 
- *         an exit status of 2 if validation fails.
+ * @param arg The numeric string to convert.
+ * @param args The list of command-line arguments.
+ * @param sh The shell structure to clean up.
+ * @return The converted exit status as an unsigned char.
  */
-static unsigned char	arg_convert(char *arg)
+static unsigned char	arg_convert(char *arg, char **args, t_shell *sh)
 {
-	long long	num; //update brief
+	long long	num;
+	bool		is_sign;
 
-	num = ft_atoll(arg);
-	if ((num > LLONG_MAX || num < LLONG_MIN) 
-		|| (num == LLONG_MAX && ft_strncmp(arg, "9223372036854775807", 19))
-		|| (num == LLONG_MIN && ft_strncmp(arg, "-9223372036854775808", 20))) //double check this at school //ft_strncpm?
+	is_sign = false;
+	num = ft_atoll(arg, &is_sign);
+	if (num == LLONG_MAX)
+	{
+		if (ft_strncmp(arg + is_sign, "9223372036854775807", 19))
+		{
+			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
+			return (ft_exit_status(2, TRUE, FALSE));
+		}
+	}
+	if (num == LLONG_MIN && ft_strncmp(arg, "-9223372036854775808", 20))
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 		return (ft_exit_status(2, TRUE, FALSE));
+	}
+	if (num == LLONG_MIN && !ft_strncmp(arg, "-9223372036854775808", 20))
+	{
+		ft_child_cleaner(sh, args, 1);
+		ft_exit_status(0, TRUE, TRUE);
 	}
 	ft_exit_status((unsigned char)num, TRUE, FALSE);
 	return ((unsigned char)num);
 }
 
 /**
- * @brief Handles the exit command
+ * @brief Handles the exit process for the shell.
  *
- * Processes arguments for the `exit` command, validating them and determining 
- * the appropriate exit status. Handles invalid numeric arguments, excess 
- * arguments, or no arguments. Exits with the specified status if valid.
+ * Cleans up resources and exits the shell. If no arguments are provided, exits
+ * with the current exit status. If a numeric argument is provided, it validates
+ * and sets the exit status accordingly. Logs an error and continues execution
+ * if too many arguments are provided.
  *
- * @param argc The number of arguments passed to the exit command.
- * @param args The array of arguments, where args[0] is the command name.
+ * @param argc The number of command-line arguments.
+ * @param args The list of command-line arguments.
+ * @param sh The shell structure to clean up.
  */
-// void	ft_exit(int argc, char **args, t_shell *sh)
-// {
-// 	unsigned char	exit_status;
-// 	int				i;
-
-// 	i = 1;
-// 	exit_status = 0;
-// 	print_exit();
-// 	if (argc == 1)
-// 	{
-// 		ft_child_cleaner(sh, args, 1);
-// 		ft_exit_status(exit_status, TRUE, TRUE);
-// 	}
-// 	if (isnumeric(args[1]))
-// 	{
-// 		ft_child_cleaner(sh, args, 1);
-// 		ft_exit_status(2, TRUE, TRUE);
-// 	}
-// 	else if (args[2])
-// 	{
-// 		ft_stderror(FALSE, "exit: too many arguments");
-// 		ft_exit_status(1, TRUE, FALSE);
-// 	}
-// 	else
-// 	{
-// 		if (arg_convert(args[i]) && !args[i + 1])
-// 		{
-// 			ft_child_cleaner(sh, args, 1);
-// 			ft_exit_status(0, FALSE, TRUE);
-// 		}
-// 	}
-// }
-
 void	ft_exit(int argc, char **args, t_shell *sh)
 {
-	unsigned char	exit_status; //update brief
+	unsigned char	exit_status;
 
 	exit_status = 0;
 	print_exit();
@@ -127,7 +112,7 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(exit_status, TRUE, TRUE);
 	}
-	if (!ft_is_numeric(args[1])) //test this
+	if (!ft_is_numeric(args[1]))
 	{
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(2, TRUE, TRUE);
@@ -137,7 +122,7 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_stderror(FALSE, "exit: too many arguments");
 		ft_exit_status(1, TRUE, FALSE);
 	}
-	if (arg_convert(args[1])) //test this at school
+	if (arg_convert(args[1], args, sh))
 	{
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(0, FALSE, TRUE);
