@@ -1,47 +1,5 @@
 #include "../../includes/minishell.h"
 
-long long	ft_check_flow(int digit, long long sign, long long res)
-{
-	if (res > LLONG_MAX / 10
-		|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10))
-	{
-		if (sign == 1)
-			return (LLONG_MAX);
-		else
-			return (LLONG_MIN);
-	}
-	return (res);
-		
-}
-
-long long	ft_atoll(const char *nptr)
-{
-	int			i;
-	long long	sign;
-	long long	res;
-
-	i = 0;
-	sign = 1;
-	res = 0;
-	while ((nptr[i] == 32) || (nptr[i] > 8 && nptr[i] < 14))
-		++i;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		++i;
-	}
-	while (nptr[i] != '\0' && (nptr[i] >= '0' && nptr[i] <= '9'))
-	{
-		res = ft_check_flow(nptr[i] - '0', sign, res);
-		if (res > LLONG_MAX || res < LLONG_MIN)
-			return (res);
-		res = res * 10 + nptr[i] - '0';
-		++i;
-	}
-	return (res * sign);
-}
-
 /**
  * @brief Prints "exit" message if the shell is running in an interactive mode.
  *
@@ -101,12 +59,12 @@ static int	isnumeric(char *arg)
  */
 static unsigned char	arg_convert(char *arg)
 {
-	long long	num;
+	long long	num; //update brief
 
 	num = ft_atoll(arg);
 	if ((num > LLONG_MAX || num < LLONG_MIN) 
-		|| (num == LLONG_MAX && ft_strcmp(arg, "9223372036854775807"))
-		|| (num == LLONG_MIN && ft_strcmp(arg, "-9223372036854775808"))) //double check this at school
+		|| (num == LLONG_MAX && ft_strncmp(arg, "9223372036854775807", 19))
+		|| (num == LLONG_MIN && ft_strncmp(arg, "-9223372036854775808", 20))) //double check this at school //ft_strncpm?
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
 		return (ft_exit_status(2, TRUE, FALSE));
@@ -125,12 +83,43 @@ static unsigned char	arg_convert(char *arg)
  * @param argc The number of arguments passed to the exit command.
  * @param args The array of arguments, where args[0] is the command name.
  */
+// void	ft_exit(int argc, char **args, t_shell *sh)
+// {
+// 	unsigned char	exit_status;
+// 	int				i;
+
+// 	i = 1;
+// 	exit_status = 0;
+// 	print_exit();
+// 	if (argc == 1)
+// 	{
+// 		ft_child_cleaner(sh, args, 1);
+// 		ft_exit_status(exit_status, TRUE, TRUE);
+// 	}
+// 	if (isnumeric(args[1]))
+// 	{
+// 		ft_child_cleaner(sh, args, 1);
+// 		ft_exit_status(2, TRUE, TRUE);
+// 	}
+// 	else if (args[2])
+// 	{
+// 		ft_stderror(FALSE, "exit: too many arguments");
+// 		ft_exit_status(1, TRUE, FALSE);
+// 	}
+// 	else
+// 	{
+// 		if (arg_convert(args[i]) && !args[i + 1])
+// 		{
+// 			ft_child_cleaner(sh, args, 1);
+// 			ft_exit_status(0, FALSE, TRUE);
+// 		}
+// 	}
+// }
+
 void	ft_exit(int argc, char **args, t_shell *sh)
 {
-	unsigned char	exit_status;
-	int				i;
+	unsigned char	exit_status; //update brief
 
-	i = 1;
 	exit_status = 0;
 	print_exit();
 	if (argc == 1)
@@ -148,12 +137,9 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_stderror(FALSE, "exit: too many arguments");
 		ft_exit_status(1, TRUE, FALSE);
 	}
-	else
+	if (arg_convert(args[1])) //test this at school
 	{
-		if (arg_convert(args[i]) && !args[i + 1])
-		{
-			ft_child_cleaner(sh, args, 1);
-			ft_exit_status(0, FALSE, TRUE);
-		}
+		ft_child_cleaner(sh, args, 1);
+		ft_exit_status(0, FALSE, TRUE);
 	}
 }

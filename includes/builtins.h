@@ -15,10 +15,18 @@ void	ft_cd(int argc, const char *new_dir, char **envp);
 
 //ft_echo.c
 void	ft_echo(char **args);
+
+//ft_pwd.c
 int		ft_pwd(void);
-void	ft_exit(int argc, char **args, t_shell *sh);
+
+//ft_unset.c
 int		ft_unset(int argc, char **argv, t_shell *sh);
-void	ft_delete(char *argv, char ***envp);
+
+//ft_exit.c
+void	ft_exit(int argc, char **args, t_shell *sh);
+
+//ft_exit_utils.c
+long long	ft_atoll(const char *nptr);
 
 //ft_export
 int		check_key(char **argv);
