@@ -26,7 +26,7 @@ int			ft_unset(int argc, char **argv, t_shell *sh);
 void		ft_exit(int argc, char **args, t_shell *sh);
 
 //ft_exit_utils.c
-long long	ft_atoll(const char *nptr);
+long long	ft_atoll(const char *nptr, bool *is_sign);
 
 //ft_export
 int			check_key(char **argv);
