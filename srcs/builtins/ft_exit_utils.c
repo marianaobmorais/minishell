@@ -26,29 +26,18 @@ static long long	ft_check_flow(int digit, long long sign, long long res)
 			return (LLONG_MIN);
 	}
 	return (res);
-		
 }
 
 /**
  * @brief Converts a string to a `long long` integer.
  *
- * This function parses a null-terminated string and converts it to a signed `long long` integer.
- * It skips leading whitespace, handles an optional sign, and processes numeric digits.
+ * This function parses a null-terminated string and converts it to a signed
+ * `long long` integer. It skips leading whitespace, handles an optional sign,
+ * and processes numeric digits.
  *
  * @param nptr The input string to be converted.
- * @return The converted `long long` integer, or `LLONG_MAX`/`LLONG_MIN` on overflow/underflow.
- *
- * @details
- * - The function:
- *   1. Skips whitespace characters (`' '`, `'\t'`, etc.).
- *   2. Detects an optional '+' or '-' to determine the sign of the result.
- *   3. Accumulates numeric digits until a non-digit is encountered or the end of the string.
- * - If overflow or underflow occurs, it returns `LLONG_MAX` or `LLONG_MIN` respectively.
- * - Relies on `ft_check_flow` to ensure numeric bounds are not exceeded.
- *
- * @note The behavior is undefined if the string contains no numeric characters.
- *
- * @see ft_check_flow()
+ * @return The converted `long long` integer, or `LLONG_MAX`/`LLONG_MIN` on
+ *         overflow/underflow.
  */
 long long	ft_atoll(const char *nptr)
 {

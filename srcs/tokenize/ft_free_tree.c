@@ -37,7 +37,6 @@ static void	ft_free_redir(t_redir *redir_node)
 		ft_free_list(*redir_node->target);
 		free(redir_node->target);
 	}
-
 }
 
 /**

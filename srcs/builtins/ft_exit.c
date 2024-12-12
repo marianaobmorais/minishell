@@ -21,9 +21,9 @@ static void	print_exit(void)
  * @param arg The string to validate.
  * @return TRUE if the string is not numeric, FALSE otherwise.
  */
-static int	isnumeric(char *arg)
+static bool	ft_is_numeric(char *arg)
 {
-	int	i;
+	int	i; //update brief
 
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
@@ -33,7 +33,7 @@ static int	isnumeric(char *arg)
 		if (!ft_isdigit(arg[i]))
 		{
 			ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-			return (ft_exit_status(2, TRUE, FALSE));
+			return (ft_exit_status(2, TRUE, FALSE), false);
 		}
 		i++;
 	}
@@ -41,9 +41,9 @@ static int	isnumeric(char *arg)
 			&& !ft_isdigit(arg[1])))
 	{
 		ft_stderror(FALSE, "exit: %s: numeric argument required", arg);
-		return (TRUE);
+		return (false);
 	}
-	return (FALSE);
+	return (true);
 }
 
 /**
@@ -127,7 +127,7 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(exit_status, TRUE, TRUE);
 	}
-	if (isnumeric(args[1]))
+	if (!ft_is_numeric(args[1])) //test this
 	{
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(2, TRUE, TRUE);

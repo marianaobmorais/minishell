@@ -13,7 +13,6 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
-
 	(void)tree; //check later
 	sh->fds_saved = 0;
 	sh->run = TRUE;
@@ -35,7 +34,6 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 	}
 	tree = NULL;
 }
-
 
 /**
  * @brief Frees the memory allocated for a shell structure.
@@ -87,16 +85,16 @@ t_shell	*ft_init_sh(char **envp)
 
 	sh = (t_shell *)malloc(sizeof(t_shell));
 	if (!sh)
-		return (ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (ft_error_malloc("sh"), NULL);
 	sh->global = ft_get_my_envp(envp);
 	if (!sh->global)
-		return (free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (ft_error_malloc("sh->global"), NULL);
 	sh->local = (char **) malloc(sizeof(char *));
 	if (!sh->local)
-		return (ft_free_vector(sh->global), free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (ft_free_vector(sh->global), free(sh), ft_error_malloc("sh->local"), NULL);
 	sh->limbo = (char **) malloc(sizeof(char *));
 	if (!sh->limbo)
-		return (ft_free_vector(sh->global), ft_free_vector(sh->local), free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (ft_free_vector(sh->global), ft_free_vector(sh->local), free(sh), ft_error_malloc("sh->limbo"), NULL);
 	sh->local[0] = NULL;
 	sh->limbo[0] = NULL;
 	sh->heredoc_list = (t_list **)malloc(sizeof(t_list *));
@@ -104,7 +102,7 @@ t_shell	*ft_init_sh(char **envp)
 	{
 		ft_free_vector(sh->local);
 		ft_free_vector(sh->global);
-		return (free(sh), ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (free(sh), ft_error_malloc("sh->heredoc_list"), NULL);
 	}
 	sh->heredoc_list[0] = NULL;
 	sh->fds_saved = 0;
@@ -153,13 +151,14 @@ int	ft_history(char *input)
 /**
  * @brief Main command-line interface loop for processing user commands.
  *
- * This function initializes and enters an infinite loop where it prompts the user 
- * for input, processes the input, and handles command execution. It sets up signal 
- * handling, reads user input from the prompt, and checks for valid commands to add 
- * to history and execute. If the input is empty (EOF), it exits the program.
+ * This function initializes and enters an infinite loop where it prompts the
+ * user for input, processes the input, and handles command execution. It sets up
+ * signal handling, reads user input from the prompt, and checks for valid
+ * commands to add to history and execute. If the input is empty (EOF), it exits
+ * the program.
  *
- * @param my_envp A pointer to the array of environment variables, passed to functions 
- *        that execute commands with the current environment.
+ * @param my_envp A pointer to the array of environment variables, passed to
+ *        functions that execute commands with the current environment.
  */
 void	ft_cli(t_shell *sh)
 {

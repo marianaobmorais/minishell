@@ -25,6 +25,7 @@ void	ft_free_vector(char **vector)
 	}
 	free(vector);
 }
+
 /**
  * @brief Frees memory allocated for a list node and its associated token.
  * 
@@ -77,15 +78,26 @@ void	ft_free_list(t_list *list)
 	free(list);
 }
 
+/**
+ * @brief Cleans up resources used by a child process in the shell.
+ *
+ * This function is responsible for releasing memory and closing file
+ * descriptors associated with a child process. It performs the following
+ * actions:
+ * - Frees the `args` vector if it is not NULL.
+ * - If `cmd` equals 1, closes original file descriptors in the shell.
+ * - Frees the shell structure `sh` if it is not NULL.
+ *
+ * @param sh The shell structure to clean up.
+ * @param args The argument vector to be freed.
+ * @param cmd Indicates whether to close original file descriptors (1 to close).
+ */
 void	ft_child_cleaner(t_shell *sh, char **args, int cmd)
 {
-	//write brief
 	if (args)
 		ft_free_vector(args);
 	if (cmd == 1)
-	{
 		close_original_fds(sh);
-	}
 	if (sh)
 		ft_free_sh(sh);
 }

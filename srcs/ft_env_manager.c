@@ -24,7 +24,7 @@ char	**ft_merge_env(char **env1, char **env2)
 	size = ft_argslen(env1) + ft_argslen(env2);
 	envp = (char **) malloc((size + 1) * sizeof(char *));
 	if (!envp)
-		return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""), NULL); //ft malloc
+		return (ft_error_malloc("envp"), NULL);
 	while (env2[i])
 	{
 		envp[i] = ft_strdup(env2[i]);

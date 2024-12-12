@@ -59,5 +59,4 @@ char	*merge(char *s1, char *s2);
 char	**tokentostring(t_list **args);
 char	**ft_split_argv(char **args);
 
-
 #endif //EXECUTION_H

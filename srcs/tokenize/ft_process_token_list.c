@@ -20,7 +20,7 @@
  *   was updated.
  * - `false` otherwise.
  */
-static bool ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
+static bool	ft_handle_wildcard(t_list **current, t_list *prev, t_list **head)
 {
 	t_list	**wild_list;
 	t_token	*token;

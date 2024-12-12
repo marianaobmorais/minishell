@@ -12,7 +12,7 @@
  *
  * @param sig The signal number received, expected to be SIGINT (signal 2).
  */
-void	sig_parent_handler(int sig)
+static void	sig_parent_handler(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
@@ -38,7 +38,7 @@ void	sig_parent_handler(int sig)
  *
  * @param sig The signal number received, which can be SIGINT or SIGQUIT.
  */
-void	sig_child_handler(int sig)
+static void	sig_child_handler(int sig)
 {
 	if (sig == SIGINT)
 		write(1, "\n", 1);
@@ -46,9 +46,18 @@ void	sig_child_handler(int sig)
 		ft_putendl_fd("Quit (core dumped)", 1);
 }
 
-void	sig_heredoc_handler(int sig)
+/**
+ * @brief Signal handler for heredoc interruptions.
+ *
+ * Handles the `SIGINT` signal during heredoc input by:
+ * - Writing a newline to the standard output.
+ * - Closing the standard input file descriptor.
+ * - Setting the exit status to 130.
+ *
+ * @param sig The signal number (expected to be `SIGINT`).
+ */
+static void	sig_heredoc_handler(int sig)
 {
-	//write brief
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
