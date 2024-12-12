@@ -91,19 +91,15 @@ void	ft_putstr_fd_len(char *s, int fd, int len)
 }
 
 /**
- * @brief Prints an error message to stderr with formatted arguments and
- * returns an exit status.
+ * @brief Main command-line interface loop for processing user commands.
  *
- * This function prints a formatted error message to the standard error output 
- * (stderr) using a format string and additional args, similar to `printf`. 
- * It starts by printing a predefined program name to indicate the source of
- * the error. For each format specifier (currently only `%s` for strings), 
- * it retrieves the arg from `va_list`, formats it, and writes it to stderr
- * with a '\n'. 
- * 
- * @param str The format string specifying the output message, using `%` 
- *            as the format specifier (e.g., `%s` for strings).
- * @param ... The variable arguments matching the format specifiers in `str`.
+ * This function initializes and enters an infinite loop where it prompts the
+ * user for input, processes the input, and handles command execution. It sets
+ * up signal handling, reads user input from the prompt, and checks for valid
+ * commands to add to history and execute. If the input is empty (EOF), it 
+ * exits the program by printing "exit".
+ *
+ * @param sh A pointer to the shell struct containing the current shell state.
  */
 void	ft_stderror(int perror_, const char *str, ...)
 {
@@ -127,15 +123,8 @@ void	ft_stderror(int perror_, const char *str, ...)
 		str++;
 	}
 	if (perror_ == TRUE)
-	{
-		ft_putstr_fd_len(all, 2, ft_strlen(all));
-		perror("");
-	}
-	else
-	{
-		all = merge(all, "\n");
-		ft_putstr_fd_len(all, 2, ft_strlen(all));
-	}
-	free(all);
-	va_end(args);
+		return (ft_putstr_fd_len(all, 2, ft_strlen(all)), perror(""), \
+			free(all), va_end(args));
+	all = merge(all, "\n");
+	return (ft_putstr_fd_len(all, 2, ft_strlen(all)), free(all), va_end(args));
 }

@@ -113,7 +113,7 @@ static void	ft_free_helper(t_list **args_cp, char **new_args)
  * @param node The current syntax tree node to check.
  * @param sh The shell structure with environment and execution context.
  * @return
- * - `TRUE` if the node contains a built-in command (e.g., `cd`, `export`, etc.) 
+ * - `TRUE` if the node contains a built-in command (e.g., `cd`, `export`, etc.)
  *   without any connected pipes or branching.
  * - `FALSE` otherwise.
  */

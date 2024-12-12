@@ -157,25 +157,25 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
  */
 void	ft_search_heredoc(void *node, t_shell *sh)
 {
-	t_redir	*rnode;
-	t_token	*tnode;
-	t_state	state;
+	t_redir	*rnd;
+	t_token	*tnd;
+	t_state	st;
 
 	if (!node)
 		return ;
 	else if (((t_node *)node)->type == PIPE)
 	{
 		ft_search_heredoc(((t_node *)node)->left, sh);
-		ft_search_heredoc(((t_node *)node)->right, sh);
-		return ;
+		return (ft_search_heredoc(((t_node *)node)->right, sh));
 	}
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
-		rnode = (t_redir *)node;
-		ft_process_token_list(rnode->target, ft_merge_env(sh->global, sh->local));
-		tnode = (t_token *)(*rnode->target)->content;
-		state = tnode->state;
-		sh->run = heredoc_fd(tnode->value, ft_merge_env(sh->global, sh->local), state, sh);
+		rnd = (t_redir *)node;
+		ft_process_token_list(rnd->target, ft_merge_env(sh->global, sh->local));
+		tnd = (t_token *)(*rnd->target)->content;
+		st = tnd->state;
+		sh->run = heredoc_fd(tnd->value, \
+			ft_merge_env(sh->global, sh->local), st, sh);
 	}
 	else if (((t_redir *)node)->type == EXEC
 		|| ((t_redir *)node)->type == EXPORT

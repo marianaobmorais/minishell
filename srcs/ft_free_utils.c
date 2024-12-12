@@ -101,3 +101,35 @@ void	ft_child_cleaner(t_shell *sh, char **args, int cmd)
 	if (sh)
 		ft_free_sh(sh);
 }
+
+/**
+ * @brief Frees the memory allocated for a shell structure.
+ *
+ * This function releases the memory allocated for the members of a t_shell
+ * structure, including global and local environment variables and the heredoc
+ * list. Finally, it frees the memory allocated for the t_shell structure
+ * itself.
+ *
+ * @param sh Pointer to the t_shell structure to be freed.
+ */
+void	ft_free_sh(t_shell *sh)
+{
+	if (sh->global)
+		ft_free_vector(sh->global);
+	if (sh->local)
+		ft_free_vector(sh->local);
+	if (sh->limbo)
+		ft_free_vector(sh->limbo);
+	if (sh->heredoc_list)
+	{
+		ft_lstclear(sh->heredoc_list, free);
+		free(sh->heredoc_list);
+	}
+	if (sh->root)
+	{
+		ft_free_tree(sh->root);
+		sh->root = NULL;
+	}
+	close_original_fds(sh);
+	free(sh);
+}

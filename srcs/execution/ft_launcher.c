@@ -28,7 +28,7 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 		close_original_fds(sh);
 		close(fds[0]);
 		if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type
-			!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
+				!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
@@ -53,7 +53,6 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
-	//static int i;//debug
 
 	sh->error_fd = 0;
 	if (!node)
@@ -66,29 +65,43 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
-			//ft_stderror(FALSE, "Esperando ... %d PID -> %d", i, pid); //debug
 		}
 		return (ft_restore_original_fds(sh));
 	}
-	//ft_stderror(FALSE, "%d PID -> %d", i, pid);//debug
-	if (curr_fds[1] != -1)
-	{
-		close(curr_fds[1]);
-		curr_fds[1] = -1;
-	}
 	if (node)
 		dup2(curr_fds[0], STDIN_FILENO);
-	//close_fds(curr_fds);
-	if (curr_fds[0] != -1)
-	{
-		close(curr_fds[0]);
-		curr_fds[0] = -1;
-	}
+	close_fds(curr_fds);
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	//i++;//debug
 	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
+}
+
+/**
+ * @brief Executes a command in a child process and manages file descriptors.
+ *
+ * This function creates a pipe, executes the command in a child process, and 
+ * manages the file descriptors. If `sh->error_fd` is 0, it creates the pipe 
+ * and calls `ft_child_process` to execute the command in the child process.
+ * Then, it calls `ft_parent_process` to manage the parent process.
+ *
+ * @param node The current node of the command list.
+ * @param next_node The next node of the command list.
+ * @param fds An array of file descriptors for the pipe.
+ * @param sh A pointer to the t_shell structure containing the shell state.
+ */
+void	ft_launcher_exec(void *node, void *next_node, int *fds, t_shell *sh)
+{
+	pid_t	pid;
+
+	pid = -1;
+	if (sh->error_fd == 0)
+	{
+		if (pipe(fds) == -1)
+			return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
+		pid = ft_child_process(fds, sh, node, next_node);
+	}
+	ft_parent_process(fds, sh, next_node, pid);
 }
 
 /**
@@ -105,42 +118,30 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
  */
 void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 {
-	pid_t	pid;
-	int		fds[2] = {-1, -1};
-
-	pid = -1;
 	ft_save_original_fds(sh);
 	if (!node)
 		return ;
 	else if (((t_node *)node)->type == PIPE)
 	{
 		sh->prev = node;
-		ft_launcher(((t_node *)node)->left, ((t_node *)node)->right, fds, sh);
+		ft_launcher(((t_node *)node)->left, ((t_node *)node)->right, sh->fds, \
+			sh);
 	}
-	else if (ft_redir(((t_redir *)node), next_node, sh))
+	else if (ft_redir(((t_redir *)node), sh))
 	{
 		sh->prev = node;
 		if (!((t_redir *)node)->next)
 		{
 			if (next_node)
-			{
 				if (pipe(curr_fds) == -1)
-					return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
-			}
+					return (ft_exit_status(1, TRUE, FALSE), \
+						ft_stderror(TRUE, ""));
 			ft_parent_process(curr_fds, sh, next_node, -1);
 		}
 		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
 	}
 	else if (((t_exec *)node)->type == EXEC)
-	{
-		if (sh->error_fd == 0)
-		{
-			if (pipe(curr_fds) == -1)
-				return (ft_exit_status(1, TRUE, FALSE), ft_stderror(TRUE, ""));
-			pid = ft_child_process(curr_fds, sh, node, next_node);
-		}
-		ft_parent_process(curr_fds, sh, next_node, pid);
-	}
+		ft_launcher_exec(node, next_node, curr_fds, sh);
 }
 
 /**
@@ -158,9 +159,10 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 {
 	if (tree)
 	{
+		sh->root = tree;
 		ft_search_heredoc(tree, sh);
 		if (sh->run == TRUE
-			&& !ft_single_command(tree, ((t_node *) tree)->right, sh))
+			&& !ft_single_command(tree, sh))
 		{
 			ft_signal(DEFAULT_);
 			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);

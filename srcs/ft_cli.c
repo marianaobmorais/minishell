@@ -13,7 +13,6 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
-	(void)tree; //check later
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -36,35 +35,27 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 }
 
 /**
- * @brief Frees the memory allocated for a shell structure.
+ * @brief Initializes the variables in the shell structure.
  *
- * This function releases the memory allocated for the members of a t_shell
- * structure, including global and local environment variables and the heredoc
- * list. Finally, it frees the memory allocated for the t_shell structure
- * itself.
+ * This function sets the initial values for the variables in the sh structure.
  *
- * @param sh Pointer to the t_shell structure to be freed.
+ * @param sh A pointer to the shell structure to be initialized.
  */
-void	ft_free_sh(t_shell *sh)
+void	ft_init_var_sh(t_shell *sh)
 {
-	if (sh->global)
-		ft_free_vector(sh->global);
-	if (sh->local)
-		ft_free_vector(sh->local);
-	if (sh->limbo)
-		ft_free_vector(sh->limbo);
-	if (sh->heredoc_list)
-	{
-		ft_lstclear(sh->heredoc_list, free);
-		free(sh->heredoc_list);
-	}
-	if (sh->root)
-	{
-		ft_free_tree(sh->root);
-		sh->root = NULL;
-	}
-	close_original_fds(sh);
-	free(sh);
+	sh->limbo[0] = NULL;
+	sh->local[0] = NULL;
+	sh->heredoc_list[0] = NULL;
+	sh->fds_saved = 0;
+	sh->error_fd = 0;
+	sh->run = TRUE;
+	sh->stdin_ = -1;
+	sh->stdout_ = -1;
+	sh->stderr_ = -1;
+	sh->prev = NULL;
+	sh->root = NULL;
+	sh->fds[0] = -1;
+	sh->fds[1] = -1;
 }
 
 /**
@@ -91,12 +82,12 @@ t_shell	*ft_init_sh(char **envp)
 		return (ft_error_malloc("sh->global"), NULL);
 	sh->local = (char **) malloc(sizeof(char *));
 	if (!sh->local)
-		return (ft_free_vector(sh->global), free(sh), ft_error_malloc("sh->local"), NULL);
+		return (ft_free_vector(sh->global), free(sh), \
+			ft_error_malloc("sh->local"), NULL);
 	sh->limbo = (char **) malloc(sizeof(char *));
 	if (!sh->limbo)
-		return (ft_free_vector(sh->global), ft_free_vector(sh->local), free(sh), ft_error_malloc("sh->limbo"), NULL);
-	sh->local[0] = NULL;
-	sh->limbo[0] = NULL;
+		return (ft_free_vector(sh->global), ft_free_vector(sh->local), \
+			free(sh), ft_error_malloc("sh->limbo"), NULL);
 	sh->heredoc_list = (t_list **)malloc(sizeof(t_list *));
 	if (!sh->heredoc_list)
 	{
@@ -104,15 +95,7 @@ t_shell	*ft_init_sh(char **envp)
 		ft_free_vector(sh->global);
 		return (free(sh), ft_error_malloc("sh->heredoc_list"), NULL);
 	}
-	sh->heredoc_list[0] = NULL;
-	sh->fds_saved = 0;
-	sh->error_fd = 0;
-	sh->run = TRUE;
-	sh->stdin_ = -1;
-	sh->stdout_ = -1;
-	sh->stderr_ = -1;
-	sh->prev = NULL;
-	sh->root = NULL;
+	ft_init_var_sh(sh);
 	return (sh);
 }
 
@@ -152,19 +135,18 @@ int	ft_history(char *input)
  * @brief Main command-line interface loop for processing user commands.
  *
  * This function initializes and enters an infinite loop where it prompts the
- * user for input, processes the input, and handles command execution. It sets up
- * signal handling, reads user input from the prompt, and checks for valid
- * commands to add to history and execute. If the input is empty (EOF), it exits
- * the program.
+ * user for input, processes the input, and handles command execution. It sets
+ * up signal handling, reads user input from the prompt, and checks for valid
+ * commands to add to history and execute. If the input is empty (EOF), it 
+ * exits the program.
  *
  * @param my_envp A pointer to the array of environment variables, passed to
  *        functions that execute commands with the current environment.
  */
 void	ft_cli(t_shell *sh)
 {
-	//update brief
 	char	*input;
-	void	*tree;
+	//void	*tree; //debug
 
 	input = NULL;
 	while (1)
@@ -184,9 +166,8 @@ void	ft_cli(t_shell *sh)
 		}
 		if (ft_history(input))
 		{
-			tree = ft_process_input(input);
-			sh->root = tree;
-			ft_launcher_manager(tree, sh);
+			//tree = ft_process_input(input); //debug
+			ft_launcher_manager(ft_process_input(input), sh);
 		}
 	}
 	rl_clear_history();
