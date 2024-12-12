@@ -125,7 +125,8 @@ static void	*ft_handle_exec_node(t_list **list, t_exec **exec, t_token **token)
  * @return A pointer to the created subroot node, or `NULL` if further
  *         processing of the token list is required.
  */
-static void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, t_token **token)
+static void	*ft_handle_subroot_node(t_list **list, t_node **sub_r, \
+	t_token **token)
 {
 	*sub_r = ft_create_subroot_node(list);
 	if (!list || !*list || !*sub_r)

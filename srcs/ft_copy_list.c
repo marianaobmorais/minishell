@@ -1,8 +1,20 @@
 #include "../includes/minishell.h"
 
+/**
+ * @brief Copies the attributes of a token and appends it to a new list.
+ *
+ * This function creates a new token with the same properties as the source
+ * token and appends it to the provided list.
+ *
+ * @param new_token A pointer to the newly allocated token to populate.
+ * @param tmp The current node in the source list being copied.
+ * @param new A pointer to the head of the destination list to which the copied
+ *        node is added.
+ * @return `true` on successful creation and addition of the new node; `false`
+ *         otherwise.
+ */
 static bool	ft_copy_token(t_token *new_token, t_list *tmp, t_list **new)
 {
-	//write brief
 	t_list	*new_node;
 
 	new_token->type = ((t_token *)tmp->content)->type;
@@ -16,9 +28,18 @@ static bool	ft_copy_token(t_token *new_token, t_list *tmp, t_list **new)
 	return (true);
 }
 
+/**
+ * @brief Creates a deep copy of a linked list of tokens.
+ *
+ * This function duplicates a token list, creating new tokens and nodes for
+ * each entry in the source list.
+ *
+ * @param old A pointer to the head of the source list to copy.
+ * @return A pointer to the head of the newly created list, or `NULL` if an
+ *         error occurs.
+ */
 t_list	**ft_copy_list(t_list **old)
 {
-	//write brief
 	t_list	**new;
 	t_list	*tmp;
 	t_token	*new_token;

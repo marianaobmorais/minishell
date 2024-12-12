@@ -181,14 +181,10 @@ void	*ft_process_input(char *input)
 	token_list = ft_create_token_list(trimmed);
 	if (!token_list)
 		return (free(trimmed), NULL);
-	//ft_print_list(token_list);//debug
 	root = NULL;
 	head = *token_list;
 	if (token_list && *token_list)
-	{
-		root = ft_build_tree(token_list, NULL); //ft_build_root(token_list, ROOT);
-		//print_root(root, 60); //debug
-	}
+		root = ft_build_tree(token_list, NULL);
 	free(trimmed);
 	ft_free_list(head);
 	free(token_list);
