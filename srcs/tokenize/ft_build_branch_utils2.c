@@ -69,8 +69,7 @@ static t_list	**ft_create_sub_list(t_list **list)
  */
 t_node	*ft_create_subroot_node(t_list **list)
 {
-	t_node	*sub_root; 
-
+	t_node	*sub_root;
 	t_list	**sub_list;
 	t_list	*head;
 

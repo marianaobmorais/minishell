@@ -10,7 +10,7 @@
  *
  * @param envp The array of environment variables to print.
  */
-void ft_env(int argc, char **args, char **envp)
+void	ft_env(int argc, char **args, char **envp)
 {
 	int	i;
 

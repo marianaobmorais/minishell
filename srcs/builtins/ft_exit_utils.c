@@ -15,11 +15,11 @@
 static long long	ft_check_flow(int digit, long long sign, long long res)
 {
 	if (sign == 1 && (res > LLONG_MAX / 10
-		|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10)))
-			return (LLONG_MAX);
+			|| (res == LLONG_MAX / 10 && digit > LLONG_MAX % 10)))
+		return (LLONG_MAX);
 	if (sign == -1 && (res > LLONG_MAX / 10
-		|| (res == LLONG_MAX / 10 && digit > (LLONG_MAX % 10) + 1)))
-			return (LLONG_MIN);
+			|| (res == LLONG_MAX / 10 && digit > (LLONG_MAX % 10) + 1)))
+		return (LLONG_MIN);
 	return (res);
 }
 

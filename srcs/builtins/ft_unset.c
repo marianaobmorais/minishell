@@ -12,12 +12,11 @@
  *
  * @param str The variable name to search for.
  * @param envp A pointer to the array of environment variables.
- * 
  * @return The length of the environment variable; otherwise, 0.
  */
 static size_t	is_var(char *str, char **envp)
 {
-	size_t	index_envp; //update bruef
+	size_t	index_envp;
 	size_t	flag;
 	size_t	size_var;
 
@@ -52,7 +51,6 @@ static size_t	is_var(char *str, char **envp)
  * @param str The name of the variable to be deleted.
  * @param envp A pointer to the environment variable array.
  * @param size_env The size of the environment array.
- * 
  * @return 0 on success, or -1 if memory allocation fails.
  */
 static int	delete_var(char *str, char ***envp, size_t size_env)
@@ -84,9 +82,18 @@ static int	delete_var(char *str, char ***envp, size_t size_env)
 	return (0);
 }
 
-static void	ft_delete(char *argv, char ***envp) //essa funcao por der static
+/**
+ * @brief Deletes a specified variable from the environment.
+ *
+ * Checks if the variable `argv` exists in the environment array `envp`.
+ * If found, removes the variable by reallocating the array and shifting the
+ * remaining variables.
+ * 
+ * @param argv The name of the variable to delete.
+ * @param envp A pointer to the environment array.
+ */
+static void	ft_delete(char *argv, char ***envp)
 {
-	//write brief
 	size_t	size_env;
 
 	if ((*envp))
@@ -98,22 +105,21 @@ static void	ft_delete(char *argv, char ***envp) //essa funcao por der static
 }
 
 /**
- * @brief Unsets (removes) specified environment variables.
+ * @brief Unsets specified variables from the shell environment.
  *
- * This function removes variables from the `envp` array. It iterates
- * through `argv` and checks each variable using the `is_var` function. If
- * the variable exists, it is removed using `delete_var`. If `argc` is 1, no
- * variables are specified, and the function returns without changes.
+ * Iterates through the provided arguments and removes each variable from the
+ * global, local, and limbo environment arrays if they exist.
  *
- * @param argc The count of arguments. If `argc > 1`, variables are specified.
- * @param argv The list of arguments; each is a variable name to unset.
- * @param sh The shell structure containing `global` and `local` environments.
- *
- * @return Exit status: 0 indicates successful execution.
+ * @param argc The number of arguments provided.
+ * @param argv An array of argument strings, where each argument is the name of
+ *        a variable to unset.
+ * @param sh A pointer to the shell structure containing the global, local, and
+ *        limbo environments.
+ * @return Always returns a success exit status (0).
  */
 int	ft_unset(int argc, char **argv, t_shell *sh)
 {
-	if (argc == 1) //update brief
+	if (argc == 1)
 		return (ft_exit_status(0, TRUE, FALSE));
 	++argv;
 	while (*argv)

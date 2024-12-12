@@ -91,9 +91,17 @@ void	ft_exec_builtin(char **args, t_shell *sh)
 		ft_env(argc, args, sh->global);
 }
 
+/**
+ * @brief Frees memory allocated for a token list and an argument vector.
+ *
+ * This function releases memory associated with a token list (`args_cp`) 
+ * and a corresponding array of strings (`new_args`).
+ *
+ * @param args_cp A double pointer to the token list to be freed.
+ * @param new_args A double pointer to the array of strings to be freed.
+ */
 static void	ft_free_helper(t_list **args_cp, char **new_args)
 {
-	//write brief
 	if (*args_cp)
 		ft_free_list(*args_cp);
 	if (args_cp)

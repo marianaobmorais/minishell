@@ -58,7 +58,7 @@ void	close_fds(int *fds);
 
 /* ft_exec.c */
 
-int	ft_exec(t_list **args, t_shell *sh);
+int		ft_exec(t_list **args, t_shell *sh);
 
 /* ft_exec_utils.c */
 
