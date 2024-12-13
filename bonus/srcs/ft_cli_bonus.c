@@ -13,6 +13,7 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
+	(void)tree; //se não meu compilador não compila
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;

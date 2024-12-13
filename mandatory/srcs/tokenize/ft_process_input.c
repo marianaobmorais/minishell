@@ -27,7 +27,7 @@ void	ft_print_list(t_list **token_list)
 	printf("-------------------------------------------------------------------\n");
 }
 
-void print_root(void *root, int indent) // Updated function
+void print_root(void *root, int indent)
 {
 	t_list  *current;
 	t_token *token;

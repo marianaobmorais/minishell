@@ -32,7 +32,7 @@ bool	ft_is_expandable(char *s)
  * 
  * @param tkn Pointer to the token structure containing the value to process.
  */
-void	ft_remove_quotes(t_token *tkn)
+static void	ft_remove_quotes(t_token *tkn)
 {
 	char	quote;
 	int		i;
@@ -73,7 +73,7 @@ void	ft_remove_quotes(t_token *tkn)
  * @param token Pointer to the token to be expanded.
  * @param envp Environment variable array used for expansion.
  */
-void	ft_expand_tokens(t_token *token, char **envp)
+static void	ft_expand_tokens(t_token *token, char **envp)
 {
 	char	*new_value;
 	int		i;

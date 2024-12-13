@@ -13,7 +13,7 @@
  *        If a redirection token is found, the pointer will point to it.
  * @return `true` if a redirection token is found; `false` otherwise.
  */
-bool	ft_find_next_redir(t_list **list)
+static bool	ft_find_next_redir(t_list **list)
 {
 	t_token	*token;
 
@@ -65,7 +65,7 @@ static void	ft_assign_redir_mode(t_redir **redir)
  * @return A pointer to the initialized `t_redir` structure, or `NULL` if
  *         memory allocation fails.
  */
-t_redir	*ft_init_redir(t_token *token, t_list **list)
+static t_redir	*ft_init_redir(t_token *token, t_list **list)
 {
 	t_redir	*redir;
 	t_list	**target;

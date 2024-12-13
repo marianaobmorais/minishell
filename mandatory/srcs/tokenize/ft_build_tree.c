@@ -14,7 +14,7 @@
  * @return `true` if the list should skip until with a valid executable token,
  *         otherwise `false`.
  */
-bool	ft_validate_skip(t_list **list)
+static bool	ft_validate_skip(t_list **list)
 {
 	t_token	*token;
 	t_list	*tmp;
@@ -47,7 +47,7 @@ bool	ft_validate_skip(t_list **list)
  * @param list A pointer to the token list, which will be updated to skip over
  *        any `EXPORT` or `EXPORT_AP` tokens.
  */
-void	ft_skip_export_tokens(t_list **list)
+static void	ft_skip_export_tokens(t_list **list)
 {
 	t_token	*token;
 

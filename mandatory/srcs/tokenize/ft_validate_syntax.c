@@ -12,7 +12,7 @@
  * @param c The optional character causing the syntax error. If `0`, no
  *        character is displayed.
  */
-void	ft_error_syntax(char *message, char c)
+static void	ft_error_syntax(char *message, char c)
 {
 	if (c != 0)
 		ft_stderror(FALSE, message, c);

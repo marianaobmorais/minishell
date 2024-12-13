@@ -125,7 +125,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  * 
  * @param list A pointer to the head of the token list to validate and adjust.
  */
-void	ft_validate_export_tokens(t_list **list)
+static void	ft_validate_export_tokens(t_list **list)
 {
 	t_list	*current; //update brief
 	t_token	*token;

@@ -167,5 +167,5 @@ void	ft_cli(t_shell *sh)
 		if (ft_history(input))
 			ft_launcher_manager(ft_process_input(input), sh);
 	}
-	//rl_clear_history();
+	rl_clear_history();
 }
