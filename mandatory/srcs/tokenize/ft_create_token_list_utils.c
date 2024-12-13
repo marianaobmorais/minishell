@@ -45,11 +45,9 @@ static t_type	ft_get_cmd_type(char *s)
  */
 static t_type	ft_get_token_type(char *s)
 {
-	t_type	type;
+	t_type	type; //update brief
 
-	if (s[0] == '|' && s[1] == '|')
-		return (OR);
-	else if (s[0] == '|')
+	if (s[0] == '|')
 		return (PIPE);
 	else if (s[0] == '>' && s[1] == '>')
 		return (APPEND);
@@ -59,10 +57,6 @@ static t_type	ft_get_token_type(char *s)
 		return (HEREDOC);
 	else if (s[0] == '<')
 		return (INFILE);
-	else if (s[0] == '&')
-		return (AND);
-	else if (s[0] == '(' || s[0] == ')')
-		return (PRTHESES);
 	else
 	{
 		type = ft_get_cmd_type(s);
@@ -148,7 +142,7 @@ static bool	ft_has_expandable_var(char *s)
  */
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
-	t_token	*new_token;
+	t_token	*new_token; //update brief
 	t_list	*new_node;
 
 	if (!*value)
@@ -161,7 +155,6 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 		return (free(new_token), ft_error_malloc("new_token->value"));
 	new_token->type = ft_get_token_type(*value);
 	new_token->state = ft_get_token_state(*value);
-	new_token->wildcard = ft_is_wildcard(*value);
 	if (token_list && !ft_is_heredoc_target(token_list))
 		new_token->expand = ft_has_expandable_var(*value);
 	else

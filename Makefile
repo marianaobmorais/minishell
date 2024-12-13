@@ -8,7 +8,7 @@ LIBFT = ./libft/libft.a
 LIBFT_DIR = ./libft
 
 SRCS = $(SRCS_DIR)/main.c \
-		$(SRCS_DIR)/ft_error_handler.c \
+		$(SRCS_DIR)/error_handler.c \
 		$(SRCS_DIR)/ft_env_manager.c \
 		$(SRCS_DIR)/ft_free_utils.c \
 		$(SRCS_DIR)/ft_cli.c \
@@ -28,21 +28,15 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/tokenize/ft_isspace.c \
 		$(SRCS_DIR)/tokenize/ft_validate_syntax.c \
 		$(SRCS_DIR)/tokenize/ft_validate_syntax_utils.c \
-		$(SRCS_DIR)/tokenize/ft_validate_parentheses.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list_utils.c \
 		$(SRCS_DIR)/tokenize/ft_create_token_list_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list.c \
 		$(SRCS_DIR)/tokenize/ft_process_token_list_utils.c \
-		$(SRCS_DIR)/tokenize/ft_process_token_list_utils2.c \
-		$(SRCS_DIR)/tokenize/ft_get_wildcard_list.c \
-		$(SRCS_DIR)/tokenize/ft_get_wildcard_list_utils.c \
 		$(SRCS_DIR)/tokenize/ft_find_next_quote.c \
-		$(SRCS_DIR)/tokenize/ft_build_root.c \
 		$(SRCS_DIR)/tokenize/ft_build_tree.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch.c \
 		$(SRCS_DIR)/tokenize/ft_build_branch_utils.c \
-		$(SRCS_DIR)/tokenize/ft_build_branch_utils2.c \
 		$(SRCS_DIR)/tokenize/ft_free_tree.c \
 		$(SRCS_DIR)/tokenize/ft_is_token_type.c \
 		$(SRCS_DIR)/builtins/ft_env.c \

@@ -85,7 +85,7 @@ static int	ft_handle_quotes(char **value, char *s, int i, char quote)
  */
 static void	ft_process_tokens(char *s, t_list **token_list)
 {
-	char	*value;
+	char	*value; //update brief
 	int		i;
 
 	i = 0;
@@ -94,7 +94,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
 	{
 		if (!ft_isspace(s[i]))
 		{
-			if (ft_strchr(METACHARS, s[i]) || ft_strchr(PRTHESESCHARS, s[i]))
+			if (ft_strchr(METACHARS, s[i]))
 				i = ft_handle_metachar(&value, &s[i], i, token_list);
 			else if (s[i] == SQUOTE || s[i] == DQUOTE)
 				i = ft_handle_quotes(&value, s, i, s[i]);
@@ -111,49 +111,42 @@ static void	ft_process_tokens(char *s, t_list **token_list)
 }
 
 /**
- * @brief Validates execution tokens to ensure proper placement and syntax.
+ * @brief Validates and adjusts the types of tokens related to `EXPORT` and
+ *        `EXPORT_AP`.
  * 
- * Checks the token list for invalid scenarios involving execution tokens
- * (e.g., commands, subshells). Specifically, the function:
- * - Tracks context (`right`) to identify whether an EXEC token follows invalid
- *   tokens (e.g., `)`).
- * - Ensures execution tokens do not appear directly after certain invalid
- *   sequences.
- * - Skips over redirection tokens as they do not affect EXEC token validation.
+ * Iterates through the token list to ensure that `EXPORT` and `EXPORT_AP`
+ * tokens are properly contextualized based on their position and the preceding
+ * token.
+ * - If an `EXPORT` or `EXPORT_AP` token appears after the first position and
+ *   does not follow a valid token type (`NODE`, another `EXPORT`, `EXPORT_AP`,
+ *   or parentheses), its type is changed to `EXEC`.
+ * - This ensures proper token classification and avoids misinterpretation
+ *   during execution.
  * 
- * Errors are reported using `ft_stderror` with appropriate messages, and the
- * function sets an error status before returning `false` when invalid syntax
- * is detected.
- * 
- * @param list Pointer to the token list to be validated.
- * @return `true` if the tokens are valid, `false` otherwise.
+ * @param list A pointer to the head of the token list to validate and adjust.
  */
-static bool	ft_validate_exec_tokens(t_list **list)
+static void	ft_validate_export_tokens(t_list **list)
 {
-	t_list	*current;
+	t_list	*current; //update brief
 	t_token	*token;
-	bool	right;
+	t_list	*prev;
+	int		pos;
 
+	pos = 0;
 	current = *list;
-	right = false;
+	prev = NULL;
 	while (current)
 	{
 		token = (t_token *)current->content;
-		if (token->value[0] == '(' || ft_is_token_type(token, NODE))
-			right = false;
-		else if (token->value[0] == ')')
-			right = true;
-		else if (ft_is_token_type(token, REDIR))
-			current = current->next;
-		else if (right == true && ft_is_token_type(token, EXEC))
-		{
-			ft_stderror(FALSE, UNEXPECTED_TOKEN_S, token->value);
-			ft_exit_status(2, TRUE, FALSE);
-			return (false);
-		}
+		if ((token->type == EXPORT || token->type == EXPORT_AP) && pos > 0
+			&& !(ft_is_token_type(((t_token *)prev->content), NODE)
+				|| ((t_token *)prev->content)->type == EXPORT
+				|| ((t_token *)prev->content)->type == EXPORT_AP))
+			token->type = EXEC;
+		pos++;
+		prev = current;
 		current = current->next;
 	}
-	return (true);
 }
 
 /**
@@ -173,7 +166,7 @@ static bool	ft_validate_exec_tokens(t_list **list)
  */
 t_list	**ft_create_token_list(char *s)
 {
-	t_list	**token_list;
+	t_list	**token_list; //update brief
 
 	token_list = (t_list **)malloc(sizeof(t_list *));
 	if (!token_list)
@@ -181,7 +174,5 @@ t_list	**ft_create_token_list(char *s)
 	*token_list = NULL;
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
-	if (!ft_validate_exec_tokens(token_list))
-		return (NULL);
 	return (token_list);
 }
