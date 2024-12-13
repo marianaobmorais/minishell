@@ -22,7 +22,7 @@
  */
 bool	ft_is_token_type(t_token *token, t_type type)
 {
-	if (type == REDIR)
+	if (type == REDIR) //update brief
 	{
 		if (token->type == OUTFILE || token->type == INFILE
 			|| token->type == APPEND || token->type == HEREDOC)
@@ -36,7 +36,7 @@ bool	ft_is_token_type(t_token *token, t_type type)
 	}
 	if (type == NODE)
 	{
-		if (token->type == PIPE || token->type == AND || token->type == OR)
+		if (token->type == PIPE)
 			return (true);
 	}
 	return (false);
@@ -64,7 +64,7 @@ bool	ft_is_token_type(t_token *token, t_type type)
  */
 bool	ft_is_node_type(t_node *node, t_type type)
 {
-	if (type == REDIR)
+	if (type == REDIR) //update brief
 	{
 		if (((t_redir *)node)->type == OUTFILE
 			|| ((t_redir *)node)->type == INFILE
@@ -80,7 +80,7 @@ bool	ft_is_node_type(t_node *node, t_type type)
 	}
 	if (type == NODE)
 	{
-		if (node->type == PIPE || node->type == AND || node->type == OR)
+		if (node->type == PIPE)
 			return (true);
 	}
 	return (false);

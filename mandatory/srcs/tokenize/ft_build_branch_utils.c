@@ -17,7 +17,7 @@
  */
 static t_list	**ft_get_args(t_list **list)
 {
-	t_list	**args;
+	t_list	**args; //update brief
 	t_list	*curr;
 	t_token	*token;
 
@@ -36,7 +36,7 @@ static t_list	**ft_get_args(t_list **list)
 			if (curr->next && ((t_token *)curr->next->content)->type != PIPE)
 				curr = curr->next;
 		}
-		else if (ft_is_token_type(token, NODE) || token->type == PRTHESES)
+		else if (ft_is_token_type(token, NODE))
 			break ;
 		curr = curr->next;
 	}
@@ -74,97 +74,4 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 		*list = (*list)->next;
 	}
 	return (exec);
-}
-
-/**
- * @brief Searches for the next redirection token in the token list.
- * 
- * This function iterates through a token list, starting from the current
- * position, to locate the next token of type `REDIR`. The search stops at
- * tokens of type `NODE` or at the end of the list. If a redirection token is
- * found, the function returns `true`, and the pointer to the list is updated to
- * the position of the found token. Otherwise, it returns `false`.
- * 
- * @param list A double pointer to the current position in the token list. 
- *        If a redirection token is found, the pointer will point to it.
- * @return `true` if a redirection token is found; `false` otherwise.
- */
-bool	ft_find_next_redir(t_list **list)
-{
-	t_token	*token;
-
-	while (*list)
-	{
-		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE))
-			break ;
-		if (ft_is_token_type(token, REDIR))
-			return (true);
-		*list = (*list)->next;
-	}
-	return (false);
-}
-
-/**
- * @brief Assigns mode and file descriptor values based on redirection type.
- * 
- * Configures the file opening mode (e.g., read, write, append) and the
- * standard file descriptor (e.g., stdin, stdout) for a redirection node based
- * on its type.
- * 
- * @param redir Double pointer to the redirection structure to configure.
- */
-static void	ft_assign_redir_mode(t_redir **redir)
-{
-	if ((*redir)->type == OUTFILE)
-		(*redir)->mode = O_WRONLY | O_CREAT | O_TRUNC;
-	else if ((*redir)->type == INFILE)
-		(*redir)->mode = O_RDONLY;
-	else if ((*redir)->type == APPEND)
-		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		(*redir)->mode = -1;
-}
-
-/**
- * @brief Initializes a redirection structure based on the given token.
- * 
- * This function creates and initializes a `t_redir` structure, which represents
- * a redirection in the shell. It also sets up a linked list (`t_list **`) to 
- * store the target of the redirection. The type of redirection (e.g., input, 
- * output, append, heredoc) is determined from the token, and the appropriate
- * redirection mode is assigned. If the next token is an executable, it is
- * considered the target of the redirection, and added to the target list.
- * 
- * @param token The token representing the redirection.
- * @param list The list of tokens to extract the redirection target from.
- * @return A pointer to the initialized `t_redir` structure, or `NULL` if
- *         memory allocation fails.
- */
-t_redir	*ft_init_redir(t_token *token, t_list **list)
-{
-	t_redir	*redir;
-	t_list	**target;
-
-	redir = (t_redir *)malloc(sizeof(t_redir));
-	if (!redir)
-		return (ft_error_malloc("redir"), NULL);
-	target = (t_list **)malloc(sizeof(t_list *));
-	if (!target)
-		return (ft_error_malloc("target"), NULL);
-	*target = NULL;
-	redir->target = NULL;
-	redir->next = NULL;
-	redir->type = token->type;
-	ft_assign_redir_mode(&redir);
-	if ((*list)->next && (*list)->next->content
-		&& ((t_token *)(*list)->next->content)->type == EXEC)
-	{
-		*list = (*list)->next;
-		ft_add_to_token_list(&((t_token *)(*list)->content)->value, target);
-		redir->target = target;
-		if (redir->type == HEREDOC)
-			((t_token *)((*redir->target)->content))->expand = false;
-	}
-	return (redir);
 }

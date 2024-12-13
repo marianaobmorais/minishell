@@ -84,18 +84,13 @@ static char	*ft_get_exit_code(int *i)
  */
 void	ft_handle_expansion(char **new_value, char *value, int *i, char **envp)
 {
-	char	*expansion;
+	char	*expansion; //update brief
 	char	*tmp;
 
 	tmp = NULL;
 	(*i)++;
 	if (value[*i] == '?')
 		expansion = ft_get_exit_code(i);
-	else if (value[*i] == '*')
-	{
-		(*i)++;
-		expansion = ft_strdup("\0");
-	}
 	else
 		expansion = ft_expand_env(&value[*i], i, envp);
 	tmp = ft_strjoin(*new_value, expansion);

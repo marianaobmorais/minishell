@@ -42,23 +42,20 @@ void	ft_error_syntax(char *message, char c)
  */
 static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 {
-	if (s[i] == '&' && s[i + 1] != '&')
-		return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
-	if (*special == true)
+	if (*special == true) //update brief
 	{
-		if (*c == '|' || *c == '&')
+		if (*c == '|')
 		{
-			if ((*c == '|' && s[i] == '&') || (*c == '&' && s[i] == '|'))
-				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
-			if (!ft_validate_logic_operator(s, i))
+			if (s[i] == '|' || ft_strchr(SPECIALCHARS, s[i])
+				|| (s[i] == '.'&& (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
 				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 		}
-		else if (s[i] != '.')
-			return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
+			if (s[i] != '.')
+				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	}
 	*special = true;
 	*c = s[i];
-	if ((ft_strchr(METACHARS, s[i]) && s[i + 1] == s[i])
+	if (((s[i] == '<' || s[i] == '>') && s[i + 1] == s[i])
 		|| (s[i] == '>' && s[i + 1] == '|'))
 		i += 1;
 	return (i);
@@ -132,9 +129,9 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
 		return (true);
 	}
 	if (ft_strchr(INVALIDCHARS, s[0]) || ft_strchr(SPECIALCHARS, s[0])
-		|| ft_strchr(METACHARS, s[0]) || ft_strchr(PRTHESESCHARS, s[0]))
+		|| ft_strchr(METACHARS, s[0]))
 	{
-		if (s[0] != '<' && s[0] != '>' && s[0] != '(')
+		if (s[0] != '<' && s[0] != '>')
 		{
 			ft_error_syntax(UNEXPECTED_TOKEN, s[0]);
 			return (true);
@@ -160,11 +157,11 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
  */
 bool	ft_validate_syntax(char *trim)
 {
+	//update brief
 	int		i;
 	bool	special;
 
-	if (ft_invalid_first_chr(trim, &special) || !ft_count_parentheses(trim)
-		|| !ft_validate_parentheses(trim))
+	if (ft_invalid_first_chr(trim, &special))
 		return (false);
 	i = 0;
 	while (trim[i])

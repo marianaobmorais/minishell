@@ -69,8 +69,7 @@ static void	ft_free_node(void *root)
 	if (!root)
 		return ;
 	node = (t_node *)root;
-	if (node->type == ROOT || node->type == AND || node->type == OR
-		|| node->type == PIPE || node->type == SUB_ROOT)
+	if (node->type == PIPE)
 	{
 		if (node->left)
 			ft_free_node(node->left);

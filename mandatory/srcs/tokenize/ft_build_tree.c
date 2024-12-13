@@ -82,7 +82,7 @@ void	ft_skip_export_tokens(t_list **list)
  */
 static bool	ft_find_next_pipe(t_list **list)
 {
-	t_token	*token;
+	t_token	*token; //update brief
 
 	if (!list || !*list)
 		return (false);
@@ -94,8 +94,6 @@ static bool	ft_find_next_pipe(t_list **list)
 			*list = (*list)->next;
 			return (true);
 		}
-		if (token->type == AND || token->type == OR)
-			return (false);
 		*list = (*list)->next;
 	}
 	return (false);
@@ -117,9 +115,9 @@ static bool	ft_find_next_pipe(t_list **list)
  * @return A pointer to the root of the newly constructed subtree, or `NULL` if 
  *         memory allocation fails or if the token list is empty or invalid.
  */
-void	*ft_build_tree(t_list **list, t_node **parent_node)
+void	*ft_build_tree(t_list **list)
 {
-	t_node	*node;
+	t_node	*node; //update brief
 
 	if (ft_validate_skip(list))
 		ft_skip_export_tokens(list);
@@ -129,16 +127,12 @@ void	*ft_build_tree(t_list **list, t_node **parent_node)
 	node->type = PIPE;
 	node->right = NULL;
 	node->left = NULL;
-	if (parent_node)
-		node->parent_node = *parent_node;
-	else
-		node->parent_node = NULL;
-	node->left = ft_build_branch(list, NULL, NULL);
+	node->left = ft_build_branch(list, NULL);
 	if (!node->left)
 		return (NULL);
 	if (!list || !*list)
 		return ((void *)node);
 	if (ft_find_next_pipe(list))
-		node->right = ft_build_tree(list, parent_node);
+		node->right = ft_build_tree(list);
 	return ((void *)node);
 }

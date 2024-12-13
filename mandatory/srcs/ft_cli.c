@@ -13,6 +13,7 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
+	(void)tree; //se nao meu compilador não compila
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -166,5 +167,5 @@ void	ft_cli(t_shell *sh)
 		if (ft_history(input))
 			ft_launcher_manager(ft_process_input(input), sh);
 	}
-	rl_clear_history();
+	//rl_clear_history();
 }

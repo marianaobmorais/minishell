@@ -19,7 +19,6 @@ static bool	ft_copy_token(t_token *new_token, t_list *tmp, t_list **new)
 
 	new_token->type = ((t_token *)tmp->content)->type;
 	new_token->state = ((t_token *)tmp->content)->state;
-	new_token->wildcard = ((t_token *)tmp->content)->wildcard;
 	new_token->expand = ((t_token *)tmp->content)->expand;
 	new_node = ft_lstnew((t_token *)new_token);
 	if (!new_node)
