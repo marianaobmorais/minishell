@@ -50,7 +50,7 @@ void	ft_launcher_manager(void *tree, t_shell *sh);
 
 /* ft_launcher_utils.c */
 
-int		ft_single_command(void *node, t_shell *sh);
+int		ft_single_command(t_node *node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
 void	close_original_fds(t_shell *sh);

@@ -160,12 +160,12 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	if (tree)
 	{
 		sh->root = tree;
-		ft_search_heredoc(tree, sh);
-		if (sh->run == TRUE
-			&& !ft_single_command(tree, sh))
+		//ft_search_heredoc(tree, sh);
+		if (/* sh->run == TRUE
+			&& */ !ft_single_command(((t_node *) tree), sh))
 		{
 			ft_signal(DEFAULT_);
-			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
+			ft_launcher(((t_node *)tree)->left, ((t_node *)tree)->right, NULL, sh);
 		}
 	}
 	ft_restore_cli(sh, tree);

@@ -142,7 +142,7 @@ test: $(NAME)
 	$(MAKE) clean
 	$(VALGRIND) ./$(NAME)
 
-test_bonus: $(NAME)
+test_bonus: $(BONUS_NAME)
 	$(MAKE) clean
 	$(VALGRIND) ./$(BONUS_NAME)
 

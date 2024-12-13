@@ -119,16 +119,16 @@ void	ft_restore_original_fds(t_shell *sh)
  *
  * @return TRUE if the command was executed, FALSE otherwise.
  */
-int	ft_single_command(void *node, t_shell *sh)
+int	ft_single_command(t_node *node, t_shell *sh)
 {
 	void	*curr;
 	char	**new_args;
 	int		argc;
 
-	if (ft_isjustbuiltin(node, sh))
+	if (ft_isjustbuiltin(node->left, sh) && node->right == NULL)
 	{
 		ft_save_original_fds(sh);
-		curr = ((t_node *)node)->left;
+		curr = ((t_node *)node->left)->left;
 		while (ft_redir(((t_redir *)curr), sh))
 			curr = ((t_redir *)curr)->next;
 		ft_process_token_list(((t_exec *)curr)->args, \
