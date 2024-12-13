@@ -1,5 +1,5 @@
-#ifndef COLORS_H
-# define COLORS_H
+#ifndef COLORS_BONUS_H
+# define COLORS_BONUS_H
 
 // Reset
 # define RESET       "\001\033[0m\002"
@@ -54,4 +54,4 @@
 # define BG_BRIGHT_CYAN    "\001\033[106m\002"
 # define BG_BRIGHT_WHITE   "\001\033[107m\002"
 
-#endif // COLORS_H
+#endif // COLORS_BONUS_H

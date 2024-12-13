@@ -22,6 +22,7 @@ typedef struct s_shell
 	char	**global;
 	char	**local;
 	char	**limbo;
+	char	*prompt;
 	int		run;
 	void	*root;
 }	t_shell;

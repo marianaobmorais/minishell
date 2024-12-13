@@ -84,4 +84,6 @@ char	**ft_merge_env(char **env1, char **env2);
 
 t_list	**ft_copy_list(t_list **old);
 
+void	ft_prompt(t_shell *sh);
+
 #endif //MINISHELL_H

@@ -13,6 +13,7 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
+	(void)tree;
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -31,6 +32,7 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 		ft_free_tree(sh->root);
 		sh->root = NULL;
 	}
+	close_original_fds(sh);
 	tree = NULL;
 }
 
