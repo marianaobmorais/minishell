@@ -131,5 +131,7 @@ void	ft_free_sh(t_shell *sh)
 		sh->root = NULL;
 	}
 	close_original_fds(sh);
+	if (sh->prompt)
+		free(sh->prompt);
 	free(sh);
 }

@@ -15,6 +15,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_exit_status.c \
 		$(SRCS_DIR)/ft_signal.c \
 		$(SRCS_DIR)/ft_copy_list.c \
+		$(SRCS_DIR)/ft_prompt.c \
 		$(SRCS_DIR)/execution/ft_heredoc.c \
 		$(SRCS_DIR)/execution/ft_heredoc_utils.c \
 		$(SRCS_DIR)/execution/ft_launcher.c \

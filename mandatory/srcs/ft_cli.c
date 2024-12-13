@@ -13,7 +13,7 @@
  */
 void	ft_restore_cli(t_shell *sh, void *tree)
 {
-	(void)tree; //se nao meu compilador não compila
+	(void)tree;
 	sh->fds_saved = 0;
 	sh->run = TRUE;
 	sh->prev = NULL;
@@ -32,6 +32,9 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 		ft_free_tree(sh->root);
 		sh->root = NULL;
 	}
+	close_original_fds(sh);
+	if (sh->prompt)
+		free(sh->prompt);
 	tree = NULL;
 }
 
@@ -55,6 +58,7 @@ void	ft_init_var_sh(t_shell *sh)
 	sh->stderr_ = -1;
 	sh->prev = NULL;
 	sh->root = NULL;
+	sh->prompt = NULL;
 	sh->fds[0] = -1;
 	sh->fds[1] = -1;
 }
@@ -152,12 +156,13 @@ void	ft_cli(t_shell *sh)
 	while (1)
 	{
 		ft_signal(PARENT_);
+		ft_prompt(sh);
 		if (input)
 		{
 			free(input);
 			input = NULL;
 		}
-		input = readline(PROMPT);
+		input = readline(sh->prompt);
 		if (!input)
 		{
 			free(input);
