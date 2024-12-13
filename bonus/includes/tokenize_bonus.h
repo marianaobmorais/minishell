@@ -1,5 +1,5 @@
-#ifndef TOKENIZE_H
-# define TOKENIZE_H
+#ifndef TOKENIZE_BONUS_H
+# define TOKENIZE_BONUS_H
 
 //chars
 # define SPECIALCHARS "{}[^!"
@@ -182,4 +182,4 @@ bool	ft_is_node_type(t_node *node, t_type type);
 void	ft_print_list(t_list **token_list);
 void	print_root(void *root, int indent);
 
-#endif //TOKENIZE_H
+#endif //TOKENIZE_BONUS_H

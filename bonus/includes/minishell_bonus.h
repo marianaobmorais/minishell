@@ -1,5 +1,5 @@
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_BONUS_H
+# define MINISHELL_BONUS_H
 
 // system libraries
 # include <unistd.h>
@@ -84,4 +84,4 @@ char	**ft_merge_env(char **env1, char **env2);
 
 t_list	**ft_copy_list(t_list **old);
 
-#endif //MINISHELL_H
+#endif //MINISHELL_BONUS_H

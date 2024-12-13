@@ -1,5 +1,5 @@
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#ifndef BUILTINS_BONUS_H
+# define BUILTINS_BONUS_H
 
 //message
 # define ERROR_IDENTIFIER "export: `%s': not a valid identifier"
@@ -51,4 +51,4 @@ void		ft_exec_builtin(char **args, t_shell *sh);
 int			ft_argslen(char **args);
 int			ft_isjustbuiltin(void *node, t_shell *sh);
 
-#endif //BUILTINS_H
+#endif //BUILTINS_BONUS_H

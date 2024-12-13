@@ -29,7 +29,8 @@
 # include "colors.h"
 
 //program name
-# define PROMPT "bashinho [pwd] $ "
+# define PROMPT_1 "\001\033[1m\033[31mB\033[33ma\033[32ms\033[34mh\033[35mi\033[36mn\033[34mh\033[31mo\033[0m \033[1m[\033[35m"
+# define PROMPT_2 "\001\033[0m\033[1m] $ \033[0m\002\b "
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
@@ -83,5 +84,7 @@ char	**ft_merge_env(char **env1, char **env2);
 /* ft_copy_list.c */
 
 t_list	**ft_copy_list(t_list **old);
+
+void	ft_prompt(t_shell *sh);
 
 #endif //MINISHELL_H
