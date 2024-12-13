@@ -135,8 +135,7 @@ fclean: clean
 	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean
-	$(MAKE)
-#	$(MAKE) all
+	$(MAKE) all
 
 test: $(NAME)
 	$(MAKE) clean
