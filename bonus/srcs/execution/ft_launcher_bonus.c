@@ -116,7 +116,8 @@ void	ft_launcher_exec(void *node, void *next_node, int *fds, t_shell *sh)
  * @param curr_fds The current file descriptors for the pipe.
  * @param sh The shell structure containing the execution state and environment
  */
-void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
+
+/*void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 {
 	ft_save_original_fds(sh);
 	if (!node)
@@ -126,6 +127,33 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 		sh->prev = node;
 		ft_launcher(((t_node *)node)->left, ((t_node *)node)->right, sh->fds, \
 			sh);
+	}
+	else if (ft_redir(((t_redir *)node), sh))
+	{
+		sh->prev = node;
+		if (!((t_redir *)node)->next)
+		{
+			if (next_node)
+				if (pipe(curr_fds) == -1)
+					return (ft_exit_status(1, TRUE, FALSE), \
+						ft_stderror(TRUE, ""));
+			ft_parent_process(curr_fds, sh, next_node, -1);
+		}
+		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
+	}
+	else if (((t_exec *)node)->type == EXEC)
+		ft_launcher_exec(node, next_node, curr_fds, sh);
+}*/
+
+void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
+{
+	ft_save_original_fds(sh);
+	if (!node)
+		return ;
+	else if (((t_node *)node)->type == PIPE)
+	{
+		sh->prev = node;
+		ft_launcher(node->left, node->right, sh->fds, sh);
 	}
 	else if (ft_redir(((t_redir *)node), sh))
 	{
@@ -156,17 +184,24 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
  * @param sh The shell structure containing execution context and state.
  */
 void	ft_launcher_manager(void *tree, t_shell *sh)
-{
-	if (tree)
+{	//update brief
+	t_node *curr_root;
+	t_node *curr_root_right;
+
+	curr_root = ((t_node *) tree);
+	//ft_search_heredoc(tree, sh);
+	if (/* sh->run == TRUE
+		&& */ !ft_single_command(curr_root, sh))
 	{
-		sh->root = tree;
-		//ft_search_heredoc(tree, sh);
-		if (/* sh->run == TRUE
-			&& */ !ft_single_command(((t_node *) tree), sh))
+		ft_signal(DEFAULT_);
+		ft_launcher(curr_root->left, NULL, NULL, sh);
+		if (curr_root->right)
 		{
-			ft_signal(DEFAULT_);
-			ft_launcher(((t_node *)tree)->left, ((t_node *)tree)->right, NULL, sh);
+			curr_root_right = curr_root->right;
+			if (curr_root_right->type == AND && ft_exit_status(0, FALSE, FALSE) == 0)
+				ft_launcher_manager(curr_root_right, sh);
+			if (curr_root_right->type == OR && ft_exit_status(0, FALSE, FALSE) != 0)
+				ft_launcher_manager(curr_root_right, sh);
 		}
 	}
-	ft_restore_cli(sh, tree);
 }

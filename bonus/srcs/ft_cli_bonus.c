@@ -146,7 +146,7 @@ int	ft_history(char *input)
  *        functions that execute commands with the current environment.
  */
 void	ft_cli(t_shell *sh)
-{
+{	//update brief
 	char	*input;
 
 	input = NULL;
@@ -169,8 +169,13 @@ void	ft_cli(t_shell *sh)
 		{
 			void *tree = NULL;
 			tree = ft_process_input(input);//debug
-			ft_launcher_manager(tree, sh);
+			if (tree)
+			{
+				sh->root = tree;
+				ft_launcher_manager(tree, sh);
+				ft_restore_cli(sh, tree);
+			}
 		}
 	}
-	rl_clear_history();
+	//rl_clear_history(); mac_os
 }

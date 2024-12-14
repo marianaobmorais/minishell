@@ -18,7 +18,7 @@ static void	sig_parent_handler(int sig)
 	write(1, "\n", 1);
 	ft_exit_status(130, TRUE, FALSE);
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	//rl_replace_line("", 0); //mac_os
 	rl_redisplay();
 }
 

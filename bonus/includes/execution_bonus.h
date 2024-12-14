@@ -44,7 +44,7 @@ int		ft_redir(t_redir *nd, t_shell *sh);
 
 /* ft_launcher.c */
 
-void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, \
+void	ft_launcher(t_node *curr_node, t_node *next_node, int *curr_fds, \
 	t_shell *sh);
 void	ft_launcher_manager(void *tree, t_shell *sh);
 
