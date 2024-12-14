@@ -8,7 +8,7 @@
  */
 static void	print_exit(void)
 {
-	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO))
 		ft_putendl_fd("exit", 2);
 }
 
