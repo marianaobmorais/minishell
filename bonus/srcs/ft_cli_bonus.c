@@ -11,11 +11,11 @@
  * @param sh Pointer to the t_shell structure.
  * @param tree Unused parameter, reserved for future use.
  */
-void	ft_restore_cli(t_shell *sh, void *tree)
+void	ft_restore_cli(t_shell *sh)
 {
-	(void)tree;
 	sh->fds_saved = 0;
 	sh->run = TRUE;
+	sh->search_heredoc = FALSE;
 	sh->prev = NULL;
 	if (sh->heredoc_list)
 	{
@@ -33,7 +33,6 @@ void	ft_restore_cli(t_shell *sh, void *tree)
 		sh->root = NULL;
 	}
 	close_original_fds(sh);
-	tree = NULL;
 }
 
 /**
@@ -51,6 +50,7 @@ void	ft_init_var_sh(t_shell *sh)
 	sh->fds_saved = 0;
 	sh->error_fd = 0;
 	sh->run = TRUE;
+	sh->search_heredoc = FALSE;
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
 	sh->stderr_ = -1;
@@ -146,7 +146,7 @@ int	ft_history(char *input)
  *        functions that execute commands with the current environment.
  */
 void	ft_cli(t_shell *sh)
-{	//update brief
+{
 	char	*input;
 
 	input = NULL;
@@ -160,22 +160,14 @@ void	ft_cli(t_shell *sh)
 		}
 		input = readline(PROMPT);
 		if (!input)
-		{
-			free(input);
-			ft_putstr_fd("exit\n", 1);
-			break ;
-		}
+			return (free(input), ft_putstr_fd("exit\n", 1), rl_clear_history());
 		if (ft_history(input))
 		{
-			void *tree = NULL;
-			tree = ft_process_input(input);//debug
-			if (tree)
-			{
-				sh->root = tree;
-				ft_launcher_manager(tree, sh);
-				ft_restore_cli(sh, tree);
-			}
+			sh->root = ft_process_input(input);
+			if (sh->root)
+				ft_launcher_manager(sh->root, sh);
+			ft_restore_cli(sh);
 		}
 	}
-	//rl_clear_history(); mac_os
+	rl_clear_history();
 }
