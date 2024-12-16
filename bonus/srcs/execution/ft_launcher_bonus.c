@@ -53,6 +53,7 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
+	//static int i;//debug
 
 	sh->error_fd = 0;
 	if (!node)
@@ -61,11 +62,15 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 		close_fds(curr_fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
+			//ft_stderror(FALSE, "esperando.. %d", i);//debug
+			//i++;//debug
 			if (WIFEXITED(status))
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
+		ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
+		ft_stderror(FALSE, "restaurando fds");//debug
 		return (ft_restore_original_fds(sh));
 	}
 	if (node)
@@ -154,6 +159,8 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	{
 		sh->prev = node;
 		ft_launcher(node->left, node->right, sh->fds, sh);
+		if (((t_node *) node->left)->type == SUB_ROOT)
+			ft_launcher(node->right, NULL, sh->fds, sh);
 	}
 	else if (ft_redir(((t_redir *)node), sh))
 	{
@@ -170,6 +177,12 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	}
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
+	else if (node->type == SUB_ROOT)
+	{
+		sh->sub_root = TRUE;
+		ft_launcher_manager(node, sh);
+		sh->sub_root = FALSE;
+	}
 }
 
 /**
@@ -186,22 +199,28 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 void	ft_launcher_manager(void *tree, t_shell *sh)
 {	//update brief
 	t_node *curr_root;
-	t_node *curr_root_right;
 
+	if (!tree)
+		return ;
 	curr_root = ((t_node *) tree);
-	//ft_search_heredoc(tree, sh);
-	if (/* sh->run == TRUE
-		&& */ !ft_single_command(curr_root, sh))
+	if (sh->search_heredoc == FALSE)
 	{
-		ft_signal(DEFAULT_);
+		ft_heredoc_manager(curr_root, sh);
+		sh->search_heredoc = TRUE;
+	}
+	ft_signal(DEFAULT_);
+	if (/* curr_root->type != OR && curr_root->type != AND &&  */sh->run == TRUE && !ft_single_command(curr_root, sh))
 		ft_launcher(curr_root->left, NULL, NULL, sh);
-		if (curr_root->right)
-		{
-			curr_root_right = curr_root->right;
-			if (curr_root_right->type == AND && ft_exit_status(0, FALSE, FALSE) == 0)
-				ft_launcher_manager(curr_root_right, sh);
-			if (curr_root_right->type == OR && ft_exit_status(0, FALSE, FALSE) != 0)
-				ft_launcher_manager(curr_root_right, sh);
-		}
+	if (curr_root->right)
+	{
+		curr_root = curr_root->right;
+		//ft_stderror(FALSE, "dentro de AND ou OR -> %d", curr_root_right->type); //debug
+		if (curr_root->type == AND && ft_exit_status(0, FALSE, FALSE) == 0)
+			ft_launcher_manager(curr_root, sh);
+		else if (curr_root->type == OR && ft_exit_status(0, FALSE, FALSE) != 0)
+			ft_launcher_manager(curr_root, sh);
+		else
+			ft_launcher_manager(curr_root->right, sh);
 	}
 }
+

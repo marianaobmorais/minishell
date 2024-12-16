@@ -125,7 +125,7 @@ int	ft_single_command(t_node *node, t_shell *sh)
 	char	**new_args;
 	int		argc;
 
-	if (ft_isjustbuiltin(node->left, sh) && node->right == NULL)
+	if (ft_isjustbuiltin(node->left, sh))
 	{
 		ft_save_original_fds(sh);
 		curr = ((t_node *)node->left)->left;
