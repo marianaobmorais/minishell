@@ -155,7 +155,7 @@ static int	heredoc_fd(char *eof, char **my_envp, t_state state, t_shell *sh)
  * @param node The current node in the command tree or redirection list.
  * @param sh The shell structure containing the execution state and environment
  */
-void	ft_search_heredoc(void *node, t_shell *sh)
+void	ft_search_heredoc(t_node *node, t_shell *sh)
 {
 	t_redir	*rnd;
 	t_token	*tnd;
@@ -163,10 +163,10 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 
 	if (!node)
 		return ;
-	else if (((t_node *)node)->type == PIPE)
+	else if (node->type == PIPE || node->type == ROOT || node->type == OR || node->type == AND)
 	{
-		ft_search_heredoc(((t_node *)node)->left, sh);
-		return (ft_search_heredoc(((t_node *)node)->right, sh));
+		ft_search_heredoc(node->left, sh);
+		return (ft_search_heredoc(node->right, sh));
 	}
 	else if (((t_redir *)node)->type == HEREDOC && sh->run == TRUE)
 	{
@@ -176,10 +176,11 @@ void	ft_search_heredoc(void *node, t_shell *sh)
 		st = tnd->state;
 		sh->run = heredoc_fd(tnd->value, \
 			ft_merge_env(sh->global, sh->local), st, sh);
+		ft_search_heredoc(((t_redir *)node)->next, sh);
 	}
-	else if (((t_redir *)node)->type == EXEC
-		|| ((t_redir *)node)->type == EXPORT
-		|| ((t_redir *)node)->type == EXPORT_AP)
+	else if (node->type == EXEC	|| node->type == EXPORT
+		|| node->type == EXPORT_AP)
 		return ;
-	ft_search_heredoc(((t_redir *)node)->next, sh);
+	else if (node->type == SUB_ROOT)
+		ft_heredoc_manager(node->left, sh);
 }

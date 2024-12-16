@@ -51,6 +51,7 @@ void	ft_init_var_sh(t_shell *sh)
 	sh->error_fd = 0;
 	sh->run = TRUE;
 	sh->search_heredoc = FALSE;
+	sh->sub_root = FALSE;
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
 	sh->stderr_ = -1;

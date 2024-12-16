@@ -73,7 +73,7 @@ void	ft_signal(int type);
 
 void	ft_cli(t_shell *sh);
 t_shell	*ft_init_sh(char **envp);
-void	ft_restore_cli(t_shell *sh, void *tree);
+void	ft_restore_cli(t_shell *sh);
 
 /* ft_env_manager.c */
 
