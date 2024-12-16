@@ -139,8 +139,4 @@ void	ft_free_tree(void *root);
 bool	ft_is_token_type(t_token *token, t_type type);
 bool	ft_is_node_type(t_node *node, t_type type);
 
-//debugging
-void	ft_print_list(t_list **token_list);
-void	print_root(void *root, int indent);
-
 #endif //TOKENIZE_H
