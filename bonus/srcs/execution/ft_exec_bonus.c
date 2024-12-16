@@ -169,7 +169,7 @@ int	ft_exec(t_list **args, t_shell *sh)
 		pathname = ft_findpath(sh->global, new_args, sh);
 		if (!pathname)
 			return (ft_stderror(FALSE, "%s: command not found", new_args[0]), \
-				ft_child_cleaner(sh, new_args, 0), write(STDOUT_FILENO, "", 0),\
+				ft_child_cleaner(sh, new_args, 0), write(STDOUT_FILENO, "", 0), \
 				ft_exit_status(127, TRUE, TRUE));
 		if (execve(pathname, new_args, sh->global) == -1)
 			return (ft_stderror(TRUE, "%s: ", new_args[0]), \

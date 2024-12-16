@@ -107,10 +107,21 @@ void	ft_restore_original_fds(t_shell *sh)
 	sh->fds_saved = 0;
 }
 
+/**
+ * @brief Handles sub-root node relationships in the syntax tree.
+ *
+ * This function checks if the left child of a given node is of type 
+ * `SUB_ROOT`. If true, it updates the shell's `next_node` 
+ * pointer to the right child. If the current node matches the 
+ * `next_node`, it resets the pointer to `NULL`.
+ *
+ * @param node The current node being processed in the syntax tree.
+ * @param sh The shell structure containing the `next_node` pointer.
+ */
 void	ft_issubroot(t_node *node, t_shell *sh)
 {
 	if (((t_node *) node->left)->type == SUB_ROOT)
-		sh->sub_root_next_node = node->right;
-	if (node == sh->sub_root_next_node)
-		sh->sub_root_next_node = NULL;
+		sh->next_node = node->right;
+	if (node == sh->next_node)
+		sh->next_node = NULL;
 }

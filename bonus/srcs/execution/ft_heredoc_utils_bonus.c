@@ -116,23 +116,23 @@ char	*ft_create_pathname(void)
 	return (pathname);
 }
 
+/**
+ * @brief Manages heredoc processing within the syntax tree.
+ *
+ * This function handles the execution of heredoc operations by traversing 
+ * the syntax tree. It processes heredoc nodes only if the shell is in a 
+ * runnable state (`sh->run == TRUE`). The function ensures that heredoc 
+ * inputs are located and prepared for execution.
+ *
+ * @param tree The root of the syntax tree containing heredoc nodes.
+ * @param sh The shell structure managing execution state and heredoc data.
+ */
 void	ft_heredoc_manager(void *tree, t_shell *sh)
-{	//update brief
-	t_node *curr_root;
-	//t_node *curr_root_right;
+{
+	t_node	*curr_root;
 
 	if (!tree || sh->run == FALSE)
 		return ;
 	curr_root = ((t_node *) tree);
-		ft_search_heredoc(curr_root, sh);
-	// if (curr_root->right)
-	// {
-	// 	curr_root_right = curr_root->right;
-	// 	if ((curr_root_right->type == AND || curr_root_right->type == OR)
-	// 		&& sh->run == TRUE)
-	// 	{
-	// 		ft_stderror(FALSE, "dentro do AND ou OR");
-	// 		ft_heredoc_manager(curr_root_right, sh);
-	// 	}
-	// }
+	ft_search_heredoc(curr_root, sh);
 }

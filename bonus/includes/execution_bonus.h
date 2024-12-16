@@ -24,7 +24,7 @@ typedef struct s_shell
 	char	**limbo;
 	int		run;
 	int		search_heredoc;
-	t_node	*sub_root_next_node;
+	t_node	*next_node;
 	void	*root;
 }	t_shell;
 

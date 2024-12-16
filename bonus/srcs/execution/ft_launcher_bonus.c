@@ -28,11 +28,11 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 		close_original_fds(sh);
 		close(fds[0]);
 		if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type
-			!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
+				!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
-		if (sh->sub_root_next_node != NULL)
+		if (sh->next_node != NULL)
 			dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		ft_exec(((t_exec *)node)->args, sh);
@@ -55,39 +55,30 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int		status;
-	//static int i;//debug
 
 	sh->error_fd = 0;
-	if (!node && !(sh->sub_root_next_node))
+	if (!node && !(sh->next_node))
 	{
 		ft_signal(CHILD_);
 		close_fds(curr_fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
-			//ft_stderror(FALSE, "esperando.. %d", i);//debug
-			//i++;//debug
 			if (WIFEXITED(status))
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
-		//ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
-		//ft_stderror(FALSE, "restaurando fds");//debug
 		return (ft_restore_original_fds(sh));
 	}
-	if (node || sh->sub_root_next_node)
+	if (node || sh->next_node)
 		dup2(curr_fds[0], STDIN_FILENO);
 	close_fds(curr_fds);
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	if (sh->sub_root_next_node && !node)
-	{
-		ft_launcher(sh->sub_root_next_node, sh->sub_root_next_node->right, NULL, sh);
-		sh->sub_root_next_node = NULL;
-	}
-	else
-		ft_launcher(node, ((t_node *)node)->right, NULL, sh);
+	if (sh->next_node && !node)
+		return (ft_launcher(sh->next_node, sh->next_node->right, NULL, sh));
+	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
 /**
@@ -129,35 +120,6 @@ void	ft_launcher_exec(void *node, void *next_node, int *fds, t_shell *sh)
  * @param curr_fds The current file descriptors for the pipe.
  * @param sh The shell structure containing the execution state and environment
  */
-
-/*void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
-{
-	ft_save_original_fds(sh);
-	if (!node)
-		return ;
-	else if (((t_node *)node)->type == PIPE)
-	{
-		sh->prev = node;
-		ft_launcher(((t_node *)node)->left, ((t_node *)node)->right, sh->fds, \
-			sh);
-	}
-	else if (ft_redir(((t_redir *)node), sh))
-	{
-		sh->prev = node;
-		if (!((t_redir *)node)->next)
-		{
-			if (next_node)
-				if (pipe(curr_fds) == -1)
-					return (ft_exit_status(1, TRUE, FALSE), \
-						ft_stderror(TRUE, ""));
-			ft_parent_process(curr_fds, sh, next_node, -1);
-		}
-		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
-	}
-	else if (((t_exec *)node)->type == EXEC)
-		ft_launcher_exec(node, next_node, curr_fds, sh);
-}*/
-
 void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 {
 	ft_save_original_fds(sh);
@@ -168,8 +130,6 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 		sh->prev = node;
 		ft_issubroot(node, sh);
 		ft_launcher(node->left, node->right, sh->fds, sh);
-		// if (((t_node *) node->left)->type == SUB_ROOT)
-		// 	ft_launcher(node->right, NULL, sh->fds, sh);
 	}
 	else if (ft_redir(((t_redir *)node), sh))
 	{
@@ -178,8 +138,7 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 		{
 			if (next_node)
 				if (pipe(curr_fds) == -1)
-					return (ft_exit_status(1, TRUE, FALSE), \
-						ft_stderror(TRUE, ""));
+					return (ft_exit_status(1, TRUE, 0), ft_stderror(TRUE, ""));
 			ft_parent_process(curr_fds, sh, next_node, -1);
 		}
 		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
@@ -191,19 +150,19 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 }
 
 /**
- * @brief Manages the execution of commands in the syntax tree.
+ * @brief Manages the execution of commands within the syntax tree.
  *
- * This function orchestrates the execution of commands by handling heredoc
- * processing, checking if the command is a single built-in, and launching
- * the appropriate execution flow. It also restores the command-line interface
- * state after execution.
+ * This function controls the execution flow by traversing the syntax tree, 
+ * handling heredoc inputs, and managing command execution based on logical 
+ * operators (`AND` and `OR`). It initializes signal handling, processes 
+ * single commands, and recursively handles branching execution paths.
  *
- * @param tree The syntax tree representing the parsed commands.
- * @param sh The shell structure containing execution context and state.
+ * @param tree The root of the syntax tree to process and execute.
+ * @param sh The shell structure containing the execution state and context.
  */
 void	ft_launcher_manager(void *tree, t_shell *sh)
-{	//update brief
-	t_node *curr_root;
+{
+	t_node	*curr_root;
 
 	if (!tree)
 		return ;
@@ -219,7 +178,6 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	if (curr_root->right)
 	{
 		curr_root = curr_root->right;
-		//ft_stderror(FALSE, "dentro de AND ou OR -> %d", curr_root_right->type); //debug
 		if (curr_root->type == AND && ft_exit_status(0, FALSE, FALSE) == 0)
 			ft_launcher_manager(curr_root, sh);
 		else if (curr_root->type == OR && ft_exit_status(0, FALSE, FALSE) != 0)
