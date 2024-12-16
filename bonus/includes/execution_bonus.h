@@ -24,7 +24,7 @@ typedef struct s_shell
 	char	**limbo;
 	int		run;
 	int		search_heredoc;
-	int		sub_root;
+	t_node	*sub_root_next_node;
 	void	*root;
 }	t_shell;
 
@@ -53,11 +53,11 @@ void	ft_launcher_manager(void *tree, t_shell *sh);
 
 /* ft_launcher_utils.c */
 
-int		ft_single_command(t_node *node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
 void	close_original_fds(t_shell *sh);
 void	close_fds(int *fds);
+void	ft_issubroot(t_node *node, t_shell *sh);
 
 /* ft_exec.c */
 
@@ -67,6 +67,7 @@ int		ft_exec(t_list **args, t_shell *sh);
 
 char	**tokentostring(t_list **args);
 char	**ft_tovector(char **old_vector, char *new_str);
+int		ft_single_command(t_node *node, t_shell *sh);
 
 /* ft_exec_ultimate.c */
 

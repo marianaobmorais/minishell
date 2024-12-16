@@ -101,6 +101,47 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 }
 
 /**
+ * @brief Executes a single command if it is a built-in command.
+ *
+ * Checks if the given node is a built-in command, saves the original file
+ * descriptors, processes redirections and arguments, and executes the command.
+ * Restores the original file descriptors and returns the execution status.
+ *
+ * @param node The command node to be executed.
+ * @param sh The shell structure containing the execution state and environment
+ *
+ * @return TRUE if the command was executed, FALSE otherwise.
+ */
+int	ft_single_command(t_node *node, t_shell *sh)
+{
+	void	*curr;
+	char	**new_args;
+	int		argc;
+
+	if (ft_isjustbuiltin(node->left, sh))
+	{
+		ft_save_original_fds(sh);
+		curr = ((t_node *)node->left)->left;
+		while (ft_redir(((t_redir *)curr), sh))
+			curr = ((t_redir *)curr)->next;
+		ft_process_token_list(((t_exec *)curr)->args, \
+			ft_merge_env(sh->global, sh->local));
+		new_args = tokentostring(((t_exec *)curr)->args);
+		if (((t_exec *)curr)->type == EXPORT
+			|| ((t_exec *)curr)->type == EXPORT_AP)
+		{
+			argc = ft_argslen(new_args);
+			ft_export(argc, new_args, sh, LOCAL);
+		}
+		if (((t_exec *)curr)->type == EXEC)
+			if (ft_isbuiltin(new_args))
+				ft_exec_builtin(new_args, sh);
+		return (ft_free_vector(new_args), ft_restore_original_fds(sh), TRUE);
+	}
+	return (FALSE);
+}
+
+/**
  * @brief Executes a command in the shell.
  *
  * Processes the list of args, checks if the command is a built-in function,

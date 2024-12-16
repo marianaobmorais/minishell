@@ -28,10 +28,12 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 		close_original_fds(sh);
 		close(fds[0]);
 		if (next_node != NULL && (sh->prev && ((t_redir *)sh->prev)->type
-				!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
+			!= OUTFILE) && ((t_redir *)sh->prev)->type != APPEND)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
+		if (sh->sub_root_next_node != NULL)
+			dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		ft_exec(((t_exec *)node)->args, sh);
 	}
@@ -52,11 +54,11 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
  */
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
-	int	status;
+	int		status;
 	//static int i;//debug
 
 	sh->error_fd = 0;
-	if (!node)
+	if (!node && !(sh->sub_root_next_node))
 	{
 		ft_signal(CHILD_);
 		close_fds(curr_fds);
@@ -69,17 +71,23 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
-		ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
-		ft_stderror(FALSE, "restaurando fds");//debug
+		//ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
+		//ft_stderror(FALSE, "restaurando fds");//debug
 		return (ft_restore_original_fds(sh));
 	}
-	if (node)
+	if (node || sh->sub_root_next_node)
 		dup2(curr_fds[0], STDIN_FILENO);
 	close_fds(curr_fds);
 	if (sh->prev && (((t_redir *)sh->prev)->type == OUTFILE
 			|| ((t_redir *)sh->prev)->type == APPEND))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
+	if (sh->sub_root_next_node && !node)
+	{
+		ft_launcher(sh->sub_root_next_node, sh->sub_root_next_node->right, NULL, sh);
+		sh->sub_root_next_node = NULL;
+	}
+	else
+		ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
 /**
@@ -158,9 +166,10 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	else if (((t_node *)node)->type == PIPE)
 	{
 		sh->prev = node;
+		ft_issubroot(node, sh);
 		ft_launcher(node->left, node->right, sh->fds, sh);
-		if (((t_node *) node->left)->type == SUB_ROOT)
-			ft_launcher(node->right, NULL, sh->fds, sh);
+		// if (((t_node *) node->left)->type == SUB_ROOT)
+		// 	ft_launcher(node->right, NULL, sh->fds, sh);
 	}
 	else if (ft_redir(((t_redir *)node), sh))
 	{
@@ -178,11 +187,7 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
 	else if (node->type == SUB_ROOT)
-	{
-		sh->sub_root = TRUE;
 		ft_launcher_manager(node, sh);
-		sh->sub_root = FALSE;
-	}
 }
 
 /**
@@ -209,7 +214,7 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 		sh->search_heredoc = TRUE;
 	}
 	ft_signal(DEFAULT_);
-	if (/* curr_root->type != OR && curr_root->type != AND &&  */sh->run == TRUE && !ft_single_command(curr_root, sh))
+	if (sh->run == TRUE && !ft_single_command(curr_root, sh))
 		ft_launcher(curr_root->left, NULL, NULL, sh);
 	if (curr_root->right)
 	{
@@ -223,4 +228,3 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 			ft_launcher_manager(curr_root->right, sh);
 	}
 }
-
