@@ -66,7 +66,7 @@ int		ft_exec(t_list **args, t_shell *sh);
 /* ft_exec_utils.c */
 
 char	**tokentostring(t_list **args);
-char	**ft_tovector(char **old_vector, char *new_str);
+char	**ft_add_to_vector(char **old_vector, char *new_str);
 
 /* ft_exec_ultimate.c */
 
