@@ -53,6 +53,7 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 {
 	int	status;
+	//static int i;//debug
 
 	sh->error_fd = 0;
 	if (!node)
@@ -61,11 +62,15 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 		close_fds(curr_fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
+			//ft_stderror(FALSE, "esperando.. %d", i);//debug
+			//i++;//debug
 			if (WIFEXITED(status))
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
+		ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
+		ft_stderror(FALSE, "restaurando fds");//debug
 		return (ft_restore_original_fds(sh));
 	}
 	if (node)
@@ -116,7 +121,8 @@ void	ft_launcher_exec(void *node, void *next_node, int *fds, t_shell *sh)
  * @param curr_fds The current file descriptors for the pipe.
  * @param sh The shell structure containing the execution state and environment
  */
-void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
+
+/*void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 {
 	ft_save_original_fds(sh);
 	if (!node)
@@ -142,6 +148,41 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
 	}
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
+}*/
+
+void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
+{
+	ft_save_original_fds(sh);
+	if (!node)
+		return ;
+	else if (((t_node *)node)->type == PIPE)
+	{
+		sh->prev = node;
+		ft_launcher(node->left, node->right, sh->fds, sh);
+		if (((t_node *) node->left)->type == SUB_ROOT)
+			ft_launcher(node->right, NULL, sh->fds, sh);
+	}
+	else if (ft_redir(((t_redir *)node), sh))
+	{
+		sh->prev = node;
+		if (!((t_redir *)node)->next)
+		{
+			if (next_node)
+				if (pipe(curr_fds) == -1)
+					return (ft_exit_status(1, TRUE, FALSE), \
+						ft_stderror(TRUE, ""));
+			ft_parent_process(curr_fds, sh, next_node, -1);
+		}
+		ft_launcher(((t_redir *)node)->next, next_node, curr_fds, sh);
+	}
+	else if (((t_exec *)node)->type == EXEC)
+		ft_launcher_exec(node, next_node, curr_fds, sh);
+	else if (node->type == SUB_ROOT)
+	{
+		sh->sub_root = TRUE;
+		ft_launcher_manager(node, sh);
+		sh->sub_root = FALSE;
+	}
 }
 
 /**
@@ -156,17 +197,30 @@ void	ft_launcher(void *node, void *next_node, int *curr_fds, t_shell *sh)
  * @param sh The shell structure containing execution context and state.
  */
 void	ft_launcher_manager(void *tree, t_shell *sh)
-{
-	if (tree)
+{	//update brief
+	t_node *curr_root;
+
+	if (!tree)
+		return ;
+	curr_root = ((t_node *) tree);
+	if (sh->search_heredoc == FALSE)
 	{
-		sh->root = tree;
-		ft_search_heredoc(tree, sh);
-		if (sh->run == TRUE
-			&& !ft_single_command(tree, sh))
-		{
-			ft_signal(DEFAULT_);
-			ft_launcher(tree, ((t_node *)tree)->right, NULL, sh);
-		}
+		ft_heredoc_manager(curr_root, sh);
+		sh->search_heredoc = TRUE;
 	}
-	ft_restore_cli(sh, tree);
+	ft_signal(DEFAULT_);
+	if (/* curr_root->type != OR && curr_root->type != AND &&  */sh->run == TRUE && !ft_single_command(curr_root, sh))
+		ft_launcher(curr_root->left, NULL, NULL, sh);
+	if (curr_root->right)
+	{
+		curr_root = curr_root->right;
+		//ft_stderror(FALSE, "dentro de AND ou OR -> %d", curr_root_right->type); //debug
+		if (curr_root->type == AND && ft_exit_status(0, FALSE, FALSE) == 0)
+			ft_launcher_manager(curr_root, sh);
+		else if (curr_root->type == OR && ft_exit_status(0, FALSE, FALSE) != 0)
+			ft_launcher_manager(curr_root, sh);
+		else
+			ft_launcher_manager(curr_root->right, sh);
+	}
 }
+

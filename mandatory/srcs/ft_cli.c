@@ -166,7 +166,7 @@ void	ft_cli(t_shell *sh)
 		if (!input)
 		{
 			free(input);
-			ft_putstr_fd("exit\n", 1);
+			ft_putstr_fd("exit\n", 2);
 			break ;
 		}
 		if (ft_history(input))

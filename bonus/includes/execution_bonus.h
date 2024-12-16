@@ -23,6 +23,8 @@ typedef struct s_shell
 	char	**local;
 	char	**limbo;
 	int		run;
+	int		search_heredoc;
+	int		sub_root;
 	void	*root;
 }	t_shell;
 
@@ -32,10 +34,11 @@ void	ft_handle_quotes_hd(char **new_value, char *value, int *i, char **envp);
 char	*ft_expand_input(char *input, char **envp);
 char	*ft_create_pathname(void);
 int		count_line(int mode);
+void	ft_heredoc_manager(void *tree, t_shell *sh);
 
 /* ft_heredoc.c */
 
-void	ft_search_heredoc(void *curr_node, t_shell *sh);
+void	ft_search_heredoc(t_node *curr_node, t_shell *sh);
 
 /* ft_redir.c */
 
@@ -44,13 +47,13 @@ int		ft_redir(t_redir *nd, t_shell *sh);
 
 /* ft_launcher.c */
 
-void	ft_launcher(void *curr_node, void *next_node, int *curr_fds, \
+void	ft_launcher(t_node *curr_node, t_node *next_node, int *curr_fds, \
 	t_shell *sh);
 void	ft_launcher_manager(void *tree, t_shell *sh);
 
 /* ft_launcher_utils.c */
 
-int		ft_single_command(void *node, t_shell *sh);
+int		ft_single_command(t_node *node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
 void	close_original_fds(t_shell *sh);

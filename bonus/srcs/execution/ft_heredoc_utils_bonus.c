@@ -115,3 +115,24 @@ char	*ft_create_pathname(void)
 	i++;
 	return (pathname);
 }
+
+void	ft_heredoc_manager(void *tree, t_shell *sh)
+{	//update brief
+	t_node *curr_root;
+	//t_node *curr_root_right;
+
+	if (!tree || sh->run == FALSE)
+		return ;
+	curr_root = ((t_node *) tree);
+		ft_search_heredoc(curr_root, sh);
+	// if (curr_root->right)
+	// {
+	// 	curr_root_right = curr_root->right;
+	// 	if ((curr_root_right->type == AND || curr_root_right->type == OR)
+	// 		&& sh->run == TRUE)
+	// 	{
+	// 		ft_stderror(FALSE, "dentro do AND ou OR");
+	// 		ft_heredoc_manager(curr_root_right, sh);
+	// 	}
+	// }
+}
