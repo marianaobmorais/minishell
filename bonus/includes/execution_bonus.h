@@ -22,6 +22,7 @@ typedef struct s_shell
 	char	**global;
 	char	**local;
 	char	**limbo;
+	char	*prompt;
 	int		run;
 	int		search_heredoc;
 	t_node	*next_node;
