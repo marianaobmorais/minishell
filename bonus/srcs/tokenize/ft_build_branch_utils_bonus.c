@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_build_branch_utils_bonus.c                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:13:22 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:13:23 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -77,35 +89,6 @@ t_exec	*ft_create_exec_node(t_token *token, t_list **list)
 }
 
 /**
- * @brief Searches for the next redirection token in the token list.
- * 
- * This function iterates through a token list, starting from the current
- * position, to locate the next token of type `REDIR`. The search stops at
- * tokens of type `NODE` or at the end of the list. If a redirection token is
- * found, the function returns `true`, and the pointer to the list is updated to
- * the position of the found token. Otherwise, it returns `false`.
- * 
- * @param list A double pointer to the current position in the token list. 
- *        If a redirection token is found, the pointer will point to it.
- * @return `true` if a redirection token is found; `false` otherwise.
- */
-bool	ft_find_next_redir(t_list **list)
-{
-	t_token	*token;
-
-	while (*list)
-	{
-		token = (t_token *)(*list)->content;
-		if (ft_is_token_type(token, NODE))
-			break ;
-		if (ft_is_token_type(token, REDIR))
-			return (true);
-		*list = (*list)->next;
-	}
-	return (false);
-}
-
-/**
  * @brief Assigns mode and file descriptor values based on redirection type.
  * 
  * Configures the file opening mode (e.g., read, write, append) and the
@@ -124,6 +107,21 @@ static void	ft_assign_redir_mode(t_redir **redir)
 		(*redir)->mode = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		(*redir)->mode = -1;
+}
+
+/**
+ * @brief Resets the `expand` and `wildcard` flags of a token.
+ *
+ * This function updates the specified token by setting its `expand` and
+ * `wildcard` flags to `false`. It is used to reset these properties after
+ * processing or when they are no longer applicable.
+ *
+ * @param target A pointer to the `t_token` structure to update.
+ */
+static void	ft_update_token(t_token *target)
+{
+	target->expand = false;
+	target->wildcard = false;
 }
 
 /**
@@ -164,10 +162,7 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		ft_add_to_token_list(&((t_token *)(*list)->content)->value, target);
 		redir->target = target;
 		if (redir->type == HEREDOC)
-		{
-			((t_token *)((*redir->target)->content))->expand = false;
-			((t_token *)((*redir->target)->content))->wildcard = false;
-		}
+			ft_update_token((t_token *)((*redir->target)->content));
 	}
 	return (redir);
 }

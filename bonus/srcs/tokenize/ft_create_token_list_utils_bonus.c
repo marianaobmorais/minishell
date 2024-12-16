@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_token_list_utils_bonus.c                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:25:16 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:25:17 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -105,7 +117,7 @@ static t_state	ft_get_token_state(char *s)
  * @return `true` if the token contains expandable variables; otherwise,
  *         `false`.
  */
-static bool	ft_has_expandable_var(char *s)
+bool	ft_has_expandable_var(char *s)
 {
 	int		i;
 
@@ -164,10 +176,7 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 	new_token->wildcard = false;
 	new_token->expand = false;
 	if (token_list && !ft_is_heredoc_target(token_list))
-	{
-		new_token->wildcard = ft_is_wildcard(*value);
-		new_token->expand = ft_has_expandable_var(*value);
-	}
+		ft_validate_token_expansion(new_token, *value);
 	new_node = ft_lstnew((t_token *)new_token);
 	if (!new_node)
 		return (free(new_token->value), free(new_token),
