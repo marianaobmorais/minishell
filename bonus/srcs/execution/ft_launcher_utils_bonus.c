@@ -120,8 +120,24 @@ void	ft_restore_original_fds(t_shell *sh)
  */
 void	ft_issubroot(t_node *node, t_shell *sh)
 {
+	t_redir	*redir;
+	//update brief
+
 	if (((t_node *) node->left)->type == SUB_ROOT)
 		sh->next_node = node->right;
+	else if (ft_is_node_type(node->left, REDIR) == true)
+	{
+		redir = (t_redir *) node->left;
+		while (redir)
+		{
+			if (ft_is_node_type((t_node *)redir, REDIR) == true
+				&& ((t_node *)(redir->next))->type == SUB_ROOT)
+				sh->next_node = node->right;
+			if (ft_is_node_type((t_node *)redir, REDIR) == false)
+				break ;
+			redir = redir->next;
+		}
+	}
 	if (node == sh->next_node)
 		sh->next_node = NULL;
 }

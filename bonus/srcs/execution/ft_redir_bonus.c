@@ -130,7 +130,7 @@ int	ft_redir(t_redir *nd, t_shell *sh)
 	{
 		target_tmp = ft_strdup(((t_token *)(*nd->target)->content)->value);
 		ft_process_token_list(nd->target, ft_merge_env(sh->global, sh->local));
-		if (!*nd->target)
+		if (!*nd->target || ft_is_wildcard(target_tmp))
 			return (ft_stderror(FALSE, "%s: ambiguous redirect", target_tmp), \
 				ft_exit_status(1, TRUE, FALSE), free(target_tmp), FALSE);
 		fd = ft_open(nd, ((t_token *)(*nd->target)->content)->value, \

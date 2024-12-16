@@ -59,6 +59,7 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/ft_exit_status_bonus.c \
 		$(BONUS_DIR)/ft_signal_bonus.c \
 		$(BONUS_DIR)/ft_copy_list_bonus.c \
+		$(BONUS_DIR)/ft_prompt_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_utils_bonus.c \
 		$(BONUS_DIR)/execution/ft_launcher_bonus.c \
