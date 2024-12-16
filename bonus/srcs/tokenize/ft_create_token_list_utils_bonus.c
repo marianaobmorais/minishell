@@ -161,11 +161,13 @@ void	ft_add_to_token_list(char **value, t_list **token_list)
 		return (free(new_token), ft_error_malloc("new_token->value"));
 	new_token->type = ft_get_token_type(*value);
 	new_token->state = ft_get_token_state(*value);
-	new_token->wildcard = ft_is_wildcard(*value);
+	new_token->wildcard = false;
+	new_token->expand = false;
 	if (token_list && !ft_is_heredoc_target(token_list))
+	{
+		new_token->wildcard = ft_is_wildcard(*value);
 		new_token->expand = ft_has_expandable_var(*value);
-	else
-		new_token->expand = false;
+	}
 	new_node = ft_lstnew((t_token *)new_token);
 	if (!new_node)
 		return (free(new_token->value), free(new_token),

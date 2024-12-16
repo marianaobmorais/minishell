@@ -164,7 +164,10 @@ t_redir	*ft_init_redir(t_token *token, t_list **list)
 		ft_add_to_token_list(&((t_token *)(*list)->content)->value, target);
 		redir->target = target;
 		if (redir->type == HEREDOC)
+		{
 			((t_token *)((*redir->target)->content))->expand = false;
+			((t_token *)((*redir->target)->content))->wildcard = false;
+		}
 	}
 	return (redir);
 }
