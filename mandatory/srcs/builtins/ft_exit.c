@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:29 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:31:30 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:02:12 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	ft_exit(int argc, char **args, t_shell *sh)
 		ft_stderror(FALSE, "exit: too many arguments");
 		ft_exit_status(1, TRUE, FALSE);
 	}
-	if (arg_convert(args[1], args, sh))
+	else if (arg_convert(args[1], args, sh))
 	{
 		ft_child_cleaner(sh, args, 1);
 		ft_exit_status(0, FALSE, TRUE);
