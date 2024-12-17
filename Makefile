@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/16 18:58:35 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/12/17 16:48:55 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,6 +93,7 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_process_token_list_utils2_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_get_wildcard_list_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_get_wildcard_list_utils_bonus.c \
+		$(BONUS_DIR)/tokenize/ft_get_wildcard_list_utils2_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_find_next_quote_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_build_root_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_build_tree_bonus.c \

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtins_bonus.h                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/16 19:02:46 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:14:33 by mariaoli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef BUILTINS_BONUS_H
 # define BUILTINS_BONUS_H
 
@@ -49,11 +37,18 @@ long long	ft_atoll(const char *nptr, bool *is_sign);
 
 /* ft_export_bonus.c */
 
-int			check_key(char **argv);
 int			add_var(char *str, size_t size, char ***envp);
 int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
+
+/* ft_export_utils_bonus.c */
+
+void		ft_sort_str_tab(char **str, int n);
 void		ft_print_export(char **envp);
+int			check_key(char **argv);
 void		ft_local_import(t_shell *sh, char *arg);
+
+/* ft_export_ultimate_bonus.c */
+
 int			ft_limbo_import(t_shell *sh, char *arg);
 
 /* builtins_utils_bonus.c */

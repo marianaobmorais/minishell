@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/16 19:24:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:24:39 by mariaoli         ###   ########.fr       */
+/*   Created: 2024/12/17 16:54:30 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/17 17:30:23 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,5 +183,6 @@ t_list	**ft_get_wildcard_list(char *s)
 		ft_stderror(TRUE, "closedir");
 		ft_exit_status(1, TRUE, FALSE);
 	}
+	wild_list = ft_set_alphabetical_order(wild_list);
 	return (wild_list);
 }

@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 18:54:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 18:54:16 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:08:34 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 				|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
 				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 		}
-		if (s[i] != '.')
+		else if (s[i] != '.')
 			return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	}
 	*special = true;

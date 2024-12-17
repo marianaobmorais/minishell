@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:06 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:03:08 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:59:46 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define TOKENIZE_H
 
 //chars
-# define SPECIALCHARS "{}[^!"
-# define INVALIDCHARS "&;()\\`*~"
+# define SPECIALCHARS "{}^!"
+# define INVALIDCHARS "&;()\\`*~["
 # define METACHARS "|<>"
 # define ISSPACE " \t\n\v\f\r"
 # define SQUOTE 39
