@@ -10,7 +10,7 @@
  * @param str The array of strings to be sorted.
  * @param n The number of strings in the array.
  */
-static void	ft_sort_str_tab(char **str, int n)
+void	ft_sort_str_tab(char **str, int n)
 {
 	int		k;
 	int		j;
