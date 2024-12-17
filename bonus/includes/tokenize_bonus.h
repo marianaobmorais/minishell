@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize_bonus.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:02:26 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:23:04 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef TOKENIZE_BONUS_H
 # define TOKENIZE_BONUS_H
 
@@ -73,52 +85,54 @@ typedef struct s_exec
 	t_list	**args;
 }	t_exec;
 
-/* ft_find_next_quote.c */
+/* ft_find_next_quote_bonus.c */
 int		ft_find_next_quote(char *s, int i, char c);
 
-/* ft_charjoin.c */
+/* ft_charjoin_bonus.c */
 char	*ft_charjoin(char *str, char c);
 
-/* ft_isspace.c */
+/* ft_isspace_bonus.c */
 int		ft_isspace(int c);
 
-/* ft_validate_syntax.c */
+/* ft_validate_syntax_bonus.c */
 bool	ft_validate_syntax(char *s);
 void	ft_error_syntax(char *message, char c);
 
-/* ft_validate_syntax_utils.c */
+/* ft_validate_syntax_utils_bonus.c */
 
 bool	ft_validate_logic_operator(char *s, int i);
 bool	ft_is_comment(char c, int *i);
 
-/* ft_ft_validate_parentheses.c */
+/* ft_ft_validate_parentheses_bonus.c */
 
 bool	ft_validate_parentheses(char *s);
 bool	ft_count_parentheses(char *s);
 
-/* ft_create_token_list.c */
+/* ft_create_token_list_bonus.c */
 
 t_list	**ft_create_token_list(char *s);
 
-/* ft_create_token_list_utils.c */
+/* ft_create_token_list_utils_bonus.c */
 
 void	ft_add_to_token_list(char **value, t_list **token_list);
+bool	ft_has_expandable_var(char *s);
 
-/* ft_create_token_list_utils2.c */
+/* ft_create_token_list_utils2_bonus.c */
 
 bool	ft_is_heredoc_target(t_list **list);
 bool	ft_is_wildcard(char *s);
 void	ft_validate_export_tokens(t_list **list);
+void	ft_validate_token_expansion(t_token *new_token, char *value);
 
-/* ft_process_input.c */
+/* ft_process_input_bonus.c */
 
 void	*ft_process_input(char *input);
 
-/* ft_process_token_list.c */
+/* ft_process_token_list_bonus.c */
 
 void	ft_process_token_list(t_list **token_list, char **envp);
 
-/* ft_process_token_list_utils.c */
+/* ft_process_token_list_utils_bonus.c */
 
 void	ft_handle_dquotes(char **new_value, char *value, int *i, \
 		char **envp);
@@ -126,19 +140,19 @@ void	ft_handle_squotes(char **new_value, char *value, int *i);
 void	ft_handle_expansion(char **new_value, char *value, int *i, \
 		char **envp);
 
-/* ft_process_token_list_utils2.c */
+/* ft_process_token_list_utils2_bonus.c */
 
 void	ft_expand_tokens(t_token *token, char **envp);
 void	ft_remove_quotes(t_token *tkn);
 bool	ft_is_expandable(char *s);
 
-/* ft_get_wildcard_list.c */
+/* ft_get_wildcard_list_bonus.c */
 
 t_list	**ft_get_wildcard_list(char *s);
 void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
 		t_list **w_list);
 
-/* ft_get_wildcard_list_utils.c */
+/* ft_get_wildcard_list_utils_bonus.c */
 
 char	*ft_get_prefix(char *s);
 char	*ft_get_sufix(char *s);
@@ -146,35 +160,35 @@ char	*ft_get_middle(char *s);
 int		ft_strncmp_(const char *str1, const char *str2, size_t len);
 char	*ft_strnstr_(const char *big, const char *little, size_t len);
 
-/* ft_build_root.c */
+/* ft_build_root_bonus.c */
 
 void	*ft_build_root(t_list **list, t_type node_type);
 
-/* ft_build_tree.c */
+/* ft_build_tree_bonus.c */
 
 void	*ft_build_tree(t_list **token_list, t_node **parent_node);
 void	ft_skip_export_tokens(t_list **list);
 bool	ft_validate_skip(t_list **list);
 
-/* ft_build_branch.c */
+/* ft_build_branch_bonus.c */
 
 void	*ft_build_branch(t_list **list, t_exec *exec, t_node *sub_root);
 
-/* ft_built_branch_utils.c */
+/* ft_built_branch_utils_bonus.c */
 
 t_exec	*ft_create_exec_node(t_token *token, t_list **list);
 bool	ft_find_next_redir(t_list **list);
-t_redir	*ft_init_redir(t_token *token, t_list **list);
 
-/* ft_built_branch_utils2.c */
+/* ft_built_branch_utils2_bonus.c */
 
 t_node	*ft_create_subroot_node(t_list **list);
+t_redir	*ft_init_redir(t_token *token, t_list **list);
 
-/* ft_free_tree.c */
+/* ft_free_tree_bonus.c */
 
 void	ft_free_tree(void *root);
 
-/* ft_is_token_type.c */
+/* ft_is_token_type_bonus.c */
 
 bool	ft_is_token_type(t_token *token, t_type type);
 bool	ft_is_node_type(t_node *node, t_type type);

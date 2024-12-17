@@ -60,11 +60,12 @@ char	**tokentostring(t_list **args)
 			new_args_cp = ft_split(((t_token *)(curr)->content)->value, ' ');
 			i = -1;
 			while (new_args_cp[++i])
-				n_args = ft_tovector(n_args, new_args_cp[i]);
+				n_args = ft_add_to_vector(n_args, new_args_cp[i]);
 			ft_free_vector(new_args_cp);
 		}
 		else
-			n_args = ft_tovector(n_args, ((t_token *)(curr)->content)->value);
+			n_args = ft_add_to_vector(n_args,
+				((t_token *)(curr)->content)->value);
 		curr = (curr)->next;
 	}
 	return (n_args);

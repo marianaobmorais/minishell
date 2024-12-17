@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_validate_syntax.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 18:54:15 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 18:54:16 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -32,7 +44,7 @@ static void	ft_error_syntax(char *message, char c)
  * Otherwise, it returns the updated index after handling multi-character
  * tokens.
  * 
- * @param trim The trimmed input string being validated.
+ * @param s The trimmed input string being validated.
  * @param i The current index in the input string.
  * @param special Pointer to a flag indicating if the previous character
  *        was special.
@@ -42,16 +54,16 @@ static void	ft_error_syntax(char *message, char c)
  */
 static int	ft_handle_specialchars(char *s, int i, bool *special, char *c)
 {
-	if (*special == true) //update brief
+	if (*special == true)
 	{
 		if (*c == '|')
 		{
 			if (s[i] == '|' || ft_strchr(SPECIALCHARS, s[i])
-				|| (s[i] == '.'&& (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
+				|| (s[i] == '.' && (ft_isspace(s[i + 1]) || s[i + 1] == '\0')))
 				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 		}
-			if (s[i] != '.')
-				return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
+		if (s[i] != '.')
+			return (ft_error_syntax(UNEXPECTED_TOKEN, s[i]), -1);
 	}
 	*special = true;
 	*c = s[i];
@@ -145,19 +157,17 @@ static bool	ft_invalid_first_chr(char *s, bool *special)
  * @brief Validates the syntax of a trimmed shell input string.
  * 
  * This function checks the input string for syntax errors, including invalid
- * characters, unbalanced parentheses and quotes, and improper placement of
- * special characters (e.g., pipes, redirections). It iterates through the
- * string, updating the state of special characters and comments, and handles
- * errors with appropriate messages and exit codes. The function ensures that
- * the input adheres to shell syntax rules before proceeding to parsing or
- * execution.
+ * characters, unbalanced quotes, and improper placement of special characters
+ * (e.g., pipes, redirections). It iterates through the string, updating the
+ * state of special characters and comments, and handles errors with appropriate
+ * messages and exit codes. The function ensures that the input adheres to shell
+ * syntax rules before proceeding to parsing or execution.
  * 
  * @param trim The trimmed input string to validate.
  * @return `true` if the syntax is valid, otherwise `false`.
  */
 bool	ft_validate_syntax(char *trim)
 {
-	//update brief
 	int		i;
 	bool	special;
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:02:59 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:14:57 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
@@ -35,7 +47,7 @@ void		ft_exit(int argc, char **args, t_shell *sh);
 
 long long	ft_atoll(const char *nptr, bool *is_sign);
 
-/* ft_export */
+/* ft_export.c */
 
 int			check_key(char **argv);
 int			add_var(char *str, size_t size, char ***envp);

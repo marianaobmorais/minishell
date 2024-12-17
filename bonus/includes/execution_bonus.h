@@ -42,7 +42,7 @@ typedef struct s_shell
 	void	*root;
 }	t_shell;
 
-/* ft_heredoc_utils.c */
+/* ft_heredoc_utils_bonus.c */
 
 void	ft_handle_quotes_hd(char **new_value, char *value, int *i, char **envp);
 char	*ft_expand_input(char *input, char **envp);
@@ -50,22 +50,21 @@ char	*ft_create_pathname(void);
 int		count_line(int mode);
 void	ft_heredoc_manager(void *tree, t_shell *sh);
 
-/* ft_heredoc.c */
+/* ft_heredoc_bonus.c */
 
 void	ft_search_heredoc(t_node *curr_node, t_shell *sh);
 
-/* ft_redir.c */
+/* ft_redir_bonus.c */
 
 int		ft_redir(t_redir *nd, t_shell *sh);
-//int		ft_open(int type, char *pathname, int mode, t_shell *sh);
 
-/* ft_launcher.c */
+/* ft_launcher_bonus.c */
 
 void	ft_launcher(t_node *curr_node, t_node *next_node, int *curr_fds, \
 	t_shell *sh);
 void	ft_launcher_manager(void *tree, t_shell *sh);
 
-/* ft_launcher_utils.c */
+/* ft_launcher_utils_bonus.c */
 
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
@@ -73,17 +72,17 @@ void	close_original_fds(t_shell *sh);
 void	close_fds(int *fds);
 void	ft_issubroot(t_node *node, t_shell *sh);
 
-/* ft_exec.c */
+/* ft_exec_bonus.c */
 
 int		ft_exec(t_list **args, t_shell *sh);
 
-/* ft_exec_utils.c */
+/* ft_exec_utils_bonus.c */
 
 char	**tokentostring(t_list **args);
-char	**ft_tovector(char **old_vector, char *new_str);
-int		ft_single_command(t_node *node, t_shell *sh);
+int		ft_single_command(t_node *node, t_shell *sh); //check later
+char	**ft_add_to_vector(char **old_vector, char *new_str);
 
-/* ft_exec_ultimate.c */
+/* ft_exec_ultimate_bonus.c */
 
 int		ft_free_paths(char **paths, int i);
 int		isvalid_dir(char *pathname, char **args, t_shell *sh);

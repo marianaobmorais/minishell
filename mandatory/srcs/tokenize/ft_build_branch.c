@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_build_branch.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 17:29:54 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 17:29:55 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -122,7 +134,7 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
 		return (NULL);
 	if (!(*list)->next
 		|| ft_is_token_type(((t_token *)(*list)->next->content), NODE))
-			redir->next = (void *)exec;
+		redir->next = (void *)exec;
 	else
 	{
 		*list = (*list)->next;
@@ -138,28 +150,23 @@ static t_redir	*ft_create_redir_node(t_token *token, t_list **list, \
 }
 
 /**
- * @brief Builds a branch of the syntax tree based on the current token type.
- * 
- * This function processes the current token in the token list and determines 
- * the appropriate branch to build for the syntax tree. It handles different 
- * token types,including executable commands (`EXEC`),parentheses (`PRTHESES`),
- * and redirections (`REDIR`). The function updates the corresponding structures
- * (execution nodes, subroot nodes, or redirection nodes) and advances the list 
- * pointer as needed.
- * 
- * @param list A double pointer to the current position in the token list. 
- *        The function processes the token at the current position.
- * @param exec A pointer to an `t_exec` structure representing an executable 
- *        command node. It is updated if an executable node is created.
- * @param sub_root A pointer to a `t_node` structure representing a subroot 
- *        (subtree for parenthesized expressions). It is updated if a subroot 
- *        node is created.
- * @return A pointer to the created branch node (`t_exec`, `t_node`, or
- *         `t_redir`) or `NULL` if no branch could be built.
+ * @brief Constructs a branch of the syntax tree for an execution or redirection
+ *        node.
+ *
+ * This function analyzes tokens in the provided list and creates either an
+ * execution node (`EXEC`) or a redirection node (`REDIR`) depending on the
+ * token type. If a `REDIR` node is created, it is linked to the provided
+ * execution node (`exec`).
+ *
+ * @param list A double pointer to the token list being processed.
+ * @param exec A pointer to the `EXEC` node to which `REDIR` nodes should be
+ *        linked. Pass `NULL` to create a new execution branch.
+ * @return A pointer to the newly created execution or redirection node, or
+ *         `NULL` if no valid node could be created.
  */
 void	*ft_build_branch(t_list **list, t_exec *exec)
 {
-	t_token	*token; //update brief
+	t_token	*token;
 	void	*result;
 
 	token = (*list)->content;
