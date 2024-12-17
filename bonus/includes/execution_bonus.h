@@ -17,7 +17,7 @@ typedef struct s_shell
 	int		fds_saved;
 	int		error_fd;
 	int		fds[2];
-	void	*prev;
+	t_node	*prev;
 	t_list	**heredoc_list;
 	char	**global;
 	char	**local;
@@ -26,6 +26,7 @@ typedef struct s_shell
 	int		run;
 	int		search_heredoc;
 	t_node	*next_node;
+	t_node	*prev_nnode;
 	void	*root;
 }	t_shell;
 

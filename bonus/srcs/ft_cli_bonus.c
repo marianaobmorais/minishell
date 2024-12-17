@@ -54,6 +54,7 @@ void	ft_init_var_sh(t_shell *sh)
 	sh->run = TRUE;
 	sh->search_heredoc = FALSE;
 	sh->next_node = NULL;
+	sh->prev_nnode = NULL;
 	sh->stdin_ = -1;
 	sh->stdout_ = -1;
 	sh->stderr_ = -1;

@@ -83,5 +83,9 @@ bool	ft_is_node_type(t_node *node, t_type type)
 		if (node->type == PIPE || node->type == AND || node->type == OR)
 			return (true);
 	}
+	if (type == REDIR_OUT)
+		if (((t_redir *)node)->type == OUTFILE
+			|| ((t_redir *)node)->type == APPEND)
+			return (true);
 	return (false);
 }

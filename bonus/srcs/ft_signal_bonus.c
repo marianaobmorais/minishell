@@ -86,7 +86,6 @@ static void	sig_heredoc_handler(int sig)
  */
 void	ft_signal(int type)
 {
-	signal(SIGTSTP, SIG_IGN);
 	if (type == PARENT_)
 	{
 		signal(SIGTSTP, SIG_IGN);
@@ -108,6 +107,7 @@ void	ft_signal(int type)
 	if (type == CHILD_)
 	{
 		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
 	}

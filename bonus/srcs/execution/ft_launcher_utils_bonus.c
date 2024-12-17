@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_launcher_utils_bonus.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:25:52 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:25:54 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -107,21 +119,26 @@ void	ft_restore_original_fds(t_shell *sh)
 	sh->fds_saved = 0;
 }
 
-/**
+/*
  * @brief Handles sub-root node relationships in the syntax tree.
  *
- * This function checks if the left child of a given node is of type 
- * `SUB_ROOT`. If true, it updates the shell's `next_node` 
- * pointer to the right child. If the current node matches the 
- * `next_node`, it resets the pointer to `NULL`.
+ * This function processes the left child of a given node to determine 
+ * if it is of type `SUB_ROOT` or part of a redirection chain. 
+ * If the left child is of type `SUB_ROOT`, the shell's `next_node` pointer 
+ * is updated to point to the right child. Additionally, the function ensures 
+ * proper handling of redirection nodes that may lead to a `SUB_ROOT` type.
+ * 
+ * The function also resets the `next_node` pointer to `NULL` if the current 
+ * node matches the `next_node`, preventing unwanted behavior in subsequent 
+ * syntax tree processing.
  *
  * @param node The current node being processed in the syntax tree.
- * @param sh The shell structure containing the `next_node` pointer.
+ * @param sh The shell structure containing the `next_node` and `prev_nnode`
+ *        pointers.
  */
 void	ft_issubroot(t_node *node, t_shell *sh)
 {
 	t_redir	*redir;
-	//update brief
 
 	if (((t_node *) node->left)->type == SUB_ROOT)
 		sh->next_node = node->right;
@@ -131,8 +148,11 @@ void	ft_issubroot(t_node *node, t_shell *sh)
 		while (redir)
 		{
 			if (ft_is_node_type((t_node *)redir, REDIR) == true
-				&& ((t_node *)(redir->next))->type == SUB_ROOT)
+				&& redir->next && ((t_node *)(redir->next))->type == SUB_ROOT)
+			{
+				sh->prev_nnode = (t_node *) redir;
 				sh->next_node = node->right;
+			}
 			if (ft_is_node_type((t_node *)redir, REDIR) == false)
 				break ;
 			redir = redir->next;
