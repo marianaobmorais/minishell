@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:02:26 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:23:04 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:34:02 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define TOKENIZE_BONUS_H
 
 //chars
-# define SPECIALCHARS "{}[^!"
-# define INVALIDCHARS ";\\`~"
+# define SPECIALCHARS "{}^!"
+# define INVALIDCHARS ";\\`~["
 # define PRTHESESCHARS "()"
 # define METACHARS "|<>&"
 # define ISSPACE " \t\n\v\f\r"
@@ -159,6 +159,10 @@ char	*ft_get_middle(char *s);
 int		ft_strncmp_(const char *str1, const char *str2, size_t len);
 char	*ft_strnstr_(const char *big, const char *little, size_t len);
 
+/* ft_get_wildcard_list_utils2_bonus.c */
+
+t_list	**ft_set_alphabetical_order(t_list **old);
+
 /* ft_build_root_bonus.c */
 
 void	*ft_build_root(t_list **list, t_type node_type);
@@ -191,9 +195,5 @@ void	ft_free_tree(void *root);
 
 bool	ft_is_token_type(t_token *token, t_type type);
 bool	ft_is_node_type(t_node *node, t_type type);
-
-//debugging
-void	ft_print_list(t_list **token_list);
-void	print_root(void *root, int indent);
 
 #endif //TOKENIZE_BONUS_H

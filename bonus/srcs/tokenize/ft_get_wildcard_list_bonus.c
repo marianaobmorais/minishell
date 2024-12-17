@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_get_wildcard_list_bonus.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 16:54:30 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/17 17:30:23 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -135,79 +147,6 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 		((t_token *)new_node->content)->wildcard = false;
 }
 
-//
-
-
-int	ft_strcmp_lower(const char *str1, const char *str2)
-{
-	unsigned char	*s1;
-	unsigned char	*s2;
-
-	s1 = (unsigned char *)str1;
-	s2 = (unsigned char *)str2;
-	while (*s1 != '\0' || *s2 != '\0')
-	{
-		if (ft_tolower(*s1) != ft_tolower(*s2))
-			return (ft_tolower(*s1) - ft_tolower(*s2));
-		++s1;
-		++s2;
-	}
-	return (0);
-}
-
-void	ft_sort_str_tab_(char **str, int n)
-{
-	int		k;
-	int		j;
-	char	*swap;
-
-	k = 0;
-	while (k < n - 1)
-	{
-		j = 0;
-		while (j < n - k - 1)
-		{
-			if (ft_strcmp_lower(str[j], str[j + 1]) > ft_strcmp_lower(str[j + 1], str[j]))
-			{
-				swap = str[j];
-				str[j] = str[j + 1];
-				str[j + 1] = swap;
-			}
-			j++;
-		}
-		k++;
-	}
-}
-
-t_list	**ft_set_alphabetical_order(t_list **old)
-{
-	t_list	**new;
-	char	**tmp;
-	int		size;
-	int		i;
-
-	new = (t_list **)malloc(sizeof(t_list *));
-	if (!new)
-		return (ft_error_malloc("new"), NULL);
-	tmp = tokentostring(old);
-	size = 0;
-	while(tmp[size])
-		size++;
-	ft_sort_str_tab_(tmp, size);
-	i = 0;
-	while (tmp[i])
-	{
-		ft_add_to_token_list(&tmp[i], new);
-		i++;
-	}
-	ft_free_list(*old);
-	free(old);
-	ft_free_vector(tmp); //check leaks and double frees
-	return (new);
-}
-
-//
-
 /**
  * @brief Retrieves a list of directory entries matching a wildcard pattern.
  * 
@@ -244,6 +183,6 @@ t_list	**ft_get_wildcard_list(char *s)
 		ft_stderror(TRUE, "closedir");
 		ft_exit_status(1, TRUE, FALSE);
 	}
-	wild_list = ft_set_alphabetical_order(wild_list); //check leaks and double frees
+	wild_list = ft_set_alphabetical_order(wild_list);
 	return (wild_list);
 }
