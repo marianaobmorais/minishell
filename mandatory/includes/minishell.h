@@ -38,11 +38,10 @@
 # include "builtins.h"
 # include "tokenize.h"
 # include "execution.h"
-# include "colors.h"
 
 //program name
-# define PROMPT_1 "\001\033[1m\033[31mb\033[33ma\033[32ms\033[34mh\033[35mi\033[36mn\033[34mh\033[31mo\033[0m \033[1m[\033[35m"
-# define PROMPT_2 "\001\033[0m\033[1m] $ \033[0m\002\b "
+# define PROMPT_1 "\001\033[1m\033[31m\002b\001\033[33m\002a\001\033[32m\002s\001\033[34m\002h\001\033[35m\002i\001\033[36m\002n\001\033[34m\002h\001\033[31m\002o\001\033[0m\033[1m\002 [\001\033[35m\002"
+# define PROMPT_2 "\001\033[0m\033[1m\002] $ \001\033[0m\002"
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 

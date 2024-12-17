@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_heredoc_bonus.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:28:37 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:28:38 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -163,7 +175,8 @@ void	ft_search_heredoc(t_node *node, t_shell *sh)
 
 	if (!node)
 		return ;
-	else if (node->type == PIPE || node->type == ROOT || node->type == OR || node->type == AND)
+	else if (node->type == PIPE || node->type == ROOT
+		|| node->type == OR || node->type == AND)
 	{
 		ft_search_heredoc(node->left, sh);
 		return (ft_search_heredoc(node->right, sh));
@@ -178,9 +191,6 @@ void	ft_search_heredoc(t_node *node, t_shell *sh)
 			ft_merge_env(sh->global, sh->local), st, sh);
 		ft_search_heredoc(((t_redir *)node)->next, sh);
 	}
-	else if (node->type == EXEC	|| node->type == EXPORT
-		|| node->type == EXPORT_AP)
-		return ;
 	else if (node->type == SUB_ROOT)
 		ft_heredoc_manager(node->left, sh);
 }

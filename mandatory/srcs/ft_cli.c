@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cli.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:32:19 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:32:20 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 /**
@@ -166,7 +178,7 @@ void	ft_cli(t_shell *sh)
 		if (!input)
 		{
 			free(input);
-			ft_putstr_fd("exit\n", 2);
+			ft_putstr_fd("exit\n", 1);
 			break ;
 		}
 		if (ft_history(input))

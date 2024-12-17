@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_launcher_utils_bonus.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:25:52 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:25:54 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -107,43 +119,45 @@ void	ft_restore_original_fds(t_shell *sh)
 	sh->fds_saved = 0;
 }
 
-/**
- * @brief Executes a single command if it is a built-in command.
+/*
+ * @brief Handles sub-root node relationships in the syntax tree.
  *
- * Checks if the given node is a built-in command, saves the original file
- * descriptors, processes redirections and arguments, and executes the command.
- * Restores the original file descriptors and returns the execution status.
+ * This function processes the left child of a given node to determine 
+ * if it is of type `SUB_ROOT` or part of a redirection chain. 
+ * If the left child is of type `SUB_ROOT`, the shell's `next_node` pointer 
+ * is updated to point to the right child. Additionally, the function ensures 
+ * proper handling of redirection nodes that may lead to a `SUB_ROOT` type.
+ * 
+ * The function also resets the `next_node` pointer to `NULL` if the current 
+ * node matches the `next_node`, preventing unwanted behavior in subsequent 
+ * syntax tree processing.
  *
- * @param node The command node to be executed.
- * @param sh The shell structure containing the execution state and environment
- *
- * @return TRUE if the command was executed, FALSE otherwise.
+ * @param node The current node being processed in the syntax tree.
+ * @param sh The shell structure containing the `next_node` and `prev_nnode`
+ *        pointers.
  */
-int	ft_single_command(t_node *node, t_shell *sh)
+void	ft_issubroot(t_node *node, t_shell *sh)
 {
-	void	*curr;
-	char	**new_args;
-	int		argc;
+	t_redir	*redir;
 
-	if (ft_isjustbuiltin(node->left, sh))
+	if (((t_node *) node->left)->type == SUB_ROOT)
+		sh->next_node = node->right;
+	else if (ft_is_node_type(node->left, REDIR) == true)
 	{
-		ft_save_original_fds(sh);
-		curr = ((t_node *)node->left)->left;
-		while (ft_redir(((t_redir *)curr), sh))
-			curr = ((t_redir *)curr)->next;
-		ft_process_token_list(((t_exec *)curr)->args, \
-			ft_merge_env(sh->global, sh->local));
-		new_args = tokentostring(((t_exec *)curr)->args);
-		if (((t_exec *)curr)->type == EXPORT
-			|| ((t_exec *)curr)->type == EXPORT_AP)
+		redir = (t_redir *) node->left;
+		while (redir)
 		{
-			argc = ft_argslen(new_args);
-			ft_export(argc, new_args, sh, LOCAL);
+			if (ft_is_node_type((t_node *)redir, REDIR) == true
+				&& redir->next && ((t_node *)(redir->next))->type == SUB_ROOT)
+			{
+				sh->prev_nnode = (t_node *) redir;
+				sh->next_node = node->right;
+			}
+			if (ft_is_node_type((t_node *)redir, REDIR) == false)
+				break ;
+			redir = redir->next;
 		}
-		if (((t_exec *)curr)->type == EXEC)
-			if (ft_isbuiltin(new_args))
-				ft_exec_builtin(new_args, sh);
-		return (ft_free_vector(new_args), ft_restore_original_fds(sh), TRUE);
 	}
-	return (FALSE);
+	if (node == sh->next_node)
+		sh->next_node = NULL;
 }

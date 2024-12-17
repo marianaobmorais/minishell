@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_prompt.c                                        :+:      :+:    :+:   */
+/*   ft_prompt_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 15:32:29 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:32:30 by joneves-         ###   ########.fr       */
+/*   Created: 2024/12/17 15:29:10 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:29:11 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../includes/minishell_bonus.h"
 
 /**
  * @brief Constructs and sets the shell prompt based on the current directory.

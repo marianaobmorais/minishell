@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_signal_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:29:15 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:29:16 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell_bonus.h"
 
 /**
@@ -86,7 +98,6 @@ static void	sig_heredoc_handler(int sig)
  */
 void	ft_signal(int type)
 {
-	signal(SIGTSTP, SIG_IGN);
 	if (type == PARENT_)
 	{
 		signal(SIGTSTP, SIG_IGN);
@@ -108,6 +119,7 @@ void	ft_signal(int type)
 	if (type == CHILD_)
 	{
 		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
 	}

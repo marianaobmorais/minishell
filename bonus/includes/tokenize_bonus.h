@@ -44,7 +44,8 @@ typedef enum e_type
 	ROOT,
 	SUB_ROOT,
 	REDIR,
-	NODE
+	NODE,
+	REDIR_OUT
 }	t_type;
 
 typedef enum e_state

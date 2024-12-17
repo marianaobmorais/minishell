@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_bonus.h                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 15:43:17 by joneves-          #+#    #+#             */
+/*   Updated: 2024/12/17 15:43:18 by joneves-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXECUTION_BONUS_H
 # define EXECUTION_BONUS_H
 
@@ -17,14 +29,16 @@ typedef struct s_shell
 	int		fds_saved;
 	int		error_fd;
 	int		fds[2];
-	void	*prev;
+	t_node	*prev;
 	t_list	**heredoc_list;
 	char	**global;
 	char	**local;
 	char	**limbo;
+	char	*prompt;
 	int		run;
 	int		search_heredoc;
-	int		sub_root;
+	t_node	*next_node;
+	t_node	*prev_nnode;
 	void	*root;
 }	t_shell;
 
@@ -52,11 +66,11 @@ void	ft_launcher_manager(void *tree, t_shell *sh);
 
 /* ft_launcher_utils_bonus.c */
 
-int		ft_single_command(t_node *node, t_shell *sh);
 void	ft_restore_original_fds(t_shell *sh);
 void	ft_save_original_fds(t_shell *sh);
 void	close_original_fds(t_shell *sh);
 void	close_fds(int *fds);
+void	ft_issubroot(t_node *node, t_shell *sh);
 
 /* ft_exec_bonus.c */
 
@@ -65,6 +79,7 @@ int		ft_exec(t_list **args, t_shell *sh);
 /* ft_exec_utils_bonus.c */
 
 char	**tokentostring(t_list **args);
+int		ft_single_command(t_node *node, t_shell *sh); //check later
 char	**ft_add_to_vector(char **old_vector, char *new_str);
 
 /* ft_exec_ultimate_bonus.c */
