@@ -16,15 +16,17 @@ The mandatory part consists of:
 
 - Handling `’` (single quotes) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
 - Handling `"` (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for `$` (dollar sign).
-- Implementing pipes `|` and redirections for input `<`, output `>`, output in append mode `>>` and heredoc `<<``.
+- Implementing pipes `|` and redirections for input `<`, output `>`, output in append mode `>>` and heredoc `<<`.
 - Handling environment variables (`$` followed by a sequence of characters) which expand to their values; and `$?` which expands to the exit status of the most recently executed foreground pipeline.
 - Handling the behaiour of `ctrl-C`, `ctrl-D` and `ctrl-\` like in bash. And in interactive mode: `ctrl-C` displays a new prompt on a new line; `ctrl-D` exits the shell; `ctrl-\` does nothing.
-- Implementing the builtins: `echo` with option -n; `cd` with only a relative or absolute path; `pwd` with no options; `export` with no options; `unset` with no options; `env` with no options or arguments, `exit`.
+- Implementing the builtins: `echo` with option -n; `cd` with only a relative or absolute path; `pwd` with no options; `export` with no options; `unset` with no options; `env` with no options or arguments; and `exit`.
 
 And the bonus part consist of the additional:
 
 - Handling the logic operators `&&` and `||` with parenthesis for priorities.
 - Wildcards `*` for the current working directory.
+
+The minishell program does not interpret unclosed quotes, unclosed parentheses or any special characters that are not required by the subject such as `\` (backslash), `;` (semicolon) or `~` (tilde).
 
 ## Build
 
