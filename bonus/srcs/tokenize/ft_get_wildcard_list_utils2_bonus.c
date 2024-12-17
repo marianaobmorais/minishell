@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:24:43 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/17 17:29:47 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:47:42 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_list	**ft_set_alphabetical_order(t_list **old)
 	*new = NULL;
 	tmp = tokentostring(old);
 	size = 0;
-	while(tmp[size])
+	while (tmp[size])
 		size++;
 	ft_sort_str_tab_(tmp, size);
 	i = 0;

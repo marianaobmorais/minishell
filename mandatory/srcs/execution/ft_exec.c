@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:57 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:31:58 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:42:26 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	**tokentostring(t_list **args)
 		}
 		else
 			n_args = ft_add_to_vector(n_args,
-				((t_token *)(curr)->content)->value);
+					((t_token *)(curr)->content)->value);
 		curr = (curr)->next;
 	}
 	return (n_args);

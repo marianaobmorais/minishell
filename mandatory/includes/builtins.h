@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 17:47:03 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/17 17:47:11 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
@@ -45,7 +57,6 @@ int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 void		ft_print_export(char **envp);
 int			check_key(char **argv);
 void		ft_local_import(t_shell *sh, char *arg);
-
 
 /* ft_export_ultimate.c */
 
