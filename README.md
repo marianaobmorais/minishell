@@ -6,7 +6,7 @@
 
 #### Finished in: ongoing
 
-This project was done in partnership with [José Elvásio](https://github.com/joseevilasio)
+This project was done in partnership with [José Júnior](https://github.com/joseevilasio)
 
 ## About
 
