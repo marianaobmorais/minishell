@@ -26,7 +26,6 @@
 # include "builtins.h"
 # include "tokenize.h"
 # include "execution.h"
-# include "colors.h"
 
 //program name
 # define PROMPT_1 "\001\033[1m\033[31m\002b\001\033[33m\002a\001\033[32m\002s\001\033[34m\002h\001\033[35m\002i\001\033[36m\002n\001\033[34m\002h\001\033[31m\002o\001\033[0m\033[1m\002 [\001\033[35m\002"
