@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_is_token_type.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 18:27:44 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 18:27:45 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -6,15 +18,14 @@
  * This function checks whether the given token matches one of several
  * predefined types, depending on the value of the `type` parameter. The
  * function will return `true` if the token matches any of the types in the
- * specified category (e.g., redirection types, execution types, or logical
- * node types). If the token doesn't match the specified category, it returns
- * `false`.
+ * specified category (e.g., redirection types or execution types). If the token
+ * doesn't match the specified category, it returns `false`.
  * 
  * The function supports checking the following categories:
  * - `REDIR`: checks for output redirection (`OUTFILE`, `INFILE`, `APPEND`,
  *   `HEREDOC`);
  * - `EXEC`: checks for execution-related types (`EXEC`, `EXPORT`,`EXPORT_AP`);
- * - `NODE`: checks for logical operators (`PIPE`, `AND`, `OR`)
+ * - `NODE`: checks for logical operators (`PIPE`)
  * 
  * @param token The token to check.
  * @param type The type category to check the token against.
@@ -22,7 +33,7 @@
  */
 bool	ft_is_token_type(t_token *token, t_type type)
 {
-	if (type == REDIR) //update brief
+	if (type == REDIR)
 	{
 		if (token->type == OUTFILE || token->type == INFILE
 			|| token->type == APPEND || token->type == HEREDOC)
@@ -48,15 +59,14 @@ bool	ft_is_token_type(t_token *token, t_type type)
  * This function checks whether the given node matches one of several
  * predefined types, depending on the value of the `type` parameter. The
  * function will return `true` if the token matches any of the types in the
- * specified category (e.g., redirection types, execution types, or logical
- * node types). If the node doesn't match the specified category, it returns
- * `false`.
+ * specified category (e.g., redirection types or execution types). If the node
+ * doesn't match the specified category, it returns `false`.
  * 
  * The function supports checking the following categories:
  * - `REDIR`: checks for output redirection (`OUTFILE`, `INFILE`, `APPEND`,
  *   `HEREDOC`);
  * - `EXEC`: checks for execution-related types (`EXEC`, `EXPORT`,`EXPORT_AP`);
- * - `NODE`: checks for logical operators (`PIPE`, `AND`, `OR`)
+ * - `NODE`: checks for logical operators (`PIPE`)
  * 
  * @param node The node to check.
  * @param type The type category to check the node against.
@@ -64,7 +74,7 @@ bool	ft_is_token_type(t_token *token, t_type type)
  */
 bool	ft_is_node_type(t_node *node, t_type type)
 {
-	if (type == REDIR) //update brief
+	if (type == REDIR)
 	{
 		if (((t_redir *)node)->type == OUTFILE
 			|| ((t_redir *)node)->type == INFILE

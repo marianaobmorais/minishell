@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_token_list_utils.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 18:25:07 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 18:25:08 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -29,23 +41,26 @@ static t_type	ft_get_cmd_type(char *s)
 }
 
 /**
- * @brief Determines the type of a token based on the given string.
- * 
- * The function inspects the provided string and identifies its type according
- * to the following logic:
- * - Special characters like `|`, `&`, `>`, `<`, `(`, `)` are mapped to their
- *   respective token types (e.g., `PIPE`, `AND`, `OUTFILE`, `PRTHESES`).
- * - The function checks for operators (like `>>`, `<<`, `||`, etc.) and
- *   matches them to the appropriate token type.
- * - For other cases, the function attempts to identify the token as a command
- *   by calling `ft_get_cmd_type`.
- * 
- * @param s The string representing a token.
- * @return The token type corresponding to the string.
+ * @brief Determines the type of a token based on its value.
+ *
+ * This function evaluates the string `s` to classify the token type.
+ * It distinguishes between shell-specific metacharacters and commands:
+ *
+ * - Metacharacters:
+ *   - `|`: PIPE
+ *   - `>>`: APPEND
+ *   - `>`: OUTFILE
+ *   - `<<`: HEREDOC
+ *   - `<`: INFILE
+ * - If the token is not a metacharacter, `ft_get_cmd_type` is called to
+ *   determine its type based on command-related logic.
+ *
+ * @param s The string representing the token.
+ * @return The determined token type (`t_type`).
  */
 static t_type	ft_get_token_type(char *s)
 {
-	t_type	type; //update brief
+	t_type	type;
 
 	if (s[0] == '|')
 		return (PIPE);
@@ -130,10 +145,10 @@ static bool	ft_has_expandable_var(char *s)
  * @brief Adds a new token to the token list.
  * 
  * This function creates a new token structure based on the provided value, 
- * assigns its properties (e.g., type, state, wildcard status, expansion 
- * status), and appends it as a new node to the given token list. If memory 
- * allocation fails at any point, the function frees any partially allocated 
- * resources and invokes an error handler.
+ * assigns its properties (e.g., type, state, expansion status), and appends it
+ * as a new node to the given token list. If memory allocation fails at any
+ * point, the function frees any partially allocated resources and invokes an
+ * error handler.
  * 
  * @param value Pointer to a dynamically allocated string representing the 
  *        token's value. The function frees the value after creating the token
@@ -142,7 +157,7 @@ static bool	ft_has_expandable_var(char *s)
  */
 void	ft_add_to_token_list(char **value, t_list **token_list)
 {
-	t_token	*new_token; //update brief
+	t_token	*new_token;
 	t_list	*new_node;
 
 	if (!*value)

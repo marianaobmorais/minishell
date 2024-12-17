@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_process_token_list.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 18:39:14 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 18:45:22 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -17,9 +29,8 @@ bool	ft_is_expandable(char *s)
 	int	i;
 
 	i = 0;
-	if (ft_isalpha(s[i]) || s[i] == '?'
-		|| (s[i] == '_' && s[i + 1]
-		&& ft_isalnum(s[i + 1])))
+	if (ft_isalpha(s[i]) || s[i] == '?' || (s[i] == '_' && s[i + 1]
+			&& ft_isalnum(s[i + 1])))
 		return (true);
 	return (false);
 }
@@ -123,22 +134,28 @@ static void	ft_remove_current_node(t_list **list, t_list *prev, t_list *curr)
 }
 
 /**
- * @brief Processes a linked list of tokens, expanding variables,
- *        handling wildcards, and removing empty nodes as necessary.
+ * @brief Processes a token list by expanding variables, removing quotes,
+ * and filtering out empty tokens.
  *
- * This function iterates through a list of tokens, applying token-specific
- * transformations such as environment variable expansion, quote removal, and
- * wildcard processing. Empty tokens generated after expansion that are in
- * `IN_QUOTE` state are removed from the list.
+ * This function iterates through a linked list of tokens and performs the
+ * following transformations:
+ * - Expands environment variables in tokens marked as expandable using
+ *   `ft_expand_tokens`.
+ * - Strips quotes from tokens in the `IN_QUOTE` state using `ft_remove_quotes`.
+ * - Removes tokens with empty `value` if they were expanded and are not inside
+ *   quotes.
+ * The function handles the list's integrity by updating `prev` and correctly
+ * removing `current` nodes using `ft_remove_current_node` when necessary.
+ * Finally, it frees the `envp` vector.
  *
- * @param list A pointer to the head of the linked list of tokens to be
- *        processed.
- * @param envp A null-terminated array of strings representing the environment
- *        variables.
+ * @param list A pointer to the linked list of tokens to process.
+ * @param envp An array of environment variables used for token expansion.
+ * The array is freed after use.
  */
+
 void	ft_process_token_list(t_list **list, char **envp)
 {
-	t_list	*current; //update brief
+	t_list	*current;
 	t_list	*prev;
 	t_list	*next;
 	t_token	*token;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_build_branch_utils2_bonus.c                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:04:44 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:06:39 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -83,4 +95,33 @@ t_node	*ft_create_subroot_node(t_list **list)
 	ft_free_list(head);
 	free(sub_list);
 	return (sub_root);
+}
+
+/**
+ * @brief Searches for the next redirection token in the token list.
+ * 
+ * This function iterates through a token list, starting from the current
+ * position, to locate the next token of type `REDIR`. The search stops at
+ * tokens of type `NODE` or at the end of the list. If a redirection token is
+ * found, the function returns `true`, and the pointer to the list is updated to
+ * the position of the found token. Otherwise, it returns `false`.
+ * 
+ * @param list A double pointer to the current position in the token list. 
+ *        If a redirection token is found, the pointer will point to it.
+ * @return `true` if a redirection token is found; `false` otherwise.
+ */
+bool	ft_find_next_redir(t_list **list)
+{
+	t_token	*token;
+
+	while (*list)
+	{
+		token = (t_token *)(*list)->content;
+		if (ft_is_token_type(token, NODE))
+			break ;
+		if (ft_is_token_type(token, REDIR))
+			return (true);
+		*list = (*list)->next;
+	}
+	return (false);
 }

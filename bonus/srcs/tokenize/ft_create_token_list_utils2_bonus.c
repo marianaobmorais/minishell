@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_token_list_utils2_bonus.c                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:16:48 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:21:58 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -149,4 +161,20 @@ void	ft_validate_export_tokens(t_list **list)
 		prev = current;
 		current = current->next;
 	}
+}
+
+/**
+ * @brief Validates and updates the expansion-related properties of a token.
+ *
+ * This function checks the given value for wildcard characters and expandable 
+ * variables. It sets the `wildcard` and `expand` flags of the specified token 
+ * accordingly.
+ *
+ * @param new_token A pointer to the `t_token` structure to update.
+ * @param value The string value to validate for wildcard and variable expansion
+ */
+void	ft_validate_token_expansion(t_token *new_token, char *value)
+{
+	new_token->wildcard = ft_is_wildcard(value);
+	new_token->expand = ft_has_expandable_var(value);
 }

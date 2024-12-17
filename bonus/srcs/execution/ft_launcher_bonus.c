@@ -69,8 +69,8 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
 		}
-		ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
-		ft_stderror(FALSE, "restaurando fds");//debug
+		//ft_stderror(FALSE, "sh prev tipo %d", ((t_node *)(((t_node *)sh->prev)->left))->type);//debug
+		//ft_stderror(FALSE, "restaurando fds");//debug
 		return (ft_restore_original_fds(sh));
 	}
 	if (node)

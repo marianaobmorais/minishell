@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_process_input_bonus.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:25:49 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:25:50 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 void	ft_print_list(t_list **token_list)
@@ -186,7 +198,7 @@ void	*ft_process_input(char *input)
 	if (token_list && *token_list)
 	{
 		root = ft_build_root(token_list, ROOT);
-		print_root(root, 200); //debug
+		//print_root(root, 200); //debug
 	}
 	free(trimmed);
 	ft_free_list(head);

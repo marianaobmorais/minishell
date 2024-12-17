@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_bonus.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:02:46 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:14:33 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_BONUS_H
 # define BUILTINS_BONUS_H
 
@@ -7,35 +19,35 @@
 typedef struct s_shell	t_shell;
 typedef enum e_env		t_env;
 
-/* ft_env.c */
+/* ft_env_bonus.c */
 
 void		ft_env(int argc, char **args, char **envp);
 
-/* ft_cd.c */
+/* ft_cd_bonus.c */
 
 void		ft_cd(int argc, const char *new_dir, char **envp);
 
-/* ft_echo.c */
+/* ft_echo_bonus.c */
 
 void		ft_echo(char **args);
 
-/* ft_pwd.c */
+/* ft_pwd_bonus.c */
 
 int			ft_pwd(void);
 
-/* ft_unset.c */
+/* ft_unset_bonus.c */
 
 int			ft_unset(int argc, char **argv, t_shell *sh);
 
-/* ft_exit.c */
+/* ft_exit_bonus.c */
 
 void		ft_exit(int argc, char **args, t_shell *sh);
 
-/* ft_exit_utils.c */
+/* ft_exit_utils_bonus.c */
 
 long long	ft_atoll(const char *nptr, bool *is_sign);
 
-/* ft_export */
+/* ft_export_bonus.c */
 
 int			check_key(char **argv);
 int			add_var(char *str, size_t size, char ***envp);
@@ -44,7 +56,7 @@ void		ft_print_export(char **envp);
 void		ft_local_import(t_shell *sh, char *arg);
 int			ft_limbo_import(t_shell *sh, char *arg);
 
-/* builtins_utils.c */
+/* builtins_utils_bonus.c */
 
 bool		ft_isbuiltin(char **args);
 void		ft_exec_builtin(char **args, t_shell *sh);

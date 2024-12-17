@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 19:03:04 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 19:03:05 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -29,7 +41,7 @@
 # include "colors.h"
 
 //program name
-# define PROMPT_1 "\001\033[1m\033[31mB\033[33ma\033[32ms\033[34mh\033[35mi\033[36mn\033[34mh\033[31mo\033[0m \033[1m[\033[35m"
+# define PROMPT_1 "\001\033[1m\033[31mb\033[33ma\033[32ms\033[34mh\033[35mi\033[36mn\033[34mh\033[31mo\033[0m \033[1m[\033[35m"
 # define PROMPT_2 "\001\033[0m\033[1m] $ \033[0m\002\b "
 # define PROG_NAME "bashinho"
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"

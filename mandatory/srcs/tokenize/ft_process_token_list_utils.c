@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_process_token_list_utils.c                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 18:49:18 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 18:49:19 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -64,19 +76,16 @@ static char	*ft_get_exit_code(int *i)
 }
 
 /**
- * @brief Handles variable and wildcard expansion in a string during token
- *        parsing.
+ * @brief Handles variable in a string during token parsing.
  * 
- * This function processes environment variables, exit codes, and wildcard
- * expansions within a given token. It identifies the type of expansion based
- * on the character following a `$` symbol and appends the expanded value to
- * the `new_value` string. For the positional parameter (`*`) expansion,
- * preceeded by `$`,it expands to NULL, as wildcard handling is done elsewhere.
+ * This function processes environment variables and exit codes within a given
+ * token. It identifies the type of expansion based on the character following a
+ * `$` symbol and appends the expanded value to the `new_value` string. For `?`,
+ * it expands the last exit code, else, it expands the enviroment variable.
  * 
  * @param new_value A pointer to the current expanded string being constructed. 
  *        This will be updated with the appended expanded value.
- * @param value The original string containing the variable or wildcard to
- *        expand.
+ * @param value The original string containing the variable to expand.
  * @param i A pointer to the current position index within `value`. This index
  *        will be updated to point past the processed expansion.
  * @param envp The environment variables array used for expanding variable
@@ -84,7 +93,7 @@ static char	*ft_get_exit_code(int *i)
  */
 void	ft_handle_expansion(char **new_value, char *value, int *i, char **envp)
 {
-	char	*expansion; //update brief
+	char	*expansion;
 	char	*tmp;
 
 	tmp = NULL;

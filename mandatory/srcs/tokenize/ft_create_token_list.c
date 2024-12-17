@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_token_list.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 17:42:44 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 17:42:45 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -85,7 +97,7 @@ static int	ft_handle_quotes(char **value, char *s, int i, char quote)
  */
 static void	ft_process_tokens(char *s, t_list **token_list)
 {
-	char	*value; //update brief
+	char	*value;
 	int		i;
 
 	i = 0;
@@ -118,8 +130,8 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  * tokens are properly contextualized based on their position and the preceding
  * token.
  * - If an `EXPORT` or `EXPORT_AP` token appears after the first position and
- *   does not follow a valid token type (`NODE`, another `EXPORT`, `EXPORT_AP`,
- *   or parentheses), its type is changed to `EXEC`.
+ *   does not follow a valid token type (`NODE`, another `EXPORT`, `EXPORT_AP`),
+ *   its type is changed to `EXEC`.
  * - This ensures proper token classification and avoids misinterpretation
  *   during execution.
  * 
@@ -127,7 +139,7 @@ static void	ft_process_tokens(char *s, t_list **token_list)
  */
 static void	ft_validate_export_tokens(t_list **list)
 {
-	t_list	*current; //update brief
+	t_list	*current;
 	t_token	*token;
 	t_list	*prev;
 	int		pos;
@@ -166,7 +178,7 @@ static void	ft_validate_export_tokens(t_list **list)
  */
 t_list	**ft_create_token_list(char *s)
 {
-	t_list	**token_list; //update brief
+	t_list	**token_list;
 
 	token_list = (t_list **)malloc(sizeof(t_list *));
 	if (!token_list)

@@ -1,23 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_build_branch_utils.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 17:32:00 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 17:32:01 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
- * @brief Extracts executable arguments from a token list.
- * 
- * This function parses a list of tokens to extract arguments that are of 
- * executable type (`EXEC`). It skips redirection tokens (`REDIR`) and their
- * associated targets. The function halts processing if it encounters a node 
- * token (`NODE`) or a parentheses token (`PRTHESES`), as these indicate the 
- * end of the argument list.
- * The extracted arguments are stored in a new list (`t_list **`), which is 
- * dynamically allocated and returned to the caller.
- * 
- * @param list The list of tokens to extract arguments from.
- * @return A pointer to a new list (`t_list **`) containing the arguments, 
- *         or `NULL` if memory allocation fails.
+ * @brief Extracts arguments from the token list and stores them in a new list.
+ *
+ * This function iterates through the provided token list, identifying tokens of
+ * type `EXEC` and adding their values to a newly allocated argument list. It
+ * skips over `REDIR` tokens and their associated values, as well as stopping
+ * when a `NODE` token is encountered. The resulting list contains arguments in
+ * the order they were found.
+ *
+ * @param list A double pointer to the token list from which arguments are
+ *        extracted.
+ * @return A double pointer to the newly created argument list, or `NULL` if
+ *         memory allocation fails.
  */
 static t_list	**ft_get_args(t_list **list)
 {
-	t_list	**args; //update brief
+	t_list	**args;
 	t_list	*curr;
 	t_token	*token;
 

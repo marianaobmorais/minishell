@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_build_tree.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 17:34:44 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/16 17:35:04 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 /**
@@ -66,23 +78,21 @@ static void	ft_skip_export_tokens(t_list **list)
 }
 
 /**
- * @brief Locates the next pipe token in the token list.
- * 
- * This function searches through a linked list of tokens, starting from the 
- * given node, for the next token of type `PIPE`. If a `PIPE` token is found, 
- * the list pointer is updated to the node following the `PIPE`, and the 
- * function returns `true`. If a logical operator token (`AND` or `OR`) is 
- * encountered before finding a `PIPE`, the search stops, and the function 
- * returns `false`. If no `PIPE` is found and the list is exhausted, 
- * `false` is returned.
- * 
- * @param list Pointer to a pointer to the current node in the token list. 
- *        The function modifies this pointer as it iterates through the list.
- * @return `true` if a `PIPE` token is found; otherwise, `false`.
+ * @brief Searches for the next PIPE token in the provided token list.
+ *
+ * This function iterates through the given token list to locate the next token 
+ * of type `PIPE`. If a `PIPE` token is found, the pointer to the list is
+ * updated to the node following the `PIPE`, and the function returns `true`. If
+ * no `PIPE` is found, it continues to the end of the list and returns `false`.
+ *
+ * @param list A double pointer to the token list being searched. 
+ *        The pointer is updated to point to the node following the `PIPE` if
+ *        found.
+ * @return `true` if a `PIPE` token is found, `false` otherwise.
  */
 static bool	ft_find_next_pipe(t_list **list)
 {
-	t_token	*token; //update brief
+	t_token	*token;
 
 	if (!list || !*list)
 		return (false);
@@ -100,24 +110,26 @@ static bool	ft_find_next_pipe(t_list **list)
 }
 
 /**
- * @brief Constructs a binary tree representing a pipeline structure.
+ * @brief Constructs a binary tree representing the shell command structure.
  *
- * This function recursively builds a binary tree from a list of tokens, where 
- * each node represents a segment of a pipeline or command sequence. The tree
- * is built by processing branches and identifying pipeline operators (`|`) to
- * split the structure into left and right subtrees. Each node points to its
- * parent node, enabling traversal up the tree.
+ * This function builds a binary tree from the provided token list to represent 
+ * a command's execution structure. Each node in the tree corresponds to a
+ * command, redirection, or pipeline segment. The left child of the node
+ * represents the current command or redirection branch, while the right child
+ * represents subsequent commands in a pipeline if a `PIPE` token is encountered
  *
- * @param list A double pointer to the head of the token list. The list is
- *        updated as tokens are processed.
- * @param parent_node A pointer to the parent node for the current subtree. If 
- *        `NULL`, the current node is the root of the tree.
- * @return A pointer to the root of the newly constructed subtree, or `NULL` if 
- *         memory allocation fails or if the token list is empty or invalid.
+ * The function handles `PIPE` tokens to split the tree into segments. If
+ * export-related tokens are detected and need skipping, they are processed by
+ * `ft_skip_export_tokens`.
+ *
+ * @param list A double pointer to the token list used for tree construction.
+ *        The pointer is updated as tokens are consumed.
+ * @return A pointer to the root node of the constructed tree, or `NULL` on
+ *         failure.
  */
 void	*ft_build_tree(t_list **list)
 {
-	t_node	*node; //update brief
+	t_node	*node;
 
 	if (ft_validate_skip(list))
 		ft_skip_export_tokens(list);
