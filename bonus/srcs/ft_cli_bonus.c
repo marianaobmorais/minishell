@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:56 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:28:57 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:19:47 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ void	ft_restore_cli(t_shell *sh)
 		sh->root = NULL;
 	}
 	close_original_fds(sh);
-	if (sh->prompt)
-		free(sh->prompt);
 }
 
 /**
@@ -72,7 +70,6 @@ void	ft_init_var_sh(t_shell *sh)
 	sh->stderr_ = -1;
 	sh->prev = NULL;
 	sh->root = NULL;
-	sh->prompt = NULL;
 	sh->fds[0] = -1;
 	sh->fds[1] = -1;
 }
@@ -170,13 +167,12 @@ void	ft_cli(t_shell *sh)
 	while (1)
 	{
 		ft_signal(PARENT_);
-		ft_prompt(sh);
 		if (input)
 		{
 			free(input);
 			input = NULL;
 		}
-		input = readline(sh->prompt);
+		input = readline(PROG_NAME);
 		if (!input)
 			return (free(input), ft_putstr_fd("exit\n", 1), rl_clear_history());
 		if (ft_history(input))

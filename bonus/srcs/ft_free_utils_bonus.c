@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_utils_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:49:17 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/17 17:49:18 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:20:25 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,5 @@ void	ft_free_sh(t_shell *sh)
 		sh->root = NULL;
 	}
 	close_original_fds(sh);
-	if (sh->prompt)
-		free(sh->prompt);
 	free(sh);
 }
