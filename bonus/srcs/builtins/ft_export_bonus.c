@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:46 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:27:47 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:07:37 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,13 @@ static int	replace_var(char *str, size_t size, char ***envp, t_env mode)
  * @return Returns 0 if the var is concatenated or added new, if LOCAL mode
  *         Returns -1 if not concatenated.
  */
-static int	concatenate_var(char *str, char ***envp, t_env mode)
+int	concatenate_var(char *str, char ***envp, t_env mode, t_shell *sh)
 {
 	int		i;
 	int		size;
 	char	*temp_str;
 	char	*value;
+	//update brief
 
 	i = 0;
 	while ((*envp)[i])
@@ -116,6 +117,8 @@ static int	concatenate_var(char *str, char ***envp, t_env mode)
 	}
 	if (mode == LOCAL)
 		return (-1);
+	//if(ft_limbo_concatenate(str, &(sh->limbo), LIMBO, sh) == 0)
+	//	return (0);
 	return (add_var(str, i, envp));
 }
 
@@ -145,9 +148,9 @@ static int	ft_export_local(char **argv, t_shell *sh)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
 		{
-			if (concatenate_var(*argv, &(sh->global), LOCAL) == -1
+			if (concatenate_var(*argv, &(sh->global), LOCAL, NULL) == -1
 				&& ft_limbo_import(sh, *argv) == -1)
-				concatenate_var(*argv, &(sh->local), DEFAULT);
+				concatenate_var(*argv, &(sh->local), DEFAULT, NULL);
 		}
 		else
 		{
@@ -195,7 +198,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		if (!ft_strchr(*argv, '='))
 			ft_local_import(sh, *argv);
 		else if (s_key > 0 && (*argv)[s_key - 1] == '+')
-			concatenate_var(*argv, &(sh->global), DEFAULT);
+			concatenate_var(*argv, &(sh->global), DEFAULT, sh);
 		else
 			replace_var(*argv, s_key, &(sh->global), DEFAULT);
 		argv++;

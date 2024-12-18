@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_bonus.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:42:55 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/17 17:42:56 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:02:11 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ long long	ft_atoll(const char *nptr, bool *is_sign);
 /* ft_export_bonus.c */
 
 int			add_var(char *str, size_t size, char ***envp);
+int			concatenate_var(char *str, char ***envp, t_env mode, t_shell *sh);
 int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 
 /* ft_export_utils_bonus.c */
