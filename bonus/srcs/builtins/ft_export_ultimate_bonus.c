@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 15:04:11 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:33:27 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ static int	delete_var_limbo(char *str, char ***envp, size_t size_env)
 	return (0);
 }
 
-int	ft_limbo_concatenate(char *str, char ***envp, t_env mode, t_shell *sh)
-{
-	concatenate_var(str, envp, LIMBO, sh);
-}
+// int	ft_limbo_concatenate(char *str, char ***envp, t_env mode, t_shell *sh)
+// {
+// 	concatenate_var(str, envp, LIMBO, sh);
+// }
 
 /**
  * @brief Imports a variable from limbo storage to the global environment.

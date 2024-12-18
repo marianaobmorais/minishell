@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:46 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 15:07:37 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:38:22 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	concatenate_var(char *str, char ***envp, t_env mode, t_shell *sh)
 	char	*temp_str;
 	char	*value;
 	//update brief
+	(void)sh;
 
 	i = 0;
 	while ((*envp)[i])
@@ -191,16 +192,18 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		return (ft_exit_status(0, TRUE, FALSE));
 	}
 	argv++;
-	exit_code = check_key(argv);
 	while (*argv)
 	{
-		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
-		if (!ft_strchr(*argv, '='))
-			ft_local_import(sh, *argv);
-		else if (s_key > 0 && (*argv)[s_key - 1] == '+')
-			concatenate_var(*argv, &(sh->global), DEFAULT, sh);
-		else
-			replace_var(*argv, s_key, &(sh->global), DEFAULT);
+		exit_code = check_key(argv);
+		{
+			s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
+			if (!ft_strchr(*argv, '='))
+				ft_local_import(sh, *argv);
+			else if (s_key > 0 && (*argv)[s_key - 1] == '+')
+				concatenate_var(*argv, &(sh->global), DEFAULT, sh);
+			else
+				replace_var(*argv, s_key, &(sh->global), DEFAULT);
+		}
 		argv++;
 	}
 	return (ft_exit_status(exit_code, TRUE, FALSE));
