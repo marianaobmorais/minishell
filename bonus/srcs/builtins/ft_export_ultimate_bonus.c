@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 19:33:27 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:03:21 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,39 @@ int	ft_limbo_import(t_shell *sh, char *arg)
 		return (0);
 	}
 	return (-1);
+}
+
+/**
+ * @brief Imports a local environment variable into the global environment.
+ *
+ * This function searches for a variable in the local environment that matches
+ * the provided argument. If a match is found and the variable has a valid 
+ * format (with an '=' separator), it adds the variable to the global envp.
+ *
+ * @param sh The shell structure containing local and global environments.
+ * @param arg The variable name to search for in the local environment.
+ */
+void	ft_local_import(t_shell *sh, char *arg)
+{
+	int		i;
+	int		size;
+	char	*var;
+
+	i = 0;
+	size = ft_strlen(arg);
+	var = NULL;
+	while ((sh->local)[i])
+	{
+		if (ft_strncmp(arg, (sh->local)[i], size) == 0
+			&& (sh->local)[i][size] == '=')
+		{
+			var = (sh->local)[i];
+			break ;
+		}
+		i++;
+	}
+	if (var)
+		add_var(var, ft_argslen(sh->global), &(sh->global));
+	else
+		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
 }

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:42:55 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/18 15:02:11 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:53:19 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,13 @@ int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 
 void		ft_sort_str_tab(char **str, int n);
 void		ft_print_export(char **envp);
-int			check_key(char **argv);
-void		ft_local_import(t_shell *sh, char *arg);
+int			ft_check_keys_argv(char **argv);
+int			ft_check_key(char *argv);
 
 /* ft_export_ultimate_bonus.c */
 
 int			ft_limbo_import(t_shell *sh, char *arg);
+void		ft_local_import(t_shell *sh, char *arg);
 
 /* builtins_utils_bonus.c */
 

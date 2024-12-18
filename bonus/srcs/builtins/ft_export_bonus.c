@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:46 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 19:38:22 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:02:13 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,8 @@ static int	ft_export_local(char **argv, t_shell *sh)
 {
 	size_t	s_key;
 
-	if (check_key(argv) != 0)
-		return (ft_exit_status(2, TRUE, FALSE));
+	if (ft_check_keys_argv(argv) != 0)
+		return (ft_exit_status(1, TRUE, FALSE));
 	while (*argv)
 	{
 		if (!ft_strchr(*argv, '='))
@@ -182,19 +182,17 @@ static int	ft_export_local(char **argv, t_shell *sh)
 int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 {
 	size_t	s_key;
-	int		exit_code;
 
 	if (mode == LOCAL)
 		return (ft_export_local(argv, sh));
 	if (argc == 1)
-	{
-		ft_print_export(ft_merge_env(sh->global, sh->limbo));
-		return (ft_exit_status(0, TRUE, FALSE));
-	}
+		return (ft_print_export(ft_merge_env(sh->global, sh->limbo)), \
+			ft_exit_status(0, TRUE, FALSE));
 	argv++;
+	ft_exit_status(0, TRUE, FALSE);
 	while (*argv)
 	{
-		exit_code = check_key(argv);
+		if (ft_check_key(*argv) == 0)
 		{
 			s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 			if (!ft_strchr(*argv, '='))
@@ -206,5 +204,5 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 		}
 		argv++;
 	}
-	return (ft_exit_status(exit_code, TRUE, FALSE));
+	return (ft_exit_status(0, FALSE, FALSE));
 }

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:53 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:27:54 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:03:52 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ void	ft_print_export(char **envp)
  *
  * @param argv Array of argument strings to validate.
  * @return 0 if all identifiers are valid, or an error message and non-zero
- * 			value if any identifier is invalid.
+ *         value if any identifier is invalid.
  */
-int	check_key(char **argv)
+int	ft_check_keys_argv(char **argv)
 {
 	size_t	i;
 
@@ -148,37 +148,29 @@ int	check_key(char **argv)
 	return (0);
 }
 
-/**
- * @brief Imports a local environment variable into the global environment.
- *
- * This function searches for a variable in the local environment that matches
- * the provided argument. If a match is found and the variable has a valid 
- * format (with an '=' separator), it adds the variable to the global envp.
- *
- * @param sh The shell structure containing local and global environments.
- * @param arg The variable name to search for in the local environment.
- */
-void	ft_local_import(t_shell *sh, char *arg)
+int	ft_check_key(char *argv)
 {
-	int		i;
-	int		size;
-	char	*var;
+	size_t	i; //update brief
 
-	i = 0;
-	size = ft_strlen(arg);
-	var = NULL;
-	while ((sh->local)[i])
+	if (argv)
 	{
-		if (ft_strncmp(arg, (sh->local)[i], size) == 0
-			&& (sh->local)[i][size] == '=')
+		i = 0;
+		if (!ft_isalpha(argv[i]) && argv[i] != '_')
+			return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+			ft_exit_status(1, TRUE, FALSE));
+		while (argv[i] != '=' && argv[i])
 		{
-			var = (sh->local)[i];
-			break ;
+			if (!ft_isalnum(argv[i]) && argv[i] != '_')
+			{
+				if (argv[i] != '+')
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+						ft_exit_status(1, TRUE, FALSE));
+				else if (argv[i] == '+' && argv[i + 1] != '=')
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+						ft_exit_status(1, TRUE, FALSE));
+			}
+			i++;
 		}
-		i++;
 	}
-	if (var)
-		add_var(var, ft_argslen(sh->global), &(sh->global));
-	else
-		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
+	return (0);
 }
