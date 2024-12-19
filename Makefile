@@ -6,7 +6,7 @@
 #    By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/18 10:21:17 by joneves-         ###   ########.fr        #
+#    Updated: 2024/12/19 14:25:44 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -122,6 +122,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 RM = rm -f
 
 VALGRIND = valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=.ignore_readline
+#VALGRIND = valgrind --leak-check=full --track-fds=yes
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline

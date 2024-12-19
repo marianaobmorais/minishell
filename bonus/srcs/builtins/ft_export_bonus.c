@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:46 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:27:47 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 07:33:28 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,20 +79,23 @@ static int	replace_var(char *str, size_t size, char ***envp, t_env mode)
 }
 
 /**
- * @brief Concatenates a value to an existing environment variable or 
- *        adds it as a new variable.
+ * @brief Concatenates a variable with an existing environment variable or adds
+ * a new variable if not present.
  *
- * Searches for an environment variable in `envp` that matches the prefix of
- * `str` (before `+=`). If found, concatenates the new value from
- * `str` (after `+=`) to the existing variable value.
- * If not found, calls `add_var` to add `str` as a new environment variable.
+ * This function searches for an environment variable matching the given string
+ * and concatenates its value if found. If the variable is not found and the
+ * mode is LOCAL or LIMBO, it returns -1. In DEFAULT mode, it calls 
+ * `ft_concat_plus` to handle the concatenation. If the variable is still not
+ * found, it trims the '+' character and adds the new variable to the
+ * environment.
  *
- * @param str The environment variable string with the format "VAR+=VALUE".
- * @param envp Pointer to the array of environment variables to be updated.
- * @return Returns 0 if the var is concatenated or added new, if LOCAL mode
- *         Returns -1 if not concatenated.
+ * @param str The input string containing the variable to concatenate.
+ * @param envp A pointer to the environment variables array.
+ * @param mode The mode of the environment (LOCAL, LIMBO, or DEFAULT).
+ * @param sh A pointer to the t_shell structure containing the shell state.
+ * @return 0 on success, -1 if the variable is not found in LOCAL or LIMBO mode.
  */
-static int	concatenate_var(char *str, char ***envp, t_env mode)
+int	concatenate_var(char *str, char ***envp, t_env mode, t_shell *sh)
 {
 	int		i;
 	int		size;
@@ -104,8 +107,7 @@ static int	concatenate_var(char *str, char ***envp, t_env mode)
 	{
 		value = ft_strchr(str, '+') + 2;
 		size = (ft_strlen(str) - ft_strlen(value)) - 2;
-		if (ft_strncmp(str, (*envp)[i], size) == 0
-			&& (*envp)[i][size] == '=')
+		if (ft_strncmp(str, (*envp)[i], size) == 0 && (*envp)[i][size] == '=')
 		{
 			temp_str = ft_strjoin((*envp)[i], value);
 			free((*envp)[i]);
@@ -114,9 +116,12 @@ static int	concatenate_var(char *str, char ***envp, t_env mode)
 		}
 		i++;
 	}
-	if (mode == LOCAL)
+	if (mode == LOCAL || mode == LIMBO)
 		return (-1);
-	return (add_var(str, i, envp));
+	if (mode == DEFAULT && ft_concat_plus(str, DEFAULT, sh) == 0)
+		return (0);
+	temp_str = ft_chartrim(str, '+');
+	return (add_var(temp_str, i, envp), free(temp_str), 0);
 }
 
 /**
@@ -136,8 +141,8 @@ static int	ft_export_local(char **argv, t_shell *sh)
 {
 	size_t	s_key;
 
-	if (check_key(argv) != 0)
-		return (ft_exit_status(2, TRUE, FALSE));
+	if (ft_check_keys_argv(argv) != 0)
+		return (ft_exit_status(1, TRUE, FALSE));
 	while (*argv)
 	{
 		if (!ft_strchr(*argv, '='))
@@ -145,9 +150,9 @@ static int	ft_export_local(char **argv, t_shell *sh)
 		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
 		if ((*argv)[s_key - 1] == '+')
 		{
-			if (concatenate_var(*argv, &(sh->global), LOCAL) == -1
+			if (concatenate_var(*argv, &(sh->global), LOCAL, NULL) == -1
 				&& ft_limbo_import(sh, *argv) == -1)
-				concatenate_var(*argv, &(sh->local), DEFAULT);
+				concatenate_var(*argv, &(sh->local), DEFAULT, sh);
 		}
 		else
 		{
@@ -178,27 +183,27 @@ static int	ft_export_local(char **argv, t_shell *sh)
 int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 {
 	size_t	s_key;
-	int		exit_code;
 
 	if (mode == LOCAL)
 		return (ft_export_local(argv, sh));
 	if (argc == 1)
-	{
-		ft_print_export(ft_merge_env(sh->global, sh->limbo));
-		return (ft_exit_status(0, TRUE, FALSE));
-	}
+		return (ft_print_export(ft_merge_env(sh->global, sh->limbo)), \
+			ft_exit_status(0, TRUE, FALSE));
 	argv++;
-	exit_code = check_key(argv);
+	ft_exit_status(0, TRUE, FALSE);
 	while (*argv)
 	{
-		s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
-		if (!ft_strchr(*argv, '='))
-			ft_local_import(sh, *argv);
-		else if (s_key > 0 && (*argv)[s_key - 1] == '+')
-			concatenate_var(*argv, &(sh->global), DEFAULT);
-		else
-			replace_var(*argv, s_key, &(sh->global), DEFAULT);
+		if (ft_check_key(*argv) == 0)
+		{
+			s_key = (ft_strlen(*argv) - ft_strlen(ft_strchr(*argv, '=')));
+			if (!ft_strchr(*argv, '='))
+				ft_local_import(sh, *argv);
+			else if (s_key > 0 && (*argv)[s_key - 1] == '+')
+				concatenate_var(*argv, &(sh->global), DEFAULT, sh);
+			else
+				replace_var(*argv, s_key, &(sh->global), DEFAULT);
+		}
 		argv++;
 	}
-	return (ft_exit_status(exit_code, TRUE, FALSE));
+	return (ft_exit_status(0, FALSE, FALSE));
 }
