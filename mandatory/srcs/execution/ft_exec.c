@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:57 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 17:42:26 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:11:00 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 		i++;
 	if (envp[i])
 		paths = ft_split(envp[i] + 5, ':');
+	if (!paths)
+		return (NULL);
 	i = -1;
 	while (paths[++i])
 	{
