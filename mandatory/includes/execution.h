@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:42:59 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:43:00 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:14:05 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_shell
 	char	**global;
 	char	**local;
 	char	**limbo;
-	char	*prompt;
 	int		run;
 	void	*root;
 }	t_shell;

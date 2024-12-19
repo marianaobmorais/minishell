@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:43:17 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:43:18 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:20:58 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_shell
 	char	**global;
 	char	**local;
 	char	**limbo;
-	char	*prompt;
 	int		run;
 	int		search_heredoc;
 	t_node	*next_node;
