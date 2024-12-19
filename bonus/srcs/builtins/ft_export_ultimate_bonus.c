@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/19 07:29:01 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 22:13:04 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,7 @@ void	ft_local_import(t_shell *sh, char *arg)
 	var = NULL;
 	while ((sh->local)[i])
 	{
-		if (ft_strncmp(arg, (sh->local)[i], size) == 0
-			&& (sh->local)[i][size] == '=')
+		if (ft_strncmp(arg, (sh->local)[i], size) == 0 && (sh->local)[i][size] == '=')
 		{
 			var = (sh->local)[i];
 			break ;
@@ -208,5 +207,15 @@ void	ft_local_import(t_shell *sh, char *arg)
 	if (var)
 		add_var(var, ft_argslen(sh->global), &(sh->global));
 	else
+	{
+		//norm
+		i = 0;
+		while ((sh->global)[i])
+		{
+			if (ft_strncmp(arg, (sh->global)[i], size) == 0 && (sh->global)[i][size] == '=')
+				return ;
+			i++;
+		}
 		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
+	}
 }
