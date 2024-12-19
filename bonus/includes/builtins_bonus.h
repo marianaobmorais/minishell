@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:42:55 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/18 19:53:19 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 06:52:22 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int			ft_check_key(char *argv);
 
 int			ft_limbo_import(t_shell *sh, char *arg);
 void		ft_local_import(t_shell *sh, char *arg);
+int			ft_concat_plus(char *str, t_env mode, t_shell *sh);
+char		*ft_chartrim(char *str, char c);
 
 /* builtins_utils_bonus.c */
 

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:35 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:31:36 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 07:33:10 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param str The array of strings to be sorted.
  * @param n The number of strings in the array.
  */
-static void	ft_sort_str_tab(char **str, int n)
+void	ft_sort_str_tab(char **str, int n)
 {
 	int		k;
 	int		j;
@@ -121,9 +121,9 @@ void	ft_print_export(char **envp)
  *
  * @param argv Array of argument strings to validate.
  * @return 0 if all identifiers are valid, or an error message and non-zero
- * 			value if any identifier is invalid.
+ *         value if any identifier is invalid.
  */
-int	check_key(char **argv)
+int	ft_check_keys_argv(char **argv)
 {
 	size_t	i;
 
@@ -149,36 +149,43 @@ int	check_key(char **argv)
 }
 
 /**
- * @brief Imports a local environment variable into the global environment.
+ * @brief Validates a given string to ensure it is a correct environment
+ * variable key.
  *
- * This function searches for a variable in the local environment that matches
- * the provided argument. If a match is found and the variable has a valid 
- * format (with an '=' separator), it adds the variable to the global envp.
+ * This function checks if the input string `argv` is a valid environment
+ * variable key. It ensures the first character is either an alphabetic char
+ * or an underscore. It then iterates through the rest of the string, allowing
+ * alphanumeric characters, underscores, and a single '+' character followed by
+ * an '='.If any invalid character is found, it prints an error message and sets
+ * the exit status.
  *
- * @param sh The shell structure containing local and global environments.
- * @param arg The variable name to search for in the local environment.
+ * @param argv The input string to be validated.
+ * @return 0 if the input string is a valid key, otherwise it returns -1 and
+ *         sets the exit status.
  */
-void	ft_local_import(t_shell *sh, char *arg)
+int	ft_check_key(char *argv)
 {
-	int		i;
-	int		size;
-	char	*var;
+	size_t	i;
 
-	i = 0;
-	size = ft_strlen(arg);
-	var = NULL;
-	while ((sh->local)[i])
+	if (argv)
 	{
-		if (ft_strncmp(arg, (sh->local)[i], size) == 0
-			&& (sh->local)[i][size] == '=')
+		i = 0;
+		if (!ft_isalpha(argv[i]) && argv[i] != '_')
+			return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+			ft_exit_status(1, TRUE, FALSE));
+		while (argv[i] != '=' && argv[i])
 		{
-			var = (sh->local)[i];
-			break ;
+			if (!ft_isalnum(argv[i]) && argv[i] != '_')
+			{
+				if (argv[i] != '+')
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+						ft_exit_status(1, TRUE, FALSE));
+				else if (argv[i] == '+' && argv[i + 1] != '=')
+					return (ft_stderror(FALSE, ERROR_IDENTIFIER, argv), \
+						ft_exit_status(1, TRUE, FALSE));
+			}
+			i++;
 		}
-		i++;
 	}
-	if (var)
-		add_var(var, ft_argslen(sh->global), &(sh->global));
-	else
-		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
+	return (0);
 }

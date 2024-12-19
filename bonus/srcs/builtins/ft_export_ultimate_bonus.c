@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 20:03:21 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 07:29:01 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,88 @@ static int	delete_var_limbo(char *str, char ***envp, size_t size_env)
 	return (0);
 }
 
-// int	ft_limbo_concatenate(char *str, char ***envp, t_env mode, t_shell *sh)
-// {
-// 	concatenate_var(str, envp, LIMBO, sh);
-// }
+/**
+ * @brief Removes all occurrences of a specified character from a string.
+ *
+ * This function creates a new string by removing all occurrences of the 
+ * specified character from the input string. If the input string is NULL, the 
+ * function returns NULL.
+ * If the specified character is not found in the input string, the original
+ * string is returned. The function handles memory allocation for the new
+ * string and ensures proper error handling in case the allocation fails.
+ *
+ * @param str The input string from which the character will be removed.
+ * @param c The character to be removed from the string.
+ * @return A new string with all occurrences of the specified character removed,
+ *         or the original string if the character is not found.
+ */
+char	*ft_chartrim(char *str, char c)
+{
+	char	*new_str;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	if (!ft_strchr(str, c))
+		return (str);
+	i = 0;
+	new_str = malloc(ft_strlen(str) * sizeof(char));
+	if (!new_str)
+		ft_error_malloc("chartrim");
+	while (*str)
+	{
+		if (*str == c)
+			str++;
+		if (*str != c)
+		{
+			new_str[i] = *str;
+			i++;
+		}
+		str++;
+	}
+	new_str[i] = '\0';
+	return (new_str);
+}
+
+/**
+ * @brief Concatenates a variable with the '+' symbol in the shell environment.
+ *
+ * This function processes a string containing a variable with a '+' symbol.
+ * It trims the '+' symbol from the string and attempts to import the variable
+ * into the shell environment. If the variable is not already present, it
+ * splits the string by the '+' symbol and concatenates the variable to the
+ * shell's local environment. The function handles memory allocation and
+ * deallocation for the temporary strings and arrays.
+ *
+ * @param str The input string containing the variable with the '+' symbol.
+ * @param mode The mode of the environment (unused).
+ * @param sh A pointer to the t_shell structure containing the shell state.
+ * @return 0 on success, -1 on failure.
+ */
+int	ft_concat_plus(char *str, t_env mode, t_shell *sh)
+{
+	char	**str_key;
+	char	*temp_str;
+
+	(void)mode;
+	temp_str = ft_chartrim(str, '+');
+	if (ft_limbo_import(sh, temp_str) == 0)
+	{
+		free(temp_str);
+		return (0);
+	}
+	str_key = ft_split(str, '+');
+	if (concatenate_var(str, &(sh->local), LOCAL, sh) == 0)
+	{
+		free(temp_str);
+		ft_local_import(sh, str_key[0]);
+		ft_free_vector(str_key);
+		return (0);
+	}
+	ft_free_vector(str_key);
+	free(temp_str);
+	return (-1);
+}
 
 /**
  * @brief Imports a variable from limbo storage to the global environment.

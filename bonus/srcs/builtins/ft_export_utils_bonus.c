@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:53 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 20:03:52 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/19 07:31:58 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,24 @@ int	ft_check_keys_argv(char **argv)
 	return (0);
 }
 
+/**
+ * @brief Validates a given string to ensure it is a correct environment
+ * variable key.
+ *
+ * This function checks if the input string `argv` is a valid environment
+ * variable key. It ensures the first character is either an alphabetic char
+ * or an underscore. It then iterates through the rest of the string, allowing
+ * alphanumeric characters, underscores, and a single '+' character followed by
+ * an '='.If any invalid character is found, it prints an error message and sets
+ * the exit status.
+ *
+ * @param argv The input string to be validated.
+ * @return 0 if the input string is a valid key, otherwise it returns -1 and
+ *         sets the exit status.
+ */
 int	ft_check_key(char *argv)
 {
-	size_t	i; //update brief
+	size_t	i;
 
 	if (argv)
 	{
