@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/19 07:29:01 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:01:11 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,27 +186,31 @@ int	ft_limbo_import(t_shell *sh, char *arg)
  * @param sh The shell structure containing local and global environments.
  * @param arg The variable name to search for in the local environment.
  */
-void	ft_local_import(t_shell *sh, char *arg)
+int	ft_local_import(t_shell *sh, char *arg)
 {
 	int		i;
 	int		size;
-	char	*var;
+	char	**env;
 
 	i = 0;
 	size = ft_strlen(arg);
-	var = NULL;
 	while ((sh->local)[i])
 	{
 		if (ft_strncmp(arg, (sh->local)[i], size) == 0
 			&& (sh->local)[i][size] == '=')
-		{
-			var = (sh->local)[i];
-			break ;
-		}
+			return (add_var((sh->local)[i], ft_argslen(sh->global), \
+				&(sh->global)));
 		i++;
 	}
-	if (var)
-		add_var(var, ft_argslen(sh->global), &(sh->global));
-	else
-		add_var(arg, ft_argslen(sh->limbo), &(sh->limbo));
+	i = 0;
+	env = ft_merge_env((sh->global), (sh->limbo));
+	while (env[i])
+	{
+		if (env[i] && ft_strncmp(arg, env[i], size) == 0
+			&& (env[i][size] == '=' || ft_strlen(arg) == ft_strlen(env[i])))
+			return (ft_free_vector(env), 0);
+		i++;
+	}
+	ft_free_vector(env);
+	return (add_var(arg, ft_argslen(sh->limbo), &(sh->limbo)));
 }

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:29:15 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:29:16 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:44:49 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,20 @@ static void	sig_heredoc_handler(int sig)
 }
 
 /**
+ * @brief Resets critical signals to default behavior or ignores them.
+ *
+ * Configures key signals: ignores SIGTSTP and restores default behavior 
+ * for SIGPIPE, SIGQUIT, and SIGINT.
+ */
+static void	sig_default(void)
+{
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGPIPE, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+}
+
+/**
  * @brief Configures signal handling based on process type (PARENT, HEREDOC,
  *        DEFAULT, CHILD).
  *
@@ -101,6 +115,7 @@ void	ft_signal(int type)
 	if (type == PARENT_)
 	{
 		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
 	}
@@ -112,14 +127,11 @@ void	ft_signal(int type)
 	}
 	if (type == DEFAULT_)
 	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+		sig_default();
 	}
 	if (type == CHILD_)
 	{
 		signal(SIGTSTP, SIG_IGN);
-		signal(SIGPIPE, SIG_IGN);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
 	}
