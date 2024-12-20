@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:43:17 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 10:20:58 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:03:36 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ int		ft_exec(t_list **args, t_shell *sh);
 
 /* ft_exec_utils_bonus.c */
 
-char	**tokentostring(t_list **args);
-int		ft_single_command(t_node *node, t_shell *sh); //check later
+int		ft_single_command(t_node *node, t_shell *sh);
 char	**ft_add_to_vector(char **old_vector, char *new_str);
 
 /* ft_exec_ultimate_bonus.c */
@@ -87,5 +86,9 @@ int		ft_free_paths(char **paths, int i);
 int		isvalid_dir(char *pathname, char **args, t_shell *sh);
 int		isvalid_file(char *pathname, char **args, t_shell *sh);
 char	*merge(char *s1, char *s2);
+
+/* ft_tokentostring_bonus.c */
+
+char	**tokentostring(t_list **args);
 
 #endif //EXECUTION_BONUS_H

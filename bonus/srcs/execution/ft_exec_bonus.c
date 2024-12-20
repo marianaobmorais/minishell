@@ -6,69 +6,40 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:20 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/19 17:09:39 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/20 15:59:50 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell_bonus.h"
 
 /**
- * @brief Safely allocates memory for an array of strings.
+ * @brief Resolves the pathname for a command using provided paths.
  *
- * This function allocates memory for an array of strings, ensuring that the
- * allocation is successful. If the allocation fails, the `ft_error_malloc`
- * function is called to handle the error.
+ * This function iterates through a list of paths, concatenates each path with 
+ * the command, and checks if the resulting pathname is accessible and valid. 
+ * If a valid pathname is found, it frees unused paths and returns the resolved 
+ * pathname. If no valid pathname is found, all paths are freed, and `NULL` is 
+ * returned.
  *
- * @return A pointer to the allocated array of strings.
+ * @param paths An array of paths to search for the command.
+ * @param cmds An array of command arguments, where `cmds[0]` is the command name
+ * @param sh A pointer to the shell structure for additional validation.
+ * @return A valid pathname string for the command, or `NULL` if not found.
  */
-char	**safe_malloc_str(void)
+static char	*ft_handle_pathname(char **paths, char **cmds, t_shell *sh)
 {
-	char	**n_args;
-
-	n_args = (char **)malloc(sizeof(char *));
-	if (!n_args)
-		ft_error_malloc("new_args");
-	*n_args = NULL;
-	return (n_args);
-}
-
-/**
- * @brief Converts a list of tokens to an array of strings.
- *
- * Iterates through a linked list of tokens, converting each token's value
- * to a string and storing it in a newly allocated array. Handles memory
- * allocation and error checking.
- *
- * @param args A double pointer to the list of tokens.
- *
- * @return A newly allocated array of strings, or NULL on error.
- */
-char	**tokentostring(t_list **args)
-{
-	char	**n_args;
-	char	**new_args_cp;
-	t_list	*curr;
+	char	*pathname;
 	int		i;
 
-	n_args = safe_malloc_str();
-	curr = *args;
-	while (curr)
+	i = 0;
+	while (paths[++i])
 	{
-		if (((t_token *)(curr)->content)->expand
-			&& !((t_token *)(curr)->content)->state)
-		{
-			new_args_cp = ft_split(((t_token *)(curr)->content)->value, ' ');
-			i = -1;
-			while (new_args_cp[++i])
-				n_args = ft_add_to_vector(n_args, new_args_cp[i]);
-			ft_free_vector(new_args_cp);
-		}
-		else
-			n_args = ft_add_to_vector(n_args,
-					((t_token *)(curr)->content)->value);
-		curr = (curr)->next;
+		pathname = merge(merge(paths[i], "/"), cmds[0]);
+		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
+			return (ft_free_paths(paths, i), pathname);
+		free(pathname);
 	}
-	return (n_args);
+	return (free(paths), NULL);
 }
 
 /**
@@ -104,15 +75,8 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 		paths = ft_split(envp[i] + 5, ':');
 	if (!paths)
 		return (NULL);
-	i = -1;
-	while (paths[++i])
-	{
-		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
-			return (ft_free_paths(paths, i), pathname);
-		free(pathname);
-	}
-	return (free(paths), NULL);
+	pathname = ft_handle_pathname(paths, cmds, sh);
+	return (pathname);
 }
 
 /**
