@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
+#    By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/20 16:07:03 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/12/20 18:49:48 by joneves-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/builtins/ft_export.c \
 		$(SRCS_DIR)/builtins/ft_export_utils.c \
 		$(SRCS_DIR)/builtins/ft_export_ultimate.c \
+		$(SRCS_DIR)/builtins/ft_export_declare.c \
 		$(SRCS_DIR)/builtins/ft_unset.c \
 		$(SRCS_DIR)/builtins/ft_exit.c \
 		$(SRCS_DIR)/builtins/ft_exit_utils.c \
@@ -108,6 +109,7 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/builtins/ft_export_bonus.c \
 		$(BONUS_DIR)/builtins/ft_export_utils_bonus.c \
 		$(BONUS_DIR)/builtins/ft_export_ultimate_bonus.c \
+		$(BONUS_DIR)/builtins/ft_export_declare_bonus.c \
 		$(BONUS_DIR)/builtins/ft_unset_bonus.c \
 		$(BONUS_DIR)/builtins/ft_exit_bonus.c \
 		$(BONUS_DIR)/builtins/ft_exit_utils_bonus.c \

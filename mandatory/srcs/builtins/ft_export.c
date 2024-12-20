@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:38 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/19 07:34:10 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 18:58:05 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,13 @@ int	add_var(char *str, size_t size, char ***envp)
  * @return Returns 0 if the variable is replaced or added new, if LOCAL mode
  *         Returns -1 if not replaced.
  */
-static int	replace_var(char *str, size_t size, char ***envp, t_env mode)
+static int	replace_var(char *str, char ***envp, t_env mode, t_shell *sh)
 {
 	int	i;
+	int	size;
 
 	i = 0;
+	size = (ft_strlen(str) - ft_strlen(ft_strchr(str, '=')));
 	while ((*envp)[i])
 	{
 		if (ft_strncmp(str, (*envp)[i], size) == 0
@@ -75,6 +77,8 @@ static int	replace_var(char *str, size_t size, char ***envp, t_env mode)
 	}
 	if (mode == LOCAL)
 		return (-1);
+	if (mode == DEFAULT)
+		ft_clear_limbo(str, sh);
 	return (add_var(str, i, envp));
 }
 
@@ -156,9 +160,9 @@ static int	ft_export_local(char **argv, t_shell *sh)
 		}
 		else
 		{
-			if (replace_var(*argv, s_key, &(sh->global), LOCAL) == -1
+			if (replace_var(*argv, &(sh->global), LOCAL, sh) == -1
 				&& ft_limbo_import(sh, *argv) == -1)
-				replace_var(*argv, s_key, &(sh->local), DEFAULT);
+				replace_var(*argv, &(sh->local), DEFAULT, sh);
 		}
 		argv++;
 	}
@@ -201,7 +205,7 @@ int	ft_export(int argc, char **argv, t_shell *sh, t_env mode)
 			else if (s_key > 0 && (*argv)[s_key - 1] == '+')
 				concatenate_var(*argv, &(sh->global), DEFAULT, sh);
 			else
-				replace_var(*argv, s_key, &(sh->global), DEFAULT);
+				replace_var(*argv, &(sh->global), DEFAULT, sh);
 		}
 		argv++;
 	}
