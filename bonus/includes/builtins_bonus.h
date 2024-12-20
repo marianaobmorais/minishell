@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:42:55 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/20 13:34:33 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 19:00:02 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,9 @@ int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
 
 /* ft_export_utils_bonus.c */
 
-void		ft_sort_str_tab(char **str, int n);
-void		ft_print_export(char **envp);
 int			ft_check_keys_argv(char **argv);
 int			ft_check_key(char *argv);
+void		ft_clear_limbo(char *arg, t_shell *sh);
 
 /* ft_export_ultimate_bonus.c */
 
@@ -66,6 +65,12 @@ int			ft_limbo_import(t_shell *sh, char *arg);
 int			ft_local_import(t_shell *sh, char *arg);
 int			ft_concat_plus(char *str, t_env mode, t_shell *sh);
 char		*ft_chartrim(char *str, char c);
+int			delete_var_limbo(char *str, char ***envp, size_t size_env);
+
+/* ft_export_declare_bonus.c */
+
+void		ft_sort_str_tab(char **str, int n);
+void		ft_print_export(char **envp);
 
 /* builtins_utils_bonus.c */
 

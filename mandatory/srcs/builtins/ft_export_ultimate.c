@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:32 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 14:01:01 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/20 18:48:02 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * @param size_env The current size of the environment array.
  * @return 0 on success, -1 on memory allocation failure.
  */
-static int	delete_var_limbo(char *str, char ***envp, size_t size_env)
+int	delete_var_limbo(char *str, char ***envp, size_t size_env)
 {
 	size_t	i;
 	size_t	j;
