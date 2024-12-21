@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:47:03 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/20 18:49:18 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/21 12:34:45 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void		ft_cd(int argc, const char *new_dir, char **envp);
 
 /* ft_echo.c */
 
-void		ft_echo(char **args);
+int		ft_echo(char **args);
 
 /* ft_pwd.c */
 
