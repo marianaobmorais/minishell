@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:00:37 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:00:38 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/21 12:34:33 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static bool	ft_arg_is_flag(char *s)
  *
  * @param args The array of arguments passed to the `echo` command.
  */
-void	ft_echo(char **args)
+int	ft_echo(char **args)
 {
 	bool	flag;
 	int		i;
@@ -59,7 +59,7 @@ void	ft_echo(char **args)
 	if (!args[1])
 	{
 		printf("\n");
-		return ;
+		return (ft_exit_status(0, TRUE, FALSE));
 	}
 	flag = false;
 	i = 1;
@@ -77,7 +77,7 @@ void	ft_echo(char **args)
 	}
 	if (!flag)
 		printf("\n");
-	ft_exit_status(0, TRUE, FALSE);
+	return (ft_exit_status(0, TRUE, FALSE));
 }
 
 /* int	main(int argc, char **argv)
