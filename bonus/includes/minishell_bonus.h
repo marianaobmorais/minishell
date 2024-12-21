@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:02:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/20 21:56:48 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/21 09:46:36 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@
 # include "execution_bonus.h"
 
 //program name
-# define PROG_NAME "\001\033[1m\033[31m\002b\001\033[33m\002a\001\033[32m\002s\
-\001\033[34m\002h\001\033[35m\002i\001\033[36m\002n\001\033[34m\002h\
-\001\033[31m\002o\001\033[0m\002 $ "
-//# define PROG_NAME "bashinho $ "
+# define PROG_NAME "bashinho $ "
 # define PROG_NAME_ERROR "\033[1;31mbashinho: \033[0m"
 
 //messages
