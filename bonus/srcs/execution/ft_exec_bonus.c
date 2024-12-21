@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:20 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 15:59:50 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:02:30 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ static char	*ft_handle_pathname(char **paths, char **cmds, t_shell *sh)
 	char	*pathname;
 	int		i;
 
-	i = 0;
+	i = -1;
 	while (paths[++i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
 		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
+		pathname = NULL;
 	}
 	return (free(paths), NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:57 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 16:03:31 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:07:42 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static char	*ft_handle_pathname(char **paths, char **cmds, t_shell *sh)
 	char	*pathname;
 	int		i;
 
-	i = 0;
+	i = -1;
 	while (paths[++i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
