@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_get_wildcard_list_bonus.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 16:45:31 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/23 16:49:01 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -99,7 +111,7 @@ t_list	**ft_get_wildcard_list(char *s)
 	wild_list = ft_copy_entry_list();
 	if (ft_find_prefix(s) && wild_list && *wild_list)
 		ft_match_prefix(wild_list, s);
-	if (ft_find_middle(s , ft_find_prefix(s)) && wild_list && *wild_list)
+	if (ft_find_middle(s, ft_find_prefix(s)) && wild_list && *wild_list)
 		ft_match_middle(wild_list, s, ft_find_prefix(s));
 	if (ft_find_sufix(s) && wild_list && *wild_list)
 		ft_match_sufix(wild_list, s);

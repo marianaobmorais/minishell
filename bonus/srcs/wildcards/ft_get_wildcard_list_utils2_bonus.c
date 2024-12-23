@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_get_wildcard_list_utils2_bonus.c                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 16:45:36 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/23 16:48:35 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -135,6 +147,7 @@ bool	ft_handle_middle(char *s, char *entry_name, bool prefix)
 {
 	char	*middle;
 	bool	result;
+
 	if (!s || !entry_name)
 		return (false);
 	result = false;
@@ -162,7 +175,7 @@ bool	ft_handle_middle(char *s, char *entry_name, bool prefix)
  */
 void	ft_match_middle(t_list **list, char *s, bool prefix)
 {
-	t_list *current;
+	t_list	*current;
 	t_list	*prev;
 	t_list	*next;
 	t_token	*token;

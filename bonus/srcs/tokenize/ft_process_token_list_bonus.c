@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_process_token_list_bonus.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:25:39 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/22 16:51:46 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/12/23 16:45:23 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

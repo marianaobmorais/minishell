@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_get_wildcard_list_utils_bonus.c                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 16:45:33 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/12/23 16:47:30 by mariaoli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell_bonus.h"
 
 /**
@@ -69,7 +81,7 @@ static char	*ft_get_sufix(char *s)
  */
 void	ft_match_prefix(t_list **list, char *s)
 {
-	t_list *current;
+	t_list	*current;
 	t_list	*prev;
 	t_list	*next;
 	t_token	*token;
@@ -134,7 +146,7 @@ static char	*ft_get_substring(t_token *token, char *sufix)
  */
 void	ft_match_sufix(t_list **list, char *s)
 {
-	t_list *current;
+	t_list	*current;
 	t_list	*prev;
 	t_list	*next;
 	char	*sufix;
