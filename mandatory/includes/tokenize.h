@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:06 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/17 16:59:46 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/22 16:49:37 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,6 @@ void	ft_handle_dquotes(char **new_value, char *value, int *i, \
 void	ft_handle_squotes(char **new_value, char *value, int *i);
 void	ft_handle_expansion(char **new_value, char *value, int *i, \
 		char **envp);
-
-/* ft_get_wildcard_list.c */
-
-void	ft_update_token_list(t_list *curr, t_list *prev, t_list **head, \
-		t_list **w_list);
 
 /* ft_build_tree.c */
 
