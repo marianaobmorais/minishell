@@ -6,7 +6,7 @@
 #    By: marianamorais <marianamorais@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/22 17:34:17 by marianamora      ###   ########.fr        #
+#    Updated: 2024/12/24 15:45:47 by marianamora      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,7 +115,6 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/wildcards/ft_get_wildcard_list_utils_bonus.c \
 		$(BONUS_DIR)/wildcards/ft_get_wildcard_list_utils2_bonus.c \
 		$(BONUS_DIR)/wildcards/ft_set_alphabetical_order_bonus.c \
-		$(BONUS_DIR)/wildcards/ft_copy_entry_list_bonus.c
 
 OBJS = $(SRCS:.c=.o)
 

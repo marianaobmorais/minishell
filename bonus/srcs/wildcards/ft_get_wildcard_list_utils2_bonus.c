@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_wildcard_list_utils2_bonus.c                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:45:36 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/23 16:48:35 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:12:55 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,20 +87,51 @@ char	*ft_strnstr_(char **big, const char *little, size_t len)
 }
 
 /**
+ * @brief Checks if a wildcard pattern has a middle segment between '*'
+ *        characters.
+ *
+ * Evaluates if there is a non-empty segment between '*' characters in the given 
+ * string. If a prefix exists, it skips the prefix before analyzing the middle.
+ *
+ * @param s The string to be checked.
+ * @param prefix A boolean indicating if the string has a prefix.
+ * @return `true` if a middle segment exists, otherwise `false`.
+ */
+bool	ft_find_middle(char *s)
+{
+	int		i;
+
+	i = 0;
+	if (!s)
+		return (false);
+	while (s[i] == '*')
+		i++;
+	if (s[i])
+	{
+		while (s[i] && s[i] != '*')
+			i++;
+		if (s[i] != '*')
+			return (false);
+		else
+			return (true);
+	}
+	return (false);
+}
+
+/**
  * @brief Extracts the middle substring from a wildcard pattern.
  *
- * Processes the given string pointer `*s` to extract the substring between
- * wildcard `*` characters. Updates the pointer `*s` to the position just after
- * the extracted middle substring. If no valid middle substring exists, frees
- * any allocated memory and returns `NULL`.
+ * Parses the input wildcard pattern `s` to extract the next substring between
+ * wildcards (`*`). Advances the pointer `s` to the next position after the
+ * extracted substring or to the end of the string if no further wildcard is
+ * present.
  *
- * @param s A pointer to the string pattern being processed, updated to the next
- *        position.
- * @param prefix Indicates whether the prefix of the pattern has been processed.
- * @return A dynamically allocated middle substring, or `NULL` if no middle
- *         substring is found.
+ * @param s A double pointer to the wildcard pattern string. The pointer is
+ *        updated to point beyond the extracted middle substring.
+ * @return The extracted middle substring, or `NULL` if no substring exists or
+ *         on memory allocation failure.
  */
-char	*ft_get_middle(char **s, bool prefix)
+static char	*ft_get_middle(char **s)
 {
 	char	*middle;
 	char	*ptr;
@@ -109,9 +140,6 @@ char	*ft_get_middle(char **s, bool prefix)
 	if (!*s)
 		return (middle);
 	ptr = *s;
-	if (prefix)
-		while (*ptr != '*')
-			ptr++;
 	while (*ptr == '*')
 		ptr++;
 	while (*ptr && *ptr != '*')
@@ -130,66 +158,38 @@ char	*ft_get_middle(char **s, bool prefix)
 }
 
 /**
- * @brief Validates if the middle substrings in a wildcard pattern match the
- *        entry name.
+ * @brief Matches middle substrings in a wildcard pattern with an entry name.
  *
- * Recursively checks if all middle substrings in the wildcard pattern `s` exist
- * within `entry_name` in order of appearance. The function handles prefix
- * conditions and updates the pattern pointer during processing.
+ * Validates if the middle substrings extracted from the wildcard pattern `s`
+ * are present in sequence within the entry name. Updates the wildcard pattern
+ * pointer `s` and the entry name pointer `entry_name` as the matching process
+ * advances.
  *
- * @param s The wildcard pattern containing middle substrings.
- * @param entry_name The name of the entry to be checked against the pattern.
- * @param prefix Indicates if the prefix of the pattern has been processed.
+ * @param s A double pointer to the wildcard pattern string, updated as
+ *        substrings are processed.
+ * @param entry_name A double pointer to the entry name string, updated as
+ *        substrings are matched.
  * @return `true` if all middle substrings match the entry name in order,
  *         otherwise `false`.
  */
-bool	ft_handle_middle(char *s, char *entry_name, bool prefix)
+
+bool	ft_match_middle(char **s, char **entry_name)
 {
 	char	*middle;
 	bool	result;
 
-	if (!s || !entry_name)
-		return (false);
 	result = false;
-	middle = ft_get_middle(&s, prefix);
+	if (!s || !*s || !entry_name || !*entry_name)
+		return (true);
+	middle = ft_get_middle(s);
 	if (!middle)
-		return (false);
-	if (ft_strnstr_(&entry_name, middle, ft_strlen(entry_name)) != NULL)
+		ft_error_malloc("middle");
+	if (ft_strnstr_(entry_name, middle, ft_strlen(*entry_name)))
 		result = true;
-	if (ft_find_middle(s, false))
-		result = ft_handle_middle(s, entry_name, false);
-	free(middle);
+	if (ft_find_middle(*s))
+		result = ft_match_middle(s, entry_name);
+	if (middle)
+		free(middle);
 	return (result);
 }
 
-/**
- * @brief Filters a list of tokens to match entries containing middle substrings
- *
- * Iterates through the token list and removes nodes whose values do not contain 
- * all middle substrings from the wildcard pattern `s` in order of appearance.
- * Handles prefix conditions during matching.
- *
- * @param list A pointer to the list of tokens to be filtered.
- * @param s The wildcard pattern containing the middle substrings to match.
- * @param prefix Indicates whether the prefix of the pattern has been processed.
- */
-void	ft_match_middle(t_list **list, char *s, bool prefix)
-{
-	t_list	*current;
-	t_list	*prev;
-	t_list	*next;
-	t_token	*token;
-
-	prev = NULL;
-	current = *list;
-	while (current)
-	{
-		next = current->next;
-		token = (t_token *)current->content;
-		if (!ft_handle_middle(s, token->value, prefix))
-			ft_remove_current_node(list, prev, current);
-		else
-			prev = current;
-		current = next;
-	}
-}
