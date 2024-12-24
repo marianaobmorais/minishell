@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:27:50 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 18:39:55 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/23 16:12:58 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,15 +194,6 @@ int	ft_local_import(t_shell *sh, char *arg)
 
 	i = 0;
 	size = ft_strlen(arg);
-	while ((sh->local)[i])
-	{
-		if (ft_strncmp(arg, (sh->local)[i], size) == 0
-			&& (sh->local)[i][size] == '=')
-			return (add_var((sh->local)[i], ft_argslen(sh->global), \
-				&(sh->global)));
-		i++;
-	}
-	i = 0;
 	env = ft_merge_env((sh->global), (sh->limbo));
 	while (env[i])
 	{
@@ -212,5 +203,14 @@ int	ft_local_import(t_shell *sh, char *arg)
 		i++;
 	}
 	ft_free_vector(env);
+	i = 0;
+	while ((sh->local)[i])
+	{
+		if (ft_strncmp(arg, (sh->local)[i], size) == 0
+			&& (sh->local)[i][size] == '=')
+			return (add_var((sh->local)[i], ft_argslen(sh->global), \
+				&(sh->global)));
+		i++;
+	}
 	return (add_var(arg, ft_argslen(sh->limbo), &(sh->limbo)));
 }
