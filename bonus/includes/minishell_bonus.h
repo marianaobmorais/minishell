@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:02:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/21 10:10:15 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/22 17:02:28 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # include "builtins_bonus.h"
 # include "tokenize_bonus.h"
 # include "execution_bonus.h"
+# include "wildcards_bonus.h"
 
 //program name
 # define PROG_NAME "\001\033[1m\033[31m\002b\001\033[33m\002a\001\033[32m\002s\
