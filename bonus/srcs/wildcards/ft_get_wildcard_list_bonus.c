@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_wildcard_list_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:45:31 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/24 16:13:19 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/12/26 15:33:53 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ static void	ft_process_entry(char *s, struct dirent *entry, t_list **wild_list)
 	if (ft_is_wildcard(((t_token *)new_node->content)->value))
 		((t_token *)new_node->content)->wildcard = false;
 }
+
 /**
  * @brief Opens the current working directory for reading its contents.
  * 

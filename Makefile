@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marianamorais <marianamorais@student.42    +#+  +:+       +#+         #
+#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/24 15:45:47 by marianamora      ###   ########.fr        #
+#    Updated: 2024/12/26 16:03:05 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -125,8 +125,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=.ignore_readline
-#VALGRIND = valgrind --leak-check=full --track-fds=yes
+VALGRIND = /usr/bin/valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=/home/mariaoli/git/minishell/.ignore_readline
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
@@ -156,11 +155,9 @@ re: fclean
 	$(MAKE) all
 
 test: $(NAME)
-	$(MAKE) clean
 	$(VALGRIND) ./$(NAME)
 
 test_bonus: $(BONUS_NAME)
-	$(MAKE) clean
 	$(VALGRIND) ./$(BONUS_NAME)
 
 .PHONY: all clean fclean re bonus

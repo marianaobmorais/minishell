@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:49:35 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/24 16:02:36 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/12/26 15:32:34 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,5 @@ bool	ft_match_middle(char **s, char **entry_name);
 /* ft_set_alphabetical_order_bonus.c */
 
 t_list	**ft_set_alphabetical_order(t_list **old);
-
 
 #endif //WILDCARDS_BONUS_H

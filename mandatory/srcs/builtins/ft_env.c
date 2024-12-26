@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:00:46 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:00:47 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:00:10 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
  * @brief Prints the environment variables.
  *
  * This function iterates through the `envp` array and prints each
- * environment variable (each string) to the standard output. If the `envp`
- * array is `NULL`, it calls the error handler to handle the situation
+ * environment variable (each string) to the standard output. If the `envp` or 
+ * `*envp` array is `NULL`, it calls the error handler to handle the situation
  * appropriately.
  *
  * @param envp The array of environment variables to print.
@@ -27,9 +27,10 @@ void	ft_env(int argc, char **args, char **envp)
 	int	i;
 
 	i = 0;
-	if (!envp)
+	if (!envp || !*envp)
 	{
-		ft_exit_status(0, TRUE, FALSE);
+		ft_stderror(FALSE, "env: No such file or directory");
+		ft_exit_status(127, TRUE, FALSE);
 		return ;
 	}
 	if (argc > 1)

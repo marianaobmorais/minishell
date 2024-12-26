@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_wildcard_list_utils_bonus.c                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:45:33 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/24 16:18:43 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/12/26 15:34:38 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ bool	ft_match_prefix(char **s, char **entry_name)
 	if (!prefix)
 		ft_error_malloc("prefix");
 	if (ft_strncmp_(*entry_name, prefix, ft_strlen(prefix)))
-			result = false;
+		result = false;
 	else
 		*entry_name = *entry_name + ft_strlen(prefix);
 	if (prefix)
@@ -142,7 +142,7 @@ bool	ft_match_sufix(char **s, char **entry_name)
 		return (ft_error_malloc("sufix"), result);
 	sufix_len = ft_strlen(sufix);
 	substring = ft_substr(*entry_name, ft_strlen(*entry_name) - sufix_len,
-		sufix_len);
+			sufix_len);
 	if (!substring)
 		ft_error_malloc("substring");
 	if (ft_strncmp_(substring, sufix, ft_strlen(sufix)))
