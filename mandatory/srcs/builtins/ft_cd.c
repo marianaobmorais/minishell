@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:00:31 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:00:32 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/26 17:04:43 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	ft_update_my_envp(char **my_envp, char *cur_pwd)
  * @param envp A pointer to the array of environment variables.
  * @return The value of the environment variable, or `NULL` if not found.
  */
-static char	*ft_getenv(char *env, char **envp)
+char	*ft_getenv(char *env, char **envp)
 {
 	char	*res;
 

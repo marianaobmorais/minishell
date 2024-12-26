@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/26 16:03:05 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/12/26 17:28:05 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_exit_status.c \
 		$(SRCS_DIR)/ft_signal.c \
 		$(SRCS_DIR)/ft_copy_list.c \
+		$(SRCS_DIR)/ft_handle_lvl.c \
 		$(SRCS_DIR)/execution/ft_heredoc.c \
 		$(SRCS_DIR)/execution/ft_heredoc_utils.c \
 		$(SRCS_DIR)/execution/ft_launcher.c \
@@ -71,6 +72,7 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/ft_exit_status_bonus.c \
 		$(BONUS_DIR)/ft_signal_bonus.c \
 		$(BONUS_DIR)/ft_copy_list_bonus.c \
+		$(BONUS_DIR)/ft_handle_lvl_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_utils_bonus.c \
 		$(BONUS_DIR)/execution/ft_launcher_bonus.c \

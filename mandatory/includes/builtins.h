@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 17:47:03 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/23 16:46:37 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/26 17:20:12 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void		ft_env(int argc, char **args, char **envp);
 /* ft_cd.c */
 
 void		ft_cd(int argc, const char *new_dir, char **envp);
+char		*ft_getenv(char *env, char **envp);
 
 /* ft_echo.c */
 
@@ -52,6 +53,7 @@ long long	ft_atoll(const char *nptr, bool *is_sign);
 int			add_var(char *str, size_t size, char ***envp);
 int			concatenate_var(char *str, char ***envp, t_env mode, t_shell *sh);
 int			ft_export(int argc, char **argv, t_shell *sh, t_env mode);
+int			replace_var(char *str, char ***envp, t_env mode, t_shell *sh);
 
 /* ft_export_utils.c */
 

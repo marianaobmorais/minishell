@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:38 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 18:58:05 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/26 17:36:04 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,27 @@ int	add_var(char *str, size_t size, char ***envp)
 }
 
 /**
- * @brief Replaces an existing env variable or adds a new one if not found.
+ * @brief Replaces or adds an environment variable in the environment array.
  *
- * Searches for a variable in `envp` matching `str` up to the equal sign `=`
- * If found, frees the old entry and replaces it with `str`. If not found, 
- * calls `add_var` to add `str` as a new environment variable.
+ * This function updates an existing environment variable if its key matches the
+ * given string. If the variable is not found in the environment array:
+ * - Returns -1 if the mode is `LOCAL`.
+ * - Clears temporary memory associated with the variable (if mode is `DEFAULT`)
+ *   and adds the variable to the environment array.
+ * The function ensures proper memory management for replaced or newly added
+ * variables.
  *
- * @param str The environment variable string to replace or add.
- * @param size The length of the variable name in `str` (up to `=`).
- * @param envp Pointer to the array of environment variables to be updated.
- * @return Returns 0 if the variable is replaced or added new, if LOCAL mode
- *         Returns -1 if not replaced.
+ * @param str The environment variable in the format "KEY=VALUE".
+ * @param envp A pointer to the environment array.
+ * @param mode Determines whether to add a variable if it does not exist:
+ *        - `LOCAL`: Do not add, return -1.
+ *        - `DEFAULT`: Add the variable if it does not exist.
+ * @param sh A pointer to the shell structure, used for clearing temporary
+ *        memory.
+ * @return 0 if the variable was successfully replaced or added. And -1 if the
+ *         variable was not found and the mode is `LOCAL`.
  */
-static int	replace_var(char *str, char ***envp, t_env mode, t_shell *sh)
+int	replace_var(char *str, char ***envp, t_env mode, t_shell *sh)
 {
 	int	i;
 	int	size;
