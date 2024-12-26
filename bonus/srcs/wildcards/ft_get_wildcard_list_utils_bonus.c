@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_wildcard_list_utils_bonus.c                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:45:33 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/23 16:47:30 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:18:43 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,34 @@
  * @return A dynamically allocated string containing the prefix. Returns 
  *         `NULL` if memory allocation fails or `s` does not contain `*`.
  */
-static char	*ft_get_prefix(char *s)
+
+/**
+ * @brief Extracts the prefix from a wildcard pattern before the first wildcard.
+ *
+ * Parses the input wildcard pattern `s` to extract the substring before the
+ * first wildcard (`*`). Updates the pointer `s` to point to the position of the
+ * first wildcard in the string.
+ *
+ * @param s A double pointer to the wildcard pattern string. The pointer is
+ *        updated to point at the first wildcard in the pattern.
+ * @return The extracted prefix string, or `NULL` if no prefix exists or on
+ *         memory allocation failure.
+ */
+static char	*ft_get_prefix(char **s)
 {
 	char	*prefix;
-	int		i;
+	char	*ptr;
 
-	i = 0;
 	prefix = NULL;
-	if (!s)
+	if (!s || !*s)
 		return (prefix);
-	while (s[i] != '*')
+	ptr = *s;
+	while (*ptr != '*')
 	{
-		prefix = ft_charjoin(prefix, s[i]);
-		i++;
+		prefix = ft_charjoin(prefix, *ptr);
+		ptr++;
 	}
+	*s = ptr;
 	return (prefix);
 }
 
@@ -70,105 +84,95 @@ static char	*ft_get_sufix(char *s)
 }
 
 /**
- * @brief Filters a list of tokens to match entries with a specific prefix.
+ * @brief Matches a prefix from a wildcard pattern with the start of an entry
+ *        name.
  *
- * Iterates through the provided list and removes nodes whose values do not 
- * start with the specified prefix. The prefix is extracted from the given 
- * wildcard pattern. Frees the prefix memory after filtering.
+ * Extracts the prefix from the wildcard pattern `s` and compares it with the
+ * start of the entry name `entry_name`. Advances both pointers to reflect
+ * the successful matching of the prefix, if applicable.
  *
- * @param list A pointer to the list of tokens to be filtered.
- * @param s The wildcard pattern containing the prefix to match.
+ * @param s A double pointer to the wildcard pattern string, updated to point
+ *        beyond the extracted prefix.
+ * @param entry_name A double pointer to the entry name string, updated to
+ *        reflect the consumed prefix on successful match.
+ * @return `true` if the prefix matches the start of the entry name, otherwise
+ *         `false`.
  */
-void	ft_match_prefix(t_list **list, char *s)
+bool	ft_match_prefix(char **s, char **entry_name)
 {
-	t_list	*current;
-	t_list	*prev;
-	t_list	*next;
-	t_token	*token;
 	char	*prefix;
+	bool	result;
 
+	result = true;
 	prefix = ft_get_prefix(s);
 	if (!prefix)
-		return ;
-	current = *list;
-	prev = NULL;
-	while (current)
-	{
-		next = current->next;
-		token = (t_token *)current->content;
-		if (ft_strncmp(token->value, prefix, ft_strlen(prefix)))
-			ft_remove_current_node(list, prev, current);
-		else
-			prev = current;
-		current = next;
-	}
-	free(prefix);
+		ft_error_malloc("prefix");
+	if (ft_strncmp_(*entry_name, prefix, ft_strlen(prefix)))
+			result = false;
+	else
+		*entry_name = *entry_name + ft_strlen(prefix);
+	if (prefix)
+		free(prefix);
+	return (result);
 }
 
 /**
- * @brief Extracts the suffix substring from a token's value.
+ * @brief Matches a suffix from a wildcard pattern with the end of an entry name
  *
- * Retrieves the substring at the end of the token's value that matches the 
- * length of the specified suffix. The function handles memory allocation 
- * for the resulting substring and returns it.
+ * Extracts the suffix from the wildcard pattern `s` and compares it with the
+ * end of the entry name `entry_name`. The function dynamically allocates memory
+ * for the suffix and the substring being compared, ensuring to free them
+ * before returning.
  *
- * @param token The token containing the value from which the substring is
- *        extracted.
- * @param sufix The suffix pattern to match.
- * @return A dynamically allocated substring matching the suffix, or `NULL` if
- *         allocation fails.
+ * @param s A double pointer to the wildcard pattern string.
+ * @param entry_name A double pointer to the entry name string.
+ * @return `true` if the suffix matches the end of the entry name, otherwise
+ *         `false`.
  */
-static char	*ft_get_substring(t_token *token, char *sufix)
+bool	ft_match_sufix(char **s, char **entry_name)
 {
-	char	*substring;
-	size_t	sufix_len;
-	size_t	value_len;
-
-	sufix_len = ft_strlen(sufix);
-	value_len = ft_strlen(token->value);
-	substring = NULL;
-	substring = ft_substr(token->value, value_len - sufix_len, sufix_len);
-	if (!substring)
-		ft_error_malloc("substring");
-	return (substring);
-}
-
-/**
- * @brief Filters a list of tokens to match entries with a specific suffix.
- *
- * Iterates through the provided list and removes nodes whose values do not 
- * end with the specified suffix. The suffix is extracted from the given 
- * wildcard pattern. Frees the suffix and any intermediate substrings after
- * filtering.
- *
- * @param list A pointer to the list of tokens to be filtered.
- * @param s The wildcard pattern containing the suffix to match.
- */
-void	ft_match_sufix(t_list **list, char *s)
-{
-	t_list	*current;
-	t_list	*prev;
-	t_list	*next;
 	char	*sufix;
 	char	*substring;
+	bool	result;
+	size_t	sufix_len;
 
-	sufix = ft_get_sufix(s);
+	result = true;
+	sufix = ft_get_sufix(*s);
 	if (!sufix)
-		return ;
-	current = *list;
-	prev = NULL;
-	while (current)
-	{
-		next = current->next;
-		substring = ft_get_substring((t_token *)current->content, sufix);
-		if (!substring)
-			return (free(sufix));
-		if (ft_strncmp_(substring, sufix, ft_strlen(sufix)))
-			ft_remove_current_node(list, prev, current);
-		else
-			prev = current;
-		current = next;
+		return (ft_error_malloc("sufix"), result);
+	sufix_len = ft_strlen(sufix);
+	substring = ft_substr(*entry_name, ft_strlen(*entry_name) - sufix_len,
+		sufix_len);
+	if (!substring)
+		ft_error_malloc("substring");
+	if (ft_strncmp_(substring, sufix, ft_strlen(sufix)))
+		result = false;
+	if (substring)
 		free(substring);
-	}
-	free(sufix);
+	if (sufix)
+		free(sufix);
+	return (result);
+}
+
+/**
+ * @brief Determines if the given string contains a suffix after the last '*'.
+ *
+ * Searches for the last '*' in the string and checks if there are characters 
+ * following it. If such characters exist, a suffix is assumed.
+ *
+ * @param s The string to be checked.
+ * @return `true` if a suffix exists, otherwise `false`.
+ */
+bool	ft_find_sufix(char *s)
+{
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	if (!s)
+		return (false);
+	tmp = ft_strrchr(s, '*');
+	if (tmp[i + 1])
+		return (true);
+	return (false);
 }
