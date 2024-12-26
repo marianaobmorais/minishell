@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:29 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 18:02:12 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/26 17:22:38 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static bool	ft_is_numeric(char *arg)
 {
 	int	i;
 
+	if (!arg)
+		return (false);
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:02:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/22 17:02:28 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/12/26 17:29:19 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ char	**ft_merge_env(char **env1, char **env2);
 
 t_list	**ft_copy_list(t_list **old);
 
-/* ft_prompt */
+/* ft_handle_lvl_bonus.c */
 
-void	ft_prompt(t_shell *sh);
+void	ft_handle_lvl(t_shell *sh);
 
 #endif //MINISHELL_BONUS_H

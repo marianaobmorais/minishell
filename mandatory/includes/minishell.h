@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:04 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/21 10:10:27 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/26 17:13:40 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,9 @@ char	**ft_merge_env(char **env1, char **env2);
 /* ft_copy_list.c */
 
 t_list	**ft_copy_list(t_list **old);
+
+/* ft_handle_lvl.c */
+
+void	ft_handle_lvl(t_shell *sh);
 
 #endif //MINISHELL_H
