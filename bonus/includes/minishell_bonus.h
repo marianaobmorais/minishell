@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:02:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/26 17:38:46 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:50:51 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 /* ft_error_handler_bonus.c */
 
 void	ft_stderror(int perror_, const char *str, ...);
+void	ft_putstr_fd_len(char *s, int fd, int len);
 void	ft_error_malloc(char *message);
 
 /* ft_signal_bonus.c */

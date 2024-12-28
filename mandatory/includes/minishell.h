@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:04 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/26 17:13:40 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:52:49 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int		ft_exit_status(int exit_status, int write_, int exit_);
 /* ft_error_handler.c */
 
 void	ft_stderror(int perror_, const char *str, ...);
+void	ft_putstr_fd_len(char *s, int fd, int len);
 void	ft_error_malloc(char *message);
 
 /* ft_signal.c */

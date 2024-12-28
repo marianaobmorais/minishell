@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:23 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:38:06 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:49:42 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
 	else if (node->type == SUB_ROOT)
-		ft_launcher_subroot(node, sh->next_node, curr_fds, sh);
+		ft_launcher_subroot(node, sh->next_node, sh);
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:29:15 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:04:54 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:51:56 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	sig_child_handler(int sig)
 	if (sig == SIGINT)
 		write(1, "\n", 1);
 	if (sig == SIGQUIT)
-		ft_putendl_fd("Quit (core dumped)", 1);
+		ft_putstr_fd_len("Quit (core dumped)\n", 2, 20);
 	if (sig == SIGPIPE)
 		ft_exit_status(141, TRUE, FALSE);
 }
