@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:32:33 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:32:34 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:45:48 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static void	sig_child_handler(int sig)
 		write(1, "\n", 1);
 	if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", 1);
+	if (sig == SIGPIPE)
+		ft_exit_status(141, TRUE, FALSE);
 }
 
 /**
@@ -79,6 +81,20 @@ static void	sig_heredoc_handler(int sig)
 }
 
 /**
+ * @brief Resets critical signals to default behavior or ignores them.
+ *
+ * Configures key signals: ignores SIGTSTP and restores default behavior 
+ * for SIGPIPE, SIGQUIT, and SIGINT.
+ */
+static void	sig_default(void)
+{
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGPIPE, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+}
+
+/**
  * @brief Configures signal handling based on process type (PARENT, HEREDOC,
  *        DEFAULT, CHILD).
  *
@@ -98,10 +114,10 @@ static void	sig_heredoc_handler(int sig)
  */
 void	ft_signal(int type)
 {
-	signal(SIGTSTP, SIG_IGN);
 	if (type == PARENT_)
 	{
 		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
 	}
@@ -113,9 +129,8 @@ void	ft_signal(int type)
 	}
 	if (type == DEFAULT_)
 	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+		sig_default();
+		signal(SIGPIPE, sig_child_handler);
 	}
 	if (type == CHILD_)
 	{
