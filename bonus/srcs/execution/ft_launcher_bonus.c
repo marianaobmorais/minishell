@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_launcher_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:23 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 17:50:27 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:38:06 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,6 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
-		if (sh->next_node != NULL && (!sh->prev_nnode
-				|| (sh->prev_nnode && sh->prev_nnode->type != OUTFILE
-					&& sh->prev_nnode->type != APPEND)))
-			dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		ft_exec(((t_exec *)node)->args, sh);
 	}
@@ -71,7 +67,7 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 	int		status;
 
 	sh->error_fd = 0;
-	if (!node && !(sh->next_node))
+	if (!node)
 	{
 		ft_signal(CHILD_);
 		close_fds(curr_fds);
@@ -84,14 +80,12 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 		}
 		return (ft_restore_original_fds(sh));
 	}
-	if (node || sh->next_node)
+	if (node)
 		dup2(curr_fds[0], STDIN_FILENO);
 	close_fds(curr_fds);
 	if ((sh->prev && ft_is_node_type(sh->prev, REDIR_OUT)) || (sh->next_node
 			&& sh->prev_nnode && ft_is_node_type(sh->prev_nnode, REDIR_OUT)))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	if (sh->next_node && !node)
-		return (ft_launcher(sh->next_node, sh->next_node->right, NULL, sh));
 	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
@@ -160,7 +154,7 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
 	else if (node->type == SUB_ROOT)
-		ft_launcher_manager(node, sh);
+		ft_launcher_subroot(node, sh->next_node, curr_fds, sh);
 }
 
 /**

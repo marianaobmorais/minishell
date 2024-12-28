@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:20 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/21 10:02:30 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:00:23 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int	ft_exec(t_list **args, t_shell *sh)
 	pathname = NULL;
 	ft_process_token_list(args, ft_merge_env(sh->global, sh->local));
 	new_args = tokentostring(args);
-	if (ft_isbuiltin(new_args))
+	if (ft_isbuiltin(new_args) && ft_exit_status(0, FALSE, FALSE) != 141)
 		ft_exec_builtin(new_args, sh);
 	else
 	{
