@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:14 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:26:15 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:33:17 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,44 @@ int	ft_search_exec(t_redir *node)
 }
 
 /**
+ * @brief Attempts to open the next heredoc file in the shell's heredoc list.
+ *
+ * This function manages the heredoc list in the shell (`t_shell`) by freeing 
+ * memory for the current entry and attempting to open the next file in the list
+ * If the file cannot be opened, it either redirects to `/dev/null` or
+ * recursively  moves to the next heredoc file in the list.
+ *
+ * @param sh Pointer to the shell structure containing the heredoc list.
+ * 
+ * @return The file descriptor for the opened heredoc file, or a descriptor 
+ *         for `/dev/null` if no valid file can be opened.
+ */
+int	ft_try_open_heredoc(t_shell *sh)
+{
+	char	*pathname;
+	int		fd;
+	t_list	*tmp;
+
+	tmp = (*sh->heredoc_list)->next;
+	free((*sh->heredoc_list)->content);
+	free((*sh->heredoc_list));
+	*sh->heredoc_list = tmp;
+	pathname = (char *)(*sh->heredoc_list)->content;
+	fd = open(pathname, O_RDONLY);
+	if (fd == -1)
+	{
+		if (!(*sh->heredoc_list))
+		{
+			fd = open("/dev/null", O_RDONLY);
+			ft_stderror(TRUE, "%s: ", pathname);
+			return (fd);
+		}
+		ft_try_open_heredoc(sh);
+	}
+	return (fd);
+}
+
+/**
  * @brief Handles here-document redirections.
  *
  * Manages here-document redirections by opening the temporary file,
@@ -108,8 +146,9 @@ void	ft_redir_heredoc(t_shell *sh, t_redir *node)
 		fd = open(pathname, O_RDONLY);
 		if (fd == -1)
 		{
-			fd = open("/dev/null", O_RDONLY);
-			ft_stderror(TRUE, "%s: ", pathname);
+			fd = ft_try_open_heredoc(sh);
+			pathname = (char *)(*sh->heredoc_list)->content;
+			tmp = (*sh->heredoc_list)->next;
 		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);

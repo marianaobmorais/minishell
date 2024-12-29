@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:37 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:28:38 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:35:53 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 	char	*input;
 
 	input = NULL;
-	ft_signal(HEREDOC_);
+	ft_signal(HEREDOC_CHILD);
 	while (ft_exit_status(0, FALSE, FALSE) == 0)
 	{
 		input = readline("> ");
@@ -171,7 +171,6 @@ void	ft_search_heredoc(t_node *node, t_shell *sh)
 {
 	t_redir	*rnd;
 	t_token	*tnd;
-	t_state	st;
 
 	if (!node)
 		return ;
@@ -186,11 +185,13 @@ void	ft_search_heredoc(t_node *node, t_shell *sh)
 		rnd = (t_redir *)node;
 		ft_process_token_list(rnd->target, ft_merge_env(sh->global, sh->local));
 		tnd = (t_token *)(*rnd->target)->content;
-		st = tnd->state;
 		sh->run = heredoc_fd(tnd->value, \
-			ft_merge_env(sh->global, sh->local), st, sh);
+			ft_merge_env(sh->global, sh->local), (t_state) tnd->state, sh);
 		ft_search_heredoc(((t_redir *)node)->next, sh);
 	}
 	else if (node->type == SUB_ROOT)
+	{
 		ft_heredoc_manager(node->left, sh);
+		ft_heredoc_manager(node->right, sh);
+	}
 }

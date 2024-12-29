@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:43:17 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/20 16:03:36 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/29 13:38:40 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ typedef enum e_signal
 {
 	PARENT_,
 	CHILD_,
-	HEREDOC_,
+	HEREDOC_CHILD,
+	HEREDOC_PARENT,
 	DEFAULT_
 }	t_signal;
 
@@ -90,5 +91,7 @@ char	*merge(char *s1, char *s2);
 /* ft_tokentostring_bonus.c */
 
 char	**tokentostring(t_list **args);
+
+void	ft_launcher_subroot(void *node, void *next_node, t_shell *sh);
 
 #endif //EXECUTION_BONUS_H

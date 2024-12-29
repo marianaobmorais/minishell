@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
+#    By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/26 17:28:05 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/12/29 14:14:57 by joneves-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ BONUS_NAME = minishell_bonus
 
 SRCS_DIR = ./mandatory/srcs
 BONUS_DIR = ./bonus/srcs
+REALPATH = $(realpath .ignore_readline)
 
 LIBFT = ./libft/libft.a
 LIBFT_DIR = ./libft
@@ -26,6 +27,7 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/ft_cli.c \
 		$(SRCS_DIR)/ft_exit_status.c \
 		$(SRCS_DIR)/ft_signal.c \
+		$(SRCS_DIR)/ft_signal_utils.c \
 		$(SRCS_DIR)/ft_copy_list.c \
 		$(SRCS_DIR)/ft_handle_lvl.c \
 		$(SRCS_DIR)/execution/ft_heredoc.c \
@@ -71,12 +73,14 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/ft_cli_bonus.c \
 		$(BONUS_DIR)/ft_exit_status_bonus.c \
 		$(BONUS_DIR)/ft_signal_bonus.c \
+		$(BONUS_DIR)/ft_signal_utils_bonus.c \
 		$(BONUS_DIR)/ft_copy_list_bonus.c \
 		$(BONUS_DIR)/ft_handle_lvl_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_bonus.c \
 		$(BONUS_DIR)/execution/ft_heredoc_utils_bonus.c \
 		$(BONUS_DIR)/execution/ft_launcher_bonus.c \
 		$(BONUS_DIR)/execution/ft_launcher_utils_bonus.c \
+		$(BONUS_DIR)/execution/ft_launcher_subroot_bonus.c \
 		$(BONUS_DIR)/execution/ft_exec_bonus.c \
 		$(BONUS_DIR)/execution/ft_exec_utils_bonus.c \
 		$(BONUS_DIR)/execution/ft_tokentostring_bonus.c \
@@ -127,7 +131,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
 
-VALGRIND = /usr/bin/valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=/home/mariaoli/git/minishell/.ignore_readline
+VALGRIND = /usr/bin/valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --suppressions=$(REALPATH)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline

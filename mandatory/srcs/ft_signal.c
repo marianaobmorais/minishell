@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:32:33 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:32:34 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:09:13 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,26 @@ static void	sig_parent_handler(int sig)
 static void	sig_child_handler(int sig)
 {
 	if (sig == SIGINT)
-		write(1, "\n", 1);
+	{
+	}
 	if (sig == SIGQUIT)
-		ft_putendl_fd("Quit (core dumped)", 1);
+	{
+	}
+	if (sig == SIGPIPE)
+		ft_exit_status(141, TRUE, FALSE);
 }
 
 /**
- * @brief Signal handler for heredoc interruptions.
+ * @brief Resets critical signals to default behavior or ignores them.
  *
- * Handles the `SIGINT` signal during heredoc input by:
- * - Writing a newline to the standard output.
- * - Closing the standard input file descriptor.
- * - Setting the exit status to 130.
- *
- * @param sig The signal number (expected to be `SIGINT`).
+ * Configures key signals: ignores SIGTSTP and restores default behavior 
+ * for SIGPIPE, SIGQUIT, and SIGINT.
  */
-static void	sig_heredoc_handler(int sig)
+static void	sig_default(void)
 {
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		close(STDIN_FILENO);
-		ft_exit_status(130, TRUE, FALSE);
-	}
+	signal(SIGPIPE, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 }
 
 /**
@@ -98,29 +95,23 @@ static void	sig_heredoc_handler(int sig)
  */
 void	ft_signal(int type)
 {
-	signal(SIGTSTP, SIG_IGN);
 	if (type == PARENT_)
 	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
-	}
-	if (type == HEREDOC_)
-	{
-		signal(SIGTSTP, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, sig_heredoc_handler);
-	}
-	if (type == DEFAULT_)
-	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
 	}
 	if (type == CHILD_)
 	{
-		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, sig_child_handler);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
+	}
+	if (type == HEREDOC_CHILD)
+		sig_heredoc_child();
+	if (type == HEREDOC_PARENT)
+		sig_heredoc_parent();
+	if (type == DEFAULT_)
+	{
+		sig_default();
 	}
 }

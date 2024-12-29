@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_create_token_list_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:16:33 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/16 19:16:34 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/29 15:53:34 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,10 @@ t_list	**ft_create_token_list(char *s)
 	ft_process_tokens(s, token_list);
 	ft_validate_export_tokens(token_list);
 	if (!ft_validate_exec_tokens(token_list))
+	{
+		ft_free_list(*token_list);
+		free(token_list);
 		return (NULL);
+	}
 	return (token_list);
 }

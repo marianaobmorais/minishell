@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_launcher_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:23 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 17:50:27 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:06:18 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 {
 	pid_t	pid;
 
+	ft_signal(CHILD_);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -44,10 +45,6 @@ pid_t	ft_child_process(int *fds, t_shell *sh, void *node, void *next_node)
 		{
 			dup2(fds[1], STDOUT_FILENO);
 		}
-		if (sh->next_node != NULL && (!sh->prev_nnode
-				|| (sh->prev_nnode && sh->prev_nnode->type != OUTFILE
-					&& sh->prev_nnode->type != APPEND)))
-			dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		ft_exec(((t_exec *)node)->args, sh);
 	}
@@ -71,9 +68,8 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 	int		status;
 
 	sh->error_fd = 0;
-	if (!node && !(sh->next_node))
+	if (!node)
 	{
-		ft_signal(CHILD_);
 		close_fds(curr_fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
@@ -81,17 +77,16 @@ void	ft_parent_process(int *curr_fds, t_shell *sh, void *node, pid_t pid)
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
+			ft_print_signal();
 		}
 		return (ft_restore_original_fds(sh));
 	}
-	if (node || sh->next_node)
+	if (node)
 		dup2(curr_fds[0], STDIN_FILENO);
 	close_fds(curr_fds);
 	if ((sh->prev && ft_is_node_type(sh->prev, REDIR_OUT)) || (sh->next_node
 			&& sh->prev_nnode && ft_is_node_type(sh->prev_nnode, REDIR_OUT)))
 		dup2(sh->stdout_, STDOUT_FILENO);
-	if (sh->next_node && !node)
-		return (ft_launcher(sh->next_node, sh->next_node->right, NULL, sh));
 	ft_launcher(node, ((t_node *)node)->right, NULL, sh);
 }
 
@@ -160,7 +155,7 @@ void	ft_launcher(t_node *node, t_node *next_node, int *curr_fds, t_shell *sh)
 	else if (((t_exec *)node)->type == EXEC)
 		ft_launcher_exec(node, next_node, curr_fds, sh);
 	else if (node->type == SUB_ROOT)
-		ft_launcher_manager(node, sh);
+		ft_launcher_subroot(node, sh->next_node, sh);
 }
 
 /**
@@ -183,10 +178,10 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	curr_root = ((t_node *) tree);
 	if (sh->search_heredoc == FALSE)
 	{
+		ft_signal(HEREDOC_PARENT);
 		ft_heredoc_manager(curr_root, sh);
 		sh->search_heredoc = TRUE;
 	}
-	ft_signal(DEFAULT_);
 	if (sh->run == TRUE && !ft_single_command(curr_root, sh))
 		ft_launcher(curr_root->left, NULL, NULL, sh);
 	if (curr_root->right)
