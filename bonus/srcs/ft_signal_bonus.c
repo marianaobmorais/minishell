@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:29:15 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:51:56 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:10:50 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,26 +61,6 @@ static void	sig_child_handler(int sig)
 }
 
 /**
- * @brief Signal handler for heredoc interruptions.
- *
- * Handles the `SIGINT` signal during heredoc input by:
- * - Writing a newline to the standard output.
- * - Closing the standard input file descriptor.
- * - Setting the exit status to 130.
- *
- * @param sig The signal number (expected to be `SIGINT`).
- */
-static void	sig_heredoc_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		close(STDIN_FILENO);
-		ft_exit_status(130, TRUE, FALSE);
-	}
-}
-
-/**
  * @brief Resets critical signals to default behavior or ignores them.
  *
  * Configures key signals: ignores SIGTSTP and restores default behavior 
@@ -121,21 +101,19 @@ void	ft_signal(int type)
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
 	}
-	if (type == HEREDOC_)
-	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, sig_heredoc_handler);
-	}
-	if (type == DEFAULT_)
-	{
-		sig_default();
-		signal(SIGPIPE, sig_child_handler); //add mandatory
-	}
 	if (type == CHILD_)
 	{
 		signal(SIGTSTP, SIG_IGN);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
+	}
+	if (type == HEREDOC_CHILD)
+		sig_heredoc_child();
+	if (type == HEREDOC_PARENT)
+		sig_heredoc_parent();
+	if (type == DEFAULT_)
+	{
+		sig_default();
+		signal(SIGPIPE, sig_child_handler);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:04 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/28 23:52:49 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:16:39 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ void	ft_error_malloc(char *message);
 /* ft_signal.c */
 
 void	ft_signal(int type);
+
+/* ft_signal_utils.c */
+
+void	sig_heredoc_parent(void);
+void	sig_heredoc_child(void);
 
 /* ft_cli.c */
 

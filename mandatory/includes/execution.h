@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:42:59 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/18 10:14:05 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:16:22 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ typedef enum e_signal
 {
 	PARENT_,
 	CHILD_,
-	HEREDOC_,
+	HEREDOC_CHILD,
+	HEREDOC_PARENT,
 	DEFAULT_
 }	t_signal;
 

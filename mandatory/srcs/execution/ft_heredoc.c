@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:32:02 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/17 15:32:03 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:17:45 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	read_heredoc(char *eof, int state, char **my_envp, int fd_write)
 	char	*input;
 
 	input = NULL;
-	ft_signal(HEREDOC_);
+	ft_signal(HEREDOC_CHILD);
 	while (ft_exit_status(0, FALSE, FALSE) == 0)
 	{
 		input = readline("> ");

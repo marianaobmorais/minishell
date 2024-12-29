@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:23 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:49:42 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 13:39:04 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ void	ft_launcher_manager(void *tree, t_shell *sh)
 	curr_root = ((t_node *) tree);
 	if (sh->search_heredoc == FALSE)
 	{
+		ft_signal(HEREDOC_PARENT);
 		ft_heredoc_manager(curr_root, sh);
 		sh->search_heredoc = TRUE;
 	}
