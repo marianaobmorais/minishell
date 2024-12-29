@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:58:37 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:43:59 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:06:11 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ pid_t	ft_child_process_subroot(int *fds, t_shell *sh, void *node, \
 {
 	pid_t	pid;
 
+	ft_signal(CHILD_);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -94,7 +95,6 @@ void	ft_parent_process_subroot(int *fds, t_shell *sh, void *node, pid_t pid)
 	sh->error_fd = 0;
 	if (!node)
 	{
-		ft_signal(CHILD_);
 		close_fds(fds);
 		if (pid != -1 && waitpid(pid, &status, 0) != -1)
 		{
@@ -102,6 +102,7 @@ void	ft_parent_process_subroot(int *fds, t_shell *sh, void *node, pid_t pid)
 				ft_exit_status(WEXITSTATUS(status), TRUE, FALSE);
 			else if (WIFSIGNALED(status))
 				ft_exit_status(WTERMSIG(status) + 128, TRUE, FALSE);
+			ft_print_signal();
 		}
 		return (ft_restore_original_fds(sh));
 	}

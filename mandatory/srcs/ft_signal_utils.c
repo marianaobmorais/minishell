@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:32:33 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/29 14:16:59 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:08:40 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,9 @@ static void	sig_heredoc_child_handler(int sig)
  */
 void	sig_heredoc_parent(void)
 {
-	signal(SIGTSTP, SIG_IGN);
+	signal(SIGINT, sig_heredoc_parent_handler);
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_heredoc_parent_handler);
 }
 
 /**
@@ -74,7 +73,25 @@ void	sig_heredoc_parent(void)
  */
 void	sig_heredoc_child(void)
 {
-	signal(SIGTSTP, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sig_heredoc_child_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+/**
+ * @brief Prints messages for signals based on the last exit status.
+ *
+ * This function checks the last exit status:
+ * - If the status is 130, it prints a newline (`\n`) to indicate an interrupt
+ *   signal (`SIGINT`).
+ * - If the status is 131, it prints "Quit (core dumped)" to indicate a quit
+ *   signal (`SIGQUIT`).
+ *
+ * This ensures appropriate feedback for user-triggered signals in the shell.
+ */
+void	ft_print_signal(void)
+{
+	if (ft_exit_status(0, FALSE, FALSE) == 130)
+		write(1, "\n", 1);
+	if (ft_exit_status(0, FALSE, FALSE) == 131)
+		write(1, "Quit (core dumped)\n", 20);
 }

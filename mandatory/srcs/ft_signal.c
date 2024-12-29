@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:32:33 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/29 14:16:01 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:09:13 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ static void	sig_parent_handler(int sig)
 static void	sig_child_handler(int sig)
 {
 	if (sig == SIGINT)
-		write(1, "\n", 1);
+	{
+	}
 	if (sig == SIGQUIT)
-		ft_putstr_fd_len("Quit (core dumped)\n", 2, 20);
+	{
+	}
 	if (sig == SIGPIPE)
 		ft_exit_status(141, TRUE, FALSE);
 }
@@ -68,7 +70,6 @@ static void	sig_child_handler(int sig)
  */
 static void	sig_default(void)
 {
-	signal(SIGTSTP, SIG_IGN);
 	signal(SIGPIPE, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
@@ -96,14 +97,12 @@ void	ft_signal(int type)
 {
 	if (type == PARENT_)
 	{
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGPIPE, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_parent_handler);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	if (type == CHILD_)
 	{
-		signal(SIGTSTP, SIG_IGN);
+		signal(SIGPIPE, sig_child_handler);
 		signal(SIGINT, sig_child_handler);
 		signal(SIGQUIT, sig_child_handler);
 	}
@@ -114,6 +113,5 @@ void	ft_signal(int type)
 	if (type == DEFAULT_)
 	{
 		sig_default();
-		signal(SIGPIPE, sig_child_handler);
 	}
 }

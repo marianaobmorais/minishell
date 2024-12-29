@@ -6,7 +6,7 @@
 /*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:03:04 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/29 14:16:39 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/29 22:06:53 by joneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	ft_signal(int type);
 
 void	sig_heredoc_parent(void);
 void	sig_heredoc_child(void);
+void	ft_print_signal(void);
 
 /* ft_cli.c */
 
