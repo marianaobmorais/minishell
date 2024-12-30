@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:26:14 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/29 16:33:17 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:08:53 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ int	ft_redir(t_redir *nd, t_shell *sh)
 	{
 		target_tmp = ft_strdup(((t_token *)(*nd->target)->content)->value);
 		ft_process_token_list(nd->target, ft_merge_env(sh->global, sh->local));
-		if (!*nd->target || ft_is_wildcard(target_tmp))
+		if (!*nd->target || ft_is_star(target_tmp))
 			return (ft_stderror(FALSE, "%s: ambiguous redirect", target_tmp), \
 				ft_exit_status(1, TRUE, FALSE), free(target_tmp), FALSE);
 		fd = ft_open(nd, ((t_token *)(*nd->target)->content)->value, \

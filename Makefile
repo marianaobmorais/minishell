@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+         #
+#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 18:58:34 by mariaoli          #+#    #+#              #
-#    Updated: 2024/12/29 14:14:57 by joneves-         ###   ########.fr        #
+#    Updated: 2024/12/30 15:09:47 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,6 +85,7 @@ BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/execution/ft_exec_utils_bonus.c \
 		$(BONUS_DIR)/execution/ft_tokentostring_bonus.c \
 		$(BONUS_DIR)/execution/ft_redir_bonus.c \
+		$(BONUS_DIR)/execution/ft_redir_utils_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_process_input_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_charjoin_bonus.c \
 		$(BONUS_DIR)/tokenize/ft_isspace_bonus.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:43:17 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/29 13:38:40 by joneves-         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:09:24 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,10 @@ void	ft_search_heredoc(t_node *curr_node, t_shell *sh);
 /* ft_redir_bonus.c */
 
 int		ft_redir(t_redir *nd, t_shell *sh);
+
+/* ft_redir_utils_bonus.c */
+
+bool	ft_is_star(char *s);
 
 /* ft_launcher_bonus.c */
 
