@@ -6,23 +6,11 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:45:33 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/12/26 15:34:38 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:07:49 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell_bonus.h"
-
-/**
- * @brief Extracts the prefix of a wildcard pattern before the first `*`.
- * 
- * This function iterates through the string `s` and constructs a new string 
- * containing all characters up to (but not including) the first occurrence 
- * of the `*` character.
- * 
- * @param s The wildcard pattern to extract the prefix from.
- * @return A dynamically allocated string containing the prefix. Returns 
- *         `NULL` if memory allocation fails or `s` does not contain `*`.
- */
 
 /**
  * @brief Extracts the prefix from a wildcard pattern before the first wildcard.
