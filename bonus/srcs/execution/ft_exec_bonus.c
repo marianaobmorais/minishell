@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:20 by joneves-          #+#    #+#             */
-/*   Updated: 2025/01/02 18:38:38 by mariaoli         ###   ########.fr       */
+/*   Updated: 2025/01/02 18:43:40 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 		return (NULL);
 	if (ft_strchr(cmds[0], '/') && isvalid_dir(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
-	if (access(cmds[0], F_OK) == 0 
+	if (access(cmds[0], F_OK) == 0
 		&& isvalid_file(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
