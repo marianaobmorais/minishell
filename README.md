@@ -4,7 +4,7 @@
 
 # minishell
 
-#### Finished in: ongoing
+#### Finished in: 2024-12-24
 
 This project was done in partnership with [José Júnior](https://github.com/joseevilasio)
 
