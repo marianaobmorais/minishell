@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:31:57 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:46:35 by joneves-         ###   ########.fr       */
+/*   Updated: 2025/01/02 18:39:05 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,8 @@ static char	*ft_handle_pathname(char **paths, char **cmds, t_shell *sh)
 	while (paths[++i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
+		if (access(pathname, F_OK) == 0
+			&& isvalid_file(pathname, cmds, sh) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 	}
@@ -169,7 +170,7 @@ int	ft_exec(t_list **args, t_shell *sh)
 				ft_child_cleaner(sh, new_args, 0), \
 				ft_exit_status(127, TRUE, TRUE));
 		if (execve(pathname, new_args, sh->global) == -1)
-			return (ft_stderror(TRUE, " execve %s: ", new_args[0]), \
+			return (ft_stderror(TRUE, "%s: ", new_args[0]), \
 				ft_child_cleaner(sh, new_args, 0), free(pathname), \
 				ft_exit_status(1, TRUE, TRUE));
 		free(pathname);

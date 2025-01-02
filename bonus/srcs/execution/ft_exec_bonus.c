@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joneves- <joneves-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:28:20 by joneves-          #+#    #+#             */
-/*   Updated: 2024/12/28 23:00:23 by joneves-         ###   ########.fr       */
+/*   Updated: 2025/01/02 18:38:38 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static char	*ft_handle_pathname(char **paths, char **cmds, t_shell *sh)
 	while (paths[++i])
 	{
 		pathname = merge(merge(paths[i], "/"), cmds[0]);
-		if (access(pathname, F_OK) == 0 && isvalid_dir(pathname, cmds, sh) == 0)
+		if (access(pathname, F_OK) == 0
+			&& isvalid_file(pathname, cmds, sh) == 0)
 			return (ft_free_paths(paths, i), pathname);
 		free(pathname);
 		pathname = NULL;
@@ -68,7 +69,8 @@ static char	*ft_findpath(char **envp, char **cmds, t_shell *sh)
 		return (NULL);
 	if (ft_strchr(cmds[0], '/') && isvalid_dir(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
-	if (access(cmds[0], F_OK) == 0 && isvalid_file(cmds[0], cmds, sh) == 0)
+	if (access(cmds[0], F_OK) == 0 
+		&& isvalid_file(cmds[0], cmds, sh) == 0)
 		return (ft_strdup(cmds[0]));
 	while (envp[i] && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;
