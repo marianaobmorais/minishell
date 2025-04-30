@@ -10,8 +10,14 @@ This project was done in partnership with [José Júnior](https://github.com/jos
 
 ## About
 
-This project objective is to create a simplified version of Bourne-Again Shell (Bash).
+This project objective is to create a simplified version of Bourne-Again Shell (Bash). It provides hands-on experience with key concepts in systems programming, such as:
+- accurately parse and interpret user input, handling commands with pipes and redirections;
+- implementing process creation, executing commands, and managing parent-child process communication;
+- supporting input and output redirection and piping between two or more commands;
+- handling signals to manage process termination and keyboard interrupts properly;
+- manage memory dynamically, ensuring proper allocation and deallocation, avoiding memory leaks, and handling errors.
 
+## Features
 The mandatory part consists of:
 
 - Handling `’` (single quotes) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
