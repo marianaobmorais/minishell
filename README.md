@@ -67,4 +67,4 @@ If you find any issues or have suggestions for improvements, please feel free to
 
 ### Message to students
 
-If you are searching resources to learn more about your own pipex, I encourage you to turn to your peers and the function manuals. Do not implement any code you do not understand and cannot code from scratch.
+If you are searching resources to learn more about your own minishell, I encourage you to turn to your peers and the function manuals. Do not implement any code you do not understand and cannot code from scratch.
