@@ -40,7 +40,7 @@ Clone the repository:
 ```shell
 git clone https://github.com/marianaobmorais/minishell.git
 ```
-Enter the clonned directory:
+Enter the cloned directory:
 ```shell
 cd minishell
 ```
